@@ -30,12 +30,14 @@ const RYDERS_DATA = {
     `,
     stats: { board: 'Wave Classic 7\'4"', stance: 'Goofy', local: 'Concón' },
     gallery: [
-      '/images/paulo/foto1.jpg',
-      '/images/paulo/foto2.jpg',
-      '/images/paulo/foto3.jpg',
-      '/images/paulo/foto4.jpg',
-      '/images/paulo/foto5.jpg',
-      '/images/paulo/foto6.jpg'
+      '/ryders/paulo/R1.jpg',
+      '/ryders/paulo/R2.jpg',
+      '/ryders/paulo/R3.jpg',
+      '/ryders/paulo/R4.jpg',
+      '/ryders/paulo/R5.jpg',
+      '/ryders/paulo/R6.jpg',
+      '/ryders/paulo/R7.jpg',
+      '/ryders/paulo/R8.jpg'
     ],
     magazine: 'https://drive.google.com/drive/folders/1ZXnRizAjEvrCkdoV0tfGwF7esY4g81oK?usp=sharing'
   },
@@ -592,17 +594,14 @@ export default function RyderMagazine() {
                     sizes="(max-width: 900px) 100vw, 50vw"
                     priority={i === 0}
                     style={{ 
-                      objectFit: 'cover',
-                      filter: 'contrast(1.1) brightness(0.9) hue-rotate(240deg) saturate(1.5)',
+                      objectFit: 'cover'
                     }}
                     className="carousel-img-optimized"
                     alt={`Rider ${i}`} 
                   />
                 </div>
               ))}
-              <div className="carousel-overlay">
-                <span>WAVE SURF CLUB</span>
-              </div>
+              {/* Watermark removed as per User Request */}
             </div>
           </div>
         </div>
