@@ -736,14 +736,12 @@ export default function LandingPage() {
 
       <section className="px-section" id="biografia">
         <div className="px-bg-wrapper">
-          <Image src="/logo-black.png" alt="Biografia" fill style={{ objectFit: 'contain', opacity: 0.1 }} />
-        </div>
-        <div className="px-overlay" />
-        <div className="px-content">
-          <div className="seccion-biografia">
-            <h2 className="titulo-bio">{t.menu_bio}</h2>
-            <p className="texto-bio">{t.sec_bio_sub}</p>
-          </div>
+          <Image 
+            src="/BIOGRAFIA.jpg" 
+            alt="Biografia" 
+            fill 
+            style={{ objectFit: 'cover' }} 
+          />
         </div>
       </section>
 
