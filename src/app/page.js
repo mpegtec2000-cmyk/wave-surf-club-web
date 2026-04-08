@@ -721,17 +721,12 @@ export default function LandingPage() {
       <section className="px-section" id="hero">
         <div className="px-bg-wrapper">
           <Image 
-            src="/portada.png" 
+            src="/PORTADA.jpg" 
             alt="Hero Background" 
             fill 
             priority
             style={{ objectFit: 'cover' }}
           />
-        </div>
-        <div className="px-overlay" style={{ background: 'linear-gradient(to bottom, transparent, rgba(11, 17, 32, 1))'}} />
-        <div className="px-content">
-          <h1 className="hero-title" dangerouslySetInnerHTML={{ __html: t.hero_title }} />
-          <p className="hero-subtitle">{t.hero_subtitle}</p>
         </div>
       </section>
 
