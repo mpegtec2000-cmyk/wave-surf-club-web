@@ -12,8 +12,8 @@ const translations = {
     btn_ingreso: 'INGRESO :',
     btn_cliente: 'CLIENTE (Nuevo Registro)',
     btn_colaborador: 'COLABORADOR (Portal)',
-    menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_equipo: 'EQUIPO', menu_taller: 'TALLER',
-    menu_ryders: 'RYDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO',
+    menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_servicios: 'SERVICIOS', menu_equipo: 'EQUIPO', menu_taller: 'TALLER',
+    menu_ryders: 'RYDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO', menu_agenda: 'AGENDA TU CLASE',
     menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARRO: (0)',
     hero_title: 'SINCE 2015,<br/>todo partió como un sueño y se hizo realidad.',
     hero_subtitle: 'Dedicados a la enseñanza del Skate y Surf, contamos con una amplia trayectoria fomentando el crecimiento deportivo. Creemos en el desarrollo integral, rescatando siempre la cultura y los valores que nacen sobre la tabla.',
@@ -298,7 +298,7 @@ export default function LandingPage() {
           align-items: center;
           list-style: none;
           margin: 0; padding: 0;
-          gap: 12px;
+          gap: 10px;
         }
         .massive-menu li a {
           color: #000;
@@ -674,11 +674,13 @@ export default function LandingPage() {
             <ul className="massive-menu">
               <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
               <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
+              <li><a href="#servicios">{t.menu_servicios}</a></li> <span className="slash">/</span>
               <li><a href="#equipo">{t.menu_equipo}</a></li> <span className="slash">/</span>
               <li><a href="#taller">{t.menu_taller}</a></li> <span className="slash">/</span>
               <li><Link href="/ryders">{t.menu_ryders}</Link></li> <span className="slash">/</span>
               <li><a href="#tienda">{t.menu_tienda}</a></li> <span className="slash">/</span>
               <li><a href="#contenido">{t.menu_contenido}</a></li> <span className="slash">/</span>
+              <li><a href="#agenda" style={{ color: '#0ea5e9' }}>{t.menu_agenda}</a></li> <span className="slash">/</span>
               <li><a href="#contacto">{t.menu_contacto}</a></li> <span className="slash">/</span>
               <li><a href="#eventos">{t.menu_eventos}</a></li> <span className="slash">/</span>
               <li><a style={{ color: '#2563eb' }}>{t.menu_carro}</a></li>
@@ -717,7 +719,12 @@ export default function LandingPage() {
         <div className="mobile-flyout">
           <a href="#biografia" onClick={() => setMenuOpen(false)}>{t.menu_bio}</a>
           <a href="#escuelas" onClick={() => setMenuOpen(false)}>{t.menu_escuelas}</a>
+          <a href="#servicios" onClick={() => setMenuOpen(false)}>{t.menu_servicios}</a>
           <a href="#equipo" onClick={() => setMenuOpen(false)}>{t.menu_equipo}</a>
+          <a href="#taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</a>
+          <Link href="/ryders" onClick={() => setMenuOpen(false)}>{t.menu_ryders}</Link>
+          <a href="#agenda" onClick={() => setMenuOpen(false)}>{t.menu_agenda}</a>
+          <a href="#contacto" onClick={() => setMenuOpen(false)}>{t.menu_contacto}</a>
           <a href="#taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</a>
           <Link href="/ryders" onClick={() => setMenuOpen(false)}>{t.menu_ryders}</Link>
           <a href="#tienda" onClick={() => setMenuOpen(false)}>{t.menu_tienda}</a>
