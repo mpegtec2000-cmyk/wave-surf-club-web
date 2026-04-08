@@ -10,8 +10,8 @@ import EquipoSection from '@/components/EquipoSection';
 const translations = {
   es: {
     btn_ingreso: 'INGRESO :',
-    btn_cliente: 'A) CLIENTE (Nuevo Registro)',
-    btn_colaborador: 'B) COLABORADOR (ERP)',
+    btn_cliente: 'CLIENTE (Nuevo Registro)',
+    btn_colaborador: 'COLABORADOR (Portal)',
     menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_equipo: 'EQUIPO', menu_taller: 'TALLER',
     menu_ryders: 'RYDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO',
     menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARRO: (0)',
@@ -222,35 +222,41 @@ export default function LandingPage() {
         }
         .dropdown-trigger {
           background: transparent;
-          color: #1e293b;
-          border: none;
-          font-size: 12px;
-          font-weight: 700;
+          color: #000;
+          border: 1px solid #000;
+          padding: 6px 15px;
+          border-radius: 4px;
+          font-family: var(--font-archivo), sans-serif;
+          font-size: 11px;
+          font-weight: 900;
           letter-spacing: 1px;
           text-transform: uppercase;
           cursor: pointer;
-          padding: 10px 0;
-          transition: color 0.3s;
+          transition: all 0.3s;
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 6px;
         }
-        .dropdown-trigger:hover { color: #0ea5e9; }
+        .dropdown-trigger:hover { 
+          background: #000;
+          color: #fff;
+        }
 
         .dropdown-content {
           position: absolute;
-          top: 100%;
-          left: 0;
-          background: #0f172a;
-          min-width: 250px;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-          border-radius: 8px;
-          border: 1px solid rgba(255,255,255,0.05);
+          top: calc(100% + 10px);
+          right: 0;
+          background: #fff;
+          min-width: 240px;
+          box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+          border-radius: 4px;
+          border: 2px solid #000;
           overflow: hidden;
           opacity: 0;
           visibility: hidden;
           transform: translateY(10px);
-          transition: all 0.2s;
+          transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+          z-index: 2000;
         }
         .dropdown:hover .dropdown-content {
           opacity: 1;
@@ -261,26 +267,28 @@ export default function LandingPage() {
           display: block;
           width: 100%;
           text-align: left;
-          padding: 16px 20px;
-          color: #94a3b8;
+          padding: 18px 20px;
+          color: #1e293b;
           text-decoration: none;
           background: transparent;
           border: none;
-          border-bottom: 1px solid rgba(255,255,255,0.02);
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 1px;
+          border-bottom: 1px solid rgba(0,0,0,0.05);
+          font-family: var(--font-archivo), sans-serif;
+          font-size: 12px;
+          font-weight: 900;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
           cursor: pointer;
           transition: all 0.2s;
         }
         .dropdown-content button:hover, .dropdown-content a:hover {
-          background: rgba(56, 189, 248, 0.1);
-          color: #38bdf8;
-          padding-left: 28px;
+          background: #000;
+          color: #fff;
+          padding-left: 25px;
         }
 
         /* Lang Dropdown (Right aligned) */
-        .lang-dropdown .dropdown-content { left: auto; right: 0; min-width: 150px; }
+        .lang-dropdown .dropdown-content { right: 0; min-width: 150px; }
 
         /* Center Menu Massive */
         .massive-menu {
