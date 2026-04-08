@@ -393,8 +393,6 @@ export default function RyderMagazine() {
           object-fit: cover;
           transition: opacity 1.5s ease-in-out, transform 8s ease-out;
           opacity: 0;
-          filter: contrast(1.1) brightness(0.9) hue-rotate(240deg) saturate(1.5);
-          mix-blend-mode: screen;
           transform: scale(1.1);
         }
         .carousel-img.active {
@@ -408,7 +406,6 @@ export default function RyderMagazine() {
           border: 1px solid rgba(0,0,0,0.8);
           padding: 10px 20px;
           z-index: 10;
-          mix-blend-mode: multiply;
         }
         .carousel-overlay span {
           font-family: serif;
@@ -427,7 +424,6 @@ export default function RyderMagazine() {
           opacity: 0;
           transition: opacity 1.5s ease-in-out, transform 8s ease-out;
           transform: scale(1.1);
-          mix-blend-mode: screen;
         }
         .carousel-image-wrapper.active {
           opacity: 1;
