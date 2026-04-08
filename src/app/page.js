@@ -543,12 +543,21 @@ export default function LandingPage() {
           background: rgba(255, 255, 255, 0.95);
           text-align: left;
         }
+        .ryder-prefix {
+          color: #38bdf8;
+          font-weight: 800;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          margin-right: 8px;
+        }
         .ryder-name {
           font-size: 13px;
           font-weight: 800;
           color: #000;
           margin: 0;
-          letter-spacing: 1px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
           text-transform: uppercase;
           line-height: 1.4;
         }
@@ -840,7 +849,11 @@ export default function LandingPage() {
                   />
                 </div>
                 <div className="ryder-info">
-                  <h4 className="ryder-name">R Y D E R  /  {formatSpaced(ryder.name)}</h4>
+                  <h4 className="ryder-name">
+                    <span className="ryder-prefix">R Y D E R</span>
+                    <span style={{ color: '#000' }}>/</span>
+                    <span style={{ marginLeft: '8px' }}>{formatSpaced(ryder.name)}</span>
+                  </h4>
                   <div className="view-mag" style={{ color: '#000' }}>Ver Revista →</div>
                 </div>
               </Link>

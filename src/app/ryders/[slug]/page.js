@@ -313,13 +313,19 @@ export default function RyderMagazine() {
           display: block;
         }
         .mag-name {
-          font-size: clamp(30px, 5vw, 60px);
+          font-size: clamp(24px, 4vw, 48px);
           font-weight: 900;
           line-height: 1.2;
-          letter-spacing: 2px;
+          display: flex;
+          align-items: center;
+          gap: 15px;
           text-transform: uppercase;
           margin: 0;
           color: #000;
+        }
+        .mag-prefix {
+          color: #38bdf8;
+          letter-spacing: 4px;
         }
 
         /* --- EDITORIAL SECTIONS --- */
@@ -540,7 +546,11 @@ export default function RyderMagazine() {
         <div className="hero-bg" />
         <div className="hero-overlay" />
         <div className="hero-title-box">
-          <h1 className="mag-name">R Y D E R  /  {formatSpaced(ryder.name)}</h1>
+          <h1 className="mag-name">
+            <span className="mag-prefix">R Y D E R</span> 
+            <span>/</span>
+            <span>{formatSpaced(ryder.name)}</span>
+          </h1>
         </div>
       </header>
 
