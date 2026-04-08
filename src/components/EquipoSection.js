@@ -122,7 +122,7 @@ export default function EquipoSection() {
 
       <div className="bg-container">
         <img 
-          src="/FONDO-RAIDERS.jpg" 
+          src="/FONDO-RAIDERS.PNG" 
           alt="Wave Surf Club Background"
           className="bg-img"
         />
