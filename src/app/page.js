@@ -4,17 +4,18 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { addClient } from '@/lib/data';
+import EquipoSection from '@/components/EquipoSection';
 
 // --- TRADUCCIONES (DICCIONARIO EN MEMORIA) ---
 const translations = {
   es: {
     btn_ingreso: 'INGRESO :',
-    btn_cliente: 'A) CLIENTE (Nuevo Registro)',
-    btn_colaborador: 'B) COLABORADOR (ERP)',
-    menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_taller: 'TALLER',
-    menu_ryders: 'RYDERS', menu_eventos: 'EVENTOS', menu_clases: 'CLASES',
-    menu_surf: 'SURF', menu_skate: 'SKATE', menu_contenido: 'CONTENIDO',
-    menu_contacto: 'CONTACTO', menu_carro: 'CARRO: (0)',
+    btn_cliente: 'CLIENTE (Nuevo Registro)',
+    btn_colaborador: 'COLABORADOR (Portal)',
+    menu_inicio: 'INICIO',
+    menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_servicios: 'SERVICIOS', menu_equipo: 'EQUIPO', menu_taller: 'TALLER',
+    menu_ryders: 'RYDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO', menu_agenda: 'AGENDA TU CLASE',
+    menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARRO: (0)',
     hero_title: 'SINCE 2015,<br/>todo partió como un sueño y se hizo realidad.',
     hero_subtitle: 'Dedicados a la enseñanza del Skate y Surf, contamos con una amplia trayectoria fomentando el crecimiento deportivo. Creemos en el desarrollo integral, rescatando siempre la cultura y los valores que nacen sobre la tabla.',
     mod_title: 'NUEVO ALUMNO',
@@ -113,6 +114,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth';
+    document.documentElement.style.scrollPaddingTop = '100px';
   }, []);
 
 
@@ -181,17 +183,10 @@ export default function LandingPage() {
           align-items: center;
           justify-content: space-between;
           padding: 0 40px;
-          height: 80px;
-          background: url('/fondo-logo.png') center/cover no-repeat;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .header::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: rgba(255, 255, 255, 0.85);
+          height: 100px; /* Slightly taller for the new logo */
+          background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(10px);
-          z-index: -1;
+          border-bottom: 2px solid #000;
         }
 
         /* Nav Layout */
@@ -220,7 +215,7 @@ export default function LandingPage() {
         }
         .nav-right { justify-content: flex-end; }
 
-        .logo-img { height: 60px; width: auto; object-fit: contain; display: block; content: url('/logo-pag.png'); }
+        .logo-img { height: 70px; width: auto; object-fit: contain; display: block; content: url('/logo-wave.png'); }
 
         /* Dropdowns */
         .dropdown {
@@ -229,35 +224,41 @@ export default function LandingPage() {
         }
         .dropdown-trigger {
           background: transparent;
-          color: #1e293b;
-          border: none;
-          font-size: 12px;
-          font-weight: 700;
+          color: #000;
+          border: 1px solid #000;
+          padding: 6px 15px;
+          border-radius: 4px;
+          font-family: var(--font-archivo), sans-serif;
+          font-size: 11px;
+          font-weight: 900;
           letter-spacing: 1px;
           text-transform: uppercase;
           cursor: pointer;
-          padding: 10px 0;
-          transition: color 0.3s;
+          transition: all 0.3s;
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 6px;
         }
-        .dropdown-trigger:hover { color: #0ea5e9; }
+        .dropdown-trigger:hover { 
+          background: #000;
+          color: #fff;
+        }
 
         .dropdown-content {
           position: absolute;
-          top: 100%;
-          left: 0;
-          background: #0f172a;
-          min-width: 250px;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-          border-radius: 8px;
-          border: 1px solid rgba(255,255,255,0.05);
+          top: calc(100% + 10px);
+          right: 0;
+          background: #fff;
+          min-width: 240px;
+          box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+          border-radius: 4px;
+          border: 2px solid #000;
           overflow: hidden;
           opacity: 0;
           visibility: hidden;
           transform: translateY(10px);
-          transition: all 0.2s;
+          transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+          z-index: 2000;
         }
         .dropdown:hover .dropdown-content {
           opacity: 1;
@@ -268,26 +269,28 @@ export default function LandingPage() {
           display: block;
           width: 100%;
           text-align: left;
-          padding: 16px 20px;
-          color: #94a3b8;
+          padding: 18px 20px;
+          color: #1e293b;
           text-decoration: none;
           background: transparent;
           border: none;
-          border-bottom: 1px solid rgba(255,255,255,0.02);
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 1px;
+          border-bottom: 1px solid rgba(0,0,0,0.05);
+          font-family: var(--font-archivo), sans-serif;
+          font-size: 12px;
+          font-weight: 900;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
           cursor: pointer;
           transition: all 0.2s;
         }
         .dropdown-content button:hover, .dropdown-content a:hover {
-          background: rgba(56, 189, 248, 0.1);
-          color: #38bdf8;
-          padding-left: 28px;
+          background: #000;
+          color: #fff;
+          padding-left: 25px;
         }
 
         /* Lang Dropdown (Right aligned) */
-        .lang-dropdown .dropdown-content { left: auto; right: 0; min-width: 150px; }
+        .lang-dropdown .dropdown-content { right: 0; min-width: 150px; }
 
         /* Center Menu Massive */
         .massive-menu {
@@ -297,18 +300,20 @@ export default function LandingPage() {
           align-items: center;
           list-style: none;
           margin: 0; padding: 0;
-          gap: 12px;
+          gap: 10px;
         }
         .massive-menu li a {
-          color: #475569;
+          color: #000;
           text-decoration: none;
-          font-size: 11px;
-          font-weight: 800;
-          letter-spacing: 1px;
+          font-family: var(--font-archivo), sans-serif;
+          font-size: 0.95rem;
+          font-weight: 900;
+          letter-spacing: -0.05em;
+          text-transform: uppercase;
           transition: color 0.3s;
         }
-        .massive-menu li a:hover { color: #0ea5e9; }
-        .slash { color: #cbd5e1; font-size: 11px; margin: 0 4px; }
+        .massive-menu li a:hover { color: #2563eb; }
+        .slash { color: #000; font-size: 11px; margin: 0 4px; font-weight: 900; }
 
         /* --- RESPONSIVE CSS --- */
         @media (max-width: 1200px) {
@@ -352,6 +357,10 @@ export default function LandingPage() {
           justify-content: center;
           text-align: center;
           overflow: hidden;
+        }
+        #hero {
+          margin-top: 100px;
+          min-height: calc(100vh - 100px);
         }
         .px-bg-wrapper {
           position: absolute;
@@ -653,44 +662,45 @@ export default function LandingPage() {
         .msg { padding: 12px; border-radius: 6px; font-size: 13px; text-align: center; margin-bottom: 20px; }
         .msg.error { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
         .msg.success { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .massive-menu { font-family: 'Archivo Black', sans-serif; }
       `}</style>
 
       {/* --- CABECERA --- */}
       <header className="header">
         <div className="nav-left">
-          <button className="mobile-btn" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? '✕' : '☰'}
-          </button>
-          <Link href="/">
-            <img src="/logo-pag.png" alt="Logo Wave" className="logo-img" />
+          <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+            <img src="/logo-wave.png" alt="Wave Surf Club" className="logo-img" />
           </Link>
+          
+          <div className="nav-center" style={{ marginLeft: '40px' }}>
+            <ul className="massive-menu">
+              <li><a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }}>{t.menu_inicio}</a></li> <span className="slash">/</span>
+              <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
+              <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
+              <li><a href="#servicios">{t.menu_servicios}</a></li> <span className="slash">/</span>
+              <li><a href="#equipo">{t.menu_equipo}</a></li> <span className="slash">/</span>
+              <li><a href="#taller">{t.menu_taller}</a></li> <span className="slash">/</span>
+              <li><Link href="/ryders">{t.menu_ryders}</Link></li> <span className="slash">/</span>
+              <li><a href="#tienda">{t.menu_tienda}</a></li> <span className="slash">/</span>
+              <li><a href="#contenido">{t.menu_contenido}</a></li> <span className="slash">/</span>
+              <li><a href="#agenda" style={{ color: '#0ea5e9' }}>{t.menu_agenda}</a></li> <span className="slash">/</span>
+              <li><a href="#contacto">{t.menu_contacto}</a></li> <span className="slash">/</span>
+              <li><a href="#eventos">{t.menu_eventos}</a></li> <span className="slash">/</span>
+              <li><a style={{ color: '#2563eb' }}>{t.menu_carro}</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="nav-right">
           <div className="dropdown">
-            <button className="dropdown-trigger">{t.btn_ingreso}</button>
+            <button className="dropdown-trigger">{t.btn_ingreso} ▼</button>
             <div className="dropdown-content">
               <button onClick={() => setShowModal(true)}>{t.btn_cliente}</button>
               <Link href="/login">{t.btn_colaborador}</Link>
             </div>
           </div>
-        </div>
-
-        <div className="nav-center">
-          <ul className="massive-menu">
-            <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
-            <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
-            <li><a href="#taller">{t.menu_taller}</a></li> <span className="slash">/</span>
-            <li><a href="#ryders">{t.menu_ryders}</a></li> <span className="slash">/</span>
-            <li><a href="#eventos">{t.menu_eventos}</a></li> <span className="slash">/</span>
-            <li><a href="#clases">{t.menu_clases}</a></li> <span className="slash">/</span>
-            <li><a href="#surf">{t.menu_surf}</a></li> <span className="slash">/</span>
-            <li><a href="#skate">{t.menu_skate}</a></li> <span className="slash">/</span>
-            <li><a href="#contenido">{t.menu_contenido}</a></li> <span className="slash">/</span>
-            <li><a href="#contacto">{t.menu_contacto}</a></li> <span className="slash">/</span>
-            <li><a style={{ color: '#38bdf8' }}>{t.menu_carro}</a></li>
-          </ul>
-        </div>
-
-        <div className="nav-right">
-          <div className="dropdown lang-dropdown">
+          
+          <div className="dropdown lang-dropdown" style={{ marginLeft: '20px' }}>
             <button className="dropdown-trigger">{LANGUAGES.find(l => l.code === lang)?.code.toUpperCase()} ▼</button>
             <div className="dropdown-content">
               {LANGUAGES.map(l => (
@@ -700,23 +710,29 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
+
+          <button className="mobile-btn" onClick={() => setMenuOpen(!menuOpen)} style={{ marginLeft: '20px' }}>
+            {menuOpen ? '✕' : '☰'}
+          </button>
         </div>
       </header>
 
       {/* MOBILE FLYOUT MENU */}
       {menuOpen && (
         <div className="mobile-flyout">
+          <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.scrollTo({top:0, behavior:'smooth'}); }}>{t.menu_inicio}</a>
           <a href="#biografia" onClick={() => setMenuOpen(false)}>{t.menu_bio}</a>
           <a href="#escuelas" onClick={() => setMenuOpen(false)}>{t.menu_escuelas}</a>
+          <a href="#servicios" onClick={() => setMenuOpen(false)}>{t.menu_servicios}</a>
+          <a href="#equipo" onClick={() => setMenuOpen(false)}>{t.menu_equipo}</a>
           <a href="#taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</a>
-          <a href="#ryders" onClick={() => setMenuOpen(false)}>{t.menu_ryders}</a>
-          <a href="#eventos" onClick={() => setMenuOpen(false)}>{t.menu_eventos}</a>
-          <a href="#clases" onClick={() => setMenuOpen(false)}>{t.menu_clases}</a>
-          <a href="#surf" onClick={() => setMenuOpen(false)}>{t.menu_surf}</a>
-          <a href="#skate" onClick={() => setMenuOpen(false)}>{t.menu_skate}</a>
+          <Link href="/ryders" onClick={() => setMenuOpen(false)}>{t.menu_ryders}</Link>
+          <a href="#agenda" onClick={() => setMenuOpen(false)}>{t.menu_agenda}</a>
+          <a href="#tienda" onClick={() => setMenuOpen(false)}>{t.menu_tienda}</a>
           <a href="#contenido" onClick={() => setMenuOpen(false)}>{t.menu_contenido}</a>
           <a href="#contacto" onClick={() => setMenuOpen(false)}>{t.menu_contacto}</a>
-          <a style={{ color: '#38bdf8' }}>{t.menu_carro}</a>
+          <a href="#eventos" onClick={() => setMenuOpen(false)}>{t.menu_eventos}</a>
+          <a style={{ color: '#2563eb' }}>{t.menu_carro}</a>
         </div>
       )}
 
@@ -725,30 +741,23 @@ export default function LandingPage() {
       <section className="px-section" id="hero">
         <div className="px-bg-wrapper">
           <Image 
-            src="/portada.png" 
+            src="/PORTADA.jpg" 
             alt="Hero Background" 
             fill 
             priority
             style={{ objectFit: 'cover' }}
           />
         </div>
-        <div className="px-overlay" style={{ background: 'linear-gradient(to bottom, transparent, rgba(11, 17, 32, 1))'}} />
-        <div className="px-content">
-          <h1 className="hero-title" dangerouslySetInnerHTML={{ __html: t.hero_title }} />
-          <p className="hero-subtitle">{t.hero_subtitle}</p>
-        </div>
       </section>
 
       <section className="px-section" id="biografia">
         <div className="px-bg-wrapper">
-          <Image src="/logo-black.png" alt="Biografia" fill style={{ objectFit: 'contain', opacity: 0.1 }} />
-        </div>
-        <div className="px-overlay" />
-        <div className="px-content">
-          <div className="seccion-biografia">
-            <h2 className="titulo-bio">{t.menu_bio}</h2>
-            <p className="texto-bio">{t.sec_bio_sub}</p>
-          </div>
+          <Image 
+            src="/BIOGRAFIA.jpg" 
+            alt="Biografia" 
+            fill 
+            style={{ objectFit: 'cover' }} 
+          />
         </div>
       </section>
 
@@ -819,44 +828,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="px-section" id="ryders" style={{ minHeight: 'auto', padding: '120px 40px' }}>
-        <div className="px-bg-wrapper">
-          <Image 
-            src="/fondo-escuela.png" 
-            alt="Ryders Background" 
-            fill 
-            style={{ objectFit: 'cover' }}
-          />
-        </div>
-        <div className="px-overlay" style={{ background: 'linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85))' }} />
-        <div className="px-content" style={{ maxWidth: '100%', margin: '0' }}>
-          <h2 className="section-marker" style={{ marginBottom: '8px', color: '#000' }}>{t.menu_ryders}</h2>
-          <p className="hero-subtitle" style={{ marginBottom: '60px', color: '#000', textShadow: 'none' }}>{t.sec_ryders_sub}</p>
-          
-          <div className="ryders-grid">
-            {rydersData.map((ryder) => (
-              <Link key={ryder.slug} href={`/ryders/${ryder.slug}`} className="ryder-card">
-                <div className="ryder-img-wrapper">
-                  <Image 
-                    src={ryder.img} 
-                    alt={ryder.name}
-                    fill
-                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                    style={{ objectFit: 'cover' }}
-                  />
-                </div>
-                <div className="ryder-info">
-                  <h4 className="ryder-name">
-                    <span className="ryder-prefix">R Y D E R</span>
-                    <span style={{ color: '#000' }}>/</span>
-                    <span style={{ marginLeft: '8px' }}>{formatSpaced(ryder.name)}</span>
-                  </h4>
-                  <div className="view-mag" style={{ color: '#000' }}>Ver Revista →</div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
+      <section className="px-section" id="equipo" style={{ padding: '0' }}>
+        <EquipoSection />
       </section>
 
       <section className="px-section" id="eventos">
