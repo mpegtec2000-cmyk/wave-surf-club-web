@@ -262,7 +262,7 @@ export default function AgendaPage() {
 
         <div className="booking-card">
           <div className="card-visual">
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.3, z-index: 0 }}>
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.3, zIndex: 0 }}>
               <Image src="/fondo-escuela.png" alt="Visual" fill style={{ objectFit: 'cover' }} />
             </div>
             <div style={{ position: 'relative', zIndex: 1 }}>
