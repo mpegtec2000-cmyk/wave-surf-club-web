@@ -348,6 +348,10 @@ export default function LandingPage() {
           text-align: center;
           overflow: hidden;
         }
+        #hero {
+          margin-top: 100px;
+          min-height: calc(100vh - 100px);
+        }
         .px-bg-wrapper {
           position: absolute;
           inset: 0;
