@@ -175,9 +175,25 @@ const RYDERS_DATA = {
     stats: { board: 'Wave Tech 6\'2"', stance: 'Regular', local: 'Concón' },
     gallery: ['https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80']
   },
+  'angelo-avello': {
+    name: 'Angelo Avello',
+    role: 'RYDER',
+    cover: 'https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Angelo Avello se une al equipo para demostrar que el surf es más que un deporte, es una forma de vida. Su estilo fluido y compromiso con la excelencia lo posicionan como un talento a seguir.</p>',
+    stats: { board: 'Wave Tech 6\'2"', stance: 'Regular', local: 'Concón' },
+    gallery: ['https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=1200&q=80']
+  },
+  'cristobal-lazcano': {
+    name: 'Cristobal Lazcano',
+    role: 'RYDER',
+    cover: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Cristobal Lazcano aporta frescura y potencia al equipo. Con una visión técnica impecable, Cristobal representa la nueva ola de deportistas que están redefiniendo el surf nacional.</p>',
+    stats: { board: 'Wave Performance 6\'0"', stance: 'Goofy', local: 'Pichilemu' },
+    gallery: ['https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=80']
+  },
   'vicente-pipe': {
     name: 'Vicente Pipe',
-    role: 'WAVE PHOTOGRAPHER',
+    role: 'RYDER',
     cover: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80',
     bio: '<p>El ojo narrativo. Vicente captura la gloria y el esfuerzo del club, inmortalizando los momentos que definen nuestra historia y la belleza del deporte de tabla.</p>',
     stats: { board: 'Wave Media Hub', stance: 'N/A', local: 'Chile' },
@@ -203,6 +219,8 @@ export default function RyderMagazine() {
   const [scrolled, setScrolled] = useState(false);
   const [index, setIndex] = useState(0);
 
+  const formatSpaced = (text) => text.toUpperCase().split('').join(' ');
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
@@ -222,8 +240,8 @@ export default function RyderMagazine() {
     <div className="mag-container">
       <style jsx>{`
         .mag-container {
-          background: #0b1120;
-          color: #f8fafc;
+          background: #ffffff;
+          color: #000;
           min-height: 100vh;
           font-family: var(--font-sans);
         }
@@ -244,7 +262,7 @@ export default function RyderMagazine() {
           border-bottom: ${scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none'};
         }
         .back-btn {
-          color: #fff;
+          color: #000;
           text-decoration: none;
           font-weight: 800;
           font-size: 12px;
@@ -280,6 +298,10 @@ export default function RyderMagazine() {
           position: relative;
           z-index: 3;
           max-width: 900px;
+          background: rgba(255, 255, 255, 0.95);
+          padding: 40px 60px;
+          border: 1px solid #000;
+          box-shadow: 20px 20px 0px rgba(0,0,0,0.1);
         }
         .mag-tag {
           color: #38bdf8;
@@ -291,12 +313,13 @@ export default function RyderMagazine() {
           display: block;
         }
         .mag-name {
-          font-size: clamp(60px, 10vw, 150px);
+          font-size: clamp(30px, 5vw, 60px);
           font-weight: 900;
-          line-height: 0.9;
-          letter-spacing: -5px;
+          line-height: 1.2;
+          letter-spacing: 2px;
           text-transform: uppercase;
           margin: 0;
+          color: #000;
         }
 
         /* --- EDITORIAL SECTIONS --- */
@@ -317,22 +340,22 @@ export default function RyderMagazine() {
           font-size: 32px;
           font-weight: 800;
           margin-bottom: 30px;
-          color: #fff;
+          color: #000;
           text-transform: uppercase;
         }
         .editorial-p {
           font-family: var(--font-inter);
           font-size: 16px;
-          line-height: 1.6;
-          color: #94a3b8;
-          font-weight: 300;
+          line-height: 1.8;
+          color: #334155;
+          font-weight: 400;
           text-align: justify;
         }
         .editorial-p p {
           margin-bottom: 20px;
         }
         .editorial-p strong {
-          color: #fff;
+          color: #000;
           font-weight: 700;
         }
         
@@ -510,14 +533,14 @@ export default function RyderMagazine() {
         <Link href="/#ryders" className="back-btn">
           ← Volver al Club
         </Link>
-        <img src="/logo-pag.png" alt="Wave" style={{ height: '40px' }} />
+        <img src="/logo-pag.png" alt="Wave" style={{ height: '40px', filter: 'brightness(0)' }} />
       </nav>
 
       <header className="mag-hero">
         <div className="hero-bg" />
         <div className="hero-overlay" />
         <div className="hero-title-box">
-          <h1 className="mag-name">{ryder.name.split(' ')[0]}<br/>{ryder.name.split(' ')[1]}</h1>
+          <h1 className="mag-name">R Y D E R  /  {formatSpaced(ryder.name)}</h1>
         </div>
       </header>
 
@@ -531,21 +554,6 @@ export default function RyderMagazine() {
               className="editorial-p" 
               dangerouslySetInnerHTML={{ __html: ryder.bio }} 
             />
-            
-            <div className="stats-grid">
-              <div className="stat-item">
-                <h6>TABLE SERIE</h6>
-                <p>{ryder.stats.board}</p>
-              </div>
-              <div className="stat-item">
-                <h6>STANCE</h6>
-                <p>{ryder.stats.stance}</p>
-              </div>
-              <div className="stat-item">
-                <h6>LOCAL SPOT</h6>
-                <p>{ryder.stats.local}</p>
-              </div>
-            </div>
 
             {ryder.magazine && (
               <div className="download-btn-container">

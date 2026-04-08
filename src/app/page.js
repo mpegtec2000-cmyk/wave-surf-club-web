@@ -116,27 +116,19 @@ export default function LandingPage() {
   }, []);
 
   const RYDERS = [
-    { name: 'Tomas Bock', slug: 'tomas-bock', role: 'PRO SURFER', img: '/tomy-escuela.png' },
-    { name: 'Paulo Muñoz', slug: 'paulo-munoz', role: 'LEGEND / SURF COACH', img: '/paulo-1.png' },
-    { name: 'Martín Cardozo', slug: 'martin-cardozo', role: 'SKATE PRO', img: 'https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Sofía Reñaca', slug: 'sofia-renaca', role: 'SURF AMBASSADOR', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Lucas Pichilemu', slug: 'lucas-pichilemu', role: 'JUNIOR TEAM', img: 'https://images.unsplash.com/photo-1518721332565-4d5dcba6676c?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Mateo Olas', slug: 'mateo-olas', role: 'SURF COACH', img: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Isidora Wave', slug: 'isidora-wave', role: 'CONTENT CREATOR', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Benjamín Coast', slug: 'benjamin-coast', role: 'SKATE TEAM', img: 'https://images.unsplash.com/photo-1601506521937-0121a7fc7a65?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Valentina Pacific', slug: 'valentina-pacific', role: 'SURF PRO', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Diego Salt', slug: 'diego-salt', role: 'WAVE TALLER', img: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Agustín Flow', slug: 'agustin-flow', role: 'SKATE JUNIOR', img: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Javiera Reef', slug: 'javiera-reef', role: 'SURF GIRL', img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Raimundo Point', slug: 'raimundo-point', role: 'BIG WAVE RIDER', img: 'https://images.unsplash.com/photo-1414442657444-24584284d720?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Pascal Shore', slug: 'pascal-shore', role: 'LONGBOARD PRO', img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Gaspar Board', slug: 'gaspar-board', role: 'SHAPER', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Antonia Tide', slug: 'antonia-tide', role: 'JUNIOR GIRLS', img: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Emilio Bowl', slug: 'emilio-bowl', role: 'PARK SKATE', img: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Catalina Spray', slug: 'catalina-spray', role: 'SURF ELITE', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Felipe Edge', slug: 'felipe-edge', role: 'TECH COACH', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Vicente Pipe', slug: 'vicente-pipe', role: 'WAVE PHOTOGRAPHER', img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=800&q=80' },
+    { name: 'Tomas Bock', slug: 'tomas-bock', img: '/tomy-escuela.png' },
+    { name: 'Paulo Muñoz', slug: 'paulo-munoz', img: '/paulo-1.png' },
+    { name: 'Angelo Avello', slug: 'angelo-avello', img: 'https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=800&q=80' },
+    { name: 'Cristobal Lazcano', slug: 'cristobal-lazcano', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80' },
+    ...Array(16).fill().map((_, i) => ({
+      name: 'Vacio',
+      slug: `vacio-${i + 5}`,
+      img: 'https://images.unsplash.com/photo-1518721332565-4d5dcba6676c?auto=format&fit=crop&w=800&q=80'
+    }))
   ];
+
+  const formatSpaced = (text) => text.toUpperCase().split('').join(' ');
+
 
   // Mobile Menu State
   const [menuOpen, setMenuOpen] = useState(false);
@@ -408,10 +400,10 @@ export default function LandingPage() {
         .section-marker {
           font-size: clamp(40px, 5vw, 60px);
           font-weight: 800;
-          color: #38bdf8;
+          color: #000;
           text-transform: uppercase;
           letter-spacing: 8px;
-          opacity: 0.8;
+          opacity: 1;
           margin-bottom: 16px;
         }
 
@@ -546,26 +538,19 @@ export default function LandingPage() {
         .ryder-info {
           position: relative;
           z-index: 2;
-          padding: 20px;
+          padding: 24px 20px;
           width: 100%;
-          background: linear-gradient(to top, rgba(15, 23, 42, 0.95), transparent);
+          background: rgba(255, 255, 255, 0.95);
           text-align: left;
         }
         .ryder-name {
-          font-size: 18px;
+          font-size: 13px;
           font-weight: 800;
-          color: #fff;
+          color: #000;
           margin: 0;
           letter-spacing: 1px;
           text-transform: uppercase;
-        }
-        .ryder-role {
-          font-size: 11px;
-          color: #38bdf8;
-          font-weight: 700;
-          letter-spacing: 2px;
-          margin-top: 4px;
-          display: block;
+          line-height: 1.4;
         }
         .view-mag {
           margin-top: 12px;
@@ -837,10 +822,10 @@ export default function LandingPage() {
             style={{ objectFit: 'cover' }}
           />
         </div>
-        <div className="px-overlay" style={{ background: 'linear-gradient(to right, rgba(11, 17, 32, 0.9), rgba(11, 17, 32, 0.7))' }} />
+        <div className="px-overlay" style={{ background: 'linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85))' }} />
         <div className="px-content" style={{ maxWidth: '100%', margin: '0' }}>
-          <h2 className="section-marker" style={{ marginBottom: '8px' }}>{t.menu_ryders}</h2>
-          <p className="hero-subtitle" style={{ marginBottom: '60px' }}>{t.sec_ryders_sub}</p>
+          <h2 className="section-marker" style={{ marginBottom: '8px', color: '#000' }}>{t.menu_ryders}</h2>
+          <p className="hero-subtitle" style={{ marginBottom: '60px', color: '#000', textShadow: 'none' }}>{t.sec_ryders_sub}</p>
           
           <div className="ryders-grid">
             {RYDERS.map((ryder) => (
@@ -855,9 +840,8 @@ export default function LandingPage() {
                   />
                 </div>
                 <div className="ryder-info">
-                  <span className="ryder-role">{ryder.role}</span>
-                  <h4 className="ryder-name">{ryder.name}</h4>
-                  <div className="view-mag">Ver Revista →</div>
+                  <h4 className="ryder-name">R Y D E R  /  {formatSpaced(ryder.name)}</h4>
+                  <div className="view-mag" style={{ color: '#000' }}>Ver Revista →</div>
                 </div>
               </Link>
             ))}
