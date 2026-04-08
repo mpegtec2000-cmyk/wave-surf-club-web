@@ -12,6 +12,7 @@ const translations = {
     btn_ingreso: 'INGRESO :',
     btn_cliente: 'CLIENTE (Nuevo Registro)',
     btn_colaborador: 'COLABORADOR (Portal)',
+    menu_inicio: 'INICIO',
     menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_servicios: 'SERVICIOS', menu_equipo: 'EQUIPO', menu_taller: 'TALLER',
     menu_ryders: 'RYDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO', menu_agenda: 'AGENDA TU CLASE',
     menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARRO: (0)',
@@ -672,6 +673,7 @@ export default function LandingPage() {
           
           <div className="nav-center" style={{ marginLeft: '40px' }}>
             <ul className="massive-menu">
+              <li><a href="#hero">{t.menu_inicio}</a></li> <span className="slash">/</span>
               <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
               <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
               <li><a href="#servicios">{t.menu_servicios}</a></li> <span className="slash">/</span>
@@ -717,6 +719,7 @@ export default function LandingPage() {
       {/* MOBILE FLYOUT MENU */}
       {menuOpen && (
         <div className="mobile-flyout">
+          <a href="#hero" onClick={() => setMenuOpen(false)}>{t.menu_inicio}</a>
           <a href="#biografia" onClick={() => setMenuOpen(false)}>{t.menu_bio}</a>
           <a href="#escuelas" onClick={() => setMenuOpen(false)}>{t.menu_escuelas}</a>
           <a href="#servicios" onClick={() => setMenuOpen(false)}>{t.menu_servicios}</a>
@@ -724,9 +727,6 @@ export default function LandingPage() {
           <a href="#taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</a>
           <Link href="/ryders" onClick={() => setMenuOpen(false)}>{t.menu_ryders}</Link>
           <a href="#agenda" onClick={() => setMenuOpen(false)}>{t.menu_agenda}</a>
-          <a href="#contacto" onClick={() => setMenuOpen(false)}>{t.menu_contacto}</a>
-          <a href="#taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</a>
-          <Link href="/ryders" onClick={() => setMenuOpen(false)}>{t.menu_ryders}</Link>
           <a href="#tienda" onClick={() => setMenuOpen(false)}>{t.menu_tienda}</a>
           <a href="#contenido" onClick={() => setMenuOpen(false)}>{t.menu_contenido}</a>
           <a href="#contacto" onClick={() => setMenuOpen(false)}>{t.menu_contacto}</a>
