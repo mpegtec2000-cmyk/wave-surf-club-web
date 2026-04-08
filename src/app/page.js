@@ -683,7 +683,7 @@ export default function LandingPage() {
               <li><Link href="/ryders">{t.menu_ryders}</Link></li> <span className="slash">/</span>
               <li><a href="#tienda">{t.menu_tienda}</a></li> <span className="slash">/</span>
               <li><a href="#contenido">{t.menu_contenido}</a></li> <span className="slash">/</span>
-              <li><a href="#agenda" style={{ color: '#0ea5e9' }}>{t.menu_agenda}</a></li> <span className="slash">/</span>
+              <li><Link href="/agenda" style={{ color: '#0ea5e9' }}>{t.menu_agenda}</Link></li> <span className="slash">/</span>
               <li><a href="#contacto">{t.menu_contacto}</a></li> <span className="slash">/</span>
               <li><a href="#eventos">{t.menu_eventos}</a></li> <span className="slash">/</span>
               <li><a style={{ color: '#2563eb' }}>{t.menu_carro}</a></li>
@@ -695,7 +695,7 @@ export default function LandingPage() {
           <div className="dropdown">
             <button className="dropdown-trigger">{t.btn_ingreso} ▼</button>
             <div className="dropdown-content">
-              <button onClick={() => setShowModal(true)}>{t.btn_cliente}</button>
+              <Link href="/agenda" className="dropdown-button-link">{t.btn_cliente}</Link>
               <Link href="/login">{t.btn_colaborador}</Link>
             </div>
           </div>
@@ -727,7 +727,7 @@ export default function LandingPage() {
           <a href="#equipo" onClick={() => setMenuOpen(false)}>{t.menu_equipo}</a>
           <Link href="/taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</Link>
           <Link href="/ryders" onClick={() => setMenuOpen(false)}>{t.menu_ryders}</Link>
-          <a href="#agenda" onClick={() => setMenuOpen(false)}>{t.menu_agenda}</a>
+          <Link href="/agenda" onClick={() => setMenuOpen(false)}>{t.menu_agenda}</Link>
           <a href="#tienda" onClick={() => setMenuOpen(false)}>{t.menu_tienda}</a>
           <a href="#contenido" onClick={() => setMenuOpen(false)}>{t.menu_contenido}</a>
           <a href="#contacto" onClick={() => setMenuOpen(false)}>{t.menu_contacto}</a>
