@@ -677,7 +677,7 @@ export default function LandingPage() {
               <li><a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }}>{t.menu_inicio}</a></li> <span className="slash">/</span>
               <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
               <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
-              <li><a href="#servicios">{t.menu_servicios}</a></li> <span className="slash">/</span>
+              <li><Link href="/servicios">{t.menu_servicios}</Link></li> <span className="slash">/</span>
               <li><a href="#equipo">{t.menu_equipo}</a></li> <span className="slash">/</span>
               <li><Link href="/taller">{t.menu_taller}</Link></li> <span className="slash">/</span>
               <li><Link href="/ryders">{t.menu_ryders}</Link></li> <span className="slash">/</span>
@@ -723,7 +723,7 @@ export default function LandingPage() {
           <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.scrollTo({top:0, behavior:'smooth'}); }}>{t.menu_inicio}</a>
           <a href="#biografia" onClick={() => setMenuOpen(false)}>{t.menu_bio}</a>
           <a href="#escuelas" onClick={() => setMenuOpen(false)}>{t.menu_escuelas}</a>
-          <a href="#servicios" onClick={() => setMenuOpen(false)}>{t.menu_servicios}</a>
+          <Link href="/servicios" onClick={() => setMenuOpen(false)}>{t.menu_servicios}</Link>
           <a href="#equipo" onClick={() => setMenuOpen(false)}>{t.menu_equipo}</a>
           <Link href="/taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</Link>
           <Link href="/ryders" onClick={() => setMenuOpen(false)}>{t.menu_ryders}</Link>
@@ -833,38 +833,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="px-section" id="clases">
-        <div className="px-bg-wrapper">
-          <Image src="/wave-light.jpeg" alt="Clases" fill style={{ objectFit: 'cover' }} />
-        </div>
-        <div className="px-overlay" />
-        <div className="px-content">
-          <h2 className="section-marker">{t.menu_clases}</h2>
-          <p className="hero-subtitle">{t.sec_clases_sub}</p>
-        </div>
-      </section>
-
-      <section className="px-section" id="surf">
-        <div className="px-bg-wrapper">
-          <Image src="https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1920&q=80" alt="Surf" fill style={{ objectFit: 'cover' }} />
-        </div>
-        <div className="px-overlay" />
-        <div className="px-content">
-          <h2 className="section-marker">{t.menu_surf}</h2>
-          <p className="hero-subtitle">{t.sec_surf_sub}</p>
-        </div>
-      </section>
-
-      <section className="px-section" id="skate">
-        <div className="px-bg-wrapper">
-          <Image src="https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=1920&q=80" alt="Skate" fill style={{ objectFit: 'cover' }} />
-        </div>
-        <div className="px-overlay" />
-        <div className="px-content">
-          <h2 className="section-marker">{t.menu_skate}</h2>
-          <p className="hero-subtitle">{t.sec_skate_sub}</p>
-        </div>
-      </section>
 
       {/* --- MODAL REGISTRO CLIENTE --- */}
       {showModal && (
