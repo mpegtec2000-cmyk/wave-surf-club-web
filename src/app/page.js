@@ -115,23 +115,20 @@ export default function LandingPage() {
     document.documentElement.style.scrollBehavior = 'smooth';
   }, []);
 
-  const RYDERS = [
-    { name: 'Tomas Bock', slug: 'tomas-bock', img: '/tomy-escuela.png' },
-    { name: 'Paulo Muñoz', slug: 'paulo-munoz', img: '/paulo-1.png' },
-    { name: 'Angelo Avello', slug: 'angelo-avello', img: 'https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=800&q=80' },
-    { name: 'Cristobal Lazcano', slug: 'cristobal-lazcano', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80' },
-    ...Array(16).fill().map((_, i) => ({
-      name: 'Vacio',
-      slug: `vacio-${i + 5}`,
-      img: 'https://images.unsplash.com/photo-1518721332565-4d5dcba6676c?auto=format&fit=crop&w=800&q=80'
-    }))
-  ];
 
   const formatSpaced = (text) => text.toUpperCase().split('').join(' ');
 
 
   // Mobile Menu State
   const [menuOpen, setMenuOpen] = useState(false);
+  const [rydersData, setRydersData] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/antigravity/ryders')
+      .then(res => res.json())
+      .then(data => setRydersData(data))
+      .catch(err => console.error('Error fetching ryders:', err));
+  }, []);
   const [showModal, setShowModal] = useState(false);
   
   // Registration Form
@@ -837,7 +834,7 @@ export default function LandingPage() {
           <p className="hero-subtitle" style={{ marginBottom: '60px', color: '#000', textShadow: 'none' }}>{t.sec_ryders_sub}</p>
           
           <div className="ryders-grid">
-            {RYDERS.map((ryder) => (
+            {rydersData.map((ryder) => (
               <Link key={ryder.slug} href={`/ryders/${ryder.slug}`} className="ryder-card">
                 <div className="ryder-img-wrapper">
                   <Image 
