@@ -114,6 +114,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth';
+    document.documentElement.style.scrollPaddingTop = '100px';
   }, []);
 
 
@@ -673,7 +674,7 @@ export default function LandingPage() {
           
           <div className="nav-center" style={{ marginLeft: '40px' }}>
             <ul className="massive-menu">
-              <li><a href="#hero">{t.menu_inicio}</a></li> <span className="slash">/</span>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }}>{t.menu_inicio}</a></li> <span className="slash">/</span>
               <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
               <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
               <li><a href="#servicios">{t.menu_servicios}</a></li> <span className="slash">/</span>
@@ -719,7 +720,7 @@ export default function LandingPage() {
       {/* MOBILE FLYOUT MENU */}
       {menuOpen && (
         <div className="mobile-flyout">
-          <a href="#hero" onClick={() => setMenuOpen(false)}>{t.menu_inicio}</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.scrollTo({top:0, behavior:'smooth'}); }}>{t.menu_inicio}</a>
           <a href="#biografia" onClick={() => setMenuOpen(false)}>{t.menu_bio}</a>
           <a href="#escuelas" onClick={() => setMenuOpen(false)}>{t.menu_escuelas}</a>
           <a href="#servicios" onClick={() => setMenuOpen(false)}>{t.menu_servicios}</a>
