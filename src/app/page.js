@@ -679,7 +679,7 @@ export default function LandingPage() {
               <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
               <li><a href="#servicios">{t.menu_servicios}</a></li> <span className="slash">/</span>
               <li><a href="#equipo">{t.menu_equipo}</a></li> <span className="slash">/</span>
-              <li><a href="#taller">{t.menu_taller}</a></li> <span className="slash">/</span>
+              <li><Link href="/taller">{t.menu_taller}</Link></li> <span className="slash">/</span>
               <li><Link href="/ryders">{t.menu_ryders}</Link></li> <span className="slash">/</span>
               <li><a href="#tienda">{t.menu_tienda}</a></li> <span className="slash">/</span>
               <li><a href="#contenido">{t.menu_contenido}</a></li> <span className="slash">/</span>
@@ -725,7 +725,7 @@ export default function LandingPage() {
           <a href="#escuelas" onClick={() => setMenuOpen(false)}>{t.menu_escuelas}</a>
           <a href="#servicios" onClick={() => setMenuOpen(false)}>{t.menu_servicios}</a>
           <a href="#equipo" onClick={() => setMenuOpen(false)}>{t.menu_equipo}</a>
-          <a href="#taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</a>
+          <Link href="/taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</Link>
           <Link href="/ryders" onClick={() => setMenuOpen(false)}>{t.menu_ryders}</Link>
           <a href="#agenda" onClick={() => setMenuOpen(false)}>{t.menu_agenda}</a>
           <a href="#tienda" onClick={() => setMenuOpen(false)}>{t.menu_tienda}</a>
@@ -817,16 +817,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="px-section" id="taller">
-        <div className="px-bg-wrapper">
-          <Image src="/paulo-1.png" alt="Taller" fill style={{ objectFit: 'cover' }} />
-        </div>
-        <div className="px-overlay" />
-        <div className="px-content">
-          <h2 className="section-marker">{t.menu_taller}</h2>
-          <p className="hero-subtitle">{t.sec_taller_sub}</p>
-        </div>
-      </section>
 
       <section className="px-section" id="equipo" style={{ padding: '0' }}>
         <EquipoSection />
