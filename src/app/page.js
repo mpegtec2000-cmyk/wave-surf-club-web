@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { addClient } from '@/lib/data';
-import RidersSection from '@/components/RidersSection';
+import EquipoSection from '@/components/EquipoSection';
 
 // --- TRADUCCIONES (DICCIONARIO EN MEMORIA) ---
 const translations = {
@@ -301,15 +301,17 @@ export default function LandingPage() {
           gap: 12px;
         }
         .massive-menu li a {
-          color: #475569;
+          color: #000;
           text-decoration: none;
-          font-size: 11px;
-          font-weight: 800;
-          letter-spacing: 1px;
+          font-family: var(--font-montserrat), sans-serif;
+          font-size: 0.9rem;
+          font-weight: 950;
+          letter-spacing: -0.05em;
+          text-transform: uppercase;
           transition: color 0.3s;
         }
         .massive-menu li a:hover { color: #0ea5e9; }
-        .slash { color: #cbd5e1; font-size: 11px; margin: 0 4px; }
+        .slash { color: #cbd5e1; font-size: 11px; margin: 0 4px; font-weight: 300; }
 
         /* --- RESPONSIVE CSS --- */
         @media (max-width: 1200px) {
@@ -679,12 +681,7 @@ export default function LandingPage() {
             <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
             <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
             <li><a href="#taller">{t.menu_taller}</a></li> <span className="slash">/</span>
-            <li><Link href="/ryders">{t.menu_ryders}</Link></li> <span className="slash">/</span>
-            <li><a href="#eventos">{t.menu_eventos}</a></li> <span className="slash">/</span>
-            <li><a href="#clases">{t.menu_clases}</a></li> <span className="slash">/</span>
-            <li><a href="#surf">{t.menu_surf}</a></li> <span className="slash">/</span>
-            <li><a href="#skate">{t.menu_skate}</a></li> <span className="slash">/</span>
-            <li><a href="#contenido">{t.menu_contenido}</a></li> <span className="slash">/</span>
+            <li><a href="#equipo">{t.menu_ryders}</a></li> <span className="slash">/</span>
             <li><a href="#contacto">{t.menu_contacto}</a></li> <span className="slash">/</span>
             <li><a style={{ color: '#38bdf8' }}>{t.menu_carro}</a></li>
           </ul>
@@ -820,22 +817,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="px-section" id="ryders" style={{ minHeight: 'auto', padding: '120px 40px' }}>
-        <div className="px-bg-wrapper">
-          <Image 
-            src="/fondo-escuela.png" 
-            alt="Ryders Background" 
-            fill 
-            style={{ objectFit: 'cover' }}
-          />
-        </div>
-        <div className="px-overlay" style={{ background: 'linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85))' }} />
-        <div className="px-content" style={{ maxWidth: '100%', margin: '0' }}>
-          <h2 className="section-marker" style={{ marginBottom: '8px', color: '#000' }}>{t.menu_ryders}</h2>
-          <p className="hero-subtitle" style={{ marginBottom: '60px', color: '#000', textShadow: 'none' }}>{t.sec_ryders_sub}</p>
-          
-          <RidersSection />
-        </div>
+      <section className="px-section" id="equipo" style={{ padding: '0' }}>
+        <EquipoSection />
       </section>
 
       <section className="px-section" id="eventos">
