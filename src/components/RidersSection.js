@@ -26,37 +26,49 @@ export default function RidersSection() {
         
         {/* Imagen de Fondo desde tu carpeta public */}
         <img 
-          src="/FONDO RAIDERS.jpg" 
+          src="/FONDO-RAIDERS.jpg" 
           alt="Fondo Riders Wave Surf Club" 
           className="w-full h-full object-contain"
         />
 
         {/* Capa de Cuadros Interactivos (Grid invisible encima) */}
         <div className="absolute top-[20%] left-[10%] w-[80%] h-[60%] grid grid-cols-2 md:grid-cols-6 gap-2">
-          {ridersData.map((rider) => (
-            <Link 
-              key={rider.id} 
-              href={rider.name !== "VACÍO" ? `/riders/${rider.slug}` : "#"}
-              className="group relative border border-transparent hover:border-blue-400 transition-all duration-300"
-              title={rider.name}
-            >
-              {/* Overlay sutil al pasar el mouse */}
-              <div className="w-full h-full bg-blue-500/0 group-hover:bg-blue-500/10 flex items-end justify-center pb-2">
-                {rider.name !== "VACÍO" && (
-                  <span className="text-[10px] text-white opacity-0 group-hover:opacity-100 bg-black/50 px-2 rounded">
-                    VER PERFIL
-                  </span>
-                )}
-              </div>
-            </Link>
-          ))}
+          {ridersData.map((rider) => {
+            const isVacio = rider.name === "VACÍO";
+            const formattedName = rider.name.split('').join(' ');
+            const prefix = "R Y D E R";
+            
+            return (
+              <Link 
+                key={rider.id} 
+                href={!isVacio ? `/ryders/${rider.slug}` : "#"}
+                className="group relative border border-transparent hover:border-blue-400 transition-all duration-300 overflow-hidden"
+              >
+                {/* Visualización del Nombre Estandarizado (Ejemplo solicitado) */}
+                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/90 flex flex-col items-center justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {!isVacio ? (
+                    <>
+                      <span className="text-[9px] font-black text-[#38bdf8] mb-1 tracking-[0.2em]">
+                        {prefix}
+                      </span>
+                      <span className="text-[10px] font-black text-black tracking-[0.3em] text-center uppercase">
+                        {formattedName}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-[9px] font-black text-gray-400 tracking-[0.3em]">
+                      D I S P O N I B L E
+                    </span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
 
       <style jsx>{`
-        /* Ajuste para que los cuadros calcen con la imagen */
         .grid {
-          /* Estos valores los puedes ajustar si los cuadros no calzan exacto */
           padding: 2% 5%;
         }
       `}</style>
