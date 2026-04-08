@@ -679,7 +679,7 @@ export default function LandingPage() {
             <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
             <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
             <li><a href="#taller">{t.menu_taller}</a></li> <span className="slash">/</span>
-            <li><a href="#ryders">{t.menu_ryders}</a></li> <span className="slash">/</span>
+            <li><Link href="/ryders">{t.menu_ryders}</Link></li> <span className="slash">/</span>
             <li><a href="#eventos">{t.menu_eventos}</a></li> <span className="slash">/</span>
             <li><a href="#clases">{t.menu_clases}</a></li> <span className="slash">/</span>
             <li><a href="#surf">{t.menu_surf}</a></li> <span className="slash">/</span>
