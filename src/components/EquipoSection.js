@@ -27,19 +27,12 @@ export default function EquipoSection() {
         .bg-img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
+          background: #000;
         }
 
-        /* Overlay para profundidad */
-        .overlay {
-          position: absolute;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.3);
-          backdrop-filter: blur(2px);
-          -webkit-backdrop-filter: blur(2px);
-          z-index: 2;
-        }
+        /* Overlay removed for pure art integrity */
 
         /* CONTENIDO SUPERPUESTO */
         .content {
@@ -133,7 +126,6 @@ export default function EquipoSection() {
           alt="Wave Surf Club Background"
           className="bg-img"
         />
-        <div className="overlay"></div>
       </div>
 
       <div className="content">
