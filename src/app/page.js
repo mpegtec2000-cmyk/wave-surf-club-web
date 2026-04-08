@@ -182,17 +182,10 @@ export default function LandingPage() {
           align-items: center;
           justify-content: space-between;
           padding: 0 40px;
-          height: 80px;
-          background: url('/fondo-logo.png') center/cover no-repeat;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .header::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: rgba(255, 255, 255, 0.85);
+          height: 100px; /* Slightly taller for the new logo */
+          background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(10px);
-          z-index: -1;
+          border-bottom: 2px solid #000;
         }
 
         /* Nav Layout */
@@ -221,7 +214,7 @@ export default function LandingPage() {
         }
         .nav-right { justify-content: flex-end; }
 
-        .logo-img { height: 60px; width: auto; object-fit: contain; display: block; content: url('/logo-pag.png'); }
+        .logo-img { height: 70px; width: auto; object-fit: contain; display: block; content: url('/logo-wave.png'); }
 
         /* Dropdowns */
         .dropdown {
@@ -303,15 +296,15 @@ export default function LandingPage() {
         .massive-menu li a {
           color: #000;
           text-decoration: none;
-          font-family: var(--font-montserrat), sans-serif;
-          font-size: 0.9rem;
-          font-weight: 950;
+          font-family: var(--font-archivo), sans-serif;
+          font-size: 0.95rem;
+          font-weight: 900;
           letter-spacing: -0.05em;
           text-transform: uppercase;
           transition: color 0.3s;
         }
-        .massive-menu li a:hover { color: #0ea5e9; }
-        .slash { color: #cbd5e1; font-size: 11px; margin: 0 4px; font-weight: 300; }
+        .massive-menu li a:hover { color: #2563eb; }
+        .slash { color: #000; font-size: 11px; margin: 0 4px; font-weight: 900; }
 
         /* --- RESPONSIVE CSS --- */
         @media (max-width: 1200px) {
@@ -656,39 +649,38 @@ export default function LandingPage() {
         .msg { padding: 12px; border-radius: 6px; font-size: 13px; text-align: center; margin-bottom: 20px; }
         .msg.error { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
         .msg.success { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .massive-menu { font-family: 'Archivo Black', sans-serif; }
       `}</style>
 
       {/* --- CABECERA --- */}
       <header className="header">
         <div className="nav-left">
-          <button className="mobile-btn" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? '✕' : '☰'}
-          </button>
-          <Link href="/">
-            <img src="/logo-pag.png" alt="Logo Wave" className="logo-img" />
+          <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+            <img src="/logo-wave.png" alt="Wave Surf Club" className="logo-img" />
           </Link>
+          
+          <div className="nav-center" style={{ marginLeft: '40px' }}>
+            <ul className="massive-menu">
+              <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
+              <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
+              <li><a href="#taller">{t.menu_taller}</a></li> <span className="slash">/</span>
+              <li><Link href="/equipo" className="equipo-link">{t.menu_ryders}</Link></li> <span className="slash">/</span>
+              <li><a href="#contacto">{t.menu_contacto}</a></li> <span className="slash">/</span>
+              <li><a style={{ color: '#2563eb' }}>{t.menu_carro}</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="nav-right">
           <div className="dropdown">
-            <button className="dropdown-trigger">{t.btn_ingreso}</button>
+            <button className="dropdown-trigger">{t.btn_ingreso} ▼</button>
             <div className="dropdown-content">
               <button onClick={() => setShowModal(true)}>{t.btn_cliente}</button>
               <Link href="/login">{t.btn_colaborador}</Link>
             </div>
           </div>
-        </div>
-
-        <div className="nav-center">
-          <ul className="massive-menu">
-            <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
-            <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
-            <li><a href="#taller">{t.menu_taller}</a></li> <span className="slash">/</span>
-            <li><a href="#equipo">{t.menu_ryders}</a></li> <span className="slash">/</span>
-            <li><a href="#contacto">{t.menu_contacto}</a></li> <span className="slash">/</span>
-            <li><a style={{ color: '#38bdf8' }}>{t.menu_carro}</a></li>
-          </ul>
-        </div>
-
-        <div className="nav-right">
-          <div className="dropdown lang-dropdown">
+          
+          <div className="dropdown lang-dropdown" style={{ marginLeft: '20px' }}>
             <button className="dropdown-trigger">{LANGUAGES.find(l => l.code === lang)?.code.toUpperCase()} ▼</button>
             <div className="dropdown-content">
               {LANGUAGES.map(l => (
@@ -698,6 +690,10 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
+
+          <button className="mobile-btn" onClick={() => setMenuOpen(!menuOpen)} style={{ marginLeft: '20px' }}>
+            {menuOpen ? '✕' : '☰'}
+          </button>
         </div>
       </header>
 

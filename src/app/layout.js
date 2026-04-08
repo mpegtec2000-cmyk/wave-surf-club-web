@@ -1,10 +1,11 @@
-import { Inter, Playfair_Display, Montserrat } from 'next/font/google';
+import { Inter, Playfair_Display, Montserrat, Archivo_Black } from 'next/font/google';
 import './globals.css';
 import { I18nProvider } from '@/lib/i18n-context';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat' });
+const archivo = Archivo_Black({ weight: '400', subsets: ['latin'], variable: '--font-archivo' });
 
 export const metadata = {
   title: 'WAVE SURF CLUB — ERP & POS | Since 2015',
@@ -15,7 +16,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body className={`${inter.variable} ${playfair.variable} ${montserrat.variable} ${inter.className}`}>
+      <body className={`${inter.variable} ${playfair.variable} ${montserrat.variable} ${archivo.variable} ${inter.className}`}>
         <I18nProvider>
           {children}
         </I18nProvider>
