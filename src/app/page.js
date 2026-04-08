@@ -60,7 +60,7 @@ const translations = {
     hero_title: 'DOMINEZ LES VAGUES.<br/>SIMPLIFIEZ VOTRE EXPÉRIENCE.',
     hero_subtitle: "Découvrez le côté intelligent du surf. Des cours et des équipements gérés avec une technologie de pointe.",
     mod_title: 'NOUVEL ÉLÈVE', mod_name: 'Nom Complet', mod_rut: 'Numéro d\'Identité', mod_email: 'Email', mod_phone: 'Téléphone', mod_submit: 'S\'inscrire', mod_processing: 'Traitement...', mod_success: 'Enregistré avec succès.', mod_error: 'Erreur lors de l\'inscription.',
-    sec_bio_sub: 'L\'histoire de la meilleure école de surf du Chili.', sec_escuelas_sub: 'Connectez-vous à nos spots de Reñaca et Concón.', sec_taller_sub: 'Réparation et personnalisation de matériel professionnel.', sec_ryders_sub: 'Les talents qui font la différence.', sec_eventos_sub: 'Compétitions et rassemblements locaux.', sec_clases_sub: 'Évoluez avec des instructeurs de haut niveau.', sec_surf_sub: 'Équipement et culture de la vague.', sec_skate_sub: 'Entraînement au sol pour maîtriser l\'eau.'
+    sec_bio_sub: 'L\'histoire de la meilleure école de surf du Chili.', sec_escuelas_sub: 'Connectez-vous à nos spots de Reñaca et Concón.', sec_taller_sub: 'Réparation et personnalisation de matériel professionnel.', sec_ryders_sub: 'Les talents qui font la diferencia.', sec_eventos_sub: 'Compétitions et rassemblements locaux.', sec_clases_sub: 'Évoluez avec des instructeurs de haut niveau.', sec_surf_sub: 'Équipement et culture de la vague.', sec_skate_sub: 'Entraînement au sol pour maîtriser l\'eau.'
   },
   de: {
     btn_ingreso: 'EINTRITT :', btn_cliente: 'A) KUNDE (Neu)', btn_colaborador: 'B) PERSONAL (ERP)',
@@ -76,7 +76,7 @@ const translations = {
     hero_title: 'DOMINE AS ONDAS.<br/>SIMPLIFIQUE SUA EXPERIÊNCIA.',
     hero_subtitle: "Descubra o lado inteligente do surfe. Aulas e equipamentos gerenciados com tecnologia de ponta.",
     mod_title: 'NOVO ALUNO', mod_name: 'Nome Completo', mod_rut: 'Identidade (RUT)', mod_email: 'Correio eletrônico', mod_phone: 'Telefone', mod_submit: 'Registrar', mod_processing: 'Processando...', mod_success: 'Registrado com sucesso.', mod_error: 'Erro no registro.',
-    sec_bio_sub: 'História da melhor escola de surfe do Chile.', sec_escuelas_sub: 'Conecte-se aos nossos picos em Reñaca e Concón.', sec_taller_sub: 'Reparo e personalização de equipamentos.', sec_ryders_sub: 'Os talentos que fazem a diferença.', sec_eventos_sub: 'Competições locais e encontros.', sec_clases_sub: 'Evolua com instrutores de alto nível.', sec_surf_sub: 'Equipamentos e cultura de ondas.', sec_skate_sub: 'Treinamento em solo para dominar a água.'
+    sec_bio_sub: 'História da melhor escola de surfe do Chile.', sec_escuelas_sub: 'Conecte-se aos nossos picos em Reñaca y Concón.', sec_taller_sub: 'Reparo e personalização de equipamentos.', sec_ryders_sub: 'Os talents que fazem a diferença.', sec_eventos_sub: 'Competições locais e encontros.', sec_clases_sub: 'Evolua com instrutores de alto nível.', sec_surf_sub: 'Equipamentos e cultura de ondas.', sec_skate_sub: 'Treinamento em solo para dominar a água.'
   },
   ja: {
     btn_ingreso: 'ログイン :', btn_cliente: 'A) クライアント', btn_colaborador: 'B) スタッフ',
@@ -798,7 +798,7 @@ export default function LandingPage() {
                 </ul>
               </div>
             </Link>
-            
+
             <Link href="/spots/punta-piedra" style={{ textDecoration: 'none' }}>
               <div className="school-card">
                 <h3>SEDE PUNTA PIEDRA <span>(Inauguración 2026)</span></h3>
