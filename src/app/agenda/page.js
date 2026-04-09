@@ -7,100 +7,6 @@ import { supabase } from '@/lib/supabase';
 import { addClient, queueNotification } from '@/lib/data';
 import Navbar from '@/components/Navbar';
 
-// ── CUSTOM CALENDAR COMPONENT ────────────────
-function CustomCalendar({ selectedDate, onSelect, minDate }) {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  
-  const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
-  const firstDayOfMonth = (year, month) => {
-    let day = new Date(year, month, 1).getDay();
-    return day === 0 ? 6 : day - 1; 
-  };
-  
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-  
-  const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-  const dayNames = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
-  
-  const handlePrev = () => setCurrentDate(new Date(year, month - 1, 1));
-  const handleNext = () => setCurrentDate(new Date(year, month + 1, 1));
-  
-  const days = [];
-  const totalDays = daysInMonth(year, month);
-  const startOffset = firstDayOfMonth(year, month);
-  
-  for (let i = 0; i < startOffset; i++) days.push(null);
-  for (let i = 1; i <= totalDays; i++) days.push(new Date(year, month, i));
-  
-  const isSelected = (d) => {
-    if (!d || !selectedDate) return false;
-    const [y, m, day] = selectedDate.split('-').map(Number);
-    return d.getDate() === day && d.getMonth() === (m - 1) && d.getFullYear() === y;
-  };
-  
-  const isDisabled = (d) => {
-    if (!d) return true;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const min = minDate ? new Date(minDate + 'T00:00:00') : today;
-    return d < min;
-  };
-
-  const isWeekend = (d) => {
-    if (!d) return false;
-    return d.getDay() === 0 || d.getDay() === 6;
-  };
-
-  return (
-    <div className="custom-calendar" style={{ background: '#fff', borderRadius: '16px', padding: '20px', color: '#000', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
-      <div className="cal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-        <button type="button" onClick={handlePrev} className="cal-nav-btn">&larr;</button>
-        <div className="cal-title" style={{ fontWeight: 800, fontSize: '14px' }}>{monthNames[month].toUpperCase()} {year}</div>
-        <button type="button" onClick={handleNext} className="cal-nav-btn">&rarr;</button>
-      </div>
-      
-      <div 
-        className="cal-grid" 
-        style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(7, 1fr)', 
-          width: '100%', 
-          border: '1px solid #e5e7eb',
-          background: '#e5e7eb',
-          gap: '1px' // This creates the "table lines" effect
-        }}
-      >
-        {dayNames.map(d => (
-          <div key={d} className="cal-day-label" style={{ background: '#000', color: '#fff', fontSize: '10px', padding: '10px 0', fontWeight: 900, textAlign: 'center' }}>
-            {d}
-          </div>
-        ))}
-        {days.map((d, i) => (
-          <div 
-            key={i} 
-            className={`cal-day ${isSelected(d) ? 'selected' : ''} ${isDisabled(d) ? 'disabled' : ''}`}
-            onClick={() => d && !isDisabled(d) && onSelect(d.toISOString().split('T')[0])}
-            style={{ 
-              aspectRatio: '1',
-              display: 'flex',
-              alignItems: 'center',
-              justify-content: center,
-              background: !d ? '#f9fafb' : (isSelected(d) ? '#000' : (isDisabled(d) ? '#f1f5f9' : '#fff')),
-              color: isSelected(d) ? '#fff' : (isDisabled(d) ? '#cbd5e1' : '#000'),
-              fontSize: '13px',
-              fontWeight: isSelected(d) ? 900 : 500,
-              cursor: d && !isDisabled(d) ? 'pointer' : 'default',
-            }}
-          >
-            {d?.getDate()}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function AgendaPage() {
   const [step, setStep] = useState('form'); // form, selection, checkout, success
   const [loading, setLoading] = useState(false);
@@ -399,91 +305,6 @@ export default function AgendaPage() {
         .receipt-card { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); padding: 25px; border-radius: 16px; margin: 20px 0; }
         .checkout-info { margin: 20px 0; padding: 20px; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2); }
       `}</style>
-
-      {/* CALENDAR STYLES GLOBAL - Critical for CustomCalendar component */}
-      <style jsx global>{`
-        .custom-calendar { 
-          background: #fff; 
-          border-radius: 16px; 
-          padding: 24px; 
-          user-select: none; 
-          box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-          color: #000;
-          width: 100%;
-          border: 1px solid rgba(0,0,0,0.1);
-        }
-        .cal-header { 
-          display: flex; 
-          justify-content: space-between; 
-          align-items: center; 
-          margin-bottom: 24px; 
-          border-bottom: 2px solid #f3f4f6;
-          padding-bottom: 15px;
-        }
-        .cal-title { 
-          font-size: 16px; 
-          font-weight: 800; 
-          letter-spacing: 2px; 
-          color: #000;
-          text-transform: uppercase;
-        }
-        .cal-nav-btn { 
-          background: #f8fafc; 
-          border: 1px solid #e2e8f0; 
-          color: #000; 
-          cursor: pointer; 
-          font-size: 20px; 
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: 0.2s; 
-        }
-        .cal-nav-btn:hover { background: #000; color: #fff; border-color: #000; }
-        
-        .cal-grid { 
-          display: grid !important; 
-          grid-template-columns: repeat(7, 1fr) !important; 
-          width: 100%;
-          border-left: 1px solid #e5e7eb;
-          border-top: 1px solid #e5e7eb;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-          background: #fff;
-        }
-        .cal-day-label { 
-          font-size: 10px; 
-          font-weight: 900; 
-          color: #fff; 
-          background: #000;
-          padding: 12px 2px; 
-          text-transform: uppercase; 
-          border-right: 1px solid rgba(255,255,255,0.2);
-          text-align: center;
-        }
-        
-        .cal-day { 
-          aspect-ratio: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 13px; 
-          cursor: pointer; 
-          transition: 0.1s; 
-          border-right: 1px solid #e5e7eb;
-          border-bottom: 1px solid #e5e7eb;
-          background: #fff;
-          font-weight: 600;
-          color: #1e293b;
-        }
-        .cal-day:hover:not(.disabled):not(.empty) { background: #38bdf8; color: #000; }
-        .cal-day.selected { background: #000 !important; color: #fff !important; font-weight: 900; }
-        .cal-day.disabled { background: #f1f5f9; color: #cbd5e1; cursor: not-allowed; }
-        .cal-day.empty { background: #f8fafc; cursor: default; }
-        
-        .day-number { position: relative; z-index: 1; }
-      `}</style>
       `}</style>
 
       <Navbar />
@@ -569,17 +390,36 @@ export default function AgendaPage() {
                   </div>
                 </div>
 
-                <div className="form-grid" style={{ gridTemplateColumns: '1.4fr 0.6fr' }}>
+                <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
                   <div className="field-group">
-                    <label className="label">Selecciona Fecha</label>
-                    <CustomCalendar 
-                      selectedDate={bookingDate} 
-                      onSelect={setBookingDate} 
-                      minDate={dateRange.min}
-                    />
+                    <label className="label">Fecha de tu Sesión</label>
+                    <div style={{ position: 'relative' }}>
+                      <input 
+                        type="date" 
+                        className="input" 
+                        value={bookingDate} 
+                        onChange={e => setBookingDate(e.target.value)}
+                        min={dateRange.min}
+                        max={dateRange.max}
+                        style={{
+                          width: '100%',
+                          fontSize: '18px',
+                          padding: '20px',
+                          background: '#fff',
+                          color: '#000',
+                          fontWeight: 800,
+                          borderRadius: '16px',
+                          border: 'none',
+                          boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+                        }}
+                      />
+                      <div style={{ fontSize: '10px', marginTop: '10px', color: '#94a3b8', fontStyle: 'italic' }}>
+                        * Selecciona o escribe la fecha (Día / Mes / Año)
+                      </div>
+                    </div>
                   </div>
                   <div className="field-group">
-                    <label className="label">Horario</label>
+                    <label className="label">Horario Preferido</label>
                     <div className="time-grid" style={{ maxHeight: '320px' }}>
                       {timeSlots.map(t => (
                         <div key={t} className={`time-pill ${bookingTime === t ? 'active' : ''}`} onClick={() => setBookingTime(t)}>{t}</div>
@@ -589,7 +429,7 @@ export default function AgendaPage() {
                 </div>
 
                 {calculatedPrice && (
-                  <div className="price-summary">
+                  <div className="price-summary" style={{ marginTop: '50px' }}>
                     <div>
                       <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800 }}>Total Sesión</span>
                       <h3 style={{ fontSize: '24px', margin: 0 }}>${calculatedPrice.price_clp.toLocaleString()} CLP</h3>
