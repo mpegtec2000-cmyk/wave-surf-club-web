@@ -7,10 +7,6 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
   },
-  // Suppress specific warnings
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
 };
 
 module.exports = nextConfig;

@@ -1,6 +1,6 @@
 'use client';
 
-import { ryders } from '@/lib/ryder-directory';
+import { riders } from '@/lib/rider-directory';
 import Link from 'next/link';
 
 export default function EquipoSection() {
@@ -58,7 +58,7 @@ export default function EquipoSection() {
         }
 
         /* Directorio de 14 Riders en Grid Artístico */
-        .ryders-grid {
+        .riders-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 16px;
@@ -67,13 +67,13 @@ export default function EquipoSection() {
         }
 
         @media (min-width: 768px) {
-          .ryders-grid {
+          .riders-grid {
             grid-template-columns: repeat(7, 1fr);
             gap: 20px;
           }
         }
 
-        .ryder-item {
+        .rider-item {
           text-decoration: none;
           display: block;
         }
@@ -122,7 +122,7 @@ export default function EquipoSection() {
 
       <div className="bg-container">
         <img 
-          src="/FONDO-RAIDERS.PNG" 
+          src="/FONDO-RIDERS.png" 
           alt="Wave Surf Club Background"
           className="bg-img"
         />
@@ -131,18 +131,18 @@ export default function EquipoSection() {
       <div className="content">
         <h2 className="title">EQUIPO</h2>
 
-        <div className="ryders-grid">
-          {ryders.map((ryder) => {
-            const isVacio = ryder.nombre === "VACÍO";
+        <div className="riders-grid">
+          {riders.map((rider) => {
+            const isVacio = rider.nombre === "VACÍO";
             return (
               <Link 
-                key={ryder.id} 
-                href={!isVacio ? `/ryders/${ryder.slug}` : "/ryders"} 
-                className="ryder-item"
+                key={rider.id} 
+                href={!isVacio ? `/riders/${rider.slug}` : "/riders"} 
+                className="rider-item"
               >
                 <div className="card">
-                   <p className="prefix">RYDER |</p>
-                   <p className="name">{ryder.nombre}</p>
+                   <p className="prefix">RIDER |</p>
+                   <p className="name">{rider.nombre}</p>
                 </div>
               </Link>
             );

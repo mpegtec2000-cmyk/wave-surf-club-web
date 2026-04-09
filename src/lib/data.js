@@ -107,6 +107,23 @@ export async function addClient(client) {
   return { data, error };
 }
 
+// ── NOTIFICATIONS ───────────────────────────
+
+export async function queueNotification(type, recipient, subject, content) {
+  const { data, error } = await supabase
+    .from('app_notifications')
+    .insert({
+      type,
+      recipient,
+      subject,
+      content,
+      status: 'pending'
+    })
+    .select()
+    .single();
+  return { data, error };
+}
+
 export async function findClientByRut(rut) {
   const clean = rut.replace(/[^0-9kK.\-]/g, '');
   const { data } = await supabase
@@ -488,26 +505,56 @@ export async function closeBranchSession(branchId, staffId, notes = '') {
 /**
  * FINANZAS GLOBALES: Resumen comparativo por centro de costo
  */
+/**
+ * FINANZAS GLOBALES: Resumen comparativo por centro de costo
+ * Combina registros consolidados (cash_closings) con transacciones finalizadas aún no cerradas.
+ */
 export async function getFinancialSummary() {
-  const { data: closings, error } = await supabase
+  // 1. Obtener cierres consolidados
+  const { data: closings } = await supabase
     .from('cash_closings')
     .select('*')
     .order('created_at', { ascending: false });
+
+  // 2. Obtener transacciones finalizadas que NO están en una sesión consolidada
+  const { data: pendingTxs } = await supabase
+    .from('transactions')
+    .select('*')
+    .is('deleted_at', null)
+    .eq('rental_status', 'finalizado')
+    .is('id_sesion', null);
     
   // Agrupar por branch_id
-  const summary = closings?.reduce((acc, c) => {
-    if (!acc[c.branch_id]) {
-      acc[c.branch_id] = { income: 0, expense: 0, net: 0, count: 0 };
-    }
-    acc[c.branch_id].income += c.total_income;
-    acc[c.branch_id].expense += c.total_expense;
-    acc[c.branch_id].net += c.net_utility;
-    acc[c.branch_id].count += 1;
-    return acc;
-  }, {});
+  const summary = {};
 
-  return summary || {};
+  // Procesar cierres históricos
+  closings?.forEach(c => {
+    if (!summary[c.branch_id]) {
+      summary[c.branch_id] = { income: 0, expense: 0, net: 0, count: 0 };
+    }
+    summary[c.branch_id].income += c.total_income;
+    summary[c.branch_id].expense += c.total_expense;
+    summary[c.branch_id].net += c.net_utility;
+    summary[c.branch_id].count += 1;
+  });
+
+  // Sumar transacciones en tiempo real (finalizadas pero no consolidadas)
+  pendingTxs?.forEach(t => {
+    if (!summary[t.branch_id]) {
+      summary[t.branch_id] = { income: 0, expense: 0, net: 0, count: 0 };
+    }
+    if (t.type === 'ingreso') {
+      summary[t.branch_id].income += t.total;
+      summary[t.branch_id].net += t.total;
+    } else {
+      summary[t.branch_id].expense += t.total;
+      summary[t.branch_id].net -= t.total;
+    }
+  });
+
+  return summary;
 }
+
 
 // ── DASHBOARD STATS ─────────────────────────
 

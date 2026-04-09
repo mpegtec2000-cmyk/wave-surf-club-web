@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const activeRyders = [
+  const activeRiders = [
     { name: 'Tomas Bock', slug: 'tomas-bock', img: '/tomy-escuela.png' },
     { name: 'Paulo Muñoz', slug: 'paulo-munoz', img: '/paulo-1.png' },
     { name: 'Angelo Avello', slug: 'angelo-avello', img: 'https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=800&q=80' },
@@ -9,14 +9,14 @@ export async function GET() {
   ];
 
   // Fill up to 20 slots
-  const allRyders = [...activeRyders];
-  for (let i = activeRyders.length; i < 20; i++) {
-    allRyders.push({
-      name: 'Vacio',
+  const allRiders = [...activeRiders];
+  for (let i = activeRiders.length; i < 20; i++) {
+    allRiders.push({
+      name: 'VACÍO',
       slug: `vacio-${i + 1}`,
       img: 'https://images.unsplash.com/photo-1518721332565-4d5dcba6676c?auto=format&fit=crop&w=800&q=80'
     });
   }
 
-  return NextResponse.json(allRyders);
+  return NextResponse.json(allRiders);
 }
