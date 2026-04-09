@@ -235,10 +235,18 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
       <style jsx>{`
         .dropdown:hover .dropdown-content { display: block !important; }
         .nav-link-luxury:hover { color: #38bdf8 !important; }
+
+        @keyframes jump-attention {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+
         .nav-link-agenda { 
           color: #38bdf8 !important; 
           text-decoration: underline !important; 
           text-underline-offset: 4px;
+          display: inline-block;
+          animation: jump-attention 1.2s infinite ease-in-out;
         }
         .nav-link-cart {
           background: #000;
