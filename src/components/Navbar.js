@@ -1,6 +1,4 @@
-'use client';
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n-context';
 import { usePathname } from 'next/navigation';
@@ -171,17 +169,19 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           gap: 10px;
           font-family: var(--font-archivo), sans-serif;
         }
-        .massive-menu li a {
-          color: #000;
-          text-decoration: none;
-          font-size: 0.95rem;
-          font-weight: 900;
-          letter-spacing: -0.05em;
-          text-transform: uppercase;
-          transition: color 0.3s;
+        :global(.massive-menu li a), :global(.nav-link) {
+          color: #000 !important;
+          text-decoration: none !important;
+          font-family: var(--font-archivo), sans-serif !important;
+          font-size: 0.95rem !important;
+          font-weight: 900 !important;
+          letter-spacing: -0.05em !important;
+          text-transform: uppercase !important;
+          transition: color 0.3s !important;
+          display: inline-block !important;
         }
-        .massive-menu li a:hover { color: #2563eb; }
-        .slash { color: #000; font-size: 11px; margin: 0 4px; font-weight: 900; }
+        :global(.massive-menu li a:hover), :global(.nav-link:hover) { color: #2563eb !important; }
+        :global(.slash) { color: #000 !important; font-size: 11px !important; margin: 0 4px !important; font-weight: 900 !important; }
 
         @media (max-width: 1200px) {
           .nav-center { display: none; }
@@ -206,14 +206,14 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           padding: 40px;
           overflow-y: auto;
         }
-        .mobile-flyout a {
-          color: #000;
-          text-decoration: none;
-          font-family: var(--font-archivo), sans-serif;
-          font-size: 24px;
-          font-weight: 900;
-          letter-spacing: -1px;
-          text-transform: uppercase;
+        :global(.mobile-flyout a) {
+          color: #000 !important;
+          text-decoration: none !important;
+          font-family: var(--font-archivo), sans-serif !important;
+          font-size: 24px !important;
+          font-weight: 900 !important;
+          letter-spacing: -1px !important;
+          text-transform: uppercase !important;
         }
         .mobile-flyout .mobile-slash { display: none; }
       `}</style>
@@ -227,7 +227,11 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           <nav className="nav-center">
             <ul className="massive-menu">
               <li>
-                <Link href={isHome ? '#' : '/'} onClick={handleHomeClick}>
+                <Link 
+                  href={isHome ? '#' : '/'} 
+                  onClick={handleHomeClick}
+                  className="nav-link"
+                >
                   {t('landing.menu_inicio')}
                 </Link>
               </li>
@@ -238,7 +242,8 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
                   <li>
                     <Link 
                       href={item.href} 
-                      style={{ color: item.color || 'inherit' }}
+                      className="nav-link"
+                      style={item.color ? { color: item.color } : {}}
                       onClick={() => setMenuOpen(false)}
                     >
                       {t(`landing.${item.key}`)}
@@ -250,6 +255,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
               <span className="slash">/</span>
               <li>
                 <a 
+                  className="nav-link"
                   style={{ color: '#2563eb', cursor: onCartClick ? 'pointer' : 'default' }}
                   onClick={(e) => {
                     if (onCartClick) {
@@ -317,4 +323,3 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
   );
 }
 
-import React from 'react';
