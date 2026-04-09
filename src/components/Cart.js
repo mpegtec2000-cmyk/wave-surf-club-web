@@ -54,7 +54,7 @@ export default function Cart({ isOpen, onClose, items, onRemove }) {
           <button className="checkout-btn" disabled={items.length === 0}>
             AGENDAR Y PAGAR <CreditCard size={18} style={{marginLeft: '10px'}} />
           </button>
-        </footer building>
+        </footer>
       </div>
 
       <style jsx>{`
