@@ -32,15 +32,13 @@ export default function EquipoSection() {
           background: #000;
         }
 
-        /* Overlay removed for pure art integrity */
-
         /* CONTENIDO SUPERPUESTO */
         .content {
           position: relative;
           z-index: 10;
           display: flex;
           flex-direction: column;
-          items-center;
+          align-items: center;
           width: 100%;
           max-width: 1400px;
           padding: 0 40px;
@@ -67,21 +65,13 @@ export default function EquipoSection() {
         }
 
         @media (min-width: 768px) {
-<<<<<<< HEAD
           .riders-grid {
-=======
-          .ryders-grid {
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
             grid-template-columns: repeat(7, 1fr);
             gap: 20px;
           }
         }
 
-<<<<<<< HEAD
         .rider-item {
-=======
-        .ryder-item {
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
           text-decoration: none;
           display: block;
         }
@@ -130,11 +120,7 @@ export default function EquipoSection() {
 
       <div className="bg-container">
         <img 
-<<<<<<< HEAD
           src="/FONDO-RIDERS.png" 
-=======
-          src="/FONDO-RAIDERS.PNG" 
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
           alt="Wave Surf Club Background"
           className="bg-img"
         />
