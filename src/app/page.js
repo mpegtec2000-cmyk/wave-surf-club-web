@@ -753,9 +753,6 @@ export default function LandingPage() {
       </section>
 
 
-      <section className="px-section" id="equipo" style={{ padding: '0' }}>
-        <EquipoSection />
-      </section>
 
       <section className="px-section" id="eventos">
         <div className="px-bg-wrapper">
