@@ -504,6 +504,10 @@ export async function closeBranchSession(branchId, staffId, notes = '') {
 
 /**
  * FINANZAS GLOBALES: Resumen comparativo por centro de costo
+ */
+<<<<<<< HEAD
+/**
+ * FINANZAS GLOBALES: Resumen comparativo por centro de costo
  * Combina registros consolidados (cash_closings) con transacciones finalizadas aún no cerradas.
  */
 export async function getFinancialSummary() {
@@ -551,6 +555,31 @@ export async function getFinancialSummary() {
 
   return summary;
 }
+
+
+=======
+export async function getFinancialSummary() {
+  const { data: closings, error } = await supabase
+    .from('cash_closings')
+    .select('*')
+    .order('created_at', { ascending: false });
+    
+  // Agrupar por branch_id
+  const summary = closings?.reduce((acc, c) => {
+    if (!acc[c.branch_id]) {
+      acc[c.branch_id] = { income: 0, expense: 0, net: 0, count: 0 };
+    }
+    acc[c.branch_id].income += c.total_income;
+    acc[c.branch_id].expense += c.total_expense;
+    acc[c.branch_id].net += c.net_utility;
+    acc[c.branch_id].count += 1;
+    return acc;
+  }, {});
+
+  return summary || {};
+}
+
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 // ── DASHBOARD STATS ─────────────────────────
 
 export async function getDashboardStats(branchId = null) {

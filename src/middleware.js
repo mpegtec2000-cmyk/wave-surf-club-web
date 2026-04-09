@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 // Este middleware simula la protección de rutas basada en cookies/sesión de Supabase
 // En una implementación real, usaríamos supabase.auth.getUser()
-export function proxy(request) {
+export function middleware(request) {
   const { pathname } = request.nextUrl;
 
   // Solo protegemos rutas de dashboard

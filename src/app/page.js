@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+<<<<<<< HEAD
+=======
 import { useTranslation } from '@/lib/i18n-context';
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 import { addClient } from '@/lib/data';
 import EquipoSection from '@/components/EquipoSection';
 
 // --- TRADUCCIONES (DICCIONARIO EN MEMORIA) ---
-// Nota: Algunas traducciones se manejan vía i18n-context, pero mantenemos este objeto para compatibilidad local
 const translations = {
   es: {
     btn_ingreso: 'INGRESO :',
@@ -24,7 +26,11 @@ const translations = {
     mod_name: 'Nombre Completo', mod_rut: 'RUT', mod_email: 'Correo Electrónico',
     mod_phone: 'Teléfono', mod_submit: 'Registrar Cliente', mod_processing: 'Procesando...',
     mod_success: 'Estudiante registrado correctamente.', mod_error: 'Error al registrar.',
+<<<<<<< HEAD
     sec_bio_sub: 'Wave Surf Club: Transformando Vidas a través del Deporte\n\nDesde 2015, lo que comenzó como un sueño de Francisco Luisiño se ha convertido en una realidad que late con fuerza en la costa chilena. En Wave, nuestra pasión va más allá de las olas: somos un motor de nuevos proyectos deportivos y un pilar para la comunidad.\n\nNos movemos por la inclusión, apoyando activamente el deporte para personas con discapacidad y creando lazos con universidades y colegios a través de paseos de curso diseñados para conectar con la naturaleza. Con sedes en Concón, Pichilemu y nuestra reciente inauguración en Punta de Piedra, somos la casa de grandes competidores internacionales y, sobre todo, el lugar donde cada visitante vive una experiencia inolvidable.',
+=======
+    sec_bio_sub: 'Wave Surf Club: Transformando Vidas a través del Deporte\n\nDesde 2015, lo que comenzó como un sueño de Francisco Luisiño se ha convertido en una reality que late con fuerza en la costa chilena. En Wave, nuestra pasión va más allá de las olas: somos un motor de nuevos proyectos deportivos y un pilar para la comunidad.\n\nNos movemos por la inclusión, apoyando activamente el deporte para personas con discapacidad y creando lazos con universidades y colegios a través de paseos de curso diseñados para conectar con la naturaleza. Con sedes en Concón, Pichilemu y nuestra reciente inauguración en Punta de Piedra, somos la casa de grandes competidores internacionales y, sobre todo, el lugar donde cada visitante vive una experiencia inolvidable.',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     sec_escuelas_sub: 'S P O T S',
     sec_riders_sub: 'WAVE FAM: THE NEXT GENERATION',
     sec_taller_sub: 'Reparación y customización de equipos profesionales.',
@@ -62,7 +68,7 @@ const translations = {
     hero_title: 'DOMINEZ LES VAGUES.<br/>SIMPLIFIEZ VOTRE EXPÉRIENCE.',
     hero_subtitle: "Découvrez le côté intelligent du surf. Des cours et des équipements gérés avec une technologie de pointe.",
     mod_title: 'NOUVEL ÉLÈVE', mod_name: 'Nom Complet', mod_rut: 'Numéro d\'Identité', mod_email: 'Email', mod_phone: 'Téléphone', mod_submit: 'S\'inscrire', mod_processing: 'Traitement...', mod_success: 'Enregistré avec succès.', mod_error: 'Erreur lors de l\'inscription.',
-    sec_bio_sub: 'L\'histoire de la meilleure école de surf du Chili.', sec_escuelas_sub: 'Connectez-vous à nos spots de Reñaca et Concón.', sec_taller_sub: 'Réparation et personnalisacion de matériel professionnel.', sec_riders_sub: 'Les talents qui font la diferencia.', sec_eventos_sub: 'Compétitions et rassemblements locaux.', sec_clases_sub: 'Évoluez avec des instructeurs de haut niveau.', sec_surf_sub: 'Équipement et culture de la vague.', sec_skate_sub: 'Entraînement au sol pour maîtriser l\'eau.'
+    sec_bio_sub: 'L\'histoire de la meilleure école de surf du Chili.', sec_escuelas_sub: 'Connectez-vous à nos spots de Reñaca et Concón.', sec_taller_sub: 'Réparation et personnalisation de matériel professionnel.', sec_riders_sub: 'Les talents qui font la diferencia.', sec_eventos_sub: 'Compétitions et rassemblements locaux.', sec_clases_sub: 'Évoluez avec des instructeurs de haut niveau.', sec_surf_sub: 'Équipement et culture de la vague.', sec_skate_sub: 'Entraînement au sol pour maîtriser l\'eau.'
   },
   de: {
     btn_ingreso: 'EINTRITT :', btn_cliente: 'A) KUNDE (Neu)', btn_colaborador: 'B) PERSONAL (ERP)',
@@ -70,7 +76,11 @@ const translations = {
     hero_title: 'BEHERRSCHE DIE WELLEN.<br/>VEREINFACHE DEINE ERFAHRUNG.',
     hero_subtitle: "Entdecke die smarte Seite des Surfens. Kurse und modernste Ausrüstung.",
     mod_title: 'NEUER STUDENT', mod_name: 'Vollständiger Name', mod_rut: 'Personalausweis', mod_email: 'E-Mail', mod_phone: 'Telefon', mod_submit: 'Registrieren', mod_processing: 'Verarbeitung...', mod_success: 'Erfolgreich registriert.', mod_error: 'Fehler bei der Registrierung.',
+<<<<<<< HEAD
     sec_bio_sub: 'Geschichte der besten Surfschule in Chile.', sec_escuelas_sub: 'Verbinde dich mit unseren Spots in Reñaca und Concón.', sec_taller_sub: 'Reparatur und Anpassung professioneller Ausrüstung.', sec_riders_sub: 'Die Talente, die den Unterschied machen.', sec_eventos_sub: 'Lokale Wettbewerbe und Treffen.', sec_clases_sub: 'Entwickle dich weiter mit erstklassigen Instruktoren.', sec_surf_sub: 'Ausrüstung und Wellenkultur.', sec_skate_sub: 'Trockentraining zur Beherrschung des Wassers.'
+=======
+    sec_bio_sub: 'Geschichte der besten Surfschule in Chile.', sec_escuelas_sub: 'Verbinde dich con unseren Spots in Reñaca und Concón.', sec_taller_sub: 'Reparatur und Anpassung professioneller Ausrüstung.', sec_riders_sub: 'Die Talente, die den Unterschied machen.', sec_eventos_sub: 'Lokale Wettbewerbe und Treffen.', sec_clases_sub: 'Entwickle dich weiter mit erstklassigen Instruktoren.', sec_surf_sub: 'Ausrüstung und Wellenkultur.', sec_skate_sub: 'Trockentraining zur Beherrschung des Wassers.'
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
   },
   pt: {
     btn_ingreso: 'ENTRADA :', btn_cliente: 'A) CLIENTE (Novo)', btn_colaborador: 'B) EQUIPE (ERP)',
@@ -78,280 +88,817 @@ const translations = {
     hero_title: 'DOMINE AS ONDAS.<br/>SIMPLIFIQUE SUA EXPERIÊNCIA.',
     hero_subtitle: "Descubra o lado inteligente do surfe. Aulas e equipamentos gerenciados com tecnologia de ponta.",
     mod_title: 'NOVO ALUNO', mod_name: 'Nome Completo', mod_rut: 'Identidade (RUT)', mod_email: 'Correio eletrônico', mod_phone: 'Telefone', mod_submit: 'Registrar', mod_processing: 'Processando...', mod_success: 'Registrado com sucesso.', mod_error: 'Erro no registro.',
-    sec_bio_sub: 'História da mejor escola de surfe do Chile.', sec_escuelas_sub: 'Conecte-se aos nossos picos em Reñaca y Concón.', sec_taller_sub: 'Reparo e personalização de equipamentos.', sec_riders_sub: 'Os talents que fazem a diferença.', sec_eventos_sub: 'Competições locais e encontros.', sec_clases_sub: 'Evolua com instrutores de alto nivel.', sec_surf_sub: 'Equipamentos e cultura de ondas.', sec_skate_sub: 'Treinamento em solo para dominar a água.'
+<<<<<<< HEAD
+    sec_bio_sub: 'História da melhor escola de surfe do Chile.', sec_escuelas_sub: 'Conecte-se aos nossos picos em Reñaca y Concón.', sec_taller_sub: 'Reparo e personalização de equipamentos.', sec_riders_sub: 'Os talents que fazem a diferença.', sec_eventos_sub: 'Competições locais e encontros.', sec_clases_sub: 'Evolua com instrutores de alto nível.', sec_surf_sub: 'Equipamentos e cultura de ondas.', sec_skate_sub: 'Treinamento em solo para dominar a água.'
+=======
+    sec_bio_sub: 'História da melhor escola de surfe do Chile.', sec_escuelas_sub: 'Conecte-se aos nossos picos em Reñaca y Concón.', sec_taller_sub: 'Reparo e personalização de equipamentos.', sec_riders_sub: 'Os talents que fazem a diferença.', sec_eventos_sub: 'Competições locais e encontros.', sec_clases_sub: 'Evolua con instrutores de alto nível.', sec_surf_sub: 'Equipamentos e cultura de ondas.', sec_skate_sub: 'Treinamento em solo para dominar a água.'
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
+  },
+  ja: {
+    btn_ingreso: 'ログイン :', btn_cliente: 'A) クライアント', btn_colaborador: 'B) スタッフ',
+    menu_bio: 'バイオグラフィー', menu_escuelas: '学校', menu_taller: 'ワークショップ', menu_riders: 'ライダー', menu_eventos: 'イベント', menu_clases: 'クラス', menu_surf: 'サーフ', menu_skate: 'スケート', menu_contenido: 'コンテンツ', menu_contacto: 'お問い合わせ', menu_carro: 'カート: (0)',
+    hero_title: '波を支配する。<br/>経験を簡素化する。', hero_subtitle: "最先端のテクノロジーで管理されたクラスと最高級の装備。",
+    mod_title: '新入生', mod_name: '氏名', mod_rut: '身分証明書', mod_email: 'メールアドレス', mod_phone: '電話番号', mod_submit: '登録', mod_processing: '処理中...', mod_success: '正常に登録されました。', mod_error: 'エラーが発生しました。',
+    sec_bio_sub: 'チリ最高のサーフィンスクールの歴史。', sec_escuelas_sub: 'レニャカとコンコンのスポットとつながろう。', sec_taller_sub: 'プロ用機材の修理とカスタマイズ。', sec_riders_sub: '違いを生み出す才能。', sec_eventos_sub: '地元の大会や集まり。', sec_clases_sub: 'トップクラスのインストラクターと進化しよう。', sec_surf_sub: '装備と波の文化。', sec_skate_sub: '水上をマスターするための陸上トレーニング。'
+  },
+  zh: {
+    btn_ingreso: '登录 :', btn_cliente: 'A) 客户注册', btn_colaborador: 'B) 员工系统',
+    menu_bio: '传记', menu_escuelas: '学校', menu_taller: '车间', menu_riders: '骑手', menu_eventos: '活动', menu_clases: '课程', menu_surf: '冲浪', menu_skate: '滑板', menu_contenido: '内容', menu_contacto: '接触', menu_carro: '推车: (0)',
+    hero_title: '驾驭海浪。<br/>简化您的体验。', hero_subtitle: "探索冲浪的智能一面。通过尖端技术管理课程。",
+    mod_title: '新学生', mod_name: '全名', mod_rut: '身份证号', mod_email: '电子邮件', mod_phone: '电话', mod_submit: '注册', mod_processing: '处理中...', mod_success: '注册成功。', mod_error: '发生错误。',
+    sec_bio_sub: '智利最好的冲浪学校的历史。', sec_escuelas_sub: '连接我们在雷尼亚卡和孔孔的地点。', sec_taller_sub: '专业设备的维修与定制。', sec_riders_sub: '创造差异的人才。', sec_eventos_sub: '当地比赛和聚会。', sec_clases_sub: '与顶级教练一起进化。', sec_surf_sub: '装备和海浪文化。', sec_skate_sub: '陆地训练以掌握水上技巧。'
+  },
+  ru: {
+    btn_ingreso: 'ВХОД :', btn_cliente: 'А) КЛИЕНТ', btn_colaborador: 'Б) ПЕРСОНАЛ',
+    menu_bio: 'БИОГРАФИЯ', menu_escuelas: 'ШКОЛЫ', menu_taller: 'МАСТЕРСКАЯ', menu_riders: 'РАЙДЕРЫ', menu_eventos: 'СОБЫТИЯ', menu_clases: 'КЛАССЫ', menu_surf: 'СЕРФ', menu_skate: 'СКЕЙТ', menu_contenido: 'КОНТЕНТ', menu_contacto: 'КОНТАКТЫ', menu_carro: 'КОРЗИНА: (0)',
+    hero_title: 'ПОКОРЯЙ ВОЛНЫ.<br/>УПРОСТИ СВОЙ ОПЫТ.', hero_subtitle: "Управляйте занятиями с помощью передовых технологий.",
+    mod_title: 'НОВЫЙ УЧЕНИК', mod_name: 'Полное Имя', mod_rut: 'Документ', mod_email: 'Email', mod_phone: 'Телефон', mod_submit: 'Зарегистрироваться', mod_processing: 'Идет обработка...', mod_success: 'Успешная регистрация', mod_error: 'Ошибка регистрации',
+    sec_bio_sub: 'История лучшей школы серфинга в Чили.', sec_escuelas_sub: 'Доступ к нашим базам в Реньяке и Конконе.', sec_taller_sub: 'Ремонт и настройка оборудования.', sec_riders_sub: 'Таланты, которые задают уровень.', sec_eventos_sub: 'Местные соревнования и встречи.', sec_clases_sub: 'Развивайся с лучшими инструкторами.', sec_surf_sub: 'Экипировка и культура волн.', sec_skate_sub: 'Сухопутные тренировки для победы на воде.'
   }
 };
 
+const LANGUAGES = [
+  { code: 'es', label: 'Español' }, { code: 'en', label: 'English' },
+  { code: 'fr', label: 'Français' }, { code: 'de', label: 'Deutsch' },
+  { code: 'pt', label: 'Português' }, { code: 'ja', label: '日本語' },
+  { code: 'zh', label: '中文' }, { code: 'ru', label: 'Русский' }
+];
+
+<<<<<<< HEAD
 export default function LandingPage() {
-  const { lang, setLang } = useTranslation();
-  const [t, setT] = useState(translations.es);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  
-  const [formData, setFormData] = useState({ name: '', rut: '', email: '', phone: '' });
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [lang, setLang] = useState('es');
+  const t = translations[lang];
+=======
+import Navbar from '@/components/Navbar';
+
+export default function LandingPage() {
+  const { lang, t: contextT } = useTranslation();
+  const t = translations[lang] || translations['es'];
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
   useEffect(() => {
-    setT(translations[lang] || translations.es);
-  }, [lang]);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    document.documentElement.style.scrollBehavior = 'smooth';
+    document.documentElement.style.scrollPaddingTop = '100px';
   }, []);
 
-  const handleRegister = async (e) => {
+
+  const formatSpaced = (text) => text.toUpperCase().split('').join(' ');
+
+
+  // Mobile Menu State
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [ridersData, setRidersData] = useState([]);
+
+  useEffect(() => {
+<<<<<<< HEAD
+    fetch('/api/riders')
+=======
+    fetch('/api/antigravity/riders')
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
+      .then(res => res.json())
+      .then(data => setRidersData(data))
+      .catch(err => console.error('Error fetching riders:', err));
+  }, []);
+  const [showModal, setShowModal] = useState(false);
+  
+  // Registration Form
+  const [rut, setRut] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState(null);
+
+  const handleRegisterClient = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage({ type: '', text: '' });
+    setMsg(null);
     try {
-      const result = await addClient(formData);
-      if (result.success) {
-        setMessage({ type: 'success', text: t.mod_success });
-        setFormData({ name: '', rut: '', email: '', phone: '' });
-        setTimeout(() => setShowModal(false), 2000);
-      } else {
-        throw new Error(result.error);
-      }
+      const { data, error } = await addClient({ rut, name, email, phone });
+      if (error) throw error;
+      setMsg({ type: 'success', text: t.mod_success });
+      setTimeout(() => {
+        setShowModal(false);
+        setMsg(null);
+        setRut(''); setName(''); setEmail(''); setPhone('');
+      }, 2000);
     } catch (err) {
-      setMessage({ type: 'error', text: t.mod_error });
+      setMsg({ type: 'error', text: t.mod_error });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="font-sans text-gray-900 bg-white selection:bg-[#FACC15] selection:text-black">
-      
-      {/* ── HEADER / NAVBAR ── */}
-      <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled ? 'bg-black/90 backdrop-blur-xl py-3 shadow-2xl' : 'bg-transparent py-6'}`}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
-          
-          <Link href="/" className="group relative">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#FACC15] to-[#EAB308] rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-300">
-                <span className="text-black font-black text-2xl">W</span>
-              </div>
-              <span className="text-white font-black text-2xl tracking-tighter transition-colors group-hover:text-[#FACC15]">WAVE SURF CLUB</span>
-            </div>
+    <div className="dark-landing">
+      <style jsx>{`
+        .dark-landing {
+          min-height: 100vh;
+          background: #0b1120;
+          color: #f8fafc;
+          font-family: var(--font-sans);
+          overflow-x: hidden;
+        }
+
+        /* --- NAVBAR --- */
+        .header {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1000;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 40px;
+          height: 100px; /* Slightly taller for the new logo */
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          border-bottom: 2px solid #000;
+        }
+
+        /* Nav Layout */
+        .nav-left, .nav-right {
+          flex: 1;
+          display: flex;
+          align-items: center;
+        }
+        .nav-left { justify-content: flex-start; gap: 24px; }
+        
+        /* Mobile menu button */
+        .mobile-btn {
+          display: none;
+          background: transparent;
+          border: none;
+          color: #1e293b;
+          font-size: 24px;
+          cursor: pointer;
+        }
+
+        .nav-center {
+          flex: 4;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .nav-right { justify-content: flex-end; }
+
+        .logo-img { height: 70px; width: auto; object-fit: contain; display: block; content: url('/logo-wave.png'); }
+
+        /* Dropdowns */
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+        .dropdown-trigger {
+          background: transparent;
+          color: #000;
+          border: 1px solid #000;
+          padding: 6px 15px;
+          border-radius: 4px;
+          font-family: var(--font-archivo), sans-serif;
+          font-size: 11px;
+          font-weight: 900;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.3s;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .dropdown-trigger:hover { 
+          background: #000;
+          color: #fff;
+        }
+
+        .dropdown-content {
+          position: absolute;
+          top: calc(100% + 10px);
+          right: 0;
+          background: #fff;
+          min-width: 240px;
+          box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+          border-radius: 4px;
+          border: 2px solid #000;
+          overflow: hidden;
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(10px);
+          transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+          z-index: 2000;
+        }
+        .dropdown:hover .dropdown-content {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+        .dropdown-content button, .dropdown-content a {
+          display: block;
+          width: 100%;
+          text-align: left;
+          padding: 18px 20px;
+          color: #1e293b;
+          text-decoration: none;
+          background: transparent;
+          border: none;
+          border-bottom: 1px solid rgba(0,0,0,0.05);
+          font-family: var(--font-archivo), sans-serif;
+          font-size: 12px;
+          font-weight: 900;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .dropdown-content button:hover, .dropdown-content a:hover {
+          background: #000;
+          color: #fff;
+          padding-left: 25px;
+        }
+
+        /* Lang Dropdown (Right aligned) */
+        .lang-dropdown .dropdown-content { right: 0; min-width: 150px; }
+
+        /* Center Menu Massive */
+        .massive-menu {
+          display: flex;
+          flex-wrap: nowrap;
+          white-space: nowrap;
+          align-items: center;
+          list-style: none;
+          margin: 0; padding: 0;
+          gap: 10px;
+        }
+        .massive-menu li a {
+          color: #000;
+          text-decoration: none;
+          font-family: var(--font-archivo), sans-serif;
+          font-size: 0.95rem;
+          font-weight: 900;
+          letter-spacing: -0.05em;
+          text-transform: uppercase;
+          transition: color 0.3s;
+        }
+        .massive-menu li a:hover { color: #2563eb; }
+        .slash { color: #000; font-size: 11px; margin: 0 4px; font-weight: 900; }
+
+        /* --- RESPONSIVE CSS --- */
+        @media (max-width: 1200px) {
+          .nav-center { display: none; }
+          .mobile-btn { display: block; }
+          .nav-left { gap: 12px; }
+          .header { padding: 0 20px; }
+        }
+
+        /* Mobile Flyout Menu */
+        .mobile-flyout {
+          position: fixed;
+          top: 80px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(11, 17, 32, 0.95);
+          backdrop-filter: blur(20px);
+          z-index: 999;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 24px;
+        }
+        .mobile-flyout a {
+          color: #f8fafc;
+          text-decoration: none;
+          font-size: 20px;
+          font-weight: 800;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+        }
+
+        /* --- PARALLAX SECTIONS --- */
+        .px-section {
+          position: relative;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          overflow: hidden;
+        }
+        #hero {
+          margin-top: 100px;
+          min-height: calc(100vh - 100px);
+        }
+        .px-bg-wrapper {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+        }
+        /* Overaly for sections (slightly darker for content readability) */
+        .px-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to bottom, rgba(11, 17, 32, 0.6), rgba(11, 17, 32, 0.95));
+          z-index: 2;
+        }
+        .px-content {
+          position: relative;
+          z-index: 3;
+          max-width: 1200px;
+          padding: 80px 24px;
+        }
+        
+        /* Fluid Typography using clamp for responsiveness */
+        .hero-text h1 {
+          font-family: var(--font-playfair), serif;
+          font-size: clamp(48px, 6vw, 80px);
+          font-weight: 800;
+          line-height: 1.1;
+          letter-spacing: -2px;
+          margin-bottom: 24px;
+          color: #f8fafc;
+        }
+        .hero-subtitle {
+          font-family: var(--font-playfair), serif;
+          font-style: italic;
+          font-size: clamp(20px, 2.5vw, 26px);
+          color: #ffffff;
+          line-height: 1.6;
+          max-width: 900px;
+          margin: 0 auto;
+          font-weight: 400;
+          white-space: pre-line;
+          text-shadow: 0 4px 15px rgba(0, 0, 0, 0.9);
+        }
+        .section-marker {
+          font-size: clamp(40px, 5vw, 60px);
+          font-weight: 800;
+          color: #000;
+          text-transform: uppercase;
+          letter-spacing: 8px;
+          opacity: 1;
+          margin-bottom: 16px;
+        }
+
+        /* --- Escuelas Grid CSS --- */
+        .schools-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 24px;
+          max-width: 1300px;
+          margin: 40px auto 0;
+          width: 100%;
+          text-align: left;
+        }
+        .school-card {
+          background: rgba(15, 23, 42, 0.4);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 16px;
+          padding: 32px;
+          transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+          cursor: pointer;
+          display: block;
+          text-decoration: none;
+        }
+        .school-card:hover {
+          transform: translateY(-8px);
+          border-color: rgba(56, 189, 248, 0.5);
+          box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+        .school-card h3 {
+          font-family: var(--font-playfair), serif;
+          font-size: 26px;
+          color: #ffffff;
+          margin-bottom: 6px;
+          font-weight: 600;
+        }
+        .school-card h3 span {
+          font-family: var(--font-inter), sans-serif;
+          font-size: 14px;
+          color: #94a3b8;
+          font-weight: 400;
+          letter-spacing: 0;
+          margin-left: 6px;
+          vertical-align: middle;
+        }
+        .school-card .slogan {
+          color: #38bdf8;
+          font-size: 12px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          margin-bottom: 20px;
+        }
+        .school-card p {
+          color: #cbd5e1;
+          font-size: 15px;
+          line-height: 1.6;
+          margin-bottom: 24px;
+        }
+        .school-card ul {
+          list-style: none;
+          padding: 0; margin: 0;
+        }
+        .school-card li {
+          color: #94a3b8;
+          font-size: 14px;
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          margin-bottom: 12px;
+          line-height: 1.5;
+        }
+        .school-card li strong {
+          color: #f8fafc;
+          font-weight: 600;
+        }
+        .school-card li::before {
+          content: '→';
+          color: #38bdf8;
+          font-size: 16px;
+          line-height: 1.2;
+        }
+
+        /* --- Placeholders --- */
+        .bg-hero { background-image: url('/fondo-web-1.png'); background-position: center; }
+        .bg-biografia { background-image: url('/fondo-pag.png'); background-position: center; }
+        .bg-escuelas { background-image: url('/fondo-escuela.png'); background-position: center; }
+        .bg-taller { background-image: url('/paulo-1.png'); }
+        .bg-eventos { background-image: url('/fondo-logo.png'); }
+        .bg-clases { background-image: url('/wave-light.jpeg'); }
+        .bg-surf { background-image: url('/hero-rider.jpeg'); }
+        .bg-skate { background-image: url('/tomi-bock-fondo.png'); }
+
+        /* --- RIDERS GRID --- */
+        .riders-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 20px;
+          margin-top: 40px;
+          width: 100%;
+          max-width: 1400px;
+        }
+        .rider-card {
+          position: relative;
+          height: 320px;
+          border-radius: 12px;
+          overflow: hidden;
+          background: #0f172a;
+          border: 1px solid rgba(255,255,255,0.05);
+          cursor: pointer;
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          text-decoration: none;
+          display: flex;
+          align-items: flex-end;
+        }
+        .rider-card:hover {
+          transform: translateY(-10px) scale(1.02);
+          border-color: #38bdf8;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px rgba(56, 189, 248, 0.2);
+        }
+        .rider-img-wrapper {
+          position: absolute;
+          inset: 0;
+          transition: transform 0.8s ease;
+          opacity: 0.6;
+        }
+        .rider-card:hover .rider-img-wrapper {
+          transform: scale(1.1);
+          opacity: 0.8;
+        }
+        .rider-info {
+          position: relative;
+          z-index: 2;
+          padding: 24px 20px;
+          width: 100%;
+          background: rgba(255, 255, 255, 0.95);
+          text-align: left;
+        }
+        .rider-prefix {
+          color: #38bdf8;
+          font-weight: 800;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          margin-right: 8px;
+        }
+        .rider-name {
+          font-size: 13px;
+          font-weight: 800;
+          color: #000;
+          margin: 0;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          text-transform: uppercase;
+          line-height: 1.4;
+        }
+        .view-mag {
+          margin-top: 12px;
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 2px;
+          color: #94a3b8;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          transition: color 0.3s;
+        }
+        .rider-card:hover .view-mag {
+          color: #38bdf8;
+        }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.8);
+          backdrop-filter: blur(10px);
+          z-index: 2000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+        .modal-box {
+          background: #0f172a;
+          border: 1px solid rgba(56, 189, 248, 0.2);
+          border-radius: 12px;
+          padding: 40px;
+          width: 100%;
+          max-width: 450px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+          position: relative;
+        }
+        .modal-close {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: transparent;
+          border: none;
+          color: #64748b;
+          font-size: 24px;
+          cursor: pointer;
+        }
+        .modal-title {
+          font-size: 24px;
+          font-weight: 700;
+          color: #f8fafc;
+          margin-bottom: 24px;
+          text-align: center;
+        }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-label {
+          display: block;
+          font-size: 12px;
+          color: #94a3b8;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 8px;
+        }
+        .form-input {
+          width: 100%;
+          background: #1e293b;
+          border: 1px solid #334155;
+          color: #f8fafc;
+          padding: 12px 16px;
+          border-radius: 6px;
+          outline: none;
+          transition: border 0.3s;
+          font-size: 16px;
+        }
+        .form-input:focus { border-color: #38bdf8; }
+        .btn-submit {
+          width: 100%;
+          background: #38bdf8;
+          color: #0f172a;
+          border: none;
+          padding: 14px;
+          font-weight: 800;
+          font-size: 14px;
+          letter-spacing: 1px;
+          border-radius: 6px;
+          cursor: pointer;
+          text-transform: uppercase;
+          transition: background 0.3s;
+        }
+        .btn-submit:hover { background: #0ea5e9; }
+        
+        .msg { padding: 12px; border-radius: 6px; font-size: 13px; text-align: center; margin-bottom: 20px; }
+        .msg.error { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .msg.success { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .massive-menu { font-family: 'Archivo Black', sans-serif; }
+      `}</style>
+
+      {/* --- CABECERA --- */}
+<<<<<<< HEAD
+      <header className="header">
+        <div className="nav-left">
+          <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+            <img src="/logo-wave.png" alt="Wave Surf Club" className="logo-img" />
           </Link>
+          
+          <div className="nav-center" style={{ marginLeft: '40px' }}>
+            <ul className="massive-menu">
+              <li><a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }}>{t.menu_inicio}</a></li> <span className="slash">/</span>
+              <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
+              <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
+              <li><Link href="/servicios">{t.menu_servicios}</Link></li> <span className="slash">/</span>
+              <li><a href="#equipo">{t.menu_equipo}</a></li> <span className="slash">/</span>
+              <li><Link href="/taller">{t.menu_taller}</Link></li> <span className="slash">/</span>
+              <li><Link href="/riders">{t.menu_riders}</Link></li> <span className="slash">/</span>
+              <li><a href="#tienda">{t.menu_tienda}</a></li> <span className="slash">/</span>
+              <li><a href="#contenido">{t.menu_contenido}</a></li> <span className="slash">/</span>
+              <li><Link href="/agenda" style={{ color: '#0ea5e9' }}>{t.menu_agenda}</Link></li> <span className="slash">/</span>
+              <li><a href="#contacto">{t.menu_contacto}</a></li> <span className="slash">/</span>
+              <li><a href="#eventos">{t.menu_eventos}</a></li> <span className="slash">/</span>
+              <li><a style={{ color: '#2563eb' }}>{t.menu_carro}</a></li>
+            </ul>
+          </div>
+        </div>
 
-          <nav className="hidden lg:flex items-center gap-8">
-            <Link href="/" className="text-white/70 hover:text-[#FACC15] font-bold text-xs uppercase tracking-widest transition-colors">{t.menu_inicio}</Link>
-            <Link href="/servicios" className="text-white/70 hover:text-[#FACC15] font-bold text-xs uppercase tracking-widest transition-colors">{t.menu_servicios}</Link>
-            <Link href="/taller" className="text-white/70 hover:text-[#FACC15] font-bold text-xs uppercase tracking-widest transition-colors">{t.menu_taller}</Link>
-            <Link href="/riders" className="text-white/70 hover:text-[#FACC15] font-bold text-xs uppercase tracking-widest transition-colors">{t.menu_riders}</Link>
-            <Link href="/agenda" className="px-6 py-2.5 bg-[#FACC15] hover:bg-white text-black font-black text-[10px] uppercase tracking-[0.2em] rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(250,204,21,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
-              {t.menu_agenda}
-            </Link>
-
-            <div className="h-4 w-[1px] bg-white/20 mx-2"></div>
-
-            <div className="flex items-center gap-3">
-              <select 
-                value={lang} 
-                onChange={(e) => setLang(e.target.value)}
-                className="bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg border border-white/10 outline-none transition-all cursor-pointer appearance-none"
-              >
-                <option value="es" className="bg-black text-white">ES</option>
-                <option value="en" className="bg-black text-white">EN</option>
-                <option value="pt" className="bg-black text-white">PT</option>
-                <option value="de" className="bg-black text-white">DE</option>
-                <option value="fr" className="bg-black text-white">FR</option>
-              </select>
-              <Link href="/login" className="text-white hover:text-[#FACC15] transition-colors">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
-              </Link>
+        <div className="nav-right">
+          <div className="dropdown">
+            <button className="dropdown-trigger">{t.btn_ingreso} ▼</button>
+            <div className="dropdown-content">
+              <Link href="/agenda" className="dropdown-button-link">{t.btn_cliente}</Link>
+              <Link href="/login">{t.btn_colaborador}</Link>
             </div>
-          </nav>
+          </div>
+          
+          <div className="dropdown lang-dropdown" style={{ marginLeft: '20px' }}>
+            <button className="dropdown-trigger">{LANGUAGES.find(l => l.code === lang)?.code.toUpperCase()} ▼</button>
+            <div className="dropdown-content">
+              {LANGUAGES.map(l => (
+                <button key={l.code} onClick={() => setLang(l.code)}>
+                  {l.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="lg:hidden p-2 text-white hover:text-[#FACC15] transition-colors">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+          <button className="mobile-btn" onClick={() => setMenuOpen(!menuOpen)} style={{ marginLeft: '20px' }}>
+            {menuOpen ? '✕' : '☰'}
           </button>
         </div>
       </header>
 
-      {/* ── HERO SECTION ── */}
-      <section className="relative h-screen flex items-center overflow-hidden">
-        <Image 
-          src="/PORTADA.jpg" 
-          alt="Hero Background" 
-          fill 
-          priority
-          className="object-cover scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/60"></div>
-        
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 w-full pt-20">
-          <div className="max-w-4xl space-y-10">
-            <div className="w-20 h-1 bg-[#FACC15]"></div>
-            <h1 className="text-6xl md:text-9xl font-black text-white tracking-tighter leading-[0.85]" dangerouslySetInnerHTML={{ __html: t.hero_title }}></h1>
-            <p className="text-xl md:text-2xl text-white/80 max-w-2xl font-medium leading-relaxed">
-              {t.hero_subtitle}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 pt-4">
-              <Link href="/agenda" className="px-10 py-5 bg-[#FACC15] hover:bg-white text-black font-black text-sm uppercase tracking-widest rounded-full transition-all duration-500 shadow-2xl hover:scale-105 text-center">
-                {t.menu_agenda}
-              </Link>
-              <button 
-                onClick={() => setShowModal(true)}
-                className="px-10 py-5 bg-white/10 hover:bg-white/20 text-white font-black text-sm uppercase tracking-widest rounded-full transition-all duration-500 backdrop-blur-md border border-white/20 text-center"
-              >
-                {t.btn_cliente}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 text-white/40">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Scroll Down</span>
-          <div className="w-[1px] h-12 bg-gradient-to-b from-white/40 to-transparent"></div>
-        </div>
-      </section>
-
-      {/* ── BIO SECTION (HISTORY) ── */}
-      <section className="bg-black py-32 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-24 items-center">
-            <div className="space-y-8">
-              <h2 className="text-[#FACC15] font-black text-sm uppercase tracking-[0.5em]">Historia</h2>
-              <div className="space-y-6">
-                <h3 className="text-5xl md:text-7xl font-black text-white tracking-tighter">WAVE SURF CLUB</h3>
-                <p className="text-gray-400 text-lg leading-relaxed whitespace-pre-line font-light italic">
-                  {t.sec_bio_sub}
-                </p>
-              </div>
-              <div className="pt-8 flex items-center gap-6">
-                <div className="h-[2px] w-24 bg-[#FACC15]"></div>
-                <span className="text-white font-bold tracking-widest text-xs uppercase">Since 2015</span>
-              </div>
-            </div>
-            <div className="relative aspect-square lg:aspect-video rounded-3xl overflow-hidden shadow-2xl group">
-              <Image src="/logo1.png" alt="Wave Logo" fill className="object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SPOTS / ESCUELAS ── */}
-      <section id="escuelas" className="bg-[#0A0A0A] py-32 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center mb-24">
-          <h2 className="text-[#FACC15] font-black text-sm uppercase tracking-[0.5em] mb-6">Nuestras Sedes</h2>
-          <h3 className="text-6xl md:text-8xl font-black text-white tracking-tighter">S P O T S</h3>
-        </div>
-        
-        <div className="max-w-[1600px] mx-auto grid md:grid-cols-3 gap-1 px-4">
-          {[
-            { id: '1', name: 'CONCÓN', img: '/SECTOR-CONCON.jpg', slug: 'concon' },
-            { id: '2', name: 'PICHILEMU', img: '/PICHILEMU.JPG', slug: 'pichilemu' },
-            { id: '3', name: 'PUNTA DE PIEDRA', img: '/PUNTA-DE-PIEDRA.jpg', slug: 'punta-de-piedra' }
-          ].map((spot) => (
-            <Link key={spot.id} href={`/spots/${spot.slug}`} className="group relative h-[600px] overflow-hidden">
-              <Image src={spot.img} alt={spot.name} fill className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000" />
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-500"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center z-10 transform group-hover:scale-110 transition-transform duration-700">
-                  <h4 className="text-4xl md:text-6xl font-black text-white tracking-widest drop-shadow-2xl">{spot.name}</h4>
-                  <div className="h-1 w-0 group-hover:w-full bg-[#FACC15] mx-auto mt-4 transition-all duration-700"></div>
-                </div>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-12 translate-y-full group-hover:translate-y-0 transition-transform duration-700">
-                <span className="text-[#FACC15] font-black tracking-widest text-xs">EXPLORAR SEDE →</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ── FOOTER ── */}
-      <footer className="bg-black text-white py-24 border-t border-white/5 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
-          <div className="space-y-6">
-            <div className="flex items-center justify-center md:justify-start gap-4">
-              <div className="w-12 h-12 bg-[#FACC15] rounded-xl flex items-center justify-center shadow-2xl">
-                <span className="text-black font-black text-3xl">W</span>
-              </div>
-              <span className="text-4xl font-black tracking-tighter uppercase">WAVE SURF CLUB</span>
-            </div>
-            <p className="text-gray-500 text-sm max-w-md tracking-wide font-medium">SINCE 2015. Transformando la cultura del surf a través del deporte, la inclusión y la excelencia técnica.</p>
-          </div>
-          
-          <div className="flex flex-col items-center md:items-end gap-6 text-center md:text-right">
-            <nav className="flex flex-wrap justify-center gap-8 text-[11px] font-black tracking-[0.2em] uppercase text-white/40">
-              <Link href="/" className="hover:text-white transition-colors">{t.menu_inicio}</Link>
-              <Link href="/servicios" className="hover:text-white transition-colors">{t.menu_servicios}</Link>
-              <Link href="/riders" className="hover:text-white transition-colors">{t.menu_riders}</Link>
-              <Link href="/taller" className="hover:text-white transition-colors">{t.menu_taller}</Link>
-            </nav>
-            <div className="text-[10px] text-white/20 uppercase tracking-[0.5em] font-medium pt-4">© 2026 WAVE SURF CLUB | ALL RIGHTS RESERVED</div>
-          </div>
-        </div>
-      </footer>
-      
-      {/* ── MODAL DE REGISTRO ── */}
-      {showModal && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center px-4">
-          <div className="absolute inset-0 bg-black/95 backdrop-blur-2xl" onClick={() => setShowModal(false)}></div>
-          <div className="relative bg-[#111] w-full max-w-xl p-10 md:p-16 rounded-[2.5rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5">
-            <button onClick={() => setShowModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
-
-            <div className="space-y-12">
-              <div className="text-center">
-                <h3 className="text-white text-4xl font-black uppercase tracking-tighter mb-4">{t.mod_title}</h3>
-                <p className="text-gray-500 text-sm uppercase tracking-widest font-bold">Únete a la familia Wave Surf Club</p>
-              </div>
-
-              <form onSubmit={handleRegister} className="space-y-6">
-                {['name', 'rut', 'email', 'phone'].map((field) => (
-                  <div key={field} className="relative group">
-                    <input
-                      type={field === 'email' ? 'email' : 'text'}
-                      required
-                      placeholder={t[`mod_${field}`]}
-                      className="w-full bg-[#1A1A1A] border-none text-white px-8 py-5 rounded-2xl outline-none focus:ring-2 focus:ring-[#FACC15]/50 transition-all font-bold group-hover:bg-[#222]"
-                      value={formData[field]}
-                      onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
-                    />
-                  </div>
-                ))}
-                
-                <button 
-                  type="submit" 
-                  disabled={loading}
-                  className="w-full bg-[#FACC15] hover:bg-white text-black font-black py-5 rounded-2xl transition-all duration-500 shadow-2xl hover:scale-[1.02] tracking-widest uppercase text-sm disabled:opacity-50"
-                >
-                  {loading ? t.mod_processing : t.mod_submit}
-                </button>
-              </form>
-
-              {message.text && (
-                <div className={`p-4 rounded-xl text-center text-xs font-black uppercase tracking-widest ${message.type === 'success' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-500'}`}>
-                  {message.text}
-                </div>
-              )}
-            </div>
-          </div>
+      {/* MOBILE FLYOUT MENU */}
+      {menuOpen && (
+        <div className="mobile-flyout">
+          <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.scrollTo({top:0, behavior:'smooth'}); }}>{t.menu_inicio}</a>
+          <a href="#biografia" onClick={() => setMenuOpen(false)}>{t.menu_bio}</a>
+          <a href="#escuelas" onClick={() => setMenuOpen(false)}>{t.menu_escuelas}</a>
+          <Link href="/servicios" onClick={() => setMenuOpen(false)}>{t.menu_servicios}</Link>
+          <a href="#equipo" onClick={() => setMenuOpen(false)}>{t.menu_equipo}</a>
+          <Link href="/taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</Link>
+          <Link href="/riders" onClick={() => setMenuOpen(false)}>{t.menu_riders}</Link>
+          <Link href="/agenda" onClick={() => setMenuOpen(false)}>{t.menu_agenda}</Link>
+          <a href="#tienda" onClick={() => setMenuOpen(false)}>{t.menu_tienda}</a>
+          <a href="#contenido" onClick={() => setMenuOpen(false)}>{t.menu_contenido}</a>
+          <a href="#contacto" onClick={() => setMenuOpen(false)}>{t.menu_contacto}</a>
+          <a href="#eventos" onClick={() => setMenuOpen(false)}>{t.menu_eventos}</a>
+          <a style={{ color: '#2563eb' }}>{t.menu_carro}</a>
         </div>
       )}
+=======
+      <Navbar />
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
-      {/* ── MOBILE MENU ── */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-[2000] bg-black flex flex-col p-12 text-center">
-          <button onClick={() => setIsMenuOpen(false)} className="self-end text-white p-4">
-            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-          </button>
-          <div className="flex-1 flex flex-col justify-center gap-10">
-            <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-4xl font-black text-white hover:text-[#FACC15] transition-colors">{t.menu_inicio}</Link>
-            <Link href="/servicios" onClick={() => setIsMenuOpen(false)} className="text-4xl font-black text-white hover:text-[#FACC15] transition-colors">{t.menu_servicios}</Link>
-            <Link href="/taller" onClick={() => setIsMenuOpen(false)} className="text-4xl font-black text-white hover:text-[#FACC15] transition-colors">{t.menu_taller}</Link>
-            <Link href="/riders" onClick={() => setIsMenuOpen(false)} className="text-4xl font-black text-white hover:text-[#FACC15] transition-colors">{t.menu_riders}</Link>
-            <Link href="/agenda" onClick={() => setIsMenuOpen(false)} className="text-4xl font-black text-[#FACC15]">{t.menu_agenda}</Link>
+      {/* --- SECCIONES PARALLAX --- */}
+
+      <section className="px-section" id="hero">
+        <div className="px-bg-wrapper">
+          <Image 
+            src="/PORTADA.jpg" 
+            alt="Hero Background" 
+            fill 
+            priority
+            style={{ objectFit: 'cover' }}
+          />
+        </div>
+      </section>
+
+      <section className="px-section" id="biografia">
+        <div className="px-bg-wrapper">
+          <Image 
+            src="/BIOGRAFIA.jpg" 
+            alt="Biografia" 
+            fill 
+            style={{ objectFit: 'cover' }} 
+          />
+        </div>
+      </section>
+
+      <section className="px-section" id="escuelas">
+        <div className="px-bg-wrapper">
+          <Image src="/tomy-escuela.png" alt="Escuelas" fill style={{ objectFit: 'cover' }} />
+        </div>
+        <div className="px-overlay" style={{ background: 'rgba(11, 17, 32, 0.2)' }} />
+        <div className="px-content">
+          <h2 className="section-marker">{t.menu_escuelas}</h2>
+          <p className="hero-subtitle">{t.sec_escuelas_sub}</p>
+
+          <div className="schools-grid">
+            <Link href="/spots/concon" style={{ textDecoration: 'none' }}>
+              <div className="school-card">
+                <h3>SEDE CONCÓN <span>(Sede Matriz)</span></h3>
+                <div className="slogan">El corazón de Wave Surf Club.</div>
+                <p>Nuestra base histórica y el punto de encuentro principal. Ubicada estratégicamente para ofrecer las mejores condiciones de enseñanza en la zona central de Chile.</p>
+                <ul>
+                  <li><strong>Mirador Privado:</strong> Vista privilegiada al lineup para análisis de olas.</li>
+                  <li><strong>Zona de Confort:</strong> Camarines equipados, Baños y Duchas con agua caliente.</li>
+                  <li><strong>Skate Park Interno:</strong> Rampas técnicas para progresión fuera del agua.</li>
+                  <li><strong>Área Lounge:</strong> Espacio de hidratación y descanso para alumnos y Riders.</li>
+                </ul>
+              </div>
+            </Link>
+            
+            <Link href="/spots/pichilemu" style={{ textDecoration: 'none' }}>
+              <div className="school-card">
+                <h3>SEDE PICHILEMU <span>(Capital del Surf)</span></h3>
+                <div className="slogan">Donde viven las leyendas.</div>
+                <p>Ubicada en la meca del surf chileno, nuestra sede ofrece una experiencia de inmersión total en la cultura de tabla más potente del país.</p>
+                <ul>
+                  <li><strong>Infraestructura Pro:</strong> Diseñada para grupos grandes (universidades y colegios).</li>
+                  <li><strong>Entrenamiento Funcional:</strong> Espacio dedicado a la preparación física específica.</li>
+                  <li><strong>Vestidores Premium:</strong> Máxima comodidad tras sesiones de frío intenso.</li>
+                  <li><strong>Acceso Directo:</strong> Ubicación clave para entrar al agua sin distracciones.</li>
+                </ul>
+              </div>
+            </Link>
+
+            <Link href="/spots/punta-piedra" style={{ textDecoration: 'none' }}>
+              <div className="school-card">
+                <h3>SEDE PUNTA PIEDRA <span>(Inauguración 2026)</span></h3>
+                <div className="slogan">El futuro del deporte extremo.</div>
+                <p>Nuestra sede más moderna y tecnológica. Un proyecto de vanguardia diseñado para elevar el estándar de las escuelas de surf en Chile.</p>
+                <ul>
+                  <li><strong>Arquitectura 360°:</strong> Mirador de última generación con vista panorámica.</li>
+                  <li><strong>Rampas de Skate Pro:</strong> Bowl y secciones de Street de alta competencia.</li>
+                  <li><strong>Accesibilidad Universal:</strong> Baños y accesos diseñados para la inclusión total.</li>
+                  <li><strong>Showroom Wave:</strong> Espacio para ver las últimas tendencias en equipo y tablas.</li>
+                </ul>
+              </div>
+            </Link>
+          </div>
+
+        </div>
+      </section>
+
+
+<<<<<<< HEAD
+      <section className="px-section" id="equipo" style={{ padding: '0' }}>
+        <EquipoSection />
+      </section>
+=======
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
+
+      <section className="px-section" id="eventos">
+        <div className="px-bg-wrapper">
+          <Image src="/fondo-logo.png" alt="Eventos" fill style={{ objectFit: 'cover' }} />
+        </div>
+        <div className="px-overlay" />
+        <div className="px-content">
+          <h2 className="section-marker">{t.menu_eventos}</h2>
+          <p className="hero-subtitle">{t.sec_eventos_sub}</p>
+        </div>
+      </section>
+
+
+      {/* --- MODAL REGISTRO CLIENTE --- */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+            <h3 className="modal-title">{t.mod_title}</h3>
+            
+            {msg && <div className={`msg ${msg.type}`}>{msg.text}</div>}
+
+            <form onSubmit={handleRegisterClient}>
+              <div className="form-group">
+                <label className="form-label">{t.mod_name}</label>
+                <input required type="text" className="form-input" value={name} onChange={e => setName(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">{t.mod_rut}</label>
+                <input required type="text" className="form-input" value={rut} onChange={e => setRut(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">{t.mod_email}</label>
+                <input required type="email" className="form-input" value={email} onChange={e => setEmail(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">{t.mod_phone}</label>
+                <input required type="text" className="form-input" value={phone} onChange={e => setPhone(e.target.value)} />
+              </div>
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? t.mod_processing : t.mod_submit}
+              </button>
+            </form>
           </div>
         </div>
       )}

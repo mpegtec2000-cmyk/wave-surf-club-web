@@ -3,7 +3,10 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { SPOTS_DATA } from '@/lib/spots-data';
+<<<<<<< HEAD
+=======
 import Navbar from '@/components/Navbar';
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
 export default function SpotPage() {
   const params = useParams();
@@ -21,7 +24,15 @@ export default function SpotPage() {
 
   return (
     <div className="spot-magazine">
+<<<<<<< HEAD
+      {/* Navbar Minimalista */}
+      <nav className="spot-nav">
+        <Link href="/#escuelas" className="back-btn">← VOLVER A SPOTS</Link>
+        <div className="logo-text">WAVE SURF CLUB</div>
+      </nav>
+=======
       <Navbar />
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
       {/* A. Hero: Pantalla Completa */}
       <section className="spot-hero" style={{ backgroundImage: `url(${spot.heroImage})` }}>

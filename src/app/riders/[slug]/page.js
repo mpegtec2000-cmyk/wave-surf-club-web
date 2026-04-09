@@ -4,6 +4,15 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+<<<<<<< HEAD
+
+const RYDERS_DATA = {
+  'tomas-bock': {
+    name: 'Tomas Bock',
+    role: 'PRO SURFER',
+    cover: '/tomy-escuela.png',
+    bio: '<p>Tomas Bock es uno de los ryders más destacados de la escena nacional. Con una trayectoria impecable en el circuito Pro, Tomas representa la esencia pura de Wave Surf Club: disciplina, pasión y una conexión profunda con el océano.</p>',
+=======
 import Navbar from '@/components/Navbar';
 
 const RIDERS_DATA = {
@@ -12,6 +21,7 @@ const RIDERS_DATA = {
     role: 'PRO RIDER',
     cover: '/tomy-escuela.png',
     bio: '<p>Tomas Bock es uno de los riders más destacados de la escena nacional. Con una trayectoria impecable en el circuito Pro, Tomas representa la esencia pura de Wave Surf Club: disciplina, pasión y una conexión profunda con el océano.</p>',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     stats: { board: 'Wave Tech 6\'0"', stance: 'Regular', local: 'Pichilemu' },
     gallery: [
       '/tomy-escuela.png',
@@ -31,6 +41,14 @@ const RIDERS_DATA = {
     `,
     stats: { board: 'Wave Classic 7\'4"', stance: 'Goofy', local: 'Concón' },
     gallery: [
+<<<<<<< HEAD
+      '/images/paulo/foto1.jpg',
+      '/images/paulo/foto2.jpg',
+      '/images/paulo/foto3.jpg',
+      '/images/paulo/foto4.jpg',
+      '/images/paulo/foto5.jpg',
+      '/images/paulo/foto6.jpg'
+=======
       '/riders/paulo/R1.jpg',
       '/riders/paulo/R2.jpg',
       '/riders/paulo/R3.jpg',
@@ -39,20 +57,165 @@ const RIDERS_DATA = {
       '/riders/paulo/R6.jpg',
       '/riders/paulo/R7.jpg',
       '/riders/paulo/R8.jpg'
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     ],
     magazine: 'https://drive.google.com/drive/folders/1ZXnRizAjEvrCkdoV0tfGwF7esY4g81oK?usp=sharing'
+  },
+  'martin-cardozo': {
+    name: 'Martín Cardozo',
+    role: 'SKATE PRO',
+    cover: 'https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Martín Cardozo es sinónimo de estilo y técnica en el skate park. Con una visión innovadora de las líneas urbanas, ha logrado posicionarse como uno de los referentes del club para la nueva generación de skaters chilenos.</p>',
+    stats: { board: 'Wave Skate 8.25"', stance: 'Regular', local: 'Concón' },
+    gallery: ['https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=1200&q=80']
+  },
+  'sofia-renaca': {
+    name: 'Sofía Reñaca',
+    role: 'SURF AMBASSADOR',
+    cover: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Sofía representa la elegancia en el agua. Como embajadora de Wave Surf Club, su misión es inspirar a más mujeres a sumergirse en la cultura del surf, promoviendo el respeto por el océano y la perseverancia deportiva.</p>',
+    stats: { board: 'Wave Flow 6\'4"', stance: 'Goofy', local: 'Reñaca' },
+    gallery: ['https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=80']
+  },
+  'lucas-pichilemu': {
+    name: 'Lucas Pichilemu',
+    role: 'JUNIOR TEAM',
+    cover: 'https://images.unsplash.com/photo-1518721332565-4d5dcba6676c?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>La joven promesa del surf nacional. Lucas ha crecido entre las olas de Pichilemu, desarrollando una lectura de mar excepcional para su edad que lo proyecta como un competidor de nivel mundial.</p>',
+    stats: { board: 'Wave Grom 5\'8"', stance: 'Regular', local: 'Pichilemu' },
+    gallery: ['https://images.unsplash.com/photo-1518721332565-4d5dcba6676c?auto=format&fit=crop&w=1200&q=80']
+  },
+  'mateo-olas': {
+    name: 'Mateo Olas',
+    role: 'SURF COACH',
+    cover: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Especialista en técnica y seguridad. Mateo es fundamental en la formación de nuevos talentos, enfocándose en la metodología técnica necesaria para que cada alumno evolucione de forma constante y segura.</p>',
+    stats: { board: 'Wave Coach 7\'2"', stance: 'Goofy', local: 'Concón' },
+    gallery: ['https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1200&q=80']
+  },
+  'isidora-wave': {
+    name: 'Isidora Wave',
+    role: 'CONTENT CREATOR',
+    cover: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Capturando la esencia del club. Isidora fusiona su pasión por el surf con la creación visual, llevando el espíritu de Wave Surf Club a todas las plataformas con una estética premium y auténtica.</p>',
+    stats: { board: 'Wave Hybrid 6\'8"', stance: 'Regular', local: 'Zapallar' },
+    gallery: ['https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80']
+  },
+  'benjamin-coast': {
+    name: 'Benjamín Coast',
+    role: 'SKATE TEAM',
+    cover: 'https://images.unsplash.com/photo-1601506521937-0121a7fc7a65?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Benjamín destaca por su creatividad y fluidez en el asfalto. Su estilo combina maniobras técnicas con una velocidad envidiable, siendo una pieza clave del equipo Pro de Skate del club.</p>',
+    stats: { board: 'Wave Pro Skate 8.0"', stance: 'Goofy', local: 'Santiago' },
+    gallery: ['https://images.unsplash.com/photo-1601506521937-0121a7fc7a65?auto=format&fit=crop&w=1200&q=80']
+  },
+  'valentina-pacific': {
+    name: 'Valentina Pacific',
+    role: 'SURF PRO',
+    cover: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Competidora nata. Valentina ha recorrido el circuito nacional con resultados consistentes, destacando por su potencia en el rail y su compromiso con el desarrollo del surf femenino.</p>',
+    stats: { board: 'Wave Performance 5\'11"', stance: 'Regular', local: 'Maitencillo' },
+    gallery: ['https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80']
+  },
+  'diego-salt': {
+    name: 'Diego Salt',
+    role: 'WAVE TALLER',
+    cover: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=1200&q=80',
+<<<<<<< HEAD
+    bio: '<p>El guardián de los equipos. Diego conoce cada secreto de las tablas y el equipamiento. Su labor en el taller asegura que cada ryder de Wave tenga las herramientas perfectas para dominar el mar.</p>',
+=======
+    bio: '<p>El guardián de los equipos. Diego conoce cada secreto de las tablas y el equipamiento. Su labor en el taller asegura que cada rider de Wave tenga las herramientas perfectas para dominar el mar.</p>',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
+    stats: { board: 'Wave Cruiser 8\'0"', stance: 'Regular', local: 'Concón' },
+    gallery: ['https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=1200&q=80']
+  },
+  'agustin-flow': {
+    name: 'Agustín Flow',
+    role: 'SKATE JUNIOR',
+    cover: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Talento emergente. Agustín representa la nueva sangre del skate, con una facilidad asombrosa para aprender trucos complejos y una dedicación que lo pone a la cabeza del equipo junior.</p>',
+    stats: { board: 'Wave Junior 7.75"', stance: 'Regular', local: 'Viña del Mar' },
+    gallery: ['https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=1200&q=80']
+  },
+  'javiera-reef': {
+    name: 'Javiera Reef',
+    role: 'SURF GIRL',
+    cover: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Pasión por el océano. Javiera es un ejemplo de constancia en el agua, siempre buscando perfeccionar su técnica y disfrutando cada sesión con el espíritu aventurero del club.</p>',
+    stats: { board: 'Wave Funboard 7\'0"', stance: 'Goofy', local: 'Concón' },
+    gallery: ['https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80']
+  },
+  'raimundo-point': {
+    name: 'Raimundo Point',
+    role: 'BIG WAVE RIDER',
+    cover: 'https://images.unsplash.com/photo-1414442657444-24584284d720?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Buscador de olas gigantes. Raimundo vive para los swells más potentes, representando el coraje y la preparación técnica extrema que requiere el surf de olas grandes en Chile.</p>',
+    stats: { board: 'Wave Gun 9\'6"', stance: 'Regular', local: 'Punta de Lobos' },
+    gallery: ['https://images.unsplash.com/photo-1414442657444-24584284d720?auto=format&fit=crop&w=1200&q=80']
+  },
+  'pascal-shore': {
+    name: 'Pascal Shore',
+    role: 'LONGBOARD PRO',
+    cover: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Clasicismo y estilo. Pascal domina el longboard con una gracia natural, rescatando las raíces del surf y demostrando que la elegancia sobre la tabla es un arte eterno.</p>',
+    stats: { board: 'Wave Long Classic 9\'2"', stance: 'Goofy', local: 'Pichilemu' },
+    gallery: ['https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80']
+  },
+  'gaspar-board': {
+    name: 'Gaspar Board',
+    role: 'SHAPER',
+    cover: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80',
+<<<<<<< HEAD
+    bio: '<p>El artesano de la velocidad. Gaspar diseña y construye las tablas que definen el rendimiento de nuestros ryders, fusionando ciencia y arte bajo el sello Wave.</p>',
+=======
+    bio: '<p>El artesano de la velocidad. Gaspar diseña y construye las tablas que definen el rendimiento de nuestros riders, fusionando ciencia y arte bajo el sello Wave.</p>',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
+    stats: { board: 'Wave Master Tool', stance: 'Regular', local: 'Concón' },
+    gallery: ['https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80']
+  },
+  'antonia-tide': {
+    name: 'Antonia Tide',
+    role: 'JUNIOR GIRLS',
+    cover: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Futuro brillante. Antonia destaca por su valentía en condiciones fuertes y su sed de aprendizaje, liderando la nueva camada de surfistas femeninas del club.</p>',
+    stats: { board: 'Wave Grom Star 5\'6"', stance: 'Regular', local: 'Concón' },
+    gallery: ['https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1200&q=80']
+  },
+  'emilio-bowl': {
+    name: 'Emilio Bowl',
+    role: 'PARK SKATE',
+    cover: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Dominio total del bowl. Emilio destaca por sus aéreos y su control en las transiciones más verticales, elevando el nivel técnico de cada sesión de entrenamiento.</p>',
+    stats: { board: 'Wave Bowl Pro 8.5"', stance: 'Goofy', local: 'Concón' },
+    gallery: ['https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1200&q=80']
+  },
+  'catalina-spray': {
+    name: 'Catalina Spray',
+    role: 'SURF ELITE',
+    cover: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80',
+    bio: '<p>Rendimiento máximo. Catalina se enfoca en el perfeccionamiento de maniobras críticas, representando la excelencia deportiva y el espíritu competitivo de Wave Surf Club.</p>',
+    stats: { board: 'Wave Elite 5\'10"', stance: 'Regular', local: 'Pichilemu' },
+    gallery: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80']
   },
   'felipe-edge': {
     name: 'Felipe Edge',
     role: 'TECH COACH',
     cover: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80',
+<<<<<<< HEAD
+    bio: '<p>Maestro de la técnica. Felipe analiza cada movimiento para optimizar el performance de los ryders pro, utilizando tecnología y experiencia para alcanzar la perfección.</p>',
+=======
     bio: '<p>Maestro de la técnica. Felipe analiza cada movimiento para optimizar el performance de los riders pro, utilizando tecnología y experiencia para alcanzar la perfección.</p>',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     stats: { board: 'Wave Tech 6\'2"', stance: 'Regular', local: 'Concón' },
     gallery: ['https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80']
   },
   'angelo-avello': {
     name: 'Angelo Avello',
+<<<<<<< HEAD
+    role: 'RYDER',
+=======
     role: 'RIDER',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     cover: 'https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=1200&q=80',
     bio: '<p>Angelo Avello se une al equipo para demostrar que el surf es más que un deporte, es una forma de vida. Su estilo fluido y compromiso con la excelencia lo posicionan como un talento a seguir.</p>',
     stats: { board: 'Wave Tech 6\'2"', stance: 'Regular', local: 'Concón' },
@@ -60,7 +223,11 @@ const RIDERS_DATA = {
   },
   'cristobal-lazcano': {
     name: 'Cristobal Lazcano',
+<<<<<<< HEAD
+    role: 'RYDER',
+=======
     role: 'RIDER',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     cover: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=80',
     bio: '<p>Cristobal Lazcano aporta frescura y potencia al equipo. Con una visión técnica impecable, Cristobal representa la nueva ola de deportistas que están redefiniendo el surf nacional.</p>',
     stats: { board: 'Wave Performance 6\'0"', stance: 'Goofy', local: 'Pichilemu' },
@@ -68,17 +235,30 @@ const RIDERS_DATA = {
   },
   'vicente-pipe': {
     name: 'Vicente Pipe',
+<<<<<<< HEAD
+    role: 'RYDER',
+=======
     role: 'RIDER',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     cover: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80',
     bio: '<p>El ojo narrativo. Vicente captura la gloria y el esfuerzo del club, inmortalizando los momentos que definen nuestra historia y la belleza del deporte de tabla.</p>',
     stats: { board: 'Wave Media Hub', stance: 'N/A', local: 'Chile' },
     gallery: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80']
   },
+<<<<<<< HEAD
+  // Fallback data for other ryders
+=======
+  // Fallback data for other riders
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
   default: {
     name: 'Wave Rider',
     role: 'TEAM RIDER',
     cover: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1920&q=80',
+<<<<<<< HEAD
+    bio: '<p>Nacido entre las olas de la zona central, este ryder ha dedicado su vida a perfeccionar la técnica y el estilo que definen a la nueva generación del surf chileno.</p>',
+=======
     bio: '<p>Nacido entre las olas de la zona central, este rider ha dedicado su vida a perfeccionar la técnica y el estilo que definen a la nueva generación del surf chileno.</p>',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     stats: { board: 'Wave Custom', stance: 'Natural', local: 'Chile' },
     gallery: [
       'https://images.unsplash.com/photo-1533031021462-8e7ac46b1d4c?auto=format&fit=crop&w=1200&q=80',
@@ -87,9 +267,15 @@ const RIDERS_DATA = {
   }
 };
 
+<<<<<<< HEAD
+export default function RyderMagazine() {
+  const { slug } = useParams();
+  const ryder = RYDERS_DATA[slug] || RYDERS_DATA.default;
+=======
 export default function RiderMagazine() {
   const { slug } = useParams();
   const rider = RIDERS_DATA[slug] || RIDERS_DATA.default;
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
   const [scrolled, setScrolled] = useState(false);
   const [index, setIndex] = useState(0);
 
@@ -102,6 +288,15 @@ export default function RiderMagazine() {
   }, []);
 
   useEffect(() => {
+<<<<<<< HEAD
+    if (ryder.gallery && ryder.gallery.length > 1) {
+      const interval = setInterval(() => {
+        setIndex((prev) => (prev + 1) % ryder.gallery.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [ryder.gallery]);
+=======
     if (rider.gallery && rider.gallery.length > 1) {
       const interval = setInterval(() => {
         setIndex((prev) => (prev + 1) % rider.gallery.length);
@@ -109,6 +304,7 @@ export default function RiderMagazine() {
       return () => clearInterval(interval);
     }
   }, [rider.gallery]);
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
   return (
     <div className="mag-container">
@@ -118,6 +314,33 @@ export default function RiderMagazine() {
           color: #000;
           min-height: 100vh;
           font-family: var(--font-sans);
+        }
+
+        /* --- STICKY NAV --- */
+        .mag-nav {
+          position: fixed;
+          top: 0; left: 0; right: 0;
+          height: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 40px;
+          z-index: 1000;
+          transition: all 0.4s;
+          background: ${scrolled ? 'rgba(11, 17, 32, 0.9)' : 'transparent'};
+          backdrop-filter: ${scrolled ? 'blur(20px)' : 'none'};
+          border-bottom: ${scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none'};
+        }
+        .back-btn {
+          color: #000;
+          text-decoration: none;
+          font-weight: 800;
+          font-size: 12px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          gap: 10px;
         }
 
         /* --- HERO COVER --- */
@@ -132,7 +355,11 @@ export default function RiderMagazine() {
         .hero-bg {
           position: absolute;
           inset: 0;
+<<<<<<< HEAD
+          background: #000 url(${ryder.cover}) center/contain no-repeat;
+=======
           background: #000 url(${rider.cover}) center/contain no-repeat;
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
           z-index: 1;
         }
         .hero-overlay {
@@ -149,6 +376,15 @@ export default function RiderMagazine() {
           padding: 40px 60px;
           border: 1px solid #000;
           box-shadow: 20px 20px 0px rgba(0,0,0,0.1);
+        }
+        .mag-tag {
+          color: #38bdf8;
+          font-weight: 800;
+          letter-spacing: 4px;
+          font-size: 14px;
+          text-transform: uppercase;
+          margin-bottom: 16px;
+          display: block;
         }
         .mag-name {
           font-size: clamp(24px, 4vw, 48px);
@@ -195,8 +431,23 @@ export default function RiderMagazine() {
           font-weight: 400;
           text-align: justify;
         }
-        .editorial-p p { margin-bottom: 20px; }
-        .editorial-p strong { color: #000; font-weight: 700; }
+        .editorial-p p {
+          margin-bottom: 20px;
+        }
+        .editorial-p strong {
+          color: #000;
+          font-weight: 700;
+        }
+        
+        .side-img {
+          width: 100%;
+          height: auto;
+          max-height: 800px;
+          object-fit: contain;
+          background: #000;
+          border-radius: 4px;
+          box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
         
         .carousel-container {
           position: relative;
@@ -206,16 +457,130 @@ export default function RiderMagazine() {
           border-radius: 4px;
           box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
+        .carousel-img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: opacity 1.5s ease-in-out, transform 8s ease-out;
+          opacity: 0;
+<<<<<<< HEAD
+          filter: contrast(1.1) brightness(0.9) hue-rotate(240deg) saturate(1.5);
+          mix-blend-mode: screen;
+=======
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
+          transform: scale(1.1);
+        }
+        .carousel-img.active {
+          opacity: 1;
+          transform: scale(1);
+        }
+        .carousel-overlay {
+          position: absolute;
+          top: 30px;
+          right: 30px;
+          border: 1px solid rgba(0,0,0,0.8);
+          padding: 10px 20px;
+          z-index: 10;
+<<<<<<< HEAD
+          mix-blend-mode: multiply;
+=======
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
+        }
+        .carousel-overlay span {
+          font-family: serif;
+          font-size: 24px;
+          font-weight: 400;
+          letter-spacing: -2px;
+          color: #000;
+          text-transform: uppercase;
+          display: block;
+          line-height: 1;
+        }
+
         .carousel-image-wrapper {
           position: absolute;
           inset: 0;
           opacity: 0;
           transition: opacity 1.5s ease-in-out, transform 8s ease-out;
           transform: scale(1.1);
+<<<<<<< HEAD
+          mix-blend-mode: screen;
+=======
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
         }
         .carousel-image-wrapper.active {
           opacity: 1;
           transform: scale(1);
+        }
+
+        .gal-img-wrapper {
+          position: relative;
+          width: 100%;
+          height: 600px;
+          background: #000;
+          border-radius: 4px;
+          overflow: hidden;
+        }
+        .gal-img-wrapper:nth-child(3n) {
+          grid-column: span 2;
+          height: 800px;
+        }
+
+        /* --- STATS GRID --- */
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 40px;
+          border-top: 1px solid rgba(255,255,255,0.1);
+          padding-top: 60px;
+          margin-top: 60px;
+        }
+        .stat-item h6 {
+          font-size: 11px;
+          color: #38bdf8;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          margin: 0 0 10px;
+        }
+        .stat-item p {
+          font-size: 24px;
+          font-weight: 700;
+          margin: 0;
+        }
+
+        /* --- GALLERY --- */
+        .mag-gallery {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+          margin-top: 100px;
+        }
+        .gal-img {
+          width: 100%;
+          height: 600px;
+          object-fit: contain;
+          background: #000;
+          border-radius: 4px;
+        }
+        .gal-img:nth-child(3n) {
+          grid-column: span 2;
+          height: 800px;
+        }
+
+        @media (max-width: 900px) {
+          .editorial-row { flex-direction: column; text-align: center; }
+          .stats-grid { grid-template-columns: 1fr; }
+          .mag-gallery { grid-template-columns: 1fr; }
+          .gal-img:nth-child(3n) { grid-column: span 1; }
+          .editorial-p {
+            font-size: 14px;
+            text-align: left;
+          }
+          .editorial-title {
+            font-size: 24px;
+          }
         }
 
         /* --- DOWNLOAD BUTTON --- */
@@ -243,24 +608,41 @@ export default function RiderMagazine() {
         .mag-download-btn:hover {
           transform: translateY(-3px);
           box-shadow: 0 15px 30px rgba(14, 165, 233, 0.4);
+          background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
         }
-
-        @media (max-width: 900px) {
-          .editorial-row { flex-direction: column; text-align: center; }
-          .editorial-title { font-size: 24px; }
+        .mag-download-btn span {
+          background: rgba(255,255,255,0.2);
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 12px;
         }
       `}</style>
-      
+
+<<<<<<< HEAD
+      <nav className="mag-nav">
+        <Link href="/#ryders" className="back-btn">
+          ← Volver al Club
+        </Link>
+        <img src="/logo-pag.png" alt="Wave" style={{ height: '40px', filter: 'brightness(0)' }} />
+      </nav>
+=======
       <Navbar />
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
       <header className="mag-hero">
         <div className="hero-bg" />
         <div className="hero-overlay" />
         <div className="hero-title-box">
           <h1 className="mag-name">
+<<<<<<< HEAD
+            <span className="mag-prefix">R Y D E R</span> 
+            <span>/</span>
+            <span>{formatSpaced(ryder.name)}</span>
+=======
             <span className="mag-prefix">R I D E R</span> 
             <span>/</span>
             <span>{formatSpaced(rider.name)}</span>
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
           </h1>
         </div>
       </header>
@@ -269,6 +651,19 @@ export default function RiderMagazine() {
         <div className="editorial-row">
           <div className="text-col">
             <h2 className="editorial-title">
+<<<<<<< HEAD
+              {ryder.title || 'LA ESENCIA DEL RIDER'}
+            </h2>
+            <div 
+              className="editorial-p" 
+              dangerouslySetInnerHTML={{ __html: ryder.bio }} 
+            />
+
+            {ryder.magazine && (
+              <div className="download-btn-container">
+                <a 
+                  href={ryder.magazine} 
+=======
               {rider.title || 'LA ESENCIA DEL RIDER'}
             </h2>
             <div 
@@ -280,6 +675,7 @@ export default function RiderMagazine() {
               <div className="download-btn-container">
                 <a 
                   href={rider.magazine} 
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
                   download 
                   className="mag-download-btn"
                 >
@@ -295,21 +691,41 @@ export default function RiderMagazine() {
           </div>
           <div className="img-col">
             <div className="carousel-container">
+<<<<<<< HEAD
+              {ryder.gallery.map((img, i) => (
+=======
               {rider.gallery.map((img, i) => (
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
                 <div key={i} className={`carousel-image-wrapper ${i === index ? 'active' : ''}`}>
                   <Image 
                     src={img} 
                     fill
                     sizes="(max-width: 900px) 100vw, 50vw"
                     priority={i === 0}
-                    style={{ objectFit: 'cover' }}
+                    style={{ 
+<<<<<<< HEAD
+                      objectFit: 'cover',
+                      filter: 'contrast(1.1) brightness(0.9) hue-rotate(240deg) saturate(1.5)',
+=======
+                      objectFit: 'cover'
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
+                    }}
+                    className="carousel-img-optimized"
                     alt={`Rider ${i}`} 
                   />
                 </div>
               ))}
+<<<<<<< HEAD
+              <div className="carousel-overlay">
+                <span>WAVE SURF CLUB</span>
+              </div>
+=======
+              {/* Watermark removed as per User Request */}
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
             </div>
           </div>
         </div>
+
       </main>
 
       <footer style={{ padding: '100px 40px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.05)' }}>

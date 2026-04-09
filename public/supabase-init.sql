@@ -4,7 +4,11 @@
 -- ============================================================
 
 -- 1. Crear ENUMs
+<<<<<<< HEAD
+CREATE TYPE user_role AS ENUM ('superadmin', 'caja', 'asistente', 'cliente', 'profesor', 'ryder');
+=======
 CREATE TYPE user_role AS ENUM ('superadmin', 'caja', 'asistente', 'cliente', 'profesor', 'rider');
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 CREATE TYPE payment_method AS ENUM ('efectivo', 'transferencia', 'tarjeta', 'por_pagar');
 CREATE TYPE trans_category AS ENUM ('arriendo', 'clase', 'tienda', 'cafeteria', 'escuela', 'pago_deuda', 'otro');
 
