@@ -12,13 +12,17 @@ function CustomCalendar({ selectedDate, onSelect, minDate }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   
   const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
-  const firstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
+  const firstDayOfMonth = (year, month) => {
+    // We want Monday (1) to be the first column, Sunday (0) the last
+    let day = new Date(year, month, 1).getDay();
+    return day === 0 ? 6 : day - 1; // Adjust so Mon=0, Sun=6
+  };
   
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   
   const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-  const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+  const dayNames = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
   
   const handlePrev = () => setCurrentDate(new Date(year, month - 1, 1));
   const handleNext = () => setCurrentDate(new Date(year, month + 1, 1));
@@ -33,8 +37,9 @@ function CustomCalendar({ selectedDate, onSelect, minDate }) {
   
   const isSelected = (d) => {
     if (!d || !selectedDate) return false;
-    const sel = new Date(selectedDate + 'T12:00:00');
-    return d.getDate() === sel.getDate() && d.getMonth() === sel.getMonth() && d.getFullYear() === sel.getFullYear();
+    // selectedDate is "YYYY-MM-DD"
+    const [y, m, day] = selectedDate.split('-').map(Number);
+    return d.getDate() === day && d.getMonth() === (m - 1) && d.getFullYear() === y;
   };
   
   const isDisabled = (d) => {
@@ -53,9 +58,9 @@ function CustomCalendar({ selectedDate, onSelect, minDate }) {
   return (
     <div className="custom-calendar">
       <div className="cal-header">
-        <button type="button" onClick={handlePrev}>&larr;</button>
-        <span>{monthNames[month]} {year}</span>
-        <button type="button" onClick={handleNext}>&rarr;</button>
+        <button type="button" onClick={handlePrev} className="cal-nav-btn">&larr;</button>
+        <div className="cal-title">{monthNames[month].toUpperCase()} {year}</div>
+        <button type="button" onClick={handleNext} className="cal-nav-btn">&rarr;</button>
       </div>
       <div className="cal-grid">
         {dayNames.map(d => <div key={d} className="cal-day-label">{d}</div>)}
@@ -65,7 +70,7 @@ function CustomCalendar({ selectedDate, onSelect, minDate }) {
             className={`cal-day ${!d ? 'empty' : ''} ${isSelected(d) ? 'selected' : ''} ${isDisabled(d) ? 'disabled' : ''} ${isWeekend(d) ? 'weekend' : ''}`}
             onClick={() => d && !isDisabled(d) && onSelect(d.toISOString().split('T')[0])}
           >
-            {d?.getDate()}
+            <span className="day-number">{d?.getDate()}</span>
           </div>
         ))}
       </div>
@@ -371,20 +376,90 @@ export default function AgendaPage() {
         .receipt-card { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); padding: 25px; border-radius: 16px; margin: 20px 0; }
         .checkout-info { margin: 20px 0; padding: 20px; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2); }
 
-        /* CALENDAR STYLES */
-        .custom-calendar { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; user-select: none; }
-        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
-        .cal-header span { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #38bdf8; }
-        .cal-header button { background: none; border: none; color: #fff; cursor: pointer; font-size: 18px; opacity: 0.6; transition: 0.3s; }
-        .cal-header button:hover { opacity: 1; color: #38bdf8; }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
-        .cal-day-label { font-size: 10px; font-weight: 800; color: #94a3b8; padding-bottom: 10px; text-transform: uppercase; }
-        .cal-day { padding: 10px; font-size: 13px; border-radius: 8px; cursor: pointer; transition: 0.3s; border: 1px solid transparent; }
-        .cal-day:hover:not(.disabled):not(.empty) { background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.3); }
-        .cal-day.selected { background: #38bdf8 !important; color: #000; font-weight: 900; }
-        .cal-day.disabled { opacity: 0.2; cursor: not-allowed; }
-        .cal-day.weekend { color: #38bdf8; }
-        .cal-day.empty { cursor: default; }
+        /* CALENDAR STYLES - Premium Table Look */
+        .custom-calendar { 
+          background: #fff; 
+          border-radius: 24px; 
+          padding: 30px; 
+          user-select: none; 
+          box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+          color: #000;
+        }
+        .cal-header { 
+          display: flex; 
+          justify-content: space-between; 
+          align-items: center; 
+          margin-bottom: 25px; 
+        }
+        .cal-title { 
+          font-size: 18px; 
+          font-weight: 900; 
+          letter-spacing: 2px; 
+          color: #000; 
+        }
+        .cal-nav-btn { 
+          background: #f3f4f6; 
+          border: none; 
+          color: #000; 
+          cursor: pointer; 
+          font-size: 20px; 
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: 0.3s; 
+        }
+        .cal-nav-btn:hover { background: #38bdf8; color: #fff; }
+        
+        .cal-grid { 
+          display: grid; 
+          grid-template-columns: repeat(7, 1fr); 
+          border: 1px solid #e5e7eb;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        .cal-day-label { 
+          font-size: 11px; 
+          font-weight: 900; 
+          color: #fff; 
+          background: #0b1120;
+          padding: 15px 5px; 
+          text-transform: uppercase; 
+          border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        .cal-day-label:last-child { border-right: none; }
+        
+        .cal-day { 
+          aspect-ratio: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px; 
+          cursor: pointer; 
+          transition: 0.2s; 
+          border-right: 1px solid #e5e7eb;
+          border-bottom: 1px solid #e5e7eb;
+          background: #fff;
+          font-weight: 500;
+        }
+        .cal-day:nth-child(7n) { border-right: none; }
+        .cal-day:hover:not(.disabled):not(.empty) { background: #f0f9ff; color: #38bdf8; }
+        .cal-day.selected { background: #0b1120 !important; color: #fff !important; font-weight: 900; position: relative; }
+        .cal-day.selected::after {
+          content: '';
+          position: absolute;
+          bottom: 8px;
+          width: 4px;
+          height: 4px;
+          background: #38bdf8;
+          border-radius: 50%;
+        }
+        .cal-day.disabled { background: #f9fafb; color: #d1d5db; cursor: not-allowed; }
+        .cal-day.weekend { color: #1e293b; }
+        .cal-day.empty { background: #f9fafb; cursor: default; }
+        .day-number { position: relative; z-index: 1; }
       `}</style>
 
       <Navbar />
