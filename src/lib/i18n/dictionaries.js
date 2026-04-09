@@ -25,6 +25,7 @@ export const dictionaries = {
       staff: "Personas",
       closing: "Cierre de Caja",
       finanzas: "Finanzas Globales",
+      fondos: "Fondos",
       settings: "Configuración"
     }
   },
@@ -54,6 +55,7 @@ export const dictionaries = {
       staff: "Staff / HR",
       closing: "Cash Closing",
       finanzas: "Global Finance",
+      fondos: "Funds",
       settings: "Settings"
     }
   },
