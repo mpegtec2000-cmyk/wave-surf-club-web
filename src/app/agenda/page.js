@@ -13,9 +13,8 @@ function CustomCalendar({ selectedDate, onSelect, minDate }) {
   
   const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
   const firstDayOfMonth = (year, month) => {
-    // We want Monday (1) to be the first column, Sunday (0) the last
     let day = new Date(year, month, 1).getDay();
-    return day === 0 ? 6 : day - 1; // Adjust so Mon=0, Sun=6
+    return day === 0 ? 6 : day - 1; 
   };
   
   const year = currentDate.getFullYear();
@@ -31,13 +30,11 @@ function CustomCalendar({ selectedDate, onSelect, minDate }) {
   const totalDays = daysInMonth(year, month);
   const startOffset = firstDayOfMonth(year, month);
   
-  // Padding for start of month
   for (let i = 0; i < startOffset; i++) days.push(null);
   for (let i = 1; i <= totalDays; i++) days.push(new Date(year, month, i));
   
   const isSelected = (d) => {
     if (!d || !selectedDate) return false;
-    // selectedDate is "YYYY-MM-DD"
     const [y, m, day] = selectedDate.split('-').map(Number);
     return d.getDate() === day && d.getMonth() === (m - 1) && d.getFullYear() === y;
   };
@@ -56,21 +53,47 @@ function CustomCalendar({ selectedDate, onSelect, minDate }) {
   };
 
   return (
-    <div className="custom-calendar">
-      <div className="cal-header">
+    <div className="custom-calendar" style={{ background: '#fff', borderRadius: '16px', padding: '20px', color: '#000', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
+      <div className="cal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
         <button type="button" onClick={handlePrev} className="cal-nav-btn">&larr;</button>
-        <div className="cal-title">{monthNames[month].toUpperCase()} {year}</div>
+        <div className="cal-title" style={{ fontWeight: 800, fontSize: '14px' }}>{monthNames[month].toUpperCase()} {year}</div>
         <button type="button" onClick={handleNext} className="cal-nav-btn">&rarr;</button>
       </div>
-      <div className="cal-grid">
-        {dayNames.map(d => <div key={d} className="cal-day-label">{d}</div>)}
+      
+      <div 
+        className="cal-grid" 
+        style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(7, 1fr)', 
+          width: '100%', 
+          border: '1px solid #e5e7eb',
+          background: '#e5e7eb',
+          gap: '1px' // This creates the "table lines" effect
+        }}
+      >
+        {dayNames.map(d => (
+          <div key={d} className="cal-day-label" style={{ background: '#000', color: '#fff', fontSize: '10px', padding: '10px 0', fontWeight: 900, textAlign: 'center' }}>
+            {d}
+          </div>
+        ))}
         {days.map((d, i) => (
           <div 
             key={i} 
-            className={`cal-day ${!d ? 'empty' : ''} ${isSelected(d) ? 'selected' : ''} ${isDisabled(d) ? 'disabled' : ''} ${isWeekend(d) ? 'weekend' : ''}`}
+            className={`cal-day ${isSelected(d) ? 'selected' : ''} ${isDisabled(d) ? 'disabled' : ''}`}
             onClick={() => d && !isDisabled(d) && onSelect(d.toISOString().split('T')[0])}
+            style={{ 
+              aspectRatio: '1',
+              display: 'flex',
+              alignItems: 'center',
+              justify-content: center,
+              background: !d ? '#f9fafb' : (isSelected(d) ? '#000' : (isDisabled(d) ? '#f1f5f9' : '#fff')),
+              color: isSelected(d) ? '#fff' : (isDisabled(d) ? '#cbd5e1' : '#000'),
+              fontSize: '13px',
+              fontWeight: isSelected(d) ? 900 : 500,
+              cursor: d && !isDisabled(d) ? 'pointer' : 'default',
+            }}
           >
-            <span className="day-number">{d?.getDate()}</span>
+            {d?.getDate()}
           </div>
         ))}
       </div>
