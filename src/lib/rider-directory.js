@@ -1,4 +1,4 @@
-export const ryders = [
+export const riders = [
   { id: 1, nombre: "TOMAS BOCK", estado: "DISPONIBLE", ocupado: true, slug: "tomas-bock" },
   { id: 2, nombre: "PAULO MUÑOZ", estado: "DISPONIBLE", ocupado: true, slug: "paulo-munoz" },
   { id: 3, nombre: "ANGELO AVELLO", estado: "DISPONIBLE", ocupado: true, slug: "angelo-avello" },

@@ -14,7 +14,7 @@ export const ROLES = {
   ASISTENTE: 'asistente',
   CLIENTE: 'cliente',
   PROFESOR: 'profesor',
-  RYDER: 'ryder',
+  RIDER: 'rider',
 };
 
 export const ROLE_LABELS = {
@@ -23,7 +23,7 @@ export const ROLE_LABELS = {
   asistente: 'Asistente',
   cliente: 'Cliente',
   profesor: 'Profesor',
-  ryder: 'Ryder',
+  rider: 'Rider',
 };
 
 export const PAYMENT_METHODS = [

@@ -2,32 +2,32 @@
 
 import Link from 'next/link';
 
-const RyderCard = ({ ryder }) => {
-  const isVacio = ryder.nombre === "VACÍO";
+const RiderCard = ({ ryder: rider }) => {
+  const isVacio = rider.nombre === "VACÍO";
   
   // Imagen de placeholder si no hay ocupado
-  const imageSrc = ryder.ocupado 
-    ? (ryder.id === 1 ? '/tomy-escuela.png' : ryder.id === 2 ? '/paulo-1.png' : `/img/ryders/${ryder.id}.jpg`)
+  const imageSrc = rider.ocupado 
+    ? (rider.id === 1 ? '/tomy-escuela.png' : rider.id === 2 ? '/paulo-1.png' : `/img/riders/${rider.id}.jpg`)
     : "https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=400&q=80";
 
   return (
-    <Link href={!isVacio ? `/ryders/${ryder.slug}` : "#"} className="card-link">
-      <div className="ryder-card group">
+    <Link href={!isVacio ? `/riders/${rider.slug}` : "#"} className="card-link">
+      <div className="rider-card group">
         <div className="img-container">
           <img 
             src={imageSrc} 
-            alt={ryder.nombre}
-            className="ryder-img"
+            alt={rider.nombre}
+            className="rider-img"
           />
         </div>
 
         <div className="info-container">
-          <p className="prefix">RYDER |</p>
-          <h3 className="name">{ryder.nombre}</h3>
-          <p className="status">{ryder.estado}</p>
+          <p className="prefix">RIDER |</p>
+          <h3 className="name">{rider.nombre}</h3>
+          <p className="status">{rider.estado}</p>
         </div>
         
-        {ryder.ocupado && <div className="overlay" />}
+        {rider.ocupado && <div className="overlay" />}
       </div>
 
       <style jsx>{`
@@ -35,7 +35,7 @@ const RyderCard = ({ ryder }) => {
           text-decoration: none;
           display: block;
         }
-        .ryder-card {
+        .rider-card {
           position: relative;
           display: flex;
           flex-direction: column;
@@ -46,7 +46,7 @@ const RyderCard = ({ ryder }) => {
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           aspect-ratio: 1 / 1;
         }
-        .ryder-card:hover {
+        .rider-card:hover {
           box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
           transform: translateY(-4px);
         }
@@ -58,14 +58,14 @@ const RyderCard = ({ ryder }) => {
           overflow: hidden;
           border-bottom: 1px solid #f1f5f9;
         }
-        .ryder-img {
+        .rider-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           object-position: center;
           transition: transform 0.5s ease;
         }
-        .ryder-card:hover .ryder-img {
+        .rider-card:hover .rider-img {
           transform: scale(1.05);
         }
 
@@ -109,7 +109,7 @@ const RyderCard = ({ ryder }) => {
           opacity: 0;
           transition: opacity 0.3s;
         }
-        .ryder-card:hover .overlay {
+        .rider-card:hover .overlay {
           opacity: 1;
         }
 
@@ -121,4 +121,4 @@ const RyderCard = ({ ryder }) => {
   );
 };
 
-export default RyderCard;
+export default RiderCard;

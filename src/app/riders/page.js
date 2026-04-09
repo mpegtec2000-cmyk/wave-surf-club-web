@@ -1,10 +1,10 @@
 'use client';
 
-import { ryders } from '@/lib/ryder-directory';
-import RyderCard from '@/components/RyderCard';
+import { riders } from '@/lib/rider-directory';
+import RiderCard from '@/components/RiderCard';
 import Link from 'next/link';
 
-export default function RydersPage() {
+export default function RidersPage() {
   return (
     <div className="directory-container">
       <style jsx>{`
@@ -108,14 +108,14 @@ export default function RydersPage() {
       </nav>
 
       <header className="header-section">
-        <h1 className="title">RYDERS</h1>
+        <h1 className="title">RIDERS</h1>
         <p className="subtitle">WAVE FAM: THE NEXT GENERATION</p>
         <div className="divider" />
       </header>
 
       <div className="grid-container">
-        {ryders.map((ryder) => (
-          <RyderCard key={ryder.id} ryder={ryder} />
+        {riders.map((rider) => (
+          <RiderCard key={rider.id} ryder={rider} />
         ))}
       </div>
 

@@ -107,6 +107,23 @@ export async function addClient(client) {
   return { data, error };
 }
 
+// ── NOTIFICATIONS ───────────────────────────
+
+export async function queueNotification(type, recipient, subject, content) {
+  const { data, error } = await supabase
+    .from('app_notifications')
+    .insert({
+      type,
+      recipient,
+      subject,
+      content,
+      status: 'pending'
+    })
+    .select()
+    .single();
+  return { data, error };
+}
+
 export async function findClientByRut(rut) {
   const clean = rut.replace(/[^0-9kK.\-]/g, '');
   const { data } = await supabase

@@ -14,7 +14,7 @@ const translations = {
     btn_colaborador: 'COLABORADOR (Portal)',
     menu_inicio: 'INICIO',
     menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_servicios: 'SERVICIOS', menu_equipo: 'EQUIPO', menu_taller: 'TALLER',
-    menu_ryders: 'RYDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO', menu_agenda: 'AGENDA TU CLASE',
+    menu_riders: 'RIDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO', menu_agenda: 'AGENDA TU CLASE',
     menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARRO: (0)',
     hero_title: 'SINCE 2015,<br/>todo partió como un sueño y se hizo realidad.',
     hero_subtitle: 'Dedicados a la enseñanza del Skate y Surf, contamos con una amplia trayectoria fomentando el crecimiento deportivo. Creemos en el desarrollo integral, rescatando siempre la cultura y los valores que nacen sobre la tabla.',
@@ -22,9 +22,9 @@ const translations = {
     mod_name: 'Nombre Completo', mod_rut: 'RUT', mod_email: 'Correo Electrónico',
     mod_phone: 'Teléfono', mod_submit: 'Registrar Cliente', mod_processing: 'Procesando...',
     mod_success: 'Estudiante registrado correctamente.', mod_error: 'Error al registrar.',
-    sec_bio_sub: 'Wave Surf Club: Transformando Vidas a través del Deporte\n\nDesde 2015, lo que comenzó como un sueño de Francisco Luisiño se ha convertido en una realidad que late con fuerza en la costa chilena. En Wave, nuestra pasión va más allá de las olas: somos un motor de nuevos proyectos deportivos y un pilar para la comunidad.\n\nNos movemos por la inclusión, apoyando activamente el deporte para personas con discapacidad y creando lazos con universidades y colegios a través de paseos de curso diseñados para conectar con la naturaleza. Con sedes en Concón, Pichilemu y nuestra reciente inauguración en Punta de Piedra, somos la casa de grandes competidores internacionales y, sobre todo, el lugar donde cada visitante vive una experiencia inolvidable.',
+    sec_bio_sub: 'Wave Surf Club: Transformando Vidas a través del Deporte\n\nDesde 2015, lo que comenzó como un sueño de Francisco Luisiño se ha convertido en una reality que late con fuerza en la costa chilena. En Wave, nuestra pasión va más allá de las olas: somos un motor de nuevos proyectos deportivos y un pilar para la comunidad.\n\nNos movemos por la inclusión, apoyando activamente el deporte para personas con discapacidad y creando lazos con universidades y colegios a través de paseos de curso diseñados para conectar con la naturaleza. Con sedes en Concón, Pichilemu y nuestra reciente inauguración en Punta de Piedra, somos la casa de grandes competidores internacionales y, sobre todo, el lugar donde cada visitante vive una experiencia inolvidable.',
     sec_escuelas_sub: 'S P O T S',
-    sec_ryders_sub: 'WAVE FAM: THE NEXT GENERATION',
+    sec_riders_sub: 'WAVE FAM: THE NEXT GENERATION',
     sec_taller_sub: 'Reparación y customización de equipos profesionales.',
     sec_eventos_sub: 'Competencias y encuentros locales.',
     sec_clases_sub: 'Evoluciona en el agua con instructores del más alto nivel.',
@@ -36,7 +36,7 @@ const translations = {
     btn_cliente: 'A) CLIENT (New Registration)',
     btn_colaborador: 'B) STAFF (ERP)',
     menu_bio: 'BIOGRAPHY', menu_escuelas: 'SCHOOLS', menu_taller: 'WORKSHOP',
-    menu_ryders: 'RYDERS', menu_eventos: 'EVENTS', menu_clases: 'CLASSES',
+    menu_riders: 'RIDERS', menu_eventos: 'EVENTS', menu_clases: 'CLASSES',
     menu_surf: 'SURF', menu_skate: 'SKATE', menu_contenido: 'CONTENT',
     menu_contacto: 'CONTACT', menu_carro: 'CART: (0)',
     hero_title: 'RULE THE WAVES.<br/>SIMPLIFY YOUR EXPERIENCE.',
@@ -48,7 +48,7 @@ const translations = {
     sec_bio_sub: 'History of the best surf school in Chile.',
     sec_escuelas_sub: 'Connect with our spots in Reñaca and Concón.',
     sec_taller_sub: 'Professional gear repair and customization.',
-    sec_ryders_sub: 'The talents that make the difference.',
+    sec_riders_sub: 'The talents that make the difference.',
     sec_eventos_sub: 'Local competitions and gatherings.',
     sec_clases_sub: 'Evolve in the water with top-tier instructors.',
     sec_surf_sub: 'Equipment and wave culture.',
@@ -56,48 +56,48 @@ const translations = {
   },
   fr: {
     btn_ingreso: 'ACCÈS :', btn_cliente: 'A) CLIENT (Nouveau Inscription)', btn_colaborador: 'B) PERSONNEL (ERP)',
-    menu_bio: 'BIOGRAPHIE', menu_escuelas: 'ÉCOLES', menu_taller: 'ATELIER', menu_ryders: 'RYDERS', menu_eventos: 'ÉVÉNEMENTS', menu_clases: 'COURS', menu_surf: 'SURF', menu_skate: 'SKATE', menu_contenido: 'CONTENU', menu_contacto: 'CONTACT', menu_carro: 'PANIER: (0)',
+    menu_bio: 'BIOGRAPHIE', menu_escuelas: 'ÉCOLES', menu_taller: 'ATELIER', menu_riders: 'RIDERS', menu_eventos: 'ÉVÉNEMENTS', menu_clases: 'COURS', menu_surf: 'SURF', menu_skate: 'SKATE', menu_contenido: 'CONTENU', menu_contacto: 'CONTACT', menu_carro: 'PANIER: (0)',
     hero_title: 'DOMINEZ LES VAGUES.<br/>SIMPLIFIEZ VOTRE EXPÉRIENCE.',
     hero_subtitle: "Découvrez le côté intelligent du surf. Des cours et des équipements gérés avec une technologie de pointe.",
     mod_title: 'NOUVEL ÉLÈVE', mod_name: 'Nom Complet', mod_rut: 'Numéro d\'Identité', mod_email: 'Email', mod_phone: 'Téléphone', mod_submit: 'S\'inscrire', mod_processing: 'Traitement...', mod_success: 'Enregistré avec succès.', mod_error: 'Erreur lors de l\'inscription.',
-    sec_bio_sub: 'L\'histoire de la meilleure école de surf du Chili.', sec_escuelas_sub: 'Connectez-vous à nos spots de Reñaca et Concón.', sec_taller_sub: 'Réparation et personnalisation de matériel professionnel.', sec_ryders_sub: 'Les talents qui font la diferencia.', sec_eventos_sub: 'Compétitions et rassemblements locaux.', sec_clases_sub: 'Évoluez avec des instructeurs de haut niveau.', sec_surf_sub: 'Équipement et culture de la vague.', sec_skate_sub: 'Entraînement au sol pour maîtriser l\'eau.'
+    sec_bio_sub: 'L\'histoire de la meilleure école de surf du Chili.', sec_escuelas_sub: 'Connectez-vous à nos spots de Reñaca et Concón.', sec_taller_sub: 'Réparation et personnalisation de matériel professionnel.', sec_riders_sub: 'Les talents qui font la diferencia.', sec_eventos_sub: 'Compétitions et rassemblements locaux.', sec_clases_sub: 'Évoluez avec des instructeurs de haut niveau.', sec_surf_sub: 'Équipement et culture de la vague.', sec_skate_sub: 'Entraînement au sol pour maîtriser l\'eau.'
   },
   de: {
     btn_ingreso: 'EINTRITT :', btn_cliente: 'A) KUNDE (Neu)', btn_colaborador: 'B) PERSONAL (ERP)',
-    menu_bio: 'BIOGRAFIE', menu_escuelas: 'SCHULEN', menu_taller: 'WERKSTATT', menu_ryders: 'RYDERS', menu_eventos: 'VERANSTALTUNGEN', menu_clases: 'KLASSEN', menu_surf: 'SURF', menu_skate: 'SKATE', menu_contenido: 'INHALT', menu_contacto: 'KONTAKT', menu_carro: 'WAGEN: (0)',
+    menu_bio: 'BIOGRAFIE', menu_escuelas: 'SCHULEN', menu_taller: 'WERKSTATT', menu_riders: 'RIDERS', menu_eventos: 'VERANSTALTUNGEN', menu_clases: 'KLASSEN', menu_surf: 'SURF', menu_skate: 'SKATE', menu_contenido: 'INHALT', menu_contacto: 'KONTAKT', menu_carro: 'WAGEN: (0)',
     hero_title: 'BEHERRSCHE DIE WELLEN.<br/>VEREINFACHE DEINE ERFAHRUNG.',
     hero_subtitle: "Entdecke die smarte Seite des Surfens. Kurse und modernste Ausrüstung.",
     mod_title: 'NEUER STUDENT', mod_name: 'Vollständiger Name', mod_rut: 'Personalausweis', mod_email: 'E-Mail', mod_phone: 'Telefon', mod_submit: 'Registrieren', mod_processing: 'Verarbeitung...', mod_success: 'Erfolgreich registriert.', mod_error: 'Fehler bei der Registrierung.',
-    sec_bio_sub: 'Geschichte der besten Surfschule in Chile.', sec_escuelas_sub: 'Verbinde dich mit unseren Spots in Reñaca und Concón.', sec_taller_sub: 'Reparatur und Anpassung professioneller Ausrüstung.', sec_ryders_sub: 'Die Talente, die den Unterschied machen.', sec_eventos_sub: 'Lokale Wettbewerbe und Treffen.', sec_clases_sub: 'Entwickle dich weiter mit erstklassigen Instruktoren.', sec_surf_sub: 'Ausrüstung und Wellenkultur.', sec_skate_sub: 'Trockentraining zur Beherrschung des Wassers.'
+    sec_bio_sub: 'Geschichte der besten Surfschule in Chile.', sec_escuelas_sub: 'Verbinde dich con unseren Spots in Reñaca und Concón.', sec_taller_sub: 'Reparatur und Anpassung professioneller Ausrüstung.', sec_riders_sub: 'Die Talente, die den Unterschied machen.', sec_eventos_sub: 'Lokale Wettbewerbe und Treffen.', sec_clases_sub: 'Entwickle dich weiter mit erstklassigen Instruktoren.', sec_surf_sub: 'Ausrüstung und Wellenkultur.', sec_skate_sub: 'Trockentraining zur Beherrschung des Wassers.'
   },
   pt: {
     btn_ingreso: 'ENTRADA :', btn_cliente: 'A) CLIENTE (Novo)', btn_colaborador: 'B) EQUIPE (ERP)',
-    menu_bio: 'BIOGRAFIA', menu_escuelas: 'ESCOLAS', menu_taller: 'OFICINA', menu_ryders: 'RYDERS', menu_eventos: 'EVENTOS', menu_clases: 'AULAS', menu_surf: 'SURF', menu_skate: 'SKATE', menu_contenido: 'CONTEÚDO', menu_contacto: 'CONTATO', menu_carro: 'CARRINHO: (0)',
+    menu_bio: 'BIOGRAFIA', menu_escuelas: 'ESCOLAS', menu_taller: 'OFICINA', menu_riders: 'RIDERS', menu_eventos: 'EVENTOS', menu_clases: 'AULAS', menu_surf: 'SURF', menu_skate: 'SKATE', menu_contenido: 'CONTEÚDO', menu_contacto: 'CONTATO', menu_carro: 'CARRINHO: (0)',
     hero_title: 'DOMINE AS ONDAS.<br/>SIMPLIFIQUE SUA EXPERIÊNCIA.',
     hero_subtitle: "Descubra o lado inteligente do surfe. Aulas e equipamentos gerenciados com tecnologia de ponta.",
     mod_title: 'NOVO ALUNO', mod_name: 'Nome Completo', mod_rut: 'Identidade (RUT)', mod_email: 'Correio eletrônico', mod_phone: 'Telefone', mod_submit: 'Registrar', mod_processing: 'Processando...', mod_success: 'Registrado com sucesso.', mod_error: 'Erro no registro.',
-    sec_bio_sub: 'História da melhor escola de surfe do Chile.', sec_escuelas_sub: 'Conecte-se aos nossos picos em Reñaca y Concón.', sec_taller_sub: 'Reparo e personalização de equipamentos.', sec_ryders_sub: 'Os talents que fazem a diferença.', sec_eventos_sub: 'Competições locais e encontros.', sec_clases_sub: 'Evolua com instrutores de alto nível.', sec_surf_sub: 'Equipamentos e cultura de ondas.', sec_skate_sub: 'Treinamento em solo para dominar a água.'
+    sec_bio_sub: 'História da melhor escola de surfe do Chile.', sec_escuelas_sub: 'Conecte-se aos nossos picos em Reñaca y Concón.', sec_taller_sub: 'Reparo e personalização de equipamentos.', sec_riders_sub: 'Os talents que fazem a diferença.', sec_eventos_sub: 'Competições locais e encontros.', sec_clases_sub: 'Evolua con instrutores de alto nível.', sec_surf_sub: 'Equipamentos e cultura de ondas.', sec_skate_sub: 'Treinamento em solo para dominar a água.'
   },
   ja: {
     btn_ingreso: 'ログイン :', btn_cliente: 'A) クライアント', btn_colaborador: 'B) スタッフ',
-    menu_bio: 'バイオグラフィー', menu_escuelas: '学校', menu_taller: 'ワークショップ', menu_ryders: 'ライダー', menu_eventos: 'イベント', menu_clases: 'クラス', menu_surf: 'サーフ', menu_skate: 'スケート', menu_contenido: 'コンテンツ', menu_contacto: 'お問い合わせ', menu_carro: 'カート: (0)',
+    menu_bio: 'バイオグラフィー', menu_escuelas: '学校', menu_taller: 'ワークショップ', menu_riders: 'ライダー', menu_eventos: 'イベント', menu_clases: 'クラス', menu_surf: 'サーフ', menu_skate: 'スケート', menu_contenido: 'コンテンツ', menu_contacto: 'お問い合わせ', menu_carro: 'カート: (0)',
     hero_title: '波を支配する。<br/>経験を簡素化する。', hero_subtitle: "最先端のテクノロジーで管理されたクラスと最高級の装備。",
     mod_title: '新入生', mod_name: '氏名', mod_rut: '身分証明書', mod_email: 'メールアドレス', mod_phone: '電話番号', mod_submit: '登録', mod_processing: '処理中...', mod_success: '正常に登録されました。', mod_error: 'エラーが発生しました。',
-    sec_bio_sub: 'チリ最高のサーフィンスクールの歴史。', sec_escuelas_sub: 'レニャカとコンコンのスポットとつながろう。', sec_taller_sub: 'プロ用機材の修理とカスタマイズ。', sec_ryders_sub: '違いを生み出す才能。', sec_eventos_sub: '地元の大会や集まり。', sec_clases_sub: 'トップクラスのインストラクターと進化しよう。', sec_surf_sub: '装備と波の文化。', sec_skate_sub: '水上をマスターするための陸上トレーニング。'
+    sec_bio_sub: 'チリ最高のサーフィンスクールの歴史。', sec_escuelas_sub: 'レニャカとコンコンのスポットとつながろう。', sec_taller_sub: 'プロ用機材の修理とカスタマイズ。', sec_riders_sub: '違いを生み出す才能。', sec_eventos_sub: '地元の大会や集まり。', sec_clases_sub: 'トップクラスのインストラクターと進化しよう。', sec_surf_sub: '装備と波の文化。', sec_skate_sub: '水上をマスターするための陸上トレーニング。'
   },
   zh: {
     btn_ingreso: '登录 :', btn_cliente: 'A) 客户注册', btn_colaborador: 'B) 员工系统',
-    menu_bio: '传记', menu_escuelas: '学校', menu_taller: '车间', menu_ryders: '骑手', menu_eventos: '活动', menu_clases: '课程', menu_surf: '冲浪', menu_skate: '滑板', menu_contenido: '内容', menu_contacto: '接触', menu_carro: '推车: (0)',
+    menu_bio: '传记', menu_escuelas: '学校', menu_taller: '车间', menu_riders: '骑手', menu_eventos: '活动', menu_clases: '课程', menu_surf: '冲浪', menu_skate: '滑板', menu_contenido: '内容', menu_contacto: '接触', menu_carro: '推车: (0)',
     hero_title: '驾驭海浪。<br/>简化您的体验。', hero_subtitle: "探索冲浪的智能一面。通过尖端技术管理课程。",
     mod_title: '新学生', mod_name: '全名', mod_rut: '身份证号', mod_email: '电子邮件', mod_phone: '电话', mod_submit: '注册', mod_processing: '处理中...', mod_success: '注册成功。', mod_error: '发生错误。',
-    sec_bio_sub: '智利最好的冲浪学校的历史。', sec_escuelas_sub: '连接我们在雷尼亚卡和孔孔的地点。', sec_taller_sub: '专业设备的维修与定制。', sec_ryders_sub: '创造差异的人才。', sec_eventos_sub: '当地比赛和聚会。', sec_clases_sub: '与顶级教练一起进化。', sec_surf_sub: '装备和海浪文化。', sec_skate_sub: '陆地训练以掌握水上技巧。'
+    sec_bio_sub: '智利最好的冲浪学校的历史。', sec_escuelas_sub: '连接我们在雷尼亚卡和孔孔的地点。', sec_taller_sub: '专业设备的维修与定制。', sec_riders_sub: '创造差异的人才。', sec_eventos_sub: '当地比赛和聚会。', sec_clases_sub: '与顶级教练一起进化。', sec_surf_sub: '装备和海浪文化。', sec_skate_sub: '陆地训练以掌握水上技巧。'
   },
   ru: {
     btn_ingreso: 'ВХОД :', btn_cliente: 'А) КЛИЕНТ', btn_colaborador: 'Б) ПЕРСОНАЛ',
-    menu_bio: 'БИОГРАФИЯ', menu_escuelas: 'ШКОЛЫ', menu_taller: 'МАСТЕРСКАЯ', menu_ryders: 'РАЙДЕРЫ', menu_eventos: 'СОБЫТИЯ', menu_clases: 'КЛАССЫ', menu_surf: 'СЕРФ', menu_skate: 'СКЕЙТ', menu_contenido: 'КОНТЕНТ', menu_contacto: 'КОНТАКТЫ', menu_carro: 'КОРЗИНА: (0)',
+    menu_bio: 'БИОГРАФИЯ', menu_escuelas: 'ШКОЛЫ', menu_taller: 'МАСТЕРСКАЯ', menu_riders: 'РАЙДЕРЫ', menu_eventos: 'СОБЫТИЯ', menu_clases: 'КЛАССЫ', menu_surf: 'СЕРФ', menu_skate: 'СКЕЙТ', menu_contenido: 'КОНТЕНТ', menu_contacto: 'КОНТАКТЫ', menu_carro: 'КОРЗИНА: (0)',
     hero_title: 'ПОКОРЯЙ ВОЛНЫ.<br/>УПРОСТИ СВОЙ ОПЫТ.', hero_subtitle: "Управляйте занятиями с помощью передовых технологий.",
     mod_title: 'НОВЫЙ УЧЕНИК', mod_name: 'Полное Имя', mod_rut: 'Документ', mod_email: 'Email', mod_phone: 'Телефон', mod_submit: 'Зарегистрироваться', mod_processing: 'Идет обработка...', mod_success: 'Успешная регистрация', mod_error: 'Ошибка регистрации',
-    sec_bio_sub: 'История лучшей школы серфинга в Чили.', sec_escuelas_sub: 'Доступ к нашим базам в Реньяке и Конконе.', sec_taller_sub: 'Ремонт и настройка оборудования.', sec_ryders_sub: 'Таланты, которые задают уровень.', sec_eventos_sub: 'Местные соревнования и встречи.', sec_clases_sub: 'Развивайся с лучшими инструкторами.', sec_surf_sub: 'Экипировка и культура волн.', sec_skate_sub: 'Сухопутные тренировки для победы на воде.'
+    sec_bio_sub: 'История лучшей школы серфинга в Чили.', sec_escuelas_sub: 'Доступ к нашим базам в Реньяке и Конконе.', sec_taller_sub: 'Ремонт и настройка оборудования.', sec_riders_sub: 'Таланты, которые задают уровень.', sec_eventos_sub: 'Местные соревнования и встречи.', sec_clases_sub: 'Развивайся с лучшими инструкторами.', sec_surf_sub: 'Экипировка и культура волн.', sec_skate_sub: 'Сухопутные тренировки для победы на воде.'
   }
 };
 
@@ -123,13 +123,13 @@ export default function LandingPage() {
 
   // Mobile Menu State
   const [menuOpen, setMenuOpen] = useState(false);
-  const [rydersData, setRydersData] = useState([]);
+  const [ridersData, setRidersData] = useState([]);
 
   useEffect(() => {
-    fetch('/api/antigravity/ryders')
+    fetch('/api/antigravity/riders')
       .then(res => res.json())
-      .then(data => setRydersData(data))
-      .catch(err => console.error('Error fetching ryders:', err));
+      .then(data => setRidersData(data))
+      .catch(err => console.error('Error fetching riders:', err));
   }, []);
   const [showModal, setShowModal] = useState(false);
   
@@ -501,11 +501,11 @@ export default function LandingPage() {
         .bg-taller { background-image: url('/paulo-1.png'); }
         .bg-eventos { background-image: url('/fondo-logo.png'); }
         .bg-clases { background-image: url('/wave-light.jpeg'); }
-        .bg-surf { background-image: url('/hero-ryder.jpeg'); }
+        .bg-surf { background-image: url('/hero-rider.jpeg'); }
         .bg-skate { background-image: url('/tomi-bock-fondo.png'); }
 
-        /* --- RYDERS GRID --- */
-        .ryders-grid {
+        /* --- RIDERS GRID --- */
+        .riders-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
           gap: 20px;
@@ -513,7 +513,7 @@ export default function LandingPage() {
           width: 100%;
           max-width: 1400px;
         }
-        .ryder-card {
+        .rider-card {
           position: relative;
           height: 320px;
           border-radius: 12px;
@@ -526,22 +526,22 @@ export default function LandingPage() {
           display: flex;
           align-items: flex-end;
         }
-        .ryder-card:hover {
+        .rider-card:hover {
           transform: translateY(-10px) scale(1.02);
           border-color: #38bdf8;
           box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px rgba(56, 189, 248, 0.2);
         }
-        .ryder-img-wrapper {
+        .rider-img-wrapper {
           position: absolute;
           inset: 0;
           transition: transform 0.8s ease;
           opacity: 0.6;
         }
-        .ryder-card:hover .ryder-img-wrapper {
+        .rider-card:hover .rider-img-wrapper {
           transform: scale(1.1);
           opacity: 0.8;
         }
-        .ryder-info {
+        .rider-info {
           position: relative;
           z-index: 2;
           padding: 24px 20px;
@@ -549,14 +549,14 @@ export default function LandingPage() {
           background: rgba(255, 255, 255, 0.95);
           text-align: left;
         }
-        .ryder-prefix {
+        .rider-prefix {
           color: #38bdf8;
           font-weight: 800;
           letter-spacing: 2px;
           text-transform: uppercase;
           margin-right: 8px;
         }
-        .ryder-name {
+        .rider-name {
           font-size: 13px;
           font-weight: 800;
           color: #000;
@@ -579,7 +579,7 @@ export default function LandingPage() {
           gap: 6px;
           transition: color 0.3s;
         }
-        .ryder-card:hover .view-mag {
+        .rider-card:hover .view-mag {
           color: #38bdf8;
         }
 
@@ -680,7 +680,7 @@ export default function LandingPage() {
               <li><Link href="/servicios">{t.menu_servicios}</Link></li> <span className="slash">/</span>
               <li><a href="#equipo">{t.menu_equipo}</a></li> <span className="slash">/</span>
               <li><Link href="/taller">{t.menu_taller}</Link></li> <span className="slash">/</span>
-              <li><Link href="/ryders">{t.menu_ryders}</Link></li> <span className="slash">/</span>
+              <li><Link href="/riders">{t.menu_riders}</Link></li> <span className="slash">/</span>
               <li><a href="#tienda">{t.menu_tienda}</a></li> <span className="slash">/</span>
               <li><a href="#contenido">{t.menu_contenido}</a></li> <span className="slash">/</span>
               <li><Link href="/agenda" style={{ color: '#0ea5e9' }}>{t.menu_agenda}</Link></li> <span className="slash">/</span>
@@ -726,7 +726,7 @@ export default function LandingPage() {
           <Link href="/servicios" onClick={() => setMenuOpen(false)}>{t.menu_servicios}</Link>
           <a href="#equipo" onClick={() => setMenuOpen(false)}>{t.menu_equipo}</a>
           <Link href="/taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</Link>
-          <Link href="/ryders" onClick={() => setMenuOpen(false)}>{t.menu_ryders}</Link>
+          <Link href="/riders" onClick={() => setMenuOpen(false)}>{t.menu_riders}</Link>
           <Link href="/agenda" onClick={() => setMenuOpen(false)}>{t.menu_agenda}</Link>
           <a href="#tienda" onClick={() => setMenuOpen(false)}>{t.menu_tienda}</a>
           <a href="#contenido" onClick={() => setMenuOpen(false)}>{t.menu_contenido}</a>
@@ -780,7 +780,7 @@ export default function LandingPage() {
                   <li><strong>Mirador Privado:</strong> Vista privilegiada al lineup para análisis de olas.</li>
                   <li><strong>Zona de Confort:</strong> Camarines equipados, Baños y Duchas con agua caliente.</li>
                   <li><strong>Skate Park Interno:</strong> Rampas técnicas para progresión fuera del agua.</li>
-                  <li><strong>Área Lounge:</strong> Espacio de hidratación y descanso para alumnos y Ryders.</li>
+                  <li><strong>Área Lounge:</strong> Espacio de hidratación y descanso para alumnos y Riders.</li>
                 </ul>
               </div>
             </Link>
