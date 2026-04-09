@@ -36,7 +36,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
     { id: 'riders', key: 'menu_riders', href: '/riders', type: 'route' },
     { id: 'tienda', key: 'menu_tienda', href: getLink('tienda'), type: 'anchor' },
     { id: 'contenido', key: 'menu_contenido', href: getLink('contenido'), type: 'anchor' },
-    { id: 'agenda', key: 'menu_agenda', href: '/agenda', type: 'route', color: '#0ea5e9' },
+    { id: 'agenda', key: 'menu_agenda', href: '/agenda', type: 'route' },
     { id: 'contacto', key: 'menu_contacto', href: getLink('contacto'), type: 'anchor' },
     { id: 'eventos', key: 'menu_eventos', href: getLink('eventos'), type: 'anchor' },
   ];
@@ -177,11 +177,24 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           font-weight: 900 !important;
           letter-spacing: -0.05em !important;
           text-transform: uppercase !important;
-          transition: color 0.3s !important;
+          transition: all 0.3s !important;
           display: inline-block !important;
         }
-        :global(.massive-menu li a:hover), :global(.nav-link:hover) { color: #2563eb !important; }
+        :global(.massive-menu li a:hover), :global(.nav-link:hover) { color: #2563eb !important; transform: translateY(-1px); }
         :global(.slash) { color: #000 !important; font-size: 11px !important; margin: 0 4px !important; font-weight: 900 !important; }
+
+        /* Estilo especial para AGENDA con animación celeste */
+        :global(.nav-link-agenda) {
+          color: #38bdf8 !important;
+          animation: pulse-celeste 2s infinite ease-in-out !important;
+          text-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        @keyframes pulse-celeste {
+          0% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.05); opacity: 0.8; }
+          100% { transform: scale(1); opacity: 1; }
+        }
 
         @media (max-width: 1200px) {
           .nav-center { display: none; }
@@ -242,7 +255,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
                   <li>
                     <Link 
                       href={item.href} 
-                      className="nav-link"
+                      className={`nav-link ${item.id === 'agenda' ? 'nav-link-agenda' : ''}`}
                       style={item.color ? { color: item.color } : {}}
                       onClick={() => setMenuOpen(false)}
                     >
