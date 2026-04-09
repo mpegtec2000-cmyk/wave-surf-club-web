@@ -225,16 +225,17 @@ export default function AgendaPage() {
         }
 
         /* --- MAIN CONTENT --- */
-        .main-content {
+        .portal-main {
           flex: 1;
           display: flex;
           align-items: center;
           justify-content: center;
           padding: 120px 20px 80px;
           position: relative;
+          width: 100%;
         }
         .bg-overlay {
-          position: absolute;
+          position: fixed;
           inset: 0;
           z-index: 1;
           opacity: 0.4;
@@ -426,7 +427,7 @@ export default function AgendaPage() {
       </header>
 
       {/* CONTENIDO PRINCIPAL */}
-      <main className="main-content">
+      <main className="portal-main">
         <div className="bg-overlay">
           <Image 
             src="/PORTADA.jpg" 
