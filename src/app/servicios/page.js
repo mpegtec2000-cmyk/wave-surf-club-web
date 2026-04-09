@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Cart from '@/components/Cart';
 import { ShoppingBag } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 
 export default function ServiciosPage() {
   const [cartOpen, setCartOpen] = useState(false);
@@ -31,38 +32,6 @@ export default function ServiciosPage() {
         }
 
         /* --- NAVBAR --- */
-        .header {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 40px;
-          height: 80px;
-          background: rgba(11, 17, 32, 0.8);
-          backdrop-filter: blur(10px);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .back-link {
-          color: #fff;
-          text-decoration: none;
-          font-family: var(--font-archivo), sans-serif;
-          font-size: 11px;
-          font-weight: 900;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          transition: all 0.3s;
-        }
-        .back-link:hover {
-          color: #38bdf8;
-          transform: translateX(-5px);
-        }
 
         .cart-trigger {
           background: #38bdf8;
@@ -191,15 +160,7 @@ export default function ServiciosPage() {
       `}</style>
 
       {/* CABECERA */}
-      <header className="header">
-        <Link href="/" className="back-link">
-          ← Menú Principal
-        </Link>
-        <button onClick={() => setCartOpen(true)} className="cart-trigger">
-          <ShoppingBag size={20} />
-          {cartItems.length > 0 && <span className="cart-count">{cartItems.length}</span>}
-        </button>
-      </header>
+      <Navbar cartCount={cartItems.length} onCartClick={() => setCartOpen(true)} />
 
       <div className="master-label">Servicios Wave Surf Club</div>
 

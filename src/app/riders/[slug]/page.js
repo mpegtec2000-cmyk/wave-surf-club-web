@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import Navbar from '@/components/Navbar';
 
 const RIDERS_DATA = {
   'tomas-bock': {
@@ -533,12 +534,7 @@ export default function RiderMagazine() {
         }
       `}</style>
 
-      <nav className="mag-nav">
-        <Link href="/#riders" className="back-btn">
-          ← Volver al Club
-        </Link>
-        <img src="/logo-pag.png" alt="Wave" style={{ height: '40px', filter: 'brightness(0)' }} />
-      </nav>
+      <Navbar />
 
       <header className="mag-hero">
         <div className="hero-bg" />

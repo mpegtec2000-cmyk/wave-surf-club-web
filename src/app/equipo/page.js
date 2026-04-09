@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 export default function EquipoPage() {
   return (
@@ -24,31 +25,9 @@ export default function EquipoPage() {
           opacity: 1 !important;
         }
 
-        /* Botón discreto para volver */
-        .back-btn {
-          position: absolute;
-          top: 20px;
-          left: 20px;
-          z-index: 100;
-          background: rgba(255, 255, 255, 0.8);
-          color: #000;
-          padding: 8px 16px;
-          border-radius: 4px;
-          text-decoration: none;
-          font-family: var(--font-archivo), sans-serif;
-          font-weight: 900;
-          font-size: 12px;
-          text-transform: uppercase;
-          transition: background 0.3s;
-        }
-        .back-btn:hover {
-          background: #fff;
-        }
       `}</style>
 
-      <Link href="/" className="back-btn">
-        Volver
-      </Link>
+      <Navbar />
 
       <div className="img-wrapper">
         <img 

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { addClient, queueNotification } from '@/lib/data';
+import Navbar from '@/components/Navbar';
 
 // ── CUSTOM CALENDAR COMPONENT ────────────────
 function CustomCalendar({ selectedDate, onSelect, minDate }) {
@@ -189,39 +190,6 @@ export default function AgendaPage() {
           display: flex;
           flex-direction: column;
           overflow-x: hidden;
-        }
-
-        /* --- NAVBAR --- */
-        .header {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          display: flex;
-          align-items: center;
-          padding: 0 40px;
-          height: 80px;
-          background: rgba(11, 17, 32, 0.8);
-          backdrop-filter: blur(10px);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .back-link {
-          color: #fff;
-          text-decoration: none;
-          font-family: var(--font-archivo), sans-serif;
-          font-size: 11px;
-          font-weight: 900;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          transition: all 0.3s;
-        }
-        .back-link:hover {
-          color: #38bdf8;
-          transform: translateX(-5px);
         }
 
         /* --- MAIN CONTENT --- */
@@ -419,12 +387,7 @@ export default function AgendaPage() {
         .cal-day.empty { cursor: default; }
       `}</style>
 
-      {/* CABECERA */}
-      <header className="header">
-        <Link href="/" className="back-link">
-          ← Cancelar y Volver
-        </Link>
-      </header>
+      <Navbar />
 
       {/* CONTENIDO PRINCIPAL */}
       <main className="portal-main">

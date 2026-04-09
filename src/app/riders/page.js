@@ -3,6 +3,7 @@
 import { riders } from '@/lib/rider-directory';
 import RiderCard from '@/components/RiderCard';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 export default function RidersPage() {
   return (
@@ -101,11 +102,7 @@ export default function RidersPage() {
         }
       `}</style>
 
-      <nav className="back-nav">
-        <Link href="/" className="back-link">
-          ← Volver al Inicio
-        </Link>
-      </nav>
+      <Navbar />
 
       <header className="header-section">
         <h1 className="title">RIDERS</h1>

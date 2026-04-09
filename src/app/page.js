@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslation } from '@/lib/i18n-context';
 import { addClient } from '@/lib/data';
 import EquipoSection from '@/components/EquipoSection';
 
@@ -108,9 +109,11 @@ const LANGUAGES = [
   { code: 'zh', label: '中文' }, { code: 'ru', label: 'Русский' }
 ];
 
+import Navbar from '@/components/Navbar';
+
 export default function LandingPage() {
-  const [lang, setLang] = useState('es');
-  const t = translations[lang];
+  const { lang, t: contextT } = useTranslation();
+  const t = translations[lang] || translations['es'];
 
   useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth';
@@ -666,75 +669,7 @@ export default function LandingPage() {
       `}</style>
 
       {/* --- CABECERA --- */}
-      <header className="header">
-        <div className="nav-left">
-          <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
-            <img src="/logo-wave.png" alt="Wave Surf Club" className="logo-img" />
-          </Link>
-          
-          <div className="nav-center" style={{ marginLeft: '40px' }}>
-            <ul className="massive-menu">
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }}>{t.menu_inicio}</a></li> <span className="slash">/</span>
-              <li><a href="#biografia">{t.menu_bio}</a></li> <span className="slash">/</span>
-              <li><a href="#escuelas">{t.menu_escuelas}</a></li> <span className="slash">/</span>
-              <li><Link href="/servicios">{t.menu_servicios}</Link></li> <span className="slash">/</span>
-              <li><a href="#equipo">{t.menu_equipo}</a></li> <span className="slash">/</span>
-              <li><Link href="/taller">{t.menu_taller}</Link></li> <span className="slash">/</span>
-              <li><Link href="/riders">{t.menu_riders}</Link></li> <span className="slash">/</span>
-              <li><a href="#tienda">{t.menu_tienda}</a></li> <span className="slash">/</span>
-              <li><a href="#contenido">{t.menu_contenido}</a></li> <span className="slash">/</span>
-              <li><Link href="/agenda" style={{ color: '#0ea5e9' }}>{t.menu_agenda}</Link></li> <span className="slash">/</span>
-              <li><a href="#contacto">{t.menu_contacto}</a></li> <span className="slash">/</span>
-              <li><a href="#eventos">{t.menu_eventos}</a></li> <span className="slash">/</span>
-              <li><a style={{ color: '#2563eb' }}>{t.menu_carro}</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="nav-right">
-          <div className="dropdown">
-            <button className="dropdown-trigger">{t.btn_ingreso} ▼</button>
-            <div className="dropdown-content">
-              <Link href="/agenda" className="dropdown-button-link">{t.btn_cliente}</Link>
-              <Link href="/login">{t.btn_colaborador}</Link>
-            </div>
-          </div>
-          
-          <div className="dropdown lang-dropdown" style={{ marginLeft: '20px' }}>
-            <button className="dropdown-trigger">{LANGUAGES.find(l => l.code === lang)?.code.toUpperCase()} ▼</button>
-            <div className="dropdown-content">
-              {LANGUAGES.map(l => (
-                <button key={l.code} onClick={() => setLang(l.code)}>
-                  {l.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button className="mobile-btn" onClick={() => setMenuOpen(!menuOpen)} style={{ marginLeft: '20px' }}>
-            {menuOpen ? '✕' : '☰'}
-          </button>
-        </div>
-      </header>
-
-      {/* MOBILE FLYOUT MENU */}
-      {menuOpen && (
-        <div className="mobile-flyout">
-          <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.scrollTo({top:0, behavior:'smooth'}); }}>{t.menu_inicio}</a>
-          <a href="#biografia" onClick={() => setMenuOpen(false)}>{t.menu_bio}</a>
-          <a href="#escuelas" onClick={() => setMenuOpen(false)}>{t.menu_escuelas}</a>
-          <Link href="/servicios" onClick={() => setMenuOpen(false)}>{t.menu_servicios}</Link>
-          <a href="#equipo" onClick={() => setMenuOpen(false)}>{t.menu_equipo}</a>
-          <Link href="/taller" onClick={() => setMenuOpen(false)}>{t.menu_taller}</Link>
-          <Link href="/riders" onClick={() => setMenuOpen(false)}>{t.menu_riders}</Link>
-          <Link href="/agenda" onClick={() => setMenuOpen(false)}>{t.menu_agenda}</Link>
-          <a href="#tienda" onClick={() => setMenuOpen(false)}>{t.menu_tienda}</a>
-          <a href="#contenido" onClick={() => setMenuOpen(false)}>{t.menu_contenido}</a>
-          <a href="#contacto" onClick={() => setMenuOpen(false)}>{t.menu_contacto}</a>
-          <a href="#eventos" onClick={() => setMenuOpen(false)}>{t.menu_eventos}</a>
-          <a style={{ color: '#2563eb' }}>{t.menu_carro}</a>
-        </div>
-      )}
+      <Navbar />
 
       {/* --- SECCIONES PARALLAX --- */}
 

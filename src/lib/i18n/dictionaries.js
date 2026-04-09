@@ -26,6 +26,15 @@ export const dictionaries = {
       closing: "Cierre de Caja",
       finanzas: "Finanzas Globales",
       settings: "Configuración"
+    },
+    landing: {
+      btn_ingreso: 'INGRESO :',
+      btn_cliente: 'CLIENTE (Nuevo Registro)',
+      btn_colaborador: 'COLABORADOR (Portal)',
+      menu_inicio: 'INICIO',
+      menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_servicios: 'SERVICIOS', menu_equipo: 'EQUIPO', menu_taller: 'TALLER',
+      menu_riders: 'RIDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO', menu_agenda: 'AGENDA TU CLASE',
+      menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARRO: (0)'
     }
   },
   en: {
@@ -55,6 +64,15 @@ export const dictionaries = {
       closing: "Cash Closing",
       finanzas: "Global Finance",
       settings: "Settings"
+    },
+    landing: {
+      btn_ingreso: 'LOGIN :',
+      btn_cliente: 'A) CLIENT (New Registration)',
+      btn_colaborador: 'B) STAFF (ERP)',
+      menu_inicio: 'HOME',
+      menu_bio: 'BIOGRAPHY', menu_escuelas: 'SCHOOLS', menu_servicios: 'SERVICES', menu_equipo: 'TEAM', menu_taller: 'WORKSHOP',
+      menu_riders: 'RIDERS', menu_tienda: 'SHOP', menu_contenido: 'CONTENT', menu_agenda: 'BOOK CLASS',
+      menu_contacto: 'CONTACT', menu_eventos: 'EVENTS', menu_carro: 'CART: (0)'
     }
   },
   pt: {
@@ -74,6 +92,13 @@ export const dictionaries = {
       total: "Total a Cobrar ($)",
       process: "PROCESSAR TRANSAÇÃO",
       recent: "Transações Recentes"
+    },
+    landing: {
+      btn_ingreso: 'ENTRADA :', btn_cliente: 'A) CLIENTE (Novo)', btn_colaborador: 'B) EQUIPE (ERP)',
+      menu_inicio: 'INÍCIO',
+      menu_bio: 'BIOGRAFIA', menu_escuelas: 'ESCOLAS', menu_servicios: 'SERVIÇOS', menu_equipo: 'EQUIPE', menu_taller: 'OFICINA', 
+      menu_riders: 'RIDERS', menu_tienda: 'LOJA', menu_contenido: 'CONTEÚDO', menu_agenda: 'AGENDA',
+      menu_contacto: 'CONTATO', menu_eventos: 'EVENTOS', menu_carro: 'CARRINHO: (0)'
     }
   },
   de: {
@@ -93,6 +118,13 @@ export const dictionaries = {
       total: "Aufzuladender Gesamtbetrag ($)",
       process: "TRANSAKTION VERARBEITEN",
       recent: "Jüngste Transaktionen"
+    },
+    landing: {
+      btn_ingreso: 'EINTRITT :', btn_cliente: 'A) KUNDE (Neu)', btn_colaborador: 'B) PERSONAL (ERP)',
+      menu_inicio: 'START',
+      menu_bio: 'BIOGRAFIE', menu_escuelas: 'SCHULEN', menu_servicios: 'DIENSTE', menu_equipo: 'TEAM', menu_taller: 'WERKSTATT', 
+      menu_riders: 'RIDERS', menu_tienda: 'SHOP', menu_contenido: 'INHALT', menu_agenda: 'KLASSEN',
+      menu_contacto: 'KONTAKT', menu_eventos: 'VERANSTALTUNGEN', menu_carro: 'WAGEN: (0)'
     }
   },
   fr: {
@@ -112,6 +144,13 @@ export const dictionaries = {
       total: "Total à Facturer ($)",
       process: "TRAITER LA TRANSACTION",
       recent: "Transactions Récentes"
+    },
+    landing: {
+      btn_ingreso: 'ACCÈS :', btn_cliente: 'A) CLIENT (Nouveau Inscription)', btn_colaborador: 'B) PERSONNEL (ERP)',
+      menu_inicio: 'ACCUEIL',
+      menu_bio: 'BIOGRAPHIE', menu_escuelas: 'ÉCOLES', menu_servicios: 'SERVICES', menu_equipo: 'ÉQUIPE', menu_taller: 'ATELIER', 
+      menu_riders: 'RIDERS', menu_tienda: 'BOUTIQUE', menu_contenido: 'CONTENU', menu_agenda: 'COURS',
+      menu_contacto: 'CONTACT', menu_eventos: 'ÉVÉNEMENTS', menu_carro: 'PANIER: (0)'
     }
   },
   zh: {
@@ -131,6 +170,13 @@ export const dictionaries = {
       total: "总计（$）",
       process: "处理交易",
       recent: "最近的交易"
+    },
+    landing: {
+       btn_ingreso: '登录 :', btn_cliente: 'A) 客户注册', btn_colaborador: 'B) 员工系统',
+       menu_inicio: '首页',
+       menu_bio: '传记', menu_escuelas: '学校', menu_servicios: '服务', menu_equipo: '团队', menu_taller: '车间', 
+       menu_riders: '骑手', menu_tienda: '商店', menu_contenido: '内容', menu_agenda: '课程',
+       menu_contacto: '接触', menu_eventos: '活动', menu_carro: '推车: (0)'
     }
   },
   ja: {
@@ -150,6 +196,13 @@ export const dictionaries = {
       total: "合計（$）",
       process: "取引を処理する",
       recent: "最近の取引"
+    },
+    landing: {
+      btn_ingreso: 'ログイン :', btn_cliente: 'A) クライアント', btn_colaborador: 'B) スタッフ',
+      menu_inicio: 'ホーム',
+      menu_bio: 'バイオグラフィー', menu_escuelas: '学校', menu_servicios: 'サービス', menu_equipo: 'チーム', menu_taller: 'ワークショップ', 
+      menu_riders: 'ライダー', menu_tienda: 'ショップ', menu_contenido: 'コンテンツ', menu_agenda: 'クラス',
+      menu_contacto: 'お問い合わせ', menu_eventos: 'イベント', menu_carro: 'カート: (0)'
     }
   },
   ru: {
@@ -169,6 +222,13 @@ export const dictionaries = {
       total: "Итого К Оплате ($)",
       process: "ОБРАБОТАТЬ ТРАНЗАКЦИЮ",
       recent: "Последние Транзакции"
+    },
+    landing: {
+      btn_ingreso: 'ВХОД :', btn_cliente: 'А) КЛИЕНТ', btn_colaborador: 'Б) ПЕРСОНАЛ',
+      menu_inicio: 'ГЛАВНАЯ',
+      menu_bio: 'БИОГРАФИЯ', menu_escuelas: 'ШКОЛЫ', menu_servicios: 'УСЛУГИ', menu_equipo: 'КОМАНДА', menu_taller: 'МАСТЕРСКАЯ', 
+      menu_riders: 'РАЙДЕРЫ', menu_tienda: 'МАГАЗИН', menu_contenido: 'КОНТЕНТ', menu_agenda: 'КЛАССЫ',
+      menu_contacto: 'КОНТАКТЫ', menu_eventos: 'СОБЫТИЯ', menu_carro: 'КОРЗИНА: (0)'
     }
   }
 };
