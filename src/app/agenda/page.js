@@ -441,11 +441,11 @@ export default function AgendaPage() {
 
         <div className="booking-card">
           <div className="card-visual">
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.3, zIndex: 0 }}>
-              <Image src="/PORTADA.jpg" alt="Visual" fill style={{ objectFit: 'cover', objectPosition: 'center' }} />
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.6, zIndex: 0 }}>
+              <Image src="/fondo-escuela.png" alt="Visual" fill style={{ objectFit: 'cover', objectPosition: 'center' }} />
             </div>
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <h2>TOMA<br/>EL MANDO.</h2>
+              <h2 style={{ fontSize: '32px', lineHeight: '1.2', letterSpacing: '-1px' }}>Agenda tu clase con profesionales del deporte.</h2>
               <p>Agenda tu primera sesión y conviértete en parte de la familia Wave Surf Club.</p>
             </div>
           </div>
