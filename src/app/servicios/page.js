@@ -1,11 +1,5 @@
 'use client';
 
-<<<<<<< HEAD
-import Link from 'next/link';
-import Image from 'next/image';
-
-export default function ServiciosPage() {
-=======
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -26,7 +20,6 @@ export default function ServiciosPage() {
     setCartItems(cartItems.filter((_, i) => i !== index));
   };
 
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
   return (
     <div className="servicios-master">
       <style jsx>{`
@@ -39,38 +32,6 @@ export default function ServiciosPage() {
         }
 
         /* --- NAVBAR --- */
-<<<<<<< HEAD
-        .header {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          display: flex;
-          align-items: center;
-          padding: 0 40px;
-          height: 80px;
-          background: rgba(11, 17, 32, 0.8);
-          backdrop-filter: blur(10px);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .back-link {
-          color: #fff;
-          text-decoration: none;
-          font-family: var(--font-archivo), sans-serif;
-          font-size: 11px;
-          font-weight: 900;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          transition: all 0.3s;
-        }
-        .back-link:hover {
-          color: #38bdf8;
-          transform: translateX(-5px);
-=======
 
         .cart-trigger {
           background: #38bdf8;
@@ -101,17 +62,12 @@ export default function ServiciosPage() {
           display: flex;
           align-items: center;
           justify-content: center;
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
         }
 
         /* --- SECCIÓN INMERSIVA --- */
         .service-section {
           position: relative;
-<<<<<<< HEAD
-          height: 110vh; /* Slightly more than viewport for smooth transition feeling */
-=======
           height: 110vh;
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
           display: flex;
           align-items: center;
           justify-content: center;
@@ -177,11 +133,8 @@ export default function ServiciosPage() {
           text-transform: uppercase;
           letter-spacing: 2px;
           border-radius: 4px;
-<<<<<<< HEAD
-=======
           cursor: pointer;
           border: none;
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
           transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
         }
         .btn-reserve:hover {
@@ -207,16 +160,6 @@ export default function ServiciosPage() {
       `}</style>
 
       {/* CABECERA */}
-<<<<<<< HEAD
-      <header className="header">
-        <Link href="/" className="back-link">
-          ← Menú Principal
-        </Link>
-      </header>
-
-      <div className="master-label">Servicios Wave Surf Club</div>
-
-=======
       <Navbar cartCount={cartItems.length} onCartClick={() => setCartOpen(true)} />
 
       <div className="master-label">Servicios Wave Surf Club</div>
@@ -228,7 +171,6 @@ export default function ServiciosPage() {
         onRemove={removeFromCart} 
       />
 
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
       {/* SECCIÓN 1: CLASES DE SURF */}
       <section className="service-section">
         <div className="bg-wrapper">
@@ -241,16 +183,12 @@ export default function ServiciosPage() {
           <p className="description">
             Evoluciona en el agua con instructores del más alto nivel. Desde tus primeras remadas hasta perfeccionamiento técnico.
           </p>
-<<<<<<< HEAD
-          <a href="/#agenda" className="btn-reserve">Agendar Sesión</a>
-=======
           <button 
             onClick={() => addToCart({ name: 'CLASE DE SURF INDIVIDUAL', price: 35000, category: 'Agua' })} 
             className="btn-reserve"
           >
             Añadir a Bolsa — $35.000
           </button>
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
         </div>
       </section>
 
@@ -266,27 +204,19 @@ export default function ServiciosPage() {
           <p className="description">
             Entrenamiento en tierra firme para dominar el agua. Mejora tu equilibrio, técnica de giro y fluidez sobre la tabla.
           </p>
-<<<<<<< HEAD
-          <a href="/#agenda" className="btn-reserve">Agendar Sesión</a>
-=======
           <button 
             onClick={() => addToCart({ name: 'SESIÓN SKATE TRAINING', price: 20000, category: 'Tierra' })} 
             className="btn-reserve"
           >
             Añadir a Bolsa — $20.000
           </button>
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
         </div>
       </section>
 
       {/* SECCIÓN 3: ARRIENDO Y EQUIPAMIENTO */}
       <section className="service-section">
         <div className="bg-wrapper">
-<<<<<<< HEAD
-          <Image src="/hero-ryder.jpeg" alt="Equipamiento" fill style={{ objectFit: 'cover' }} />
-=======
           <Image src="/hero-rider.jpeg" alt="Equipamiento" fill style={{ objectFit: 'cover' }} />
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
         </div>
         <div className="overlay" />
         <div className="content">
@@ -295,16 +225,12 @@ export default function ServiciosPage() {
           <p className="description">
             Contamos con el mejor equipamiento del mercado. Arriendo de trajes 4/3mm, tablas de alta gama y accesorios técnicos.
           </p>
-<<<<<<< HEAD
-          <a href="/#agenda" className="btn-reserve">Ver Catálogo</a>
-=======
           <button 
             onClick={() => addToCart({ name: 'ARRIENDO EQUIPO COMPLETO', price: 15000, category: 'Hardware' })} 
             className="btn-reserve"
           >
             Añadir a Bolsa — $15.000
           </button>
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
         </div>
       </section>
 
@@ -326,7 +252,4 @@ export default function ServiciosPage() {
     </div>
   );
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7

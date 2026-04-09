@@ -3,10 +3,7 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { SPOTS_DATA } from '@/lib/spots-data';
-<<<<<<< HEAD
-=======
 import Navbar from '@/components/Navbar';
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
 export default function SpotPage() {
   const params = useParams();
@@ -24,15 +21,7 @@ export default function SpotPage() {
 
   return (
     <div className="spot-magazine">
-<<<<<<< HEAD
-      {/* Navbar Minimalista */}
-      <nav className="spot-nav">
-        <Link href="/#escuelas" className="back-btn">← VOLVER A SPOTS</Link>
-        <div className="logo-text">WAVE SURF CLUB</div>
-      </nav>
-=======
       <Navbar />
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
       {/* A. Hero: Pantalla Completa */}
       <section className="spot-hero" style={{ backgroundImage: `url(${spot.heroImage})` }}>
@@ -103,37 +92,6 @@ export default function SpotPage() {
           color: #f8fafc;
           min-height: 100vh;
           font-family: var(--font-inter), sans-serif;
-        }
-
-        /* Nav Minimalista */
-        .spot-nav {
-          position: fixed;
-          top: 0; left: 0; right: 0;
-          height: 80px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 0 40px;
-          background: rgba(11, 17, 32, 0.4);
-          backdrop-filter: blur(15px);
-          z-index: 100;
-          border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .back-btn {
-          color: #94a3b8;
-          text-decoration: none;
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          transition: color 0.3s;
-        }
-        .back-btn:hover { color: #f8fafc; }
-        .logo-text {
-          font-family: var(--font-playfair), serif;
-          font-size: 20px;
-          font-weight: 600;
-          letter-spacing: 4px;
         }
 
         /* Hero Fullscreen */

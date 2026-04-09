@@ -26,11 +26,7 @@ export default function RidersSection() {
         
         {/* Imagen de Fondo desde tu carpeta public */}
         <img 
-<<<<<<< HEAD
-          src="/FONDO-RAIDERS.jpg" 
-=======
           src="/FONDO-RIDERS.png" 
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
           alt="Fondo Riders Wave Surf Club" 
           className="w-full h-full object-contain"
         />
@@ -40,20 +36,12 @@ export default function RidersSection() {
           {ridersData.map((rider) => {
             const isVacio = rider.name === "VACÍO";
             const formattedName = rider.name.split('').join(' ');
-<<<<<<< HEAD
-            const prefix = "R Y D E R";
-=======
             const prefix = "R I D E R";
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
             
             return (
               <Link 
                 key={rider.id} 
-<<<<<<< HEAD
-                href={!isVacio ? `/ryders/${rider.slug}` : "#"}
-=======
                 href={!isVacio ? `/riders/${rider.slug}` : "#"}
->>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
                 className="group relative border border-transparent hover:border-blue-400 transition-all duration-300 overflow-hidden"
               >
                 {/* Visualización del Nombre Estandarizado (Ejemplo solicitado) */}

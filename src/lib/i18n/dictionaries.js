@@ -25,7 +25,7 @@ export const dictionaries = {
       staff: "Personas",
       closing: "Cierre de Caja",
       finanzas: "Finanzas Globales",
-      banco: "Banco",
+      fondos: "Fondos",
       settings: "Configuración"
     },
     landing: {
@@ -35,7 +35,7 @@ export const dictionaries = {
       menu_inicio: 'INICIO',
       menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_servicios: 'SERVICIOS', menu_equipo: 'EQUIPO', menu_taller: 'TALLER',
       menu_riders: 'RIDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO', menu_agenda: 'AGENDA TU CLASE',
-      menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARRO: (0)'
+      menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARROS: (0)'
     }
   },
   en: {
@@ -64,7 +64,7 @@ export const dictionaries = {
       staff: "Staff / HR",
       closing: "Cash Closing",
       finanzas: "Global Finance",
-      banco: "Bank",
+      fondos: "Funds",
       settings: "Settings"
     },
     landing: {

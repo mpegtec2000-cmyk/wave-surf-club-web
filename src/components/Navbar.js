@@ -1,338 +1,272 @@
-import React, { useState } from 'react';
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { Menu, X, ChevronDown, Globe, User } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n-context';
-import { usePathname } from 'next/navigation';
 
 export default function Navbar({ cartCount = 0, onCartClick }) {
   const { lang, changeLang, t } = useTranslation();
-  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const LANGUAGES = [
-    { code: 'es', label: 'Español' }, { code: 'en', label: 'English' },
-    { code: 'fr', label: 'Français' }, { code: 'de', label: 'Deutsch' },
-    { code: 'pt', label: 'Português' }, { code: 'ja', label: '日本語' },
-    { code: 'zh', label: '中文' }, { code: 'ru', label: 'Русский' }
+    { code: 'es', name: 'ES' },
+    { code: 'en', name: 'EN' },
+    { code: 'pt', name: 'PT' },
+    { code: 'de', name: 'DE' }
   ];
 
-  const isHome = pathname === '/';
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  const getLink = (id) => isHome ? `#${id}` : `/#${id}`;
-
-  const handleHomeClick = (e) => {
-    if (isHome) {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    setMenuOpen(false);
-  };
-
+  // EXACT ORDER PROVIDED BY USER
   const menuItems = [
-    { id: 'biografia', key: 'menu_bio', href: getLink('biografia'), type: 'anchor' },
-    { id: 'escuelas', key: 'menu_escuelas', href: getLink('escuelas'), type: 'anchor' },
+    { id: 'inicio', key: 'menu_inicio', href: '/#hero', type: 'anchor' },
+    { id: 'biografia', key: 'menu_bio', href: '/biografia', type: 'route' },
+    { id: 'escuelas', key: 'menu_escuelas', href: '/escuelas', type: 'route' },
     { id: 'servicios', key: 'menu_servicios', href: '/servicios', type: 'route' },
     { id: 'equipo', key: 'menu_equipo', href: '/equipo', type: 'route' },
     { id: 'taller', key: 'menu_taller', href: '/taller', type: 'route' },
     { id: 'riders', key: 'menu_riders', href: '/riders', type: 'route' },
-    { id: 'tienda', key: 'menu_tienda', href: getLink('tienda'), type: 'anchor' },
-    { id: 'contenido', key: 'menu_contenido', href: getLink('contenido'), type: 'anchor' },
+    { id: 'tienda', key: 'menu_tienda', href: '/#tienda', type: 'anchor' },
+    { id: 'contenido', key: 'menu_contenido', href: '/#contenido', type: 'anchor' },
     { id: 'agenda', key: 'menu_agenda', href: '/agenda', type: 'route' },
-    { id: 'contacto', key: 'menu_contacto', href: getLink('contacto'), type: 'anchor' },
-    { id: 'eventos', key: 'menu_eventos', href: getLink('eventos'), type: 'anchor' },
+    { id: 'contacto', key: 'menu_contacto', href: '/#contacto', type: 'anchor' },
+    { id: 'eventos', key: 'menu_eventos', href: '/eventos', type: 'route' },
+    { id: 'carro', key: 'menu_carro', href: '#', type: 'cart' },
   ];
 
+  const handleScrollTo = (e, id) => {
+    if (window.location.pathname !== '/') return;
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      const offset = 95;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = el.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+    setMenuOpen(false);
+  };
+
   return (
-    <>
-      <style jsx>{`
-        .header {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 40px;
-          height: 100px;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
-          border-bottom: 2px solid #000;
-        }
+    <nav 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '95px',
+        backgroundColor: '#ffffff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 30px 0 0',
+        zIndex: 999999,
+        borderBottom: '2px solid #000',
+        transition: 'all 0.3s ease',
+        boxShadow: scrolled ? '0 10px 30px rgba(0,0,0,0.1)' : 'none'
+      }}
+      className="nav-luxury-container"
+    >
+      {/* LOGO BOX - LEFT (Black Square) */}
+      <div style={{
+        backgroundColor: '#000',
+        width: '95px',
+        height: '95px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: '15px',
+        flexShrink: 0
+      }}>
+        <Link href="/">
+          <img src="/logo-wave.png" alt="Wave Surf Club" style={{ width: '65%', height: 'auto', display: 'block' }} />
+        </Link>
+      </div>
 
-        .nav-left, .nav-right {
-          flex: 1;
-          display: flex;
-          align-items: center;
-        }
-        .nav-left { justify-content: flex-start; gap: 24px; }
+      {/* MENU - CENTER (Desktop only) */}
+      <div style={{ 
+        flex: 1, 
+        display: 'flex', 
+        justifyContent: 'center', 
+        overflowX: 'auto',
+        scrollbarWidth: 'none' 
+      }} className="hidden lg:flex">
+        <ul style={{
+          display: 'flex',
+          listStyle: 'none',
+          gap: '8px',
+          margin: 0,
+          padding: 0,
+          alignItems: 'center',
+          whiteSpace: 'nowrap'
+        }}>
+          {menuItems.map((item, idx) => (
+            <li key={item.id} style={{ display: 'flex', alignItems: 'center' }}>
+              <Link
+                href={item.href}
+                onClick={item.type === 'anchor' ? (e) => handleScrollTo(e, item.id) : item.type === 'cart' ? (e) => { e.preventDefault(); onCartClick && onCartClick(); } : undefined}
+                className={`nav-link-luxury ${item.id === 'agenda' ? 'nav-link-agenda' : item.id === 'carro' ? 'nav-link-cart' : ''}`}
+                style={{
+                  fontSize: '11px',
+                  fontWeight: '900',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  color: '#000',
+                  textDecoration: 'none',
+                  padding: '5px 2px',
+                  transition: 'color 0.2s'
+                }}
+              >
+                {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
+              </Link>
+              {idx < menuItems.length - 1 && (
+                <span style={{ 
+                  margin: '0 4px', 
+                  color: '#000', 
+                  opacity: 0.3, 
+                  fontSize: '14px', 
+                  fontWeight: '300' 
+                }}>/</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* RIGHT ACTIONS (Ingresos / Idioma) */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '15px', paddingLeft: '15px' }}>
         
-        .mobile-btn {
-          display: none;
-          background: transparent;
-          border: none;
-          color: #1e293b;
-          font-size: 24px;
-          cursor: pointer;
-        }
+        {/* INGRESOS Dropdown */}
+        <div className="dropdown" style={{ position: 'relative' }}>
+          <button className="dropdown-trigger" style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '10px 5px',
+            fontFamily: 'inherit',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px'
+          }}>
+            <span style={{ fontSize: '11px', fontWeight: '900', letterSpacing: '1px' }}>{t('landing.btn_ingreso')}</span>
+            <ChevronDown size={14} />
+          </button>
+          <div className="dropdown-content" style={{
+            position: 'absolute',
+            top: '100%',
+            right: 0,
+            background: '#fff',
+            border: '2px solid #000',
+            minWidth: '200px',
+            zIndex: 1000,
+            display: 'none' // Controlled by CSS :hover
+          }}>
+            <Link href="/login" style={{ display: 'block', padding: '15px', textDecoration: 'none', color: '#000', fontSize: '11px', fontWeight: '900', borderBottom: '1px solid #eee' }}>{t('landing.btn_colaborador')}</Link>
+            <Link href="/agenda" style={{ display: 'block', padding: '15px', textDecoration: 'none', color: '#000', fontSize: '11px', fontWeight: '900' }}>{t('landing.btn_cliente')}</Link>
+          </div>
+        </div>
 
-        .nav-center {
-          flex: 4;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .nav-right { justify-content: flex-end; }
+        {/* IDIOMA Dropdown */}
+        <div className="dropdown" style={{ position: 'relative' }}>
+          <button className="dropdown-trigger" style={{
+            background: 'none',
+            border: '1px solid #000',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            padding: '5px 10px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px'
+          }}>
+            <Globe size={14} />
+            <span style={{ fontSize: '11px', fontWeight: '900' }}>{lang.toUpperCase()}</span>
+          </button>
+          <div className="dropdown-content" style={{
+            position: 'absolute',
+            top: '100%',
+            right: 0,
+            background: '#fff',
+            border: '2px solid #000',
+            minWidth: '100px',
+            zIndex: 1000,
+            display: 'none'
+          }}>
+            {LANGUAGES.map(l => (
+              <button 
+                key={l.code} 
+                onClick={() => changeLang(l.code)}
+                style={{ 
+                  display: 'block', 
+                  width: '100%', 
+                  padding: '12px', 
+                  textAlign: 'left', 
+                  background: 'none', 
+                  border: 'none', 
+                  borderBottom: '1px solid #eee',
+                  fontSize: '11px', 
+                  fontWeight: '900',
+                  cursor: 'pointer' 
+                }}
+              >
+                {l.name}
+              </button>
+            ))}
+          </div>
+        </div>
 
-        .logo-img { height: 70px; width: auto; object-fit: contain; display: block; cursor: pointer; }
+        {/* MOBILE MENU TOGGLE */}
+        <button className="lg:hidden" onClick={() => setMenuOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+          <Menu size={28} />
+        </button>
+      </div>
 
-        .dropdown {
-          position: relative;
-          display: inline-block;
+      <style jsx>{`
+        .dropdown:hover .dropdown-content { display: block !important; }
+        .nav-link-luxury:hover { color: #38bdf8 !important; }
+        .nav-link-agenda { 
+          color: #38bdf8 !important; 
+          text-decoration: underline !important; 
+          text-underline-offset: 4px;
         }
-        .dropdown-trigger {
-          background: transparent;
-          color: #000;
-          border: 1px solid #000;
-          padding: 6px 15px;
-          border-radius: 4px;
-          font-family: var(--font-archivo), sans-serif;
-          font-size: 11px;
-          font-weight: 900;
-          letter-spacing: 1px;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: all 0.3s;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-        .dropdown-trigger:hover { 
+        .nav-link-cart {
           background: #000;
-          color: #fff;
+          color: #fff !important;
+          padding: 4px 10px !important;
+          border-radius: 20px;
         }
-
-        .dropdown-content {
-          position: absolute;
-          top: calc(100% + 10px);
-          right: 0;
-          background: #fff;
-          min-width: 240px;
-          box-shadow: 0 15px 50px rgba(0,0,0,0.15);
-          border-radius: 4px;
-          border: 2px solid #000;
-          overflow: hidden;
-          opacity: 0;
-          visibility: hidden;
-          transform: translateY(10px);
-          transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-          z-index: 2000;
-        }
-        .dropdown:hover .dropdown-content {
-          opacity: 1;
-          visibility: visible;
-          transform: translateY(0);
-        }
-        .dropdown-content button, .dropdown-content a {
-          display: block;
-          width: 100%;
-          text-align: left;
-          padding: 18px 20px;
-          color: #1e293b;
-          text-decoration: none;
-          background: transparent;
-          border: none;
-          border-bottom: 1px solid rgba(0,0,0,0.05);
-          font-family: var(--font-archivo), sans-serif;
-          font-size: 12px;
-          font-weight: 900;
-          letter-spacing: 0.5px;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .dropdown-content button:hover, .dropdown-content a:hover {
-          background: #000;
-          color: #fff;
-          padding-left: 25px;
-        }
-
-        .lang-dropdown .dropdown-content { right: 0; min-width: 150px; }
-
-        .massive-menu {
-          display: flex;
-          flex-wrap: nowrap;
-          white-space: nowrap;
-          align-items: center;
-          list-style: none;
-          margin: 0; padding: 0;
-          gap: 10px;
-          font-family: var(--font-archivo), sans-serif;
-        }
-        :global(.massive-menu li a), :global(.nav-link) {
-          color: #000 !important;
-          text-decoration: none !important;
-          font-family: var(--font-archivo), sans-serif !important;
-          font-size: 0.95rem !important;
-          font-weight: 900 !important;
-          letter-spacing: -0.05em !important;
-          text-transform: uppercase !important;
-          transition: all 0.3s !important;
-          display: inline-block !important;
-        }
-        :global(.massive-menu li a:hover), :global(.nav-link:hover) { color: #2563eb !important; transform: translateY(-1px); }
-        :global(.slash) { color: #000 !important; font-size: 11px !important; margin: 0 4px !important; font-weight: 900 !important; }
-
-        /* Estilo especial para AGENDA con animación celeste */
-        :global(.nav-link-agenda) {
-          color: #38bdf8 !important;
-          animation: pulse-celeste 2s infinite ease-in-out !important;
-          text-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-        }
-
-        @keyframes pulse-celeste {
-          0% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.05); opacity: 0.8; }
-          100% { transform: scale(1); opacity: 1; }
-        }
-
-        @media (max-width: 1200px) {
-          .nav-center { display: none; }
-          .mobile-btn { display: block; }
-          .nav-left { gap: 12px; }
-          .header { padding: 0 20px; }
-        }
-
+        
+        /* Mobile flyout styles */
         .mobile-flyout {
           position: fixed;
-          top: 100px;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(255, 255, 255, 0.98);
-          z-index: 999;
+          inset: 0;
+          background: #fff;
+          z-index: 1000000;
           display: flex;
           flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 20px;
           padding: 40px;
-          overflow-y: auto;
         }
-        :global(.mobile-flyout a) {
-          color: #000 !important;
-          text-decoration: none !important;
-          font-family: var(--font-archivo), sans-serif !important;
-          font-size: 24px !important;
-          font-weight: 900 !important;
-          letter-spacing: -1px !important;
-          text-transform: uppercase !important;
+        .flyout-header { display: flex; justify-content: flex-end; margin-bottom: 40px; }
+        .flyout-links { display: flex; flex-direction: column; gap: 20px; }
+        .flyout-links a { 
+          font-size: 24px; 
+          font-weight: 900; 
+          text-decoration: none; 
+          color: #000; 
+          text-transform: uppercase;
         }
-        .mobile-flyout .mobile-slash { display: none; }
       `}</style>
-
-      <header className="header">
-        <div className="nav-left">
-          <Link href="/" onClick={handleHomeClick}>
-            <img src="/logo-wave.png" alt="Wave Surf Club" className="logo-img" />
-          </Link>
-          
-          <nav className="nav-center">
-            <ul className="massive-menu">
-              <li>
-                <Link 
-                  href={isHome ? '#' : '/'} 
-                  onClick={handleHomeClick}
-                  className="nav-link"
-                >
-                  {t('landing.menu_inicio')}
-                </Link>
-              </li>
-              <span className="slash">/</span>
-              
-              {menuItems.map((item, index) => (
-                <React.Fragment key={item.id}>
-                  <li>
-                    <Link 
-                      href={item.href} 
-                      className={`nav-link ${item.id === 'agenda' ? 'nav-link-agenda' : ''}`}
-                      style={item.color ? { color: item.color } : {}}
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {t(`landing.${item.key}`)}
-                    </Link>
-                  </li>
-                  {index < menuItems.length - 1 && <span className="slash">/</span>}
-                </React.Fragment>
-              ))}
-              <span className="slash">/</span>
-              <li>
-                <a 
-                  className="nav-link"
-                  style={{ color: '#2563eb', cursor: onCartClick ? 'pointer' : 'default' }}
-                  onClick={(e) => {
-                    if (onCartClick) {
-                      e.preventDefault();
-                      onCartClick();
-                    }
-                  }}
-                >
-                  {t('landing.menu_carro').replace('(0)', `(${cartCount})`)}
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-        <div className="nav-right">
-          <div className="dropdown">
-            <button className="dropdown-trigger">{t('landing.btn_ingreso')} ▼</button>
-            <div className="dropdown-content">
-              <Link href="/agenda">{t('landing.btn_cliente')}</Link>
-              <Link href="/login">{t('landing.btn_colaborador')}</Link>
-            </div>
-          </div>
-          
-          <div className="dropdown lang-dropdown" style={{ marginLeft: '20px' }}>
-            <button className="dropdown-trigger">{LANGUAGES.find(l => l.code === lang)?.code.toUpperCase()} ▼</button>
-            <div className="dropdown-content">
-              {LANGUAGES.map(l => (
-                <button key={l.code} onClick={() => changeLang(l.code)}>
-                  {l.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button className="mobile-btn" onClick={() => setMenuOpen(!menuOpen)} style={{ marginLeft: '20px' }}>
-            {menuOpen ? '✕' : '☰'}
-          </button>
-        </div>
-      </header>
-
-      {menuOpen && (
-        <div className="mobile-flyout">
-          <Link href={isHome ? '#' : '/'} onClick={handleHomeClick}>{t('landing.menu_inicio')}</Link>
-          {menuItems.map(item => (
-            <Link key={item.id} href={item.href} onClick={() => setMenuOpen(false)}>
-              {t(`landing.${item.key}`)}
-            </Link>
-          ))}
-          <a 
-            style={{ color: '#2563eb', fontSize: '24px' }}
-            onClick={(e) => {
-              if (onCartClick) {
-                e.preventDefault();
-                onCartClick();
-                setMenuOpen(false);
-              }
-            }}
-          >
-            {t('landing.menu_carro').replace('(0)', `(${cartCount})`)}
-          </a>
-        </div>
-      )}
-    </>
+    </nav>
   );
 }
-
