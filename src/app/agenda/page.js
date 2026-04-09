@@ -305,7 +305,6 @@ export default function AgendaPage() {
         .receipt-card { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); padding: 25px; border-radius: 16px; margin: 20px 0; }
         .checkout-info { margin: 20px 0; padding: 20px; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2); }
       `}</style>
-      `}</style>
 
       <Navbar />
 
