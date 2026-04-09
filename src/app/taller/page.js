@@ -17,8 +17,8 @@ export default function TallerPage() {
         />
         <div className="hero-overlay" />
         <div className="hero-content">
-          <h1 className="hero-main-title">TALLER & MODELADO</h1>
-          <p className="hero-tagline">Crafting the Future of Surfing</p>
+          <h1 className="hero-main-title">TALLER</h1>
+          <p className="hero-tagline">Wave Surf Club</p>
         </div>
       </section>
 
