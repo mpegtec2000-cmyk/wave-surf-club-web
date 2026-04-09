@@ -23,7 +23,7 @@ export default function BiografiaPage() {
         zIndex: 1
       }}>
         <Image 
-          src="/biografia.jpg" 
+          src="/BIOGRAFIA.jpg" 
           alt="Biografía Wave Surf Club" 
           fill 
           priority
