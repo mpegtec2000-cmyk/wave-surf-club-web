@@ -11,7 +11,7 @@ export default function TallerPage() {
       {/* HERO SECTION - Full Height */}
       <section className="hero">
         <img 
-          src="/paulo-1.png" 
+          src="/FONDO TALLER.jpg" 
           alt="Taller Wave Surf Club"
           className="hero-img"
         />
