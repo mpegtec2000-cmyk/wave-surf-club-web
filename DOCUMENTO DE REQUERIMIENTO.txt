@@ -1,0 +1,151 @@
+Actúa como un Desarrollador Full-Stack Senior y Experto en Supabase.
+Tu tarea es construir la arquitectura del ERP logístico y POS "Wave Surf Club - Since 2015".
+Stack estricto: Next.js (React), Node.js, y SUPABASE (PostgreSQL + Auth + RLS + Edge Functions).
+
+A continuación, te entrego el script SQL definitivo. Debes ejecutarlo en el SQL Editor de Supabase para inicializar la base de datos, la autenticación y los Triggers.
+
+==================================================
+1. SCRIPT SQL: ESTRUCTURA Y SUPABASE AUTH (COPIAR Y EJECUTAR)
+==================================================
+
+-- 1. Crear ENUMs
+CREATE TYPE user_role AS ENUM ('superadmin', 'caja', 'asistente', 'cliente', 'profesor', 'ryder');
+CREATE TYPE payment_method AS ENUM ('efectivo', 'transferencia', 'credito', 'por_pagar');
+CREATE TYPE trans_category AS ENUM ('arriendo', 'clase', 'tienda', 'cafeteria', 'escuela', 'pago_deuda', 'otro');
+
+-- 2. Crear Tabla de Sucursales
+CREATE TABLE branches (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+INSERT INTO branches (name) VALUES 
+('WAVE SURF PUNTA PIEDRA'), 
+('WAVE SURF CONCÓN'), 
+('WAVE SURF PICHILEMU');
+
+-- 3. Crear Tabla de Perfiles (Conectada a auth.users)
+CREATE TABLE profiles (
+    id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+    rut VARCHAR(12) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20),
+    role user_role DEFAULT 'cliente',
+    branch_id INTEGER REFERENCES branches(id),
+    debt_balance DECIMAL(10,2) DEFAULT 0.00
+);
+
+-- 4. TRIGGER AUTOMÁTICO DE SUPABASE AUTH
+-- Cuando se registre un usuario en Supabase Auth, se crea su perfil automáticamente
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.profiles (id, email, name, rut, role)
+  VALUES (
+    new.id, 
+    new.email, 
+    new.raw_user_meta_data->>'name', 
+    new.raw_user_meta_data->>'rut',
+    COALESCE((new.raw_user_meta_data->>'role')::user_role, 'cliente'::user_role)
+  );
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+-- 5. Crear Tabla de Inventario Logístico
+CREATE TABLE inventory (
+    item_code VARCHAR(20) PRIMARY KEY,
+    branch_id INTEGER REFERENCES branches(id) NOT NULL,
+    color VARCHAR(50),
+    size VARCHAR(20),
+    entry_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    is_rented BOOLEAN DEFAULT FALSE,
+    notes TEXT
+);
+
+-- 6. Crear Tabla de Transacciones (POS)
+CREATE TABLE transactions (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    branch_id INTEGER REFERENCES branches(id) NOT NULL,
+    staff_id UUID REFERENCES profiles(id) NOT NULL,
+    client_rut VARCHAR(12) REFERENCES profiles(rut),
+    type VARCHAR(20) CHECK (type IN ('ingreso', 'salida')) NOT NULL,
+    category trans_category NOT NULL,
+    method payment_method,
+    total DECIMAL(10,2) NOT NULL,
+    is_incident BOOLEAN DEFAULT FALSE,
+    incident_note TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 7. ACTIVAR SEGURIDAD RLS (Row Level Security) EN SUPABASE
+ALTER TABLE branches ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE inventory ENABLE ROW LEVEL SECURITY;
+ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+
+-- Políticas base (El SuperAdmin ve todo)
+CREATE POLICY "Superadmin_All_Access_Inventory" ON inventory FOR ALL USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'superadmin')
+);
+CREATE POLICY "Superadmin_All_Access_Transactions" ON transactions FOR ALL USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'superadmin')
+);
+
+==================================================
+2. LÓGICA DE NEGOCIO EN EL BACKEND / ENDPOINTS
+==================================================
+
+1. MÓDULO DE DEUDAS:
+- Al seleccionar método 'por_pagar' en una transacción, sumar el monto a `debt_balance` en `profiles` del cliente.
+- Al registrar 'pago_deuda', restar ese monto del `debt_balance`.
+
+2. SISTEMA LOGÍSTICO "AV" (Cálculo dinámico sobre entry_date):
+- 0-3 meses: 'AV1' (✅ OPERATIVO).
+- 3-6 meses: 'AV2' (🕒 REVISIÓN).
+- 6-9 meses: 'AV3' (🔧 REPARACIÓN).
+- +9 meses: 'URGENTE' (⚠️ VENCIDO - Bloquea automáticamente transacciones con is_rented=true).
+
+==================================================
+3. SUPABASE EDGE FUNCTION: CIERRE DE CAJA
+==================================================
+Crea una Edge Function que agrupe los datos del día de una `branch_id`, construya un archivo .txt codificado en UTF-8 y lo envíe por email a WAVE_SURF_CLUB@outlook.com.
+
+Plantilla exacta del .TXT:
+==================================================
+        CIERRE DE CAJA - WAVE SURF CLUB
+==================================================
+SUCURSAL: ${branch_name}
+FECHA: ${current_date}
+RESPONSABLE DE TURNO: ${staff_name}
+--------------------------------------------------
+
+1. BALANCES DE LA SEDE:
+- Ingresos:   $${total_income}
+- Salidas:    $${total_expense}
+- TOTAL NETO: $${net_balance}
+
+2. MÉTODOS DE PAGO:
+- Efectivo:       $${cash_total}
+- Transferencia:  $${transfer_total}
+- Crédito:        $${credit_total}
+- Por Pagar:      $${debt_generated_today}
+- Deuda Pagada:   $${debt_paid_today}
+
+3. CONTROL DE ACTIVOS (SEDE ${branch_name}):
+- Alertas AV3 (Reparación): ${list_av3_items}
+- ALERTAS VENCIDOS (Urgente): ${list_expired_items}
+
+4. NOTAS E INCIDENCIAS DEL TURNO:
+${incidents_loop}
+- [${time}] Incidencia ${item_code}: "${incident_note}" - Cargo: $${incident_amount}
+==================================================
+           FIN DEL REPORTE - SINCE 2015
+==================================================
+
+Instrucción final para la IA: Ejecuta el código SQL, configura las políticas RLS restantes para que el rol 'caja' solo vea su sucursal, y levanta el frontend conectando Supabase Auth para el login.

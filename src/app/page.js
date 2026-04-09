@@ -3,6 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+<<<<<<< HEAD
+=======
+import { useTranslation } from '@/lib/i18n-context';
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 import { addClient } from '@/lib/data';
 import EquipoSection from '@/components/EquipoSection';
 
@@ -22,7 +26,11 @@ const translations = {
     mod_name: 'Nombre Completo', mod_rut: 'RUT', mod_email: 'Correo Electrónico',
     mod_phone: 'Teléfono', mod_submit: 'Registrar Cliente', mod_processing: 'Procesando...',
     mod_success: 'Estudiante registrado correctamente.', mod_error: 'Error al registrar.',
+<<<<<<< HEAD
     sec_bio_sub: 'Wave Surf Club: Transformando Vidas a través del Deporte\n\nDesde 2015, lo que comenzó como un sueño de Francisco Luisiño se ha convertido en una realidad que late con fuerza en la costa chilena. En Wave, nuestra pasión va más allá de las olas: somos un motor de nuevos proyectos deportivos y un pilar para la comunidad.\n\nNos movemos por la inclusión, apoyando activamente el deporte para personas con discapacidad y creando lazos con universidades y colegios a través de paseos de curso diseñados para conectar con la naturaleza. Con sedes en Concón, Pichilemu y nuestra reciente inauguración en Punta de Piedra, somos la casa de grandes competidores internacionales y, sobre todo, el lugar donde cada visitante vive una experiencia inolvidable.',
+=======
+    sec_bio_sub: 'Wave Surf Club: Transformando Vidas a través del Deporte\n\nDesde 2015, lo que comenzó como un sueño de Francisco Luisiño se ha convertido en una reality que late con fuerza en la costa chilena. En Wave, nuestra pasión va más allá de las olas: somos un motor de nuevos proyectos deportivos y un pilar para la comunidad.\n\nNos movemos por la inclusión, apoyando activamente el deporte para personas con discapacidad y creando lazos con universidades y colegios a través de paseos de curso diseñados para conectar con la naturaleza. Con sedes en Concón, Pichilemu y nuestra reciente inauguración en Punta de Piedra, somos la casa de grandes competidores internacionales y, sobre todo, el lugar donde cada visitante vive una experiencia inolvidable.',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     sec_escuelas_sub: 'S P O T S',
     sec_riders_sub: 'WAVE FAM: THE NEXT GENERATION',
     sec_taller_sub: 'Reparación y customización de equipos profesionales.',
@@ -68,7 +76,11 @@ const translations = {
     hero_title: 'BEHERRSCHE DIE WELLEN.<br/>VEREINFACHE DEINE ERFAHRUNG.',
     hero_subtitle: "Entdecke die smarte Seite des Surfens. Kurse und modernste Ausrüstung.",
     mod_title: 'NEUER STUDENT', mod_name: 'Vollständiger Name', mod_rut: 'Personalausweis', mod_email: 'E-Mail', mod_phone: 'Telefon', mod_submit: 'Registrieren', mod_processing: 'Verarbeitung...', mod_success: 'Erfolgreich registriert.', mod_error: 'Fehler bei der Registrierung.',
+<<<<<<< HEAD
     sec_bio_sub: 'Geschichte der besten Surfschule in Chile.', sec_escuelas_sub: 'Verbinde dich mit unseren Spots in Reñaca und Concón.', sec_taller_sub: 'Reparatur und Anpassung professioneller Ausrüstung.', sec_riders_sub: 'Die Talente, die den Unterschied machen.', sec_eventos_sub: 'Lokale Wettbewerbe und Treffen.', sec_clases_sub: 'Entwickle dich weiter mit erstklassigen Instruktoren.', sec_surf_sub: 'Ausrüstung und Wellenkultur.', sec_skate_sub: 'Trockentraining zur Beherrschung des Wassers.'
+=======
+    sec_bio_sub: 'Geschichte der besten Surfschule in Chile.', sec_escuelas_sub: 'Verbinde dich con unseren Spots in Reñaca und Concón.', sec_taller_sub: 'Reparatur und Anpassung professioneller Ausrüstung.', sec_riders_sub: 'Die Talente, die den Unterschied machen.', sec_eventos_sub: 'Lokale Wettbewerbe und Treffen.', sec_clases_sub: 'Entwickle dich weiter mit erstklassigen Instruktoren.', sec_surf_sub: 'Ausrüstung und Wellenkultur.', sec_skate_sub: 'Trockentraining zur Beherrschung des Wassers.'
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
   },
   pt: {
     btn_ingreso: 'ENTRADA :', btn_cliente: 'A) CLIENTE (Novo)', btn_colaborador: 'B) EQUIPE (ERP)',
@@ -76,7 +88,11 @@ const translations = {
     hero_title: 'DOMINE AS ONDAS.<br/>SIMPLIFIQUE SUA EXPERIÊNCIA.',
     hero_subtitle: "Descubra o lado inteligente do surfe. Aulas e equipamentos gerenciados com tecnologia de ponta.",
     mod_title: 'NOVO ALUNO', mod_name: 'Nome Completo', mod_rut: 'Identidade (RUT)', mod_email: 'Correio eletrônico', mod_phone: 'Telefone', mod_submit: 'Registrar', mod_processing: 'Processando...', mod_success: 'Registrado com sucesso.', mod_error: 'Erro no registro.',
+<<<<<<< HEAD
     sec_bio_sub: 'História da melhor escola de surfe do Chile.', sec_escuelas_sub: 'Conecte-se aos nossos picos em Reñaca y Concón.', sec_taller_sub: 'Reparo e personalização de equipamentos.', sec_riders_sub: 'Os talents que fazem a diferença.', sec_eventos_sub: 'Competições locais e encontros.', sec_clases_sub: 'Evolua com instrutores de alto nível.', sec_surf_sub: 'Equipamentos e cultura de ondas.', sec_skate_sub: 'Treinamento em solo para dominar a água.'
+=======
+    sec_bio_sub: 'História da melhor escola de surfe do Chile.', sec_escuelas_sub: 'Conecte-se aos nossos picos em Reñaca y Concón.', sec_taller_sub: 'Reparo e personalização de equipamentos.', sec_riders_sub: 'Os talents que fazem a diferença.', sec_eventos_sub: 'Competições locais e encontros.', sec_clases_sub: 'Evolua con instrutores de alto nível.', sec_surf_sub: 'Equipamentos e cultura de ondas.', sec_skate_sub: 'Treinamento em solo para dominar a água.'
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
   },
   ja: {
     btn_ingreso: 'ログイン :', btn_cliente: 'A) クライアント', btn_colaborador: 'B) スタッフ',
@@ -108,9 +124,17 @@ const LANGUAGES = [
   { code: 'zh', label: '中文' }, { code: 'ru', label: 'Русский' }
 ];
 
+<<<<<<< HEAD
 export default function LandingPage() {
   const [lang, setLang] = useState('es');
   const t = translations[lang];
+=======
+import Navbar from '@/components/Navbar';
+
+export default function LandingPage() {
+  const { lang, t: contextT } = useTranslation();
+  const t = translations[lang] || translations['es'];
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
   useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth';
@@ -126,7 +150,11 @@ export default function LandingPage() {
   const [ridersData, setRidersData] = useState([]);
 
   useEffect(() => {
+<<<<<<< HEAD
     fetch('/api/riders')
+=======
+    fetch('/api/antigravity/riders')
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
       .then(res => res.json())
       .then(data => setRidersData(data))
       .catch(err => console.error('Error fetching riders:', err));
@@ -666,6 +694,7 @@ export default function LandingPage() {
       `}</style>
 
       {/* --- CABECERA --- */}
+<<<<<<< HEAD
       <header className="header">
         <div className="nav-left">
           <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
@@ -735,6 +764,9 @@ export default function LandingPage() {
           <a style={{ color: '#2563eb' }}>{t.menu_carro}</a>
         </div>
       )}
+=======
+      <Navbar />
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
       {/* --- SECCIONES PARALLAX --- */}
 
@@ -818,9 +850,12 @@ export default function LandingPage() {
       </section>
 
 
+<<<<<<< HEAD
       <section className="px-section" id="equipo" style={{ padding: '0' }}>
         <EquipoSection />
       </section>
+=======
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
       <section className="px-section" id="eventos">
         <div className="px-bg-wrapper">

@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+<<<<<<< HEAD
 
 const RYDERS_DATA = {
   'tomas-bock': {
@@ -11,6 +12,16 @@ const RYDERS_DATA = {
     role: 'PRO SURFER',
     cover: '/tomy-escuela.png',
     bio: '<p>Tomas Bock es uno de los ryders más destacados de la escena nacional. Con una trayectoria impecable en el circuito Pro, Tomas representa la esencia pura de Wave Surf Club: disciplina, pasión y una conexión profunda con el océano.</p>',
+=======
+import Navbar from '@/components/Navbar';
+
+const RIDERS_DATA = {
+  'tomas-bock': {
+    name: 'Tomas Bock',
+    role: 'PRO RIDER',
+    cover: '/tomy-escuela.png',
+    bio: '<p>Tomas Bock es uno de los riders más destacados de la escena nacional. Con una trayectoria impecable en el circuito Pro, Tomas representa la esencia pura de Wave Surf Club: disciplina, pasión y una conexión profunda con el océano.</p>',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     stats: { board: 'Wave Tech 6\'0"', stance: 'Regular', local: 'Pichilemu' },
     gallery: [
       '/tomy-escuela.png',
@@ -30,12 +41,23 @@ const RYDERS_DATA = {
     `,
     stats: { board: 'Wave Classic 7\'4"', stance: 'Goofy', local: 'Concón' },
     gallery: [
+<<<<<<< HEAD
       '/images/paulo/foto1.jpg',
       '/images/paulo/foto2.jpg',
       '/images/paulo/foto3.jpg',
       '/images/paulo/foto4.jpg',
       '/images/paulo/foto5.jpg',
       '/images/paulo/foto6.jpg'
+=======
+      '/riders/paulo/R1.jpg',
+      '/riders/paulo/R2.jpg',
+      '/riders/paulo/R3.jpg',
+      '/riders/paulo/R4.jpg',
+      '/riders/paulo/R5.jpg',
+      '/riders/paulo/R6.jpg',
+      '/riders/paulo/R7.jpg',
+      '/riders/paulo/R8.jpg'
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     ],
     magazine: 'https://drive.google.com/drive/folders/1ZXnRizAjEvrCkdoV0tfGwF7esY4g81oK?usp=sharing'
   },
@@ -99,7 +121,11 @@ const RYDERS_DATA = {
     name: 'Diego Salt',
     role: 'WAVE TALLER',
     cover: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=1200&q=80',
+<<<<<<< HEAD
     bio: '<p>El guardián de los equipos. Diego conoce cada secreto de las tablas y el equipamiento. Su labor en el taller asegura que cada ryder de Wave tenga las herramientas perfectas para dominar el mar.</p>',
+=======
+    bio: '<p>El guardián de los equipos. Diego conoce cada secreto de las tablas y el equipamiento. Su labor en el taller asegura que cada rider de Wave tenga las herramientas perfectas para dominar el mar.</p>',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     stats: { board: 'Wave Cruiser 8\'0"', stance: 'Regular', local: 'Concón' },
     gallery: ['https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=1200&q=80']
   },
@@ -139,7 +165,11 @@ const RYDERS_DATA = {
     name: 'Gaspar Board',
     role: 'SHAPER',
     cover: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80',
+<<<<<<< HEAD
     bio: '<p>El artesano de la velocidad. Gaspar diseña y construye las tablas que definen el rendimiento de nuestros ryders, fusionando ciencia y arte bajo el sello Wave.</p>',
+=======
+    bio: '<p>El artesano de la velocidad. Gaspar diseña y construye las tablas que definen el rendimiento de nuestros riders, fusionando ciencia y arte bajo el sello Wave.</p>',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     stats: { board: 'Wave Master Tool', stance: 'Regular', local: 'Concón' },
     gallery: ['https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80']
   },
@@ -171,13 +201,21 @@ const RYDERS_DATA = {
     name: 'Felipe Edge',
     role: 'TECH COACH',
     cover: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80',
+<<<<<<< HEAD
     bio: '<p>Maestro de la técnica. Felipe analiza cada movimiento para optimizar el performance de los ryders pro, utilizando tecnología y experiencia para alcanzar la perfección.</p>',
+=======
+    bio: '<p>Maestro de la técnica. Felipe analiza cada movimiento para optimizar el performance de los riders pro, utilizando tecnología y experiencia para alcanzar la perfección.</p>',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     stats: { board: 'Wave Tech 6\'2"', stance: 'Regular', local: 'Concón' },
     gallery: ['https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80']
   },
   'angelo-avello': {
     name: 'Angelo Avello',
+<<<<<<< HEAD
     role: 'RYDER',
+=======
+    role: 'RIDER',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     cover: 'https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=1200&q=80',
     bio: '<p>Angelo Avello se une al equipo para demostrar que el surf es más que un deporte, es una forma de vida. Su estilo fluido y compromiso con la excelencia lo posicionan como un talento a seguir.</p>',
     stats: { board: 'Wave Tech 6\'2"', stance: 'Regular', local: 'Concón' },
@@ -185,7 +223,11 @@ const RYDERS_DATA = {
   },
   'cristobal-lazcano': {
     name: 'Cristobal Lazcano',
+<<<<<<< HEAD
     role: 'RYDER',
+=======
+    role: 'RIDER',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     cover: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=80',
     bio: '<p>Cristobal Lazcano aporta frescura y potencia al equipo. Con una visión técnica impecable, Cristobal representa la nueva ola de deportistas que están redefiniendo el surf nacional.</p>',
     stats: { board: 'Wave Performance 6\'0"', stance: 'Goofy', local: 'Pichilemu' },
@@ -193,18 +235,30 @@ const RYDERS_DATA = {
   },
   'vicente-pipe': {
     name: 'Vicente Pipe',
+<<<<<<< HEAD
     role: 'RYDER',
+=======
+    role: 'RIDER',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     cover: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80',
     bio: '<p>El ojo narrativo. Vicente captura la gloria y el esfuerzo del club, inmortalizando los momentos que definen nuestra historia y la belleza del deporte de tabla.</p>',
     stats: { board: 'Wave Media Hub', stance: 'N/A', local: 'Chile' },
     gallery: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80']
   },
+<<<<<<< HEAD
   // Fallback data for other ryders
+=======
+  // Fallback data for other riders
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
   default: {
     name: 'Wave Rider',
     role: 'TEAM RIDER',
     cover: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1920&q=80',
+<<<<<<< HEAD
     bio: '<p>Nacido entre las olas de la zona central, este ryder ha dedicado su vida a perfeccionar la técnica y el estilo que definen a la nueva generación del surf chileno.</p>',
+=======
+    bio: '<p>Nacido entre las olas de la zona central, este rider ha dedicado su vida a perfeccionar la técnica y el estilo que definen a la nueva generación del surf chileno.</p>',
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
     stats: { board: 'Wave Custom', stance: 'Natural', local: 'Chile' },
     gallery: [
       'https://images.unsplash.com/photo-1533031021462-8e7ac46b1d4c?auto=format&fit=crop&w=1200&q=80',
@@ -213,9 +267,15 @@ const RYDERS_DATA = {
   }
 };
 
+<<<<<<< HEAD
 export default function RyderMagazine() {
   const { slug } = useParams();
   const ryder = RYDERS_DATA[slug] || RYDERS_DATA.default;
+=======
+export default function RiderMagazine() {
+  const { slug } = useParams();
+  const rider = RIDERS_DATA[slug] || RIDERS_DATA.default;
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
   const [scrolled, setScrolled] = useState(false);
   const [index, setIndex] = useState(0);
 
@@ -228,6 +288,7 @@ export default function RyderMagazine() {
   }, []);
 
   useEffect(() => {
+<<<<<<< HEAD
     if (ryder.gallery && ryder.gallery.length > 1) {
       const interval = setInterval(() => {
         setIndex((prev) => (prev + 1) % ryder.gallery.length);
@@ -235,6 +296,15 @@ export default function RyderMagazine() {
       return () => clearInterval(interval);
     }
   }, [ryder.gallery]);
+=======
+    if (rider.gallery && rider.gallery.length > 1) {
+      const interval = setInterval(() => {
+        setIndex((prev) => (prev + 1) % rider.gallery.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [rider.gallery]);
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
   return (
     <div className="mag-container">
@@ -285,7 +355,11 @@ export default function RyderMagazine() {
         .hero-bg {
           position: absolute;
           inset: 0;
+<<<<<<< HEAD
           background: #000 url(${ryder.cover}) center/contain no-repeat;
+=======
+          background: #000 url(${rider.cover}) center/contain no-repeat;
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
           z-index: 1;
         }
         .hero-overlay {
@@ -391,8 +465,11 @@ export default function RyderMagazine() {
           object-fit: cover;
           transition: opacity 1.5s ease-in-out, transform 8s ease-out;
           opacity: 0;
+<<<<<<< HEAD
           filter: contrast(1.1) brightness(0.9) hue-rotate(240deg) saturate(1.5);
           mix-blend-mode: screen;
+=======
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
           transform: scale(1.1);
         }
         .carousel-img.active {
@@ -406,7 +483,10 @@ export default function RyderMagazine() {
           border: 1px solid rgba(0,0,0,0.8);
           padding: 10px 20px;
           z-index: 10;
+<<<<<<< HEAD
           mix-blend-mode: multiply;
+=======
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
         }
         .carousel-overlay span {
           font-family: serif;
@@ -425,7 +505,10 @@ export default function RyderMagazine() {
           opacity: 0;
           transition: opacity 1.5s ease-in-out, transform 8s ease-out;
           transform: scale(1.1);
+<<<<<<< HEAD
           mix-blend-mode: screen;
+=======
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
         }
         .carousel-image-wrapper.active {
           opacity: 1;
@@ -535,21 +618,31 @@ export default function RyderMagazine() {
         }
       `}</style>
 
+<<<<<<< HEAD
       <nav className="mag-nav">
         <Link href="/#ryders" className="back-btn">
           ← Volver al Club
         </Link>
         <img src="/logo-pag.png" alt="Wave" style={{ height: '40px', filter: 'brightness(0)' }} />
       </nav>
+=======
+      <Navbar />
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
 
       <header className="mag-hero">
         <div className="hero-bg" />
         <div className="hero-overlay" />
         <div className="hero-title-box">
           <h1 className="mag-name">
+<<<<<<< HEAD
             <span className="mag-prefix">R Y D E R</span> 
             <span>/</span>
             <span>{formatSpaced(ryder.name)}</span>
+=======
+            <span className="mag-prefix">R I D E R</span> 
+            <span>/</span>
+            <span>{formatSpaced(rider.name)}</span>
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
           </h1>
         </div>
       </header>
@@ -558,6 +651,7 @@ export default function RyderMagazine() {
         <div className="editorial-row">
           <div className="text-col">
             <h2 className="editorial-title">
+<<<<<<< HEAD
               {ryder.title || 'LA ESENCIA DEL RIDER'}
             </h2>
             <div 
@@ -569,6 +663,19 @@ export default function RyderMagazine() {
               <div className="download-btn-container">
                 <a 
                   href={ryder.magazine} 
+=======
+              {rider.title || 'LA ESENCIA DEL RIDER'}
+            </h2>
+            <div 
+              className="editorial-p" 
+              dangerouslySetInnerHTML={{ __html: rider.bio }} 
+            />
+
+            {rider.magazine && (
+              <div className="download-btn-container">
+                <a 
+                  href={rider.magazine} 
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
                   download 
                   className="mag-download-btn"
                 >
@@ -584,7 +691,11 @@ export default function RyderMagazine() {
           </div>
           <div className="img-col">
             <div className="carousel-container">
+<<<<<<< HEAD
               {ryder.gallery.map((img, i) => (
+=======
+              {rider.gallery.map((img, i) => (
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
                 <div key={i} className={`carousel-image-wrapper ${i === index ? 'active' : ''}`}>
                   <Image 
                     src={img} 
@@ -592,17 +703,25 @@ export default function RyderMagazine() {
                     sizes="(max-width: 900px) 100vw, 50vw"
                     priority={i === 0}
                     style={{ 
+<<<<<<< HEAD
                       objectFit: 'cover',
                       filter: 'contrast(1.1) brightness(0.9) hue-rotate(240deg) saturate(1.5)',
+=======
+                      objectFit: 'cover'
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
                     }}
                     className="carousel-img-optimized"
                     alt={`Rider ${i}`} 
                   />
                 </div>
               ))}
+<<<<<<< HEAD
               <div className="carousel-overlay">
                 <span>WAVE SURF CLUB</span>
               </div>
+=======
+              {/* Watermark removed as per User Request */}
+>>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
             </div>
           </div>
         </div>
