@@ -194,7 +194,8 @@ export default function AgendaPage() {
         branch_id: formData.sede === 'Concón' ? 1 : (formData.sede === 'Pichilemu' ? 2 : 3),
 >>>>>>> 893568468ee5be2213dbb313ca60a3eb42ff5fd7
         payment_status: 'pagado',
-        metadata: { ...formData, date: bookingDate, time: bookingTime }
+        is_web_tx: true, // Mark as web transaction
+        metadata: { ...formData, date: bookingDate, time: bookingTime, is_external: true }
       });
       if (error) throw error;
 
