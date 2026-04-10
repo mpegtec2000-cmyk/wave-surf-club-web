@@ -343,15 +343,17 @@ export default function RiderMagazine() {
           display: block;
         }
         .mag-name {
-          font-size: clamp(24px, 4vw, 48px);
-          font-weight: 900;
-          line-height: 1.2;
+          font-size: clamp(32px, 5vw, 64px);
+          font-weight: 950;
+          line-height: 0.9;
           display: flex;
           align-items: center;
-          gap: 15px;
+          gap: 10px;
           text-transform: uppercase;
           margin: 0;
           color: #000;
+          letter-spacing: -0.05em;
+          transform: skewX(-5deg);
         }
         .mag-prefix {
           color: #38bdf8;
