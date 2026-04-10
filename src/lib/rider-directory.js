@@ -3,8 +3,9 @@ export const riders = [
   { id: 2, nombre: "PAULO MUÑOZ", estado: "DISPONIBLE", ocupado: true, slug: "paulo-munoz" },
   { id: 3, nombre: "ANGELO AVELLO", estado: "DISPONIBLE", ocupado: true, slug: "angelo-avello" },
   { id: 4, nombre: "CRISTOBAL LAZCANO", estado: "DISPONIBLE", ocupado: true, slug: "cristobal-lazcano" },
-  ...Array.from({ length: 10 }, (_, i) => ({
-    id: i + 5,
+  { id: 5, nombre: "LUCAS PENNA", estado: "DISPONIBLE", ocupado: true, slug: "lucas-penna" },
+  ...Array.from({ length: 9 }, (_, i) => ({
+    id: i + 6,
     nombre: "VACÍO",
     estado: "DISPONIBLE",
     ocupado: false,
