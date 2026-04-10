@@ -202,6 +202,16 @@ const RIDERS_DATA = {
     stats: { board: 'Wave Media Hub', stance: 'N/A', local: 'Chile' },
     gallery: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80']
   },
+  'lucas-penna': {
+    name: 'Lucas Penna',
+    role: 'TEAM RIDER',
+    cover: '/riders/lucas-penna/fondo.png',
+    bio: '<p>Lucas Penna se une al equipo para demostrar que el surf y el skate son más que un deporte, son una forma de vida. Su estilo fluido y compromiso con la excelencia lo posicionan como un talento a seguir en la escena nacional.</p>',
+    stats: { board: 'Wave Tech 6\'2"', stance: 'Regular', local: 'Pichilemu' },
+    gallery: [
+      '/riders/lucas-penna/fondo.png'
+    ]
+  },
   default: {
     name: 'Wave Rider',
     role: 'TEAM RIDER',
