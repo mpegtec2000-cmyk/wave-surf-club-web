@@ -10,13 +10,19 @@ const RIDERS_DATA = {
   'tomas-bock': {
     name: 'Tomas Bock',
     role: 'PRO RIDER',
-    cover: '/tomy-escuela.png',
-    bio: '<p>Tomas Bock es uno de los riders más destacados de la escena nacional. Con una trayectoria impecable en el circuito Pro, Tomas representa la esencia pura de Wave Surf Club: disciplina, pasión y una conexión profunda con el océano.</p>',
-    stats: { board: 'Wave Tech 6\'0"', stance: 'Regular', local: 'Pichilemu' },
+    title: 'TOMAS BOCK',
+    cover: '/riders/tomas-bock/tomi-2.png',
+    bio: `
+      <p>Originario de Reñaca, Tomás es actualmente uno de los "Riders" más influyentes y talentosos del surf chileno. Desde sus inicios en el Quinto Sector, demostró un estilo explosivo y una lectura de ola superior, lo que lo llevó rápidamente a dominar el circuito nacional juvenil y a convertirse en una pieza clave de la Selección Chilena de Surf.</p>
+      <p><strong>Hitos y Carrera</strong><br/>
+      <strong>Trayectoria Internacional:</strong> Competidor constante en los Qualifying Series (QS) de la World Surf League (WSL), llevando la bandera chilena a los escenarios más exigentes del mundo.</p>
+      <p><strong>Especialidad:</strong> Destaca por su surfing progresivo, con un dominio excepcional de los aéreos y maniobras radicales en secciones críticas de la ola.</p>
+      <p><strong>Referente Local:</strong> Múltiple campeón nacional y referente indiscutido en la zona central de Chile.</p>
+    `,
+    stats: { board: 'Wave Performance 6\'0"', stance: 'Regular', local: 'Reñaca' },
     gallery: [
-      '/tomy-escuela.png',
-      'https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1533031021462-8e7ac46b1d4c?auto=format&fit=crop&w=1200&q=80'
+      '/riders/tomas-bock/tomi-2.png',
+      '/riders/tomas-bock/tomi-1.jpg'
     ]
   },
   'paulo-munoz': {
