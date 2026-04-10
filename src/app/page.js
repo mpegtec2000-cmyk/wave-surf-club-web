@@ -28,14 +28,14 @@ export default function LandingPage() {
         zIndex: 1
       }}>
         <Image 
-          src="/FONDO OFFICIAL.png" 
+          src="/FONDO OFICIAL.png" 
           alt="Wave Surf Club - Portada Oficial" 
           fill 
           priority
           quality={100}
           style={{ 
             objectFit: 'cover',
-            objectPosition: 'top'
+            objectPosition: 'center'
           }}
         />
       </div>
