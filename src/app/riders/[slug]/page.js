@@ -24,7 +24,10 @@ const RIDERS_DATA = {
       '/riders/tomas-bock/tomi-1.jpg',
       '/riders/tomas-bock/tomi-2.png'
     ],
-    instagramUrl: 'https://www.instagram.com/p/Ckor3D0g9ml/'
+    instagramUrls: [
+      'https://www.instagram.com/p/Ckor3D0g9ml/',
+      'https://www.instagram.com/p/C7ST0ZTvNQE/'
+    ]
   },
   'paulo-munoz': {
     name: 'Paulo Muñoz',
@@ -563,10 +566,11 @@ export default function RiderMagazine() {
               className="editorial-p" 
               dangerouslySetInnerHTML={{ __html: rider.bio }} 
             />
-            {rider.instagramUrl && (
-              <div className="instagram-box">
+            {/* INSTAGRAM VIDEOS */}
+            {(rider.instagramUrls || (rider.instagramUrl && [rider.instagramUrl])).map((url, i) => (
+              <div key={i} className="instagram-box">
                 <iframe 
-                  src={`${rider.instagramUrl}embed/`} 
+                  src={`${url}embed/`} 
                   width="100%" 
                   height="720" 
                   frameBorder="0" 
@@ -575,7 +579,7 @@ export default function RiderMagazine() {
                   style={{ borderRadius: '4px', border: '1px solid #eee', background: '#fff' }}
                 />
               </div>
-            )}
+            ))}
 
             {rider.magazine && (
               <div className="download-btn-container">
