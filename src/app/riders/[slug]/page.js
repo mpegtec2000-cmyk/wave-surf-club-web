@@ -249,7 +249,7 @@ export default function RiderMagazine() {
   const [scrolled, setScrolled] = useState(false);
   const [index, setIndex] = useState(0);
 
-  const formatSpaced = (text) => text.toUpperCase().split('').join(' ');
+  const formatSpaced = (text) => text.toUpperCase();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -327,9 +327,10 @@ export default function RiderMagazine() {
         .hero-title-box {
           position: relative;
           z-index: 3;
-          max-width: 900px;
+          max-width: 95%;
+          display: inline-block;
           background: rgba(255, 255, 255, 0.95);
-          padding: 40px 60px;
+          padding: 30px 50px;
           border: 1px solid #000;
           box-shadow: 20px 20px 0px rgba(0,0,0,0.1);
         }
@@ -343,17 +344,18 @@ export default function RiderMagazine() {
           display: block;
         }
         .mag-name {
-          font-size: clamp(32px, 5vw, 64px);
+          font-size: clamp(24px, 4vw, 56px);
           font-weight: 950;
-          line-height: 0.9;
+          line-height: 1;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 15px;
           text-transform: uppercase;
           margin: 0;
           color: #000;
-          letter-spacing: -0.05em;
+          letter-spacing: -0.02em;
           transform: skewX(-5deg);
+          white-space: nowrap;
         }
         .mag-prefix {
           color: #38bdf8;
