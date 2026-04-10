@@ -30,7 +30,7 @@ export default function EquipoPage() {
 
       <div className="img-wrapper">
         <img 
-          src="/FONDO-RAIDERS.PNG" 
+          src="/FONDO EQUIPO.jpg" 
           alt="Equipo Wave Surf Club"
           className="pure-img"
         />
