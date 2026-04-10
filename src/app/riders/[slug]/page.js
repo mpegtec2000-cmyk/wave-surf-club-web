@@ -25,7 +25,6 @@ const RIDERS_DATA = {
       '/riders/tomas-bock/tomi-2.png'
     ],
     instagramUrls: [
-      'https://www.instagram.com/p/Ckor3D0g9ml/',
       'https://www.instagram.com/p/C7ST0ZTvNQE/'
     ]
   },
