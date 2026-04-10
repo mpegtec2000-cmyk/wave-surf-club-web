@@ -568,7 +568,7 @@ export default function RiderMagazine() {
               dangerouslySetInnerHTML={{ __html: rider.bio }} 
             />
             {/* INSTAGRAM VIDEOS */}
-            {(rider.instagramUrls || (rider.instagramUrl && [rider.instagramUrl])).map((url, i) => (
+            {(rider.instagramUrls || (rider.instagramUrl ? [rider.instagramUrl] : [])).map((url, i) => (
               <div key={i} className="instagram-box">
                 <iframe 
                   src={`${url.replace(/\/$/, '')}/embed/`} 
