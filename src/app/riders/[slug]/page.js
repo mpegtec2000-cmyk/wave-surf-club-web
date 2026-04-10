@@ -291,9 +291,9 @@ export default function RiderMagazine() {
           padding: 0 40px;
           z-index: 1000;
           transition: all 0.4s;
-          background: ${scrolled ? 'rgba(11, 17, 32, 0.9)' : 'transparent'};
+          background: ${scrolled ? 'rgba(11, 17, 32, 0.9)' : '#ffffff'};
           backdrop-filter: ${scrolled ? 'blur(20px)' : 'none'};
-          border-bottom: ${scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none'};
+          border-bottom: 1px solid rgba(0,0,0,0.1);
         }
         .back-btn {
           color: #000;
@@ -309,11 +309,12 @@ export default function RiderMagazine() {
 
         /* --- HERO COVER --- */
         .mag-hero {
-          height: 100vh;
+          height: calc(100vh - 95px);
+          margin-top: 95px;
           position: relative;
           display: flex;
           align-items: flex-end;
-          padding: 100px 8%;
+          padding: 60px 8%;
           overflow: hidden;
         }
         .hero-bg {
