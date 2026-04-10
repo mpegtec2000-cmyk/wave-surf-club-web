@@ -5,9 +5,9 @@ import Link from 'next/link';
 const RiderCard = ({ ryder: rider }) => {
   const isVacio = rider.nombre === "VACÍO";
   
-  // Imagen de placeholder si no hay ocupado
+  // Elige la imagen: Prioridad a rider.cover (si existe), luego mapeo por ID, luego placeholder
   const imageSrc = rider.ocupado 
-    ? (rider.id === 1 ? '/tomy-escuela.png' : rider.id === 2 ? '/paulo-1.png' : `/img/riders/${rider.id}.jpg`)
+    ? (rider.cover || (rider.id === 1 ? '/tomy-escuela.png' : rider.id === 2 ? '/paulo-1.png' : `/img/riders/${rider.id}.jpg`))
     : "https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=400&q=80";
 
   return (

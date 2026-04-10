@@ -206,10 +206,21 @@ const RIDERS_DATA = {
     name: 'Lucas Penna',
     role: 'TEAM RIDER',
     cover: '/riders/lucas-penna/fondo.png',
-    bio: '<p>Lucas Penna se une al equipo para demostrar que el surf y el skate son más que un deporte, son una forma de vida. Su estilo fluido y compromiso con la excelencia lo posicionan como un talento a seguir en la escena nacional.</p>',
-    stats: { board: 'Wave Tech 6\'2"', stance: 'Regular', local: 'Pichilemu' },
+    bio: `
+      <p>Luca se crío en Reñaca, creció con la cultura y las historias de esa playa, su acercamiento al surf viene básicamente desde que nació cuando su padre lo llevaba en brazos al agua con un traje que le quedaba grande porque no habían para niños más pequeños, rodeado de antiguos surfistas que le transmitían la pasión por el surf y por el mar.</p>
+      <p>Si bien su camino no ha sido el más fácil, siempre que se lo ve en el agua se le puede ver sonriendo, contando algo que le de risa o buscando como superarse, a su forma de verlo el surf siempre será una gran razón para estar alegre, surfear lo conecta con su historia familiar y lo hace reconciliarse con su propia historia.</p>
+    `,
+    stats: { board: 'Wave Performance 6\'2"', stance: 'Regular', local: 'Reñaca' },
     gallery: [
-      '/riders/lucas-penna/fondo.png'
+      '/riders/lucas-penna/1.png',
+      '/riders/lucas-penna/2.png',
+      '/riders/lucas-penna/3.png',
+      '/riders/lucas-penna/4.png',
+      '/riders/lucas-penna/5.png',
+      '/riders/lucas-penna/6.png',
+      '/riders/lucas-penna/7.png',
+      '/riders/lucas-penna/8.png',
+      '/riders/lucas-penna/9.png'
     ]
   },
   default: {
@@ -297,7 +308,7 @@ export default function RiderMagazine() {
         .hero-bg {
           position: absolute;
           inset: 0;
-          background: #000 url(${rider.cover}) center/contain no-repeat;
+          background: #000 url(${rider.cover}) center/cover no-repeat;
           z-index: 1;
         }
         .hero-overlay {
