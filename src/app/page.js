@@ -28,8 +28,8 @@ export default function LandingPage() {
         zIndex: 1
       }}>
         <Image 
-          src="/FONDO INICIO.png" 
-          alt="Wave Surf Club - Portada" 
+          src="/FONDO OFFICIAL.png" 
+          alt="Wave Surf Club - Portada Oficial" 
           fill 
           priority
           quality={100}
