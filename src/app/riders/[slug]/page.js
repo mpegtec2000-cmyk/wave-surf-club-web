@@ -11,7 +11,7 @@ const RIDERS_DATA = {
     name: 'Tomas Bock',
     role: 'PRO RIDER',
     title: 'TOMAS BOCK',
-    cover: '/riders/tomas-bock/tomi-1.jpg',
+    cover: '/riders/tomas-bock/tomi-2.png',
     bio: `
       <p>Originario de Reñaca, Tomás es actualmente uno de los "Riders" más influyentes y talentosos del surf chileno. Desde sus inicios en el Quinto Sector, demostró un estilo explosivo y una lectura de ola superior, lo que lo llevó rápidamente a dominar el circuito nacional juvenil y a convertirse en una pieza clave de la Selección Chilena de Surf.</p>
       <p><strong>Hitos y Carrera</strong><br/>
