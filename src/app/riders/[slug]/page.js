@@ -23,7 +23,8 @@ const RIDERS_DATA = {
     gallery: [
       '/riders/tomas-bock/tomi-1.jpg',
       '/riders/tomas-bock/tomi-2.png'
-    ]
+    ],
+    instagramUrl: 'https://www.instagram.com/p/Ckor3D0g9ml/'
   },
   'paulo-munoz': {
     name: 'Paulo Muñoz',
@@ -484,6 +485,11 @@ export default function RiderMagazine() {
           height: 800px;
         }
 
+        .instagram-box {
+          margin-top: 40px;
+          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
         @media (max-width: 900px) {
           .editorial-row { flex-direction: column; text-align: center; }
           .stats-grid { grid-template-columns: 1fr; }
@@ -557,6 +563,19 @@ export default function RiderMagazine() {
               className="editorial-p" 
               dangerouslySetInnerHTML={{ __html: rider.bio }} 
             />
+            {rider.instagramUrl && (
+              <div className="instagram-box">
+                <iframe 
+                  src={`${rider.instagramUrl}embed/`} 
+                  width="100%" 
+                  height="720" 
+                  frameBorder="0" 
+                  scrolling="no" 
+                  allowTransparency="true"
+                  style={{ borderRadius: '4px', border: '1px solid #eee', background: '#fff' }}
+                />
+              </div>
+            )}
 
             {rider.magazine && (
               <div className="download-btn-container">
