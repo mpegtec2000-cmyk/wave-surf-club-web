@@ -32,21 +32,13 @@ export default function LandingPage() {
           alt="Wave Surf Club - Portada" 
           fill 
           priority
+          quality={100}
           style={{ 
             objectFit: 'cover',
             objectPosition: 'center'
           }}
         />
       </div>
-
-      {/* Pequeña animación de entrada o micro-overlay si fuera necesario */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4))',
-        zIndex: 2,
-        pointerEvents: 'none'
-      }} />
 
       <style jsx global>{`
         body { 
