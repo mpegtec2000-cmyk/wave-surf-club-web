@@ -9,36 +9,23 @@ export default function LandingPage() {
   const { t } = useTranslation();
 
   return (
-    <main style={{ 
-      width: '100%', 
-      height: '100vh', 
-      backgroundColor: '#000', 
-      position: 'relative',
-      overflow: 'hidden'
-    }}>
-      {/* Navbar principal */}
+    <>
       <Navbar />
-
-      {/* Hero Principal (Solo PORTADA) */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 1
-      }}>
-        <Image 
-          src="/FONDO OFICIAL.png" 
-          alt="Wave Surf Club - Portada Oficial" 
-          fill 
-          priority
-          quality={100}
-          style={{ 
-            objectFit: 'cover',
-            objectPosition: 'center'
-          }}
-        />
-      </div>
+      <main style={{ marginTop: '95px', width: '100%', height: 'calc(100vh - 95px)', position: 'relative', overflow: 'hidden' }}>
+        <div id="hero" style={{ position: 'relative', width: '100%', height: '100%', zIndex: 1 }}>
+          <Image 
+            src="/FONDO OFICIAL.png" 
+            alt="Wave Surf Club - Portada Oficial" 
+            fill 
+            priority
+            quality={100}
+            style={{ 
+              objectFit: 'cover',
+              objectPosition: 'center'
+            }}
+          />
+        </div>
+      </main>
 
       <style jsx global>{`
         body { 
@@ -49,6 +36,6 @@ export default function LandingPage() {
           font-family: var(--font-archivo), sans-serif;
         }
       `}</style>
-    </main>
+    </>
   );
 }
