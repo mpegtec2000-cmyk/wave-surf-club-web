@@ -25,7 +25,8 @@ const RIDERS_DATA = {
       '/riders/tomas-bock/tomi-2.png'
     ],
     instagramUrls: [
-      'https://www.instagram.com/p/C7ST0ZTvNQE/'
+      'https://www.instagram.com/p/C7ST0ZTvNQE/',
+      'https://www.instagram.com/reel/DA_zhg4PxnB/'
     ]
   },
   'paulo-munoz': {
@@ -569,7 +570,7 @@ export default function RiderMagazine() {
             {(rider.instagramUrls || (rider.instagramUrl && [rider.instagramUrl])).map((url, i) => (
               <div key={i} className="instagram-box">
                 <iframe 
-                  src={`${url}embed/`} 
+                  src={`${url.replace(/\/$/, '')}/embed/`} 
                   width="100%" 
                   height="720" 
                   frameBorder="0" 
