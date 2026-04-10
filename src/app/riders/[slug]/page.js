@@ -205,6 +205,7 @@ const RIDERS_DATA = {
   'lucas-penna': {
     name: 'Lucas Penna',
     role: 'TEAM RIDER',
+    title: 'LUCAS PENNA',
     cover: '/riders/lucas-penna/fondo.png',
     bio: `
       <p>Luca se crío en Reñaca, creció con la cultura y las historias de esa playa, su acercamiento al surf viene básicamente desde que nació cuando su padre lo llevaba en brazos al agua con un traje que le quedaba grande porque no habían para niños más pequeños, rodeado de antiguos surfistas que le transmitían la pasión por el surf y por el mar.</p>
