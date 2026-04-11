@@ -75,6 +75,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
   };
 
   return (
+    <>
     <nav 
       style={{
         position: 'fixed',
@@ -243,119 +244,121 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           <Menu size={28} />
         </button>
       </div>
+      </div>
+    </nav>
 
-      {/* MOBILE FLYOUT */}
-      {menuOpen && (
-        <div className="mobile-flyout">
-          <div className="flyout-header">
-            <div className="flyout-logo-box">
-               <Image src="/logo-wave.png" alt="Logo" width={40} height={40} style={{ objectFit: 'contain' }} />
-            </div>
-            <button 
-              onClick={() => setMenuOpen(false)} 
-              style={{ background: '#000', border: 'none', cursor: 'pointer', color: '#fff', padding: '10px', borderRadius: '50%' }}
-            >
-              <X size={24} />
-            </button>
+    {/* MOBILE FLYOUT - MOVED OUTSIDE NAV TO PREVENT CLIPPING */}
+    {menuOpen && (
+      <div className="mobile-flyout">
+        <div className="flyout-header">
+          <div className="flyout-logo-box">
+             <Image src="/logo-wave.png" alt="Logo" width={40} height={40} style={{ objectFit: 'contain' }} />
           </div>
-          <div className="flyout-links">
-            {menuItems.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                onClick={(e) => {
-                  if (item.type === 'anchor') {
-                    handleScrollTo(e, item.id);
-                  } else if (item.type === 'cart') {
-                    e.preventDefault();
-                    onCartClick && onCartClick();
-                    setMenuOpen(false);
-                  } else {
-                    setMenuOpen(false);
-                  }
-                }}
-                className={item.id === 'agenda' ? 'nav-link-agenda' : ''}
-              >
-                {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
-              </Link>
-            ))}
-          </div>
-          
-          <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '30px', borderTop: '2px solid #eee', paddingTop: '40px' }}>
-             {/* ACCESOS en Mobile */}
-             <div>
-               <span style={{ fontSize: '10px', fontWeight: 900, letterSpacing: '2px', color: '#94a3b8', display: 'block', marginBottom: '15px' }}>ACCESO / LOGIN</span>
-               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                  <Link 
-                    href="/login" 
-                    onClick={() => setMenuOpen(false)} 
-                    style={{ 
-                      fontSize: '14px', 
-                      fontWeight: 900, 
-                      textTransform: 'uppercase', 
-                      color: '#fff', 
-                      background: '#000',
-                      padding: '20px', 
-                      textAlign: 'center',
-                      borderRadius: '8px',
-                      textDecoration: 'none',
-                      letterSpacing: '1px'
-                    }}
-                  >
-                    {t('landing.btn_colaborador')}
-                  </Link>
-                  <Link 
-                    href="/agenda" 
-                    onClick={() => setMenuOpen(false)} 
-                    style={{ 
-                      fontSize: '14px', 
-                      fontWeight: 900, 
-                      textTransform: 'uppercase', 
-                      color: '#000', 
-                      padding: '18px', 
-                      textAlign: 'center',
-                      border: '2px solid #000',
-                      borderRadius: '8px',
-                      textDecoration: 'none',
-                      letterSpacing: '1px'
-                    }}
-                  >
-                    {t('landing.btn_cliente')}
-                  </Link>
-               </div>
-             </div>
-
-             {/* IDIOMA en Mobile */}
-             <div>
-               <span style={{ fontSize: '10px', fontWeight: 900, letterSpacing: '2px', color: '#94a3b8', display: 'block', marginBottom: '15px' }}>LENGUAJE / LANGUAGE</span>
-               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                  {LANGUAGES.map(l => (
-                    <button 
-                      key={l.code} 
-                      onClick={() => { changeLang(l.code); setMenuOpen(false); }}
-                      style={{ 
-                        padding: '12px 20px', 
-                        background: lang === l.code ? '#38bdf8' : 'none', 
-                        color: lang === l.code ? '#fff' : '#000',
-                        border: '2px solid #000',
-                        borderRadius: '4px',
-                        fontSize: '13px', 
-                        fontWeight: '900',
-                        cursor: 'pointer',
-                        flex: 1,
-                        minWidth: '70px'
-                      }}
-                    >
-                      {l.name}
-                    </button>
-                  ))}
-               </div>
-             </div>
-          </div>
+          <button 
+            onClick={() => setMenuOpen(false)} 
+            style={{ background: '#000', border: 'none', cursor: 'pointer', color: '#fff', padding: '10px', borderRadius: '50%' }}
+          >
+            <X size={24} />
+          </button>
         </div>
-      )}
+        <div className="flyout-links">
+          {menuItems.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              onClick={(e) => {
+                if (item.type === 'anchor') {
+                  handleScrollTo(e, item.id);
+                } else if (item.type === 'cart') {
+                  e.preventDefault();
+                  onCartClick && onCartClick();
+                  setMenuOpen(false);
+                } else {
+                  setMenuOpen(false);
+                }
+              }}
+              className={item.id === 'agenda' ? 'nav-link-agenda' : ''}
+            >
+              {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
+            </Link>
+          ))}
+        </div>
+        
+        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '30px', borderTop: '2px solid #eee', paddingTop: '40px' }}>
+           {/* ACCESOS en Mobile */}
+           <div>
+             <span style={{ fontSize: '10px', fontWeight: 900, letterSpacing: '2px', color: '#94a3b8', display: 'block', marginBottom: '15px' }}>ACCESO / LOGIN</span>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <Link 
+                  href="/login" 
+                  onClick={() => setMenuOpen(false)} 
+                  style={{ 
+                    fontSize: '14px', 
+                    fontWeight: 900, 
+                    textTransform: 'uppercase', 
+                    color: '#fff', 
+                    background: '#000',
+                    padding: '20px', 
+                    textAlign: 'center',
+                    borderRadius: '8px',
+                    textDecoration: 'none',
+                    letterSpacing: '1px'
+                  }}
+                >
+                  {t('landing.btn_colaborador')}
+                </Link>
+                <Link 
+                  href="/agenda" 
+                  onClick={() => setMenuOpen(false)} 
+                  style={{ 
+                    fontSize: '14px', 
+                    fontWeight: 900, 
+                    textTransform: 'uppercase', 
+                    color: '#000', 
+                    padding: '18px', 
+                    textAlign: 'center',
+                    border: '2px solid #000',
+                    borderRadius: '8px',
+                    textDecoration: 'none',
+                    letterSpacing: '1px'
+                  }}
+                >
+                  {t('landing.btn_cliente')}
+                </Link>
+             </div>
+           </div>
 
-      <style jsx>{`
+           {/* IDIOMA en Mobile */}
+           <div>
+             <span style={{ fontSize: '10px', fontWeight: 900, letterSpacing: '2px', color: '#94a3b8', display: 'block', marginBottom: '15px' }}>LENGUAJE / LANGUAGE</span>
+             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                {LANGUAGES.map(l => (
+                  <button 
+                    key={l.code} 
+                    onClick={() => { changeLang(l.code); setMenuOpen(false); }}
+                    style={{ 
+                      padding: '12px 20px', 
+                      background: lang === l.code ? '#38bdf8' : 'none', 
+                      color: lang === l.code ? '#fff' : '#000',
+                      border: '2px solid #000',
+                      borderRadius: '4px',
+                      fontSize: '13px', 
+                      fontWeight: '900',
+                      cursor: 'pointer',
+                      flex: 1,
+                      minWidth: '70px'
+                    }}
+                  >
+                    {l.name}
+                  </button>
+                ))}
+             </div>
+           </div>
+        </div>
+      </div>
+    )}
+
+    <style jsx>{`
         .nav-luxury-container {
           height: var(--nav-height, 95px);
           padding: 0 30px 0 0;
@@ -464,5 +467,6 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         }
       `}</style>
     </nav>
+    </>
   );
 }
