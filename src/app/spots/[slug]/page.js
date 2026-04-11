@@ -74,6 +74,16 @@ export default function SpotPage() {
                 <h6>HIGHLIGHTS</h6>
                 <p>{spot.stats.features}</p>
               </div>
+              {spot.instagramUrl && (
+                <div className="stat-item">
+                  <h6>INSTAGRAM</h6>
+                  <p>
+                    <a href={spot.instagramUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38bdf8', textDecoration: 'none' }}>
+                      @FOLLOW
+                    </a>
+                  </p>
+                </div>
+              )}
             </div>
             
             <div className="amenities-container">

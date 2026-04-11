@@ -44,6 +44,7 @@ export const SPOTS_DATA = {
       { title: "Sector Training", desc: "Área de acondicionamiento físico y secado rápido de trajes." },
     ],
     mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6545.968725832717!2d-72.01633512217822!3d-34.38139589999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9664d0bc79e6fcfb%3A0x462bfe0f82d2cb2a!2sLa%20Puntilla%20Pichilemu!5e0!3m2!1ses-419!2scl!4v1712400000000!5m2!1ses-419!2scl",
+    instagramUrl: "https://www.instagram.com/wavesurfclub_pichilemu/",
     gallery: [
       "https://images.unsplash.com/photo-1512413912197-e81882bdc63c?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1528150177508-7cc0c36cda5c?auto=format&fit=crop&w=800&q=80",
