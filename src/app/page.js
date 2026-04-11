@@ -27,7 +27,7 @@ export default function LandingPage() {
                 objectPosition: 'center'
               }}
             />
-            <div className="hero-overlay" />
+            {/* Filter removed as requested */}
           </div>
 
           {/* REAL TEXT TITLES - Never get cut off */}
@@ -98,7 +98,8 @@ export default function LandingPage() {
           width: 100%;
           height: calc(100vh - var(--nav-height));
           display: flex;
-          align-items: center;
+          align-items: flex-end;
+          padding-bottom: 60px;
           justify-content: center;
           background: #000;
         }
@@ -122,10 +123,7 @@ export default function LandingPage() {
         }
 
         .hero-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
-          z-index: 2;
+          display: none;
         }
 
         .hero-content {
