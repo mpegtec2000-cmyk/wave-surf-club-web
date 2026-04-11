@@ -27,7 +27,8 @@ export default function EscuelasPage() {
       slogan: 'Donde viven las leyendas.',
       desc: 'Ubicada en la meca del surf chileno, inmersión total.',
       img: '/PICHILEMU.jpg',
-      features: ['Infraestructura Pro', 'Entrenamiento Funcional', 'Acceso Directo']
+      features: ['Infraestructura Pro', 'Entrenamiento Funcional', 'Acceso Directo'],
+      highlight: 'REPARA TU NAVE'
     },
     {
       id: 'punta-piedra',
