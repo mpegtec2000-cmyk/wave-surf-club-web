@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import Script from 'next/script';
 import Navbar from '@/components/Navbar';
 
 const RIDERS_DATA = {
@@ -573,18 +574,27 @@ export default function RiderMagazine() {
             />
             {/* INSTAGRAM VIDEOS */}
             {(rider.instagramUrls || (rider.instagramUrl ? [rider.instagramUrl] : [])).map((url, i) => (
-              <div key={i} className="instagram-box">
-                <iframe 
-                  src={`${url.replace(/\/$/, '')}/embed/`} 
-                  width="100%" 
-                  height="720" 
-                  frameBorder="0" 
-                  scrolling="no" 
-                  allowTransparency="true"
-                  style={{ borderRadius: '4px', border: '1px solid #eee', background: '#fff' }}
-                />
+              <div key={i} className="instagram-box" style={{ width: '100%', minHeight: '500px', display: 'flex', justifyContent: 'center' }}>
+                <blockquote 
+                  className="instagram-media" 
+                  data-instgrm-permalink={url} 
+                  data-instgrm-version="14"
+                  style={{ width: '100%', border: 'none', background: '#fff', margin: '0' }}
+                >
+                  <a href={url}>Cargando video de Instagram...</a>
+                </blockquote>
               </div>
             ))}
+
+            <Script 
+              src="https://www.instagram.com/embed.js" 
+              strategy="afterInteractive" 
+              onLoad={() => {
+                if (window.instgrm) {
+                  window.instgrm.Embeds.process();
+                }
+              }}
+            />
 
             {rider.magazine && (
               <div className="download-btn-container">
