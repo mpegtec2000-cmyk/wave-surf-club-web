@@ -18,7 +18,8 @@ export const SPOTS_DATA = {
     ctaText: "ASEGURA TU LUGAR CON LOS MEJORES",
     instagramVideos: [
       "https://www.instagram.com/p/DVzJA-8ki4c/",
-      "https://www.instagram.com/p/DOSCcP1DfYU/"
+      "https://www.instagram.com/reel/DSD6xuzEYiE/",
+      "https://www.instagram.com/reel/DHEMF8fOygU/"
     ],
     mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3345.541460395353!2d-71.5543162848154!3d-32.91572978093259!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9689df967ed37bed%3A0xc6cb1c75953e5e78!2sPlaya%20La%20Boca%2C%20Conc%C3%B3n!5e0!3m2!1ses-419!2scl!4v1712400000000!5m2!1ses-419!2scl",
     gallery: [
