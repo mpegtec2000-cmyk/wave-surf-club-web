@@ -32,17 +32,11 @@ export default function LandingPage() {
 
           {/* REAL TEXT TITLES - Never get cut off */}
           <div className="hero-content">
-            <div className="title-box">
-              <h1 className="main-brand-title">
-                <span className="since">EST. 2015</span>
-                WAVE SURF CLUB
-              </h1>
-              <p className="hero-description">
-                Donde el estilo y la técnica se encuentran sobre el agua.
-              </p>
-              <div className="hero-actions">
-                <a href="/riders" className="btn-outline-luxury">CONOCE AL EQUIPO</a>
-              </div>
+            <div className="hero-actions">
+              <a href="/riders" className="btn-pill-premium">
+                <span className="booking-dot"></span>
+                Conoce a tu profesor
+              </a>
             </div>
           </div>
         </div>
@@ -198,22 +192,31 @@ export default function LandingPage() {
           color: #fff;
         }
 
-        .btn-outline-luxury {
-          background: transparent;
-          color: #fff;
-          padding: 18px 36px;
+        .btn-pill-premium {
+          background: #fff;
+          color: #000;
+          padding: 12px 30px;
           text-decoration: none;
           font-weight: 900;
           font-size: 14px;
           text-transform: uppercase;
-          letter-spacing: 1px;
-          border: 2px solid #fff;
+          letter-spacing: 2px;
+          border-radius: 100px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
           transition: all 0.3s ease;
         }
 
-        .btn-outline-luxury:hover {
+        .btn-pill-premium:hover {
+          transform: translateY(-5px);
+          background: #38bdf8;
+          color: #fff;
+        }
+
+        .btn-pill-premium:hover .booking-dot {
           background: #fff;
-          color: #000;
         }
 
         @media (max-width: 768px) {
