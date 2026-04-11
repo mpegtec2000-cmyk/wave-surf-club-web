@@ -11,12 +11,13 @@ export default function EscuelasPage() {
   const sedes = [
     {
       id: 'concon',
-      title: 'SEDE CONCÓN',
-      subtitle: 'Sede Matriz',
-      slogan: 'El corazón de Wave Surf Club.',
-      desc: 'Nuestra base histórica y el punto de encuentro principal.',
+      title: 'WAVE SURF CLUB CONCÓN',
+      subtitle: 'SEDE MATRIZ / PLAYA LA BOCA',
+      slogan: 'El Epicentro del Surf & Skate en Chile',
+      desc: 'Infraestructura de Clase Mundial con la Mega Ramp más grande de Chile. Vive la Experiencia Full Day: tu equipo te espera para una segunda sesión sin costo adicional.',
       img: '/fondo-escuela.png',
-      features: ['Mirador Privado', 'Zona de Confort', 'Skate Park Interno']
+      features: ['Staff de Élite', 'Duchas Agua Caliente', 'Taller Neoprene', 'Mirador Panorámico'],
+      cta: 'ASEGURA TU LUGAR CON LOS MEJORES'
     },
     {
       id: 'pichilemu',
@@ -102,10 +103,25 @@ export default function EscuelasPage() {
                 <h3 style={{ fontSize: '20px', fontWeight: 900, marginBottom: '5px' }}>{sede.title}</h3>
                 <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 900, marginBottom: '15px', letterSpacing: '1px' }}>{sede.subtitle}</div>
                 <p style={{ fontSize: '14px', color: '#4b5563', lineHeight: '1.5', marginBottom: '20px' }}>{sede.desc}</p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '25px' }}>
                     {sede.features.map(f => (
                         <span key={f} style={{ fontSize: '10px', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px', fontWeight: 700 }}>{f}</span>
                     ))}
+                </div>
+                <div style={{ 
+                    marginTop: 'auto',
+                    width: '100%',
+                    padding: '12px',
+                    textAlign: 'center',
+                    background: '#000',
+                    color: '#fff',
+                    fontSize: '11px',
+                    fontWeight: '900',
+                    borderRadius: '8px',
+                    letterSpacing: '1px',
+                    textTransform: 'uppercase'
+                }}>
+                    {sede.cta || 'VER MÁS DETALLES'}
                 </div>
               </div>
             </Link>
