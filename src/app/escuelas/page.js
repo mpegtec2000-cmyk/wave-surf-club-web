@@ -56,8 +56,8 @@ export default function EscuelasPage() {
         zIndex: 1
       }}>
         <Image 
-          src="/tomi-bock-fondo.png" 
-          alt="Bio Wave Surf Club" 
+          src="/FONDO CONCON.jpg" 
+          alt="Escuelas Wave Surf Club" 
           fill 
           priority
           style={{ 
