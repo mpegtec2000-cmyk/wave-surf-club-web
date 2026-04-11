@@ -1,19 +1,24 @@
 export const SPOTS_DATA = {
   "concon": {
     name: "Wave Surf Club Concón",
-    subtitle: "El corazón de Wave surf club",
+    subtitle: "El Epicentro del Surf & Skate en Chile",
     heroImage: "/concon.jpg",
-    description: "Infraestructura de Clase Mundial: Mega Ramp más grande de Chile y escuela de alto rendimiento. EXPERIENCIA FULL DAY: tabla y traje incluidos durante toda tu jornada. Staff de Élite con profesores certificados y atletas internacionales.",
+    description: "🚀 Infraestructura de Clase Mundial: Contamos con la Mega Ramp más grande de Chile y una escuela de alto rendimiento.\n\n🏆 Staff de Élite: Entrena con profesores certificados y atletas de talla nacional e internacional. Servicio profesional garantizado.\n\n🏖️ Ubicación Privilegiada: Ubicados en Playa La Boca, a pasos de los mejores hoteles y el distrito gastronómico de Concón.\n\n⚡ EXPERIENCIA FULL DAY: Al tomar una clase o arrendar equipo, la tabla y el traje son tuyos durante toda la jornada. ¿Quieres ir a almorzar o descansar y volver más tarde? Tu equipo te espera para la segunda sesión sin costos extra.",
     stats: {
       area: "Clase Mundial",
       capacity: "Mega Ramp Chile",
       features: "High Performance",
     },
     amenities: [
-      { title: "Escuela Pro", desc: "Surf & Skate: Niveles Principiante, Medio y Avanzado." },
-      { title: "Comodidad 5*", desc: "Duchas de agua caliente, camarines y custodia segura." },
-      { title: "Espacios VIP", desc: "Mirador panorámico, terrazas relajantes y cafetería oficial." },
+      { title: "Escuela Pro", desc: "Escuela de Surf & Skate: Niveles Principiante, Medio y Avanzado." },
+      { title: "Comodidad Total", desc: "Duchas de agua, baños, camarines y custodia segura." },
+      { title: "Espacios Sociales", desc: "Mirador panorámico, terrazas relajantes, cafetería y Tienda oficial." },
       { title: "Taller Técnico", desc: "Reparación profesional de trajes de neoprene." }
+    ],
+    ctaText: "ASEGURA TU LUGAR CON LOS MEJORES",
+    instagramVideos: [
+      "https://www.instagram.com/p/DVzJA-8ki4c/",
+      "https://www.instagram.com/p/DOSCcP1DfYU/"
     ],
     mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3345.541460395353!2d-71.5543162848154!3d-32.91572978093259!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9689df967ed37bed%3A0xc6cb1c75953e5e78!2sPlaya%20La%20Boca%2C%20Conc%C3%B3n!5e0!3m2!1ses-419!2scl!4v1712400000000!5m2!1ses-419!2scl",
     gallery: [

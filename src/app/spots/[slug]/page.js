@@ -78,12 +78,34 @@ export default function SpotPage() {
           ))}
         </div>
       </section>
+      
+      {/* Instagram Content Section */}
+      {spot.instagramVideos && spot.instagramVideos.length > 0 && (
+        <section className="spot-social-vids">
+          <h2>Vive la Experiencia en Tiempo Real</h2>
+          <div className="social-vids-grid">
+            {spot.instagramVideos.map((url, i) => (
+              <div key={i} className="instagram-container">
+                <iframe 
+                  src={`${url}embed`} 
+                  width="100%" 
+                  height="650" 
+                  frameBorder="0" 
+                  scrolling="no" 
+                  allowtransparency="true"
+                  style={{ borderRadius: '12px' }}
+                ></iframe>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* D. Call to Action Inmobiliario */}
       <section className="spot-cta">
         <h2>¿Listo para vivir la experiencia?</h2>
         <p>Garantiza tu espacio en {spot.name}</p>
-        <Link href="/#hero" className="btn-cta">SOLICITAR MEMBRESÍA</Link>
+        <Link href="/agenda" className="btn-cta">{spot.ctaText || "SOLICITAR MEMBRESÍA"}</Link>
       </section>
 
       <style jsx>{`
@@ -228,6 +250,33 @@ export default function SpotPage() {
         }
         .gallery-item:hover {
           transform: scale(1.02);
+        }
+
+        /* Instagram Videos */
+        .spot-social-vids {
+          padding: 100px 20px;
+          max-width: 1400px;
+          margin: 0 auto;
+          text-align: center;
+        }
+        .spot-social-vids h2 {
+          font-family: var(--font-playfair), serif;
+          font-size: 40px;
+          margin-bottom: 60px;
+        }
+        .social-vids-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 40px;
+          justify-items: center;
+        }
+        .instagram-container {
+          width: 100%;
+          max-width: 400px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+          border-radius: 12px;
+          overflow: hidden;
+          background: #000;
         }
 
         /* CTA */
