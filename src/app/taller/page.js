@@ -112,7 +112,8 @@ export default function TallerPage() {
         .hero {
           position: relative;
           width: 100vw;
-          height: 100vh;
+          height: calc(100vh - 95px);
+          margin-top: 95px;
           overflow: hidden;
           display: flex;
           align-items: center;
@@ -135,6 +136,12 @@ export default function TallerPage() {
           position: relative;
           z-index: 2;
           text-align: center;
+          padding: 0 20px;
+        }
+        @media (max-width: 1024px) {
+          .hero-content {
+            padding-top: 100px;
+          }
         }
         .hero-main-title {
           font-size: clamp(40px, 8vw, 120px);
@@ -151,6 +158,33 @@ export default function TallerPage() {
           text-transform: uppercase;
           margin-top: 20px;
           font-weight: 800;
+        }
+
+        @media (max-width: 1024px) {
+          .hero {
+            height: calc(85vh - 70px);
+            margin-top: 70px;
+          }
+          .hero-main-title {
+            font-size: clamp(32px, 12vw, 64px);
+            letter-spacing: -2px;
+          }
+          .hero-tagline {
+            font-size: 10px;
+            letter-spacing: 4px;
+          }
+          .info-section {
+            padding: 60px 20px !important;
+          }
+          .header-block {
+            margin-bottom: 40px !important;
+          }
+          .section-title {
+            font-size: 32px !important;
+          }
+          .content-grid {
+            gap: 30px !important;
+          }
         }
 
         /* --- INFO SECTION --- */

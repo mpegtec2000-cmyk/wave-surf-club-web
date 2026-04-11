@@ -71,7 +71,7 @@ export default function RiderMagazine() {
         /* --- HERO COVER --- */
         .mag-hero {
           height: 85vh;
-          margin-top: 95px; /* Navbar height */
+          margin-top: var(--nav-height, 95px);
           position: relative;
           display: flex;
           align-items: flex-end;
@@ -255,11 +255,11 @@ export default function RiderMagazine() {
         @media (max-width: 900px) {
           .mag-nav {
             padding: 0 20px;
-            height: 70px;
+            height: var(--nav-height, 70px);
           }
           .mag-hero {
             height: 60vh;
-            margin-top: 70px;
+            margin-top: var(--nav-height, 70px);
             padding: 40px 5%;
           }
           .hero-title-box {
@@ -267,8 +267,9 @@ export default function RiderMagazine() {
             box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
           }
           .mag-name {
-            font-size: clamp(18px, 6vw, 32px);
-            gap: 10px;
+            font-size: clamp(16px, 5vw, 24px);
+            gap: 8px;
+            letter-spacing: -1px;
           }
           .mag-tag {
             font-size: 10px;
@@ -284,7 +285,7 @@ export default function RiderMagazine() {
             margin-bottom: 60px;
           }
           .editorial-title {
-            font-size: 24px;
+            font-size: 22px;
             margin-bottom: 20px;
           }
           .editorial-p {

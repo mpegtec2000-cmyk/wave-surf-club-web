@@ -10,9 +10,17 @@ export default function EquipoPage() {
         .equipo-pure-container {
           width: 100%;
           height: 100vh;
+          padding-top: 95px;
           background: #000;
           position: relative;
           overflow: hidden;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 1023px) {
+          .equipo-pure-container {
+            padding-top: 70px;
+          }
         }
 
         .img-wrapper {

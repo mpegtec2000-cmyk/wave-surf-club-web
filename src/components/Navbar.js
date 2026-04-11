@@ -218,6 +218,11 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           </div>
         </div>
 
+        {/* LOGIN ICON (Mobile only) */}
+        <Link href="/login" className="mobile-login-icon">
+          <User size={26} />
+        </Link>
+
         {/* MOBILE MENU TOGGLE */}
         <button className="mobile-toggle" onClick={() => setMenuOpen(true)}>
           <Menu size={32} />
@@ -258,29 +263,69 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
             ))}
           </div>
           
-          <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '30px', borderTop: '1px solid #eee', paddingTop: '40px' }}>
+          <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '30px', borderTop: '2px solid #eee', paddingTop: '40px' }}>
              {/* ACCESOS en Mobile */}
-             <div style={{ display: 'flex', gap: '15px' }}>
-                <Link href="/login" onClick={() => setMenuOpen(false)} style={{ fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', color: '#000', padding: '10px 15px', border: '1px solid #000', borderRadius: '4px' }}>{t('landing.btn_colaborador')}</Link>
-                <Link href="/agenda" onClick={() => setMenuOpen(false)} style={{ fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', color: '#000', padding: '10px 15px', border: '1px solid #000', borderRadius: '4px' }}>{t('landing.btn_cliente')}</Link>
+             <div>
+               <span style={{ fontSize: '10px', fontWeight: 900, letterSpacing: '2px', color: '#94a3b8', display: 'block', marginBottom: '15px' }}>ACCESO / LOGIN</span>
+               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                  <Link 
+                    href="/login" 
+                    onClick={() => setMenuOpen(false)} 
+                    style={{ 
+                      fontSize: '14px', 
+                      fontWeight: 900, 
+                      textTransform: 'uppercase', 
+                      color: '#fff', 
+                      background: '#000',
+                      padding: '20px', 
+                      textAlign: 'center',
+                      borderRadius: '8px',
+                      textDecoration: 'none',
+                      letterSpacing: '1px'
+                    }}
+                  >
+                    {t('landing.btn_colaborador')}
+                  </Link>
+                  <Link 
+                    href="/agenda" 
+                    onClick={() => setMenuOpen(false)} 
+                    style={{ 
+                      fontSize: '14px', 
+                      fontWeight: 900, 
+                      textTransform: 'uppercase', 
+                      color: '#000', 
+                      padding: '18px', 
+                      textAlign: 'center',
+                      border: '2px solid #000',
+                      borderRadius: '8px',
+                      textDecoration: 'none',
+                      letterSpacing: '1px'
+                    }}
+                  >
+                    {t('landing.btn_cliente')}
+                  </Link>
+               </div>
              </div>
 
              {/* IDIOMA en Mobile */}
              <div>
-               <span style={{ fontSize: '10px', fontWeight: 900, letterSpacing: '2px', color: '#94a3b8', display: 'block', marginBottom: '10px' }}>LENGUAJE / LANGUAGE</span>
-               <div style={{ display: 'flex', gap: '10px' }}>
+               <span style={{ fontSize: '10px', fontWeight: 900, letterSpacing: '2px', color: '#94a3b8', display: 'block', marginBottom: '15px' }}>LENGUAJE / LANGUAGE</span>
+               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   {LANGUAGES.map(l => (
                     <button 
                       key={l.code} 
                       onClick={() => { changeLang(l.code); setMenuOpen(false); }}
                       style={{ 
-                        padding: '8px 12px', 
-                        background: lang === l.code ? '#000' : 'none', 
+                        padding: '12px 20px', 
+                        background: lang === l.code ? '#38bdf8' : 'none', 
                         color: lang === l.code ? '#fff' : '#000',
-                        border: '1px solid #000',
+                        border: '2px solid #000',
                         borderRadius: '4px',
-                        fontSize: '12px',
-                        fontWeight: '900'
+                        fontSize: '13px',
+                        fontWeight: '900',
+                        cursor: 'pointer',
+                        flex: 1,
+                        minWidth: '70px'
                       }}
                     >
                       {l.name}
@@ -326,6 +371,11 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           cursor: pointer;
           color: #38bdf8;
         }
+        .mobile-login-icon {
+          display: none;
+          color: #000;
+          padding: 5px;
+        }
 
         .dropdown:hover .dropdown-content { display: block !important; }
         .nav-link-luxury:hover { color: #38bdf8 !important; }
@@ -370,7 +420,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           .nav-menu-desktop, .nav-action-desktop {
             display: none !important;
           }
-          .mobile-toggle {
+          .mobile-toggle, .mobile-login-icon {
             display: block;
           }
           .nav-luxury-container {
