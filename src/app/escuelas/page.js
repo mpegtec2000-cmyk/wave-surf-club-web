@@ -14,10 +14,11 @@ export default function EscuelasPage() {
       title: 'WAVE SURF CLUB CONCÓN',
       subtitle: 'SEDE MATRIZ / PLAYA LA BOCA',
       slogan: 'El Epicentro del Surf & Skate en Chile',
-      desc: 'Infraestructura de Clase Mundial con la Mega Ramp más grande de Chile. Vive la Experiencia Full Day: tu equipo te espera para una segunda sesión sin costo adicional.',
+      desc: 'Mega Ramp más grande de Chile y Staff de Élite. Única con EXPERIENCIA FULL DAY: tu equipo te espera para una segunda sesión sin costo adicional.',
       img: '/fondo-escuela.png',
-      features: ['Staff de Élite', 'Duchas Agua Caliente', 'Taller Neoprene', 'Mirador Panorámico'],
-      cta: 'ASEGURA TU LUGAR CON LOS MEJORES'
+      features: ['Mega Ramp Pro', 'Duchas Agua Caliente', 'Taller Neoprene', 'Cafetería & Mirador'],
+      cta: 'ASEGURA TU LUGAR CON LOS MEJORES',
+      highlight: 'RESERVA FULL DAY'
     },
     {
       id: 'pichilemu',
@@ -97,12 +98,29 @@ export default function EscuelasPage() {
                 boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
                 height: '100%'
               }}>
-                <div style={{ height: '160px', position: 'relative', marginBottom: '20px', borderRadius: '8px', overflow: 'hidden' }}>
+                <div style={{ height: '180px', position: 'relative', marginBottom: '25px', borderRadius: '12px', overflow: 'hidden' }}>
                     <Image src={sede.img} alt={sede.title} fill style={{ objectFit: 'cover' }} />
+                    {sede.highlight && (
+                        <div style={{ 
+                            position: 'absolute', 
+                            top: '15px', 
+                            right: '15px', 
+                            background: '#38bdf8', 
+                            color: '#fff', 
+                            padding: '6px 12px', 
+                            borderRadius: '50px', 
+                            fontSize: '10px', 
+                            fontWeight: '900',
+                            letterSpacing: '1px',
+                            boxShadow: '0 4px 10px rgba(56, 189, 248, 0.4)'
+                        }}>
+                            {sede.highlight}
+                        </div>
+                    )}
                 </div>
-                <h3 style={{ fontSize: '20px', fontWeight: 900, marginBottom: '5px' }}>{sede.title}</h3>
-                <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 900, marginBottom: '15px', letterSpacing: '1px' }}>{sede.subtitle}</div>
-                <p style={{ fontSize: '14px', color: '#4b5563', lineHeight: '1.5', marginBottom: '20px' }}>{sede.desc}</p>
+                <h3 style={{ fontSize: '22px', fontWeight: 950, marginBottom: '5px', letterSpacing: '-0.02em' }}>{sede.title}</h3>
+                <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 900, marginBottom: '15px', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{sede.subtitle}</div>
+                <p style={{ fontSize: '14px', color: '#4b5563', lineHeight: '1.6', marginBottom: '25px', fontWeight: '500' }}>{sede.desc}</p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '25px' }}>
                     {sede.features.map(f => (
                         <span key={f} style={{ fontSize: '10px', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px', fontWeight: 700 }}>{f}</span>
