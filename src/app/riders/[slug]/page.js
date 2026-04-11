@@ -212,26 +212,26 @@ const RIDERS_DATA = {
     stats: { board: 'Wave Media Hub', stance: 'N/A', local: 'Chile' },
     gallery: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80']
   },
-  'lucas-penna': {
-    name: 'Lucas Penna',
+  'luca-penna': {
+    name: 'Luca Penna',
     role: 'TEAM RIDER',
-    title: 'LUCAS PENNA',
-    cover: '/riders/lucas-penna/fondo.png',
+    title: 'LUCA PENNA',
+    cover: '/riders/luca-penna/fondo.png',
     bio: `
       <p>Luca se crío en Reñaca, creció con la cultura y las historias de esa playa, su acercamiento al surf viene básicamente desde que nació cuando su padre lo llevaba en brazos al agua con un traje que le quedaba grande porque no habían para niños más pequeños, rodeado de antiguos surfistas que le transmitían la pasión por el surf y por el mar.</p>
       <p>Si bien su camino no ha sido el más fácil, siempre que se lo ve en el agua se le puede ver sonriendo, contando algo que le de risa o buscando como superarse, a su forma de verlo el surf siempre será una gran razón para estar alegre, surfear lo conecta con su historia familiar y lo hace reconciliarse con su propia historia.</p>
     `,
     stats: { board: 'Wave Performance 6\'2"', stance: 'Regular', local: 'Reñaca' },
     gallery: [
-      '/riders/lucas-penna/1.png',
-      '/riders/lucas-penna/2.png',
-      '/riders/lucas-penna/3.png',
-      '/riders/lucas-penna/4.png',
-      '/riders/lucas-penna/5.png',
-      '/riders/lucas-penna/6.png',
-      '/riders/lucas-penna/7.png',
-      '/riders/lucas-penna/8.png',
-      '/riders/lucas-penna/9.png'
+      '/riders/luca-penna/1.png',
+      '/riders/luca-penna/2.png',
+      '/riders/luca-penna/3.png',
+      '/riders/luca-penna/4.png',
+      '/riders/luca-penna/5.png',
+      '/riders/luca-penna/6.png',
+      '/riders/luca-penna/7.png',
+      '/riders/luca-penna/8.png',
+      '/riders/luca-penna/9.png'
     ]
   },
   default: {
