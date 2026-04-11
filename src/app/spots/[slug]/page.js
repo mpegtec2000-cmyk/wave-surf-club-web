@@ -228,7 +228,7 @@ export default function SpotPage() {
         }
         .editorial-row {
           display: grid;
-          grid-template-columns: 1fr 450px;
+          grid-template-columns: 1fr 400px;
           gap: 100px;
           margin-bottom: 150px;
           align-items: start;
@@ -311,7 +311,7 @@ export default function SpotPage() {
         /* --- MAP --- */
         .tech-map-premium {
           width: 100%;
-          height: 600px;
+          height: 400px;
           background: #0a0a0a;
           border-radius: 4px;
           overflow: hidden;
@@ -419,7 +419,7 @@ export default function SpotPage() {
         @media (max-width: 1200px) {
           .editorial-row { grid-template-columns: 1fr; gap: 60px; }
           .img-col { order: -1; }
-          .tech-map-premium { height: 400px; }
+          .tech-map-premium { height: 300px; }
           .sticky-col { position: static; }
         }
 
