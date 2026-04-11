@@ -2,13 +2,14 @@
 
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
+import { Instagram } from 'lucide-react';
 
 export default function TallerPage() {
   return (
     <div className="taller-page">
       <Navbar />
       
-      {/* HERO SECTION - Full Height */}
+      {/* HERO SECTION - Full Height, No Title, No Overlay */}
       <section className="hero">
         <Image 
           src="/FONDO TALLER MATI.jpg" 
@@ -18,6 +19,78 @@ export default function TallerPage() {
           className="hero-img"
         />
       </section>
+
+      {/* RESTORED CONTENT SECTION */}
+      <section className="info-section">
+        <div className="max-w-5xl mx-auto">
+          
+          {/* Encabezado Estilo Wave - Sin Título Principal */}
+          <div className="header-block">
+            <p className="section-intro">
+              El corazón técnico de Wave Surf Club Pichilemu, liderado por nuestro Shaper Matías Espinoza.
+            </p>
+          </div>
+
+          {/* Historia y Biografía */}
+          <div className="content-grid">
+            <div className="text-block">
+              <p>
+                Nuestra visión es la <strong className="text-white">sostenibilidad real</strong>. 
+                Fabricamos tablas con madera de Agave, una planta introducida en Chile que nos permite crear equipos de alto rendimiento con impacto ambiental cero.
+              </p>
+              <p className="quote">
+                "Mi meta es que cuando se acabe la vida útil de la tabla, pueda ser compostada y en un año vuelva a la tierra." 
+                <br/><span className="author">— Matías Espinoza.</span>
+              </p>
+            </div>
+
+            {/* Enlace Destacado al Instagram Secundario */}
+            <div className="social-card">
+              <Instagram size={48} className="icon-accent" />
+              <h3 className="card-title">Sigue el Proceso</h3>
+              <p className="card-text">
+                Mira la recolección de Agave y el shaping paso a paso en nuestra cuenta especializada.
+              </p>
+              <a 
+                href="https://www.instagram.com/wavesurfclub_pichilemu" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="insta-btn"
+              >
+                @wavesurfclub_pichilemu
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Sección de Video Instagram - Matías Espinoza */}
+        <div style={{ marginTop: '100px', textAlign: 'center' }}>
+          <h3 style={{ color: '#38bdf8', fontSize: '12px', letterSpacing: '6px', marginBottom: '40px', textTransform: 'uppercase', fontWeight: 900 }}>FILOSOFÍA DEL PROYECTO</h3>
+          <div style={{ 
+            maxWidth: '540px', 
+            margin: '0 auto', 
+            borderRadius: '24px', 
+            overflow: 'hidden',
+            boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
+            background: '#0a0a0a',
+            border: '1px solid rgba(255,255,255,0.05)'
+          }}>
+            <iframe 
+              src="https://www.instagram.com/p/DHGdS7BMufO/embed" 
+              width="100%" 
+              height="650" 
+              frameBorder="0" 
+              scrolling="no" 
+              allowtransparency="true"
+              style={{ display: 'block' }}
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        WAVE SURF CLUB © 2026 — PICHILEMU WORKSHOP
+      </footer>
 
       <style jsx>{`
         .taller-page {
@@ -44,6 +117,110 @@ export default function TallerPage() {
           height: 100%;
           object-fit: cover;
           object-position: center;
+        }
+
+        /* --- INFO SECTION --- */
+        .info-section {
+          padding: 100px 20px;
+          background: #000;
+        }
+        .header-block { margin-bottom: 80px; }
+        .text-accent { color: #38bdf8; }
+        .section-intro {
+          font-size: 20px;
+          color: #94a3b8;
+          max-width: 700px;
+          margin: 0 auto;
+          text-align: center;
+        }
+
+        .content-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 60px;
+          align-items: center;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+        @media (max-width: 900px) {
+          .content-grid { grid-template-columns: 1fr; }
+        }
+
+        .text-block {
+          font-size: 18px;
+          line-height: 1.8;
+          color: #cbd5e1;
+          font-weight: 300;
+        }
+        .text-white { color: #fff; font-weight: 800; }
+        .quote {
+          margin-top: 40px;
+          border-left: 3px solid #38bdf8;
+          padding-left: 20px;
+          font-style: italic;
+          color: #fff;
+        }
+        .author {
+          display: block;
+          margin-top: 10px;
+          font-size: 14px;
+          font-style: normal;
+          color: #38bdf8;
+          font-weight: 800;
+          text-transform: uppercase;
+        }
+
+        .social-card {
+          background: #0a0a0a;
+          border: 1px solid #1a1a1a;
+          padding: 60px 40px;
+          border-radius: 24px;
+          text-align: center;
+          transition: all 0.4s;
+        }
+        .social-card:hover {
+          border-color: #38bdf8;
+          transform: translateY(-10px);
+          box-shadow: 0 20px 40px rgba(56, 189, 248, 0.1);
+        }
+        .icon-accent { color: #38bdf8; margin-bottom: 24px; }
+        .card-title { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+        .card-text { color: #94a3b8; font-size: 14px; margin-bottom: 32px; }
+        
+        .insta-btn {
+          display: inline-block;
+          background: #fff;
+          color: #000;
+          padding: 16px 32px;
+          border-radius: 50px;
+          font-weight: 900;
+          text-decoration: none;
+          text-transform: uppercase;
+          font-size: 13px;
+          letter-spacing: 1px;
+          transition: all 0.3s;
+        }
+        .insta-btn:hover {
+          background: #38bdf8;
+          transform: scale(1.05);
+        }
+
+        footer {
+          text-align: center;
+          padding: 60px 0;
+          font-size: 10px;
+          letter-spacing: 4px;
+          color: #334155;
+          border-top: 1px solid #111;
+        }
+
+        @media (max-width: 1024px) {
+          .hero {
+            height: 60vh;
+          }
+          .info-section {
+            padding: 60px 20px;
+          }
         }
       `}</style>
     </div>
