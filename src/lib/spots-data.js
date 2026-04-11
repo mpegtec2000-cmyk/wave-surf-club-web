@@ -21,7 +21,7 @@ export const SPOTS_DATA = {
       "https://www.instagram.com/reel/DSD6xuzEYiE/",
       "https://www.instagram.com/reel/DHEMF8fOygU/"
     ],
-    mapUrl: "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d4402.991593042879!2d-71.513181076189!3d-32.92150101132809!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9689c33e4487d31d%3A0x8fc83b8de496ce1f!2sWave%20Surf%20Club!5e1!3m2!1ses-419!2scl!4v1775924823131!5m2!1ses-419!2scl",
+    mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4155.974610626181!2d-71.5134496234554!3d-32.91928877050885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9689c33e4487d31d%3A0x8fc83b8de496ce1f!2sWave%20Surf%20Club!5e1!3m2!1ses-419!2scl!4v1775925039138!5m2!1ses-419!2scl",
     gallery: [
       "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
