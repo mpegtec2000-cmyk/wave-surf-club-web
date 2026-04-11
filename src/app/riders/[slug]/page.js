@@ -232,6 +232,10 @@ const RIDERS_DATA = {
       '/riders/luca-penna/7.png',
       '/riders/luca-penna/8.png',
       '/riders/luca-penna/9.png'
+    ],
+    instagramUrls: [
+      'https://www.instagram.com/p/DHerkpLRg8U/',
+      'https://www.instagram.com/p/C4vtVIDRrtu/'
     ]
   },
   default: {
@@ -309,8 +313,8 @@ export default function RiderMagazine() {
 
         /* --- HERO COVER --- */
         .mag-hero {
-          height: calc(100vh - 95px);
-          margin-top: 95px;
+          height: calc(100vh - 120px);
+          margin-top: 120px;
           position: relative;
           display: flex;
           align-items: flex-end;
@@ -320,7 +324,7 @@ export default function RiderMagazine() {
         .hero-bg {
           position: absolute;
           inset: 0;
-          background: #000 url(${rider.cover}) center/cover no-repeat;
+          background: #000 url(${rider.cover}) center 15% / cover no-repeat;
           z-index: 1;
         }
         .hero-overlay {

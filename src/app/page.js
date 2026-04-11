@@ -21,7 +21,7 @@ export default function LandingPage() {
             quality={100}
             style={{ 
               objectFit: 'cover',
-              objectPosition: 'center'
+              objectPosition: 'center top'
             }}
           />
         </div>
