@@ -52,21 +52,6 @@ export default function LandingPage() {
           </div>
         )}
 
-        {/* TIENDA SECTION - COMING SOON */}
-        <div id="tienda" className="tienda-section">
-          <div className="tienda-bg-wrapper">
-            <Image 
-              src="/FONDO TIENDA.jpg" 
-              alt="Wave Surf Club Shop" 
-              fill 
-              style={{ 
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
-          </div>
-          {/* Optional overlay if needed, currently clean as requested */}
-        </div>
       </main>
 
       <style jsx global>{`
