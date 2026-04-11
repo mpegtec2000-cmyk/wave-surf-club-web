@@ -465,7 +465,6 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           }
         }
       `}</style>
-    </nav>
     </>
   );
 }
