@@ -103,7 +103,7 @@ export const RIDERS_DATA = {
   'diego-salt': {
     name: 'Diego Salt',
     role: 'WAVE TALLER',
-    cover: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=1200&q=80',
+    cover: '/FONDO TALLER MATI.jpg',
     bio: '<p>El guardián de los equipos. Diego conoce cada secreto de las tablas y el equipamiento. Su labor en el taller asegura que cada rider de Wave tenga las herramientas perfectas para dominar el mar.</p>',
     stats: { board: 'Wave Cruiser 8\'0"', stance: 'Regular', local: 'Concón' },
     gallery: ['https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=1200&q=80']
