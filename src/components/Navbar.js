@@ -24,6 +24,15 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [menuOpen]);
+
   // EXACT ORDER PROVIDED BY USER
   const menuItems = [
     { id: 'inicio', key: 'menu_inicio', href: '/', type: 'route' },
@@ -42,7 +51,12 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
   ];
 
   const handleScrollTo = (e, id) => {
-    if (window.location.pathname !== '/') return;
+    setMenuOpen(false);
+    if (window.location.pathname !== '/') {
+      // Allow default Link behavior for hash links from other pages
+      return; 
+    }
+    
     e.preventDefault();
     const el = document.getElementById(id);
     if (el) {
@@ -58,7 +72,6 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         behavior: 'smooth'
       });
     }
-    setMenuOpen(false);
   };
 
   return (
@@ -235,11 +248,14 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
       {menuOpen && (
         <div className="mobile-flyout">
           <div className="flyout-header">
+            <div className="flyout-logo-box">
+               <Image src="/logo-wave.png" alt="Logo" width={40} height={40} style={{ objectFit: 'contain' }} />
+            </div>
             <button 
               onClick={() => setMenuOpen(false)} 
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#000' }}
+              style={{ background: '#000', border: 'none', cursor: 'pointer', color: '#fff', padding: '10px', borderRadius: '50%' }}
             >
-              <X size={32} />
+              <X size={24} />
             </button>
           </div>
           <div className="flyout-links">
@@ -369,10 +385,16 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         }
         .mobile-toggle {
           display: none;
-          background: none;
+          background: #000;
           border: none;
           cursor: pointer;
-          color: #000;
+          color: #fff;
+          width: 44px;
+          height: 44px;
+          border-radius: 4px;
+          justify-content: center;
+          align-items: center;
+          z-index: 10000;
         }
         .mobile-login-icon {
           display: none;
@@ -399,23 +421,37 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         .mobile-flyout {
           position: fixed;
           inset: 0;
-          background: #fff;
+          background: #fdfcfb;
           z-index: 1000000;
           display: flex;
           flex-direction: column;
-          padding: 50px 40px;
+          padding: 20px 30px 40px;
           overflow-y: auto;
+          animation: slideIn 0.3s ease-out;
         }
-        .flyout-header { display: flex; justify-content: flex-end; margin-bottom: 30px; }
-        .flyout-links { display: flex; flex-direction: column; gap: 20px; }
+        @keyframes slideIn {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        .flyout-header { 
+          display: flex; 
+          justify-content: space-between; 
+          align-items: center;
+          margin-bottom: 40px; 
+          padding-bottom: 20px;
+          border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .flyout-links { display: flex; flex-direction: column; gap: 12px; }
         .flyout-links a { 
-          font-size: 32px; 
+          font-size: 28px; 
           font-weight: 950; 
           text-decoration: none; 
           color: #000; 
           text-transform: uppercase;
           letter-spacing: -0.04em;
-          line-height: 1;
+          line-height: 1.1;
+          border-bottom: 1px solid rgba(0,0,0,0.03);
+          padding-bottom: 5px;
         }
 
         @media (max-width: 1023px) {
@@ -423,7 +459,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
             display: none !important;
           }
           .mobile-toggle, .mobile-login-icon {
-            display: block;
+            display: flex;
           }
         }
       `}</style>
