@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, ChevronDown, Globe, User } from 'lucide-react';
+import { Menu, X, Globe, User, ChevronDown } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n-context';
 
 export default function Navbar({ cartCount = 0, onCartClick }) {
@@ -26,14 +26,12 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
 
   useEffect(() => {
     if (menuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('menu-open');
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.classList.remove('menu-open');
     }
-    return () => { document.body.style.overflow = 'unset'; };
   }, [menuOpen]);
 
-  // EXACT ORDER PROVIDED BY USER
   const menuItems = [
     { id: 'inicio', key: 'menu_inicio', href: '/', type: 'route' },
     { id: 'biografia', key: 'menu_bio', href: '/biografia', type: 'route' },
@@ -52,25 +50,14 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
 
   const handleScrollTo = (e, id) => {
     setMenuOpen(false);
-    if (window.location.pathname !== '/') {
-      // Allow default Link behavior for hash links from other pages
-      return; 
-    }
+    if (window.location.pathname !== '/') return;
     
     e.preventDefault();
     const el = document.getElementById(id);
     if (el) {
-      const isMobile = window.innerWidth < 1024;
-      const offset = isMobile ? 70 : 95;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = el.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+      const offset = window.innerWidth < 1024 ? 70 : 95;
+      const elementPosition = el.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
     }
   };
 
@@ -82,70 +69,74 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         .mobile-toggle-btn {
           display: none;
           position: fixed;
-          top: 15px;
+          top: 20px;
           right: 20px;
-          z-index: 10000000;
+          z-index: 10000001;
           background: #000;
           color: #fff;
           border: none;
-          width: 50px;
-          height: 50px;
+          width: 48px;
+          height: 48px;
           border-radius: 8px;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+          box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+          transition: transform 0.2s;
         }
+        .mobile-toggle-btn:active { transform: scale(0.9); }
 
         .mobile-flyout-overlay {
           position: fixed;
           inset: 0;
           background: #000;
-          z-index: 9999999;
+          z-index: 10000000;
           display: flex;
           flex-direction: column;
-          padding: 40px;
+          padding: 30px;
+          overflow-y: auto;
           animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes slideUp {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
+          from { transform: translateY(100%); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
         }
 
-        .flyout-nav-links {
+        .flyout-links {
           display: flex;
           flex-direction: column;
-          gap: 15px;
-          margin-top: 40px;
+          gap: 12px;
+          margin: 40px 0;
         }
 
-        .flyout-nav-links a {
-          font-size: 32px;
+        .flyout-links a {
+          font-size: 24px;
           font-weight: 900;
           color: #fff;
           text-decoration: none;
           text-transform: uppercase;
-          letter-spacing: -0.04em;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
-          padding-bottom: 10px;
+          letter-spacing: -0.02em;
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          padding-bottom: 8px;
         }
 
         @media (max-width: 1023px) {
-          .nav-menu-desktop, .nav-action-desktop { display: none !important; }
+          .nav-luxury-container { height: 70px !important; }
+          .desktop-only { display: none !important; }
           .mobile-toggle-btn { display: flex !important; }
+          .logo-box-luxury { width: 70px !important; }
         }
       `}</style>
 
-      <button 
-        className="mobile-toggle-btn"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Toggle Menu"
-      >
-        {menuOpen ? <X size={28} /> : <Menu size={28} />}
+      {/* MOBILE TOGGLE - ESCAPES ALL NESTING */}
+      <button className="mobile-toggle-btn" onClick={() => setMenuOpen(!menuOpen)}>
+        {menuOpen ? <X size={26} /> : <Menu size={26} />}
       </button>
 
+      {/* MAIN NAVBAR */}
       <nav 
+        className="nav-luxury-container"
         style={{
           position: 'fixed',
           top: 0,
@@ -164,76 +155,48 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           visibility: menuOpen ? 'hidden' : 'visible'
         }}
       >
-      {/* LOGO BOX - LEFT (Black Square) */}
-      <div className="logo-box">
-        <Link href="/" style={{ display: 'block', position: 'relative', width: '100%', height: '100%', padding: '18%' }}>
-          <Image 
-            src="/logo-wave.png" 
-            alt="Wave Surf Club" 
-            fill
-            sizes="(max-width: 1024px) 70px, 95px"
-            priority
-            style={{ objectFit: 'contain' }}
-          />
-        </Link>
-      </div>
+        <div className="logo-box-luxury" style={{ backgroundColor: '#000', width: '95px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
+          <Link href="/" style={{ position: 'relative', width: '60%', height: '60%' }}>
+            <Image src="/logo-wave.png" alt="Wave" fill style={{ objectFit: 'contain' }} priority />
+          </Link>
+        </div>
 
-      {/* MENU - CENTER (Desktop only) */}
-      <div className="nav-menu-desktop">
-        <ul style={{
-          display: 'flex',
-          listStyle: 'none',
-          gap: '12px',
-          margin: 0,
-          padding: 0,
-          alignItems: 'center',
-          whiteSpace: 'nowrap'
-        }}>
-          {menuItems.map((item, idx) => (
-            <li key={item.id} style={{ display: 'flex', alignItems: 'center' }}>
-              <Link
-                href={item.href}
-                onClick={item.type === 'anchor' ? (e) => handleScrollTo(e, item.id) : item.type === 'cart' ? (e) => { e.preventDefault(); onCartClick && onCartClick(); } : undefined}
-                className={`nav-link-luxury ${item.id === 'agenda' ? 'nav-link-agenda' : item.id === 'carro' ? 'nav-link-cart' : ''}`}
-                style={{
-                  fontSize: '11px',
-                  fontWeight: '900',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  color: '#000',
-                  textDecoration: 'none',
-                  padding: '10px 4px',
-                  transition: 'color 0.2s'
-                }}
-              >
-                {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
-              </Link>
-              {idx < menuItems.length - 1 && (
-                <span style={{ 
-                  margin: '0 2px', 
-                  color: '#000', 
-                  opacity: 0.15, 
-                  fontSize: '14px', 
-                  fontWeight: '300' 
-                }}>/</span>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
+        <div className="desktop-only" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <ul style={{ display: 'flex', listStyle: 'none', gap: '15px', margin: 0, padding: 0 }}>
+            {menuItems.map((item) => (
+              <li key={item.id}>
+                <Link
+                  href={item.href}
+                  onClick={(e) => item.type === 'anchor' && handleScrollTo(e, item.id)}
+                  style={{
+                    fontSize: '11px', fontWeight: 900, textTransform: 'uppercase', color: '#000', textDecoration: 'none', letterSpacing: '1px'
+                  }}
+                >
+                  {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
 
+        <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '20px', paddingRight: '30px' }}>
+          <Link href="/login" style={{ fontSize: '11px', fontWeight: 900, color: '#000', textDecoration: 'none' }}>{t('landing.btn_colaborador')}</Link>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            {LANGUAGES.map(l => (
+              <button key={l.code} onClick={() => changeLang(l.code)} style={{ background: lang === l.code ? '#000' : 'none', color: lang === l.code ? '#fff' : '#000', border: '1px solid #000', borderRadius: '4px', fontSize: '10px', fontWeight: 900, cursor: 'pointer', padding: '4px 8px' }}>
+                {l.name}
+              </button>
+            ))}
           </div>
         </div>
       </nav>
 
-      {/* MOBILE FLYOUT - FULL SCREEN DARK STYLE */}
+      {/* MOBILE FLYOUT */}
       {menuOpen && (
         <div className="mobile-flyout-overlay">
-          <div className="flyout-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Image src="/logo-wave.png" alt="Logo" width={50} height={50} style={{ filter: 'invert(1)', objectFit: 'contain' }} />
-          </div>
-
-          <div className="flyout-nav-links">
+          <Image src="/logo-wave.png" alt="Logo" width={50} height={50} style={{ filter: 'invert(1)' }} />
+          
+          <div className="flyout-links">
             {menuItems.map((item) => (
               <Link
                 key={item.id}
@@ -255,40 +218,20 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
             ))}
           </div>
 
-          <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <Link href="/login" onClick={() => setMenuOpen(false)} style={{ background: '#fff', color: '#000', padding: '15px', textAlign: 'center', borderRadius: '8px', fontWeight: 900, textDecoration: 'none' }}>
-              {t('landing.btn_colaborador')}
-            </Link>
-            <Link href="/agenda" onClick={() => setMenuOpen(false)} style={{ border: '1px solid #fff', color: '#fff', padding: '15px', textAlign: 'center', borderRadius: '8px', fontWeight: 900, textDecoration: 'none' }}>
-              {t('landing.btn_cliente')}
-            </Link>
+          <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+             <Link href="/login" onClick={() => setMenuOpen(false)} style={{ background: '#fff', color: '#000', padding: '16px', textAlign: 'center', borderRadius: '8px', fontWeight: 900, textDecoration: 'none', fontSize: '14px' }}>
+               {t('landing.btn_colaborador')}
+             </Link>
+             <div style={{ display: 'flex', gap: '10px' }}>
+                {LANGUAGES.map(l => (
+                  <button key={l.code} onClick={() => { changeLang(l.code); setMenuOpen(false); }} style={{ flex: 1, background: lang === l.code ? '#38bdf8' : 'none', color: '#fff', border: '1px solid #fff', borderRadius: '4px', padding: '12px', fontWeight: 900 }}>
+                    {l.name}
+                  </button>
+                ))}
+             </div>
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        .logo-box {
-          background-color: #000;
-          width: 95px;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 25px;
-          flex-shrink: 0;
-        }
-        @media (max-width: 1023px) {
-          .logo-box { width: 75px; }
-        }
-
-        .nav-menu-desktop {
-          flex: 1;
-          display: flex;
-          justify-content: center;
-        }
-        .nav-link-luxury:hover { color: #38bdf8; }
-        .dropdown:hover .dropdown-content { display: block !important; }
-      `}</style>
     </>
   );
 }
