@@ -20,11 +20,11 @@ export default function EscuelasPage() {
     },
     {
       id: 'pichilemu',
-      title: 'SEDE PICHILEMU',
+      title: 'PICHILEMU',
       subtitle: 'Capital del Surf',
       slogan: 'Donde viven las leyendas.',
       desc: 'Ubicada en la meca del surf chileno, inmersión total.',
-      img: '/paulo-1.png',
+      img: '/PICHILEMU.jpg',
       features: ['Infraestructura Pro', 'Entrenamiento Funcional', 'Acceso Directo']
     },
     {

@@ -24,7 +24,7 @@ export const SPOTS_DATA = {
   "pichilemu": {
     name: "Sede Pichilemu",
     subtitle: "Epicentro Mundial del Surf",
-    heroImage: "https://images.unsplash.com/photo-1505663740263-0490e54d3d75?auto=format&fit=crop&w=1920&q=80",
+    heroImage: "/PICHILEMU.jpg",
     description: "Ubicada en la meca del surf chileno, nuestra sede ofrece una experiencia de inmersión total en la cultura de tabla más potente del país.",
     stats: {
       area: "800 m²",

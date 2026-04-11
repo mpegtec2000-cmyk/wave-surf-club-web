@@ -7,6 +7,7 @@ import { useTranslation } from '@/lib/i18n-context';
 
 export default function LandingPage() {
   const { t } = useTranslation();
+  const [showBooking, setShowBooking] = useState(true);
 
   return (
     <>
@@ -40,11 +41,37 @@ export default function LandingPage() {
                 Donde el estilo y la técnica se encuentran sobre el agua.
               </p>
               <div className="hero-actions">
-                <a href="/agenda" className="btn-primary-luxury">RESERVAR CLASE</a>
                 <a href="/riders" className="btn-outline-luxury">CONOCE AL EQUIPO</a>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* FLOATING BOOKING CTA */}
+        {showBooking && (
+          <div className="floating-booking-banner">
+            <a href="/agenda" className="booking-link">
+              <span className="booking-dot"></span>
+              RESERVAR CLASE
+            </a>
+            <button onClick={() => setShowBooking(false)} className="close-booking">×</button>
+          </div>
+        )}
+
+        {/* TIENDA SECTION - COMING SOON */}
+        <div id="tienda" className="tienda-section">
+          <div className="tienda-bg-wrapper">
+            <Image 
+              src="/FONDO TIENDA.jpg" 
+              alt="Wave Surf Club Shop" 
+              fill 
+              style={{ 
+                objectFit: 'cover',
+                objectPosition: 'center'
+              }}
+            />
+          </div>
+          {/* Optional overlay if needed, currently clean as requested */}
         </div>
       </main>
 
@@ -69,18 +96,29 @@ export default function LandingPage() {
         .landing-main {
           margin-top: var(--nav-height);
           width: 100%;
-          height: calc(100vh - var(--nav-height));
           position: relative;
         }
 
         .hero-section {
           position: relative;
           width: 100%;
-          height: 100%;
+          height: calc(100vh - var(--nav-height));
           display: flex;
           align-items: center;
           justify-content: center;
           background: #000;
+        }
+
+        .tienda-section {
+          position: relative;
+          width: 100%;
+          height: 100vh;
+          background: #000;
+        }
+
+        .tienda-bg-wrapper {
+          position: absolute;
+          inset: 0;
         }
 
         .hero-bg-wrapper {
@@ -194,6 +232,88 @@ export default function LandingPage() {
           }
           .main-brand-title {
             margin-bottom: 20px;
+          }
+        }
+
+        /* FLOATING BOOKING BANNER */
+        .floating-booking-banner {
+          position: fixed;
+          top: calc(var(--nav-height) + 15px);
+          right: 30px;
+          z-index: 9999;
+          background: #fff;
+          display: flex;
+          align-items: center;
+          padding: 6px 6px 6px 15px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+          border-radius: 100px;
+          animation: slideInRight 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .booking-link {
+          text-decoration: none;
+          color: #000;
+          font-size: 10.5px;
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-right: 15px;
+        }
+
+        .booking-dot {
+          width: 6px;
+          height: 6px;
+          background: #38bdf8;
+          border-radius: 50%;
+          display: inline-block;
+          animation: pulse-dot 2s infinite;
+        }
+
+        .close-booking {
+          background: #f1f5f9;
+          border: none;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          color: #64748b;
+          font-size: 18px;
+          font-weight: 300;
+          transition: all 0.2s;
+        }
+
+        .close-booking:hover {
+          background: #000;
+          color: #fff;
+        }
+
+        @keyframes slideInRight {
+          from { opacity: 0; transform: translateX(30px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse-dot {
+          0% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.5); opacity: 0.5; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+          .floating-booking-banner {
+            top: calc(var(--nav-height) + 10px);
+            right: 15px;
+            padding: 5px 5px 5px 12px;
+          }
+          .booking-link {
+            font-size: 9px;
+            letter-spacing: 1px;
+            margin-right: 10px;
           }
         }
       `}</style>
