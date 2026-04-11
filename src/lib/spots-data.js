@@ -1,7 +1,7 @@
 export const SPOTS_DATA = {
   "concon": {
     name: "Wave Surf Club Concón",
-    subtitle: "El Epicentro del Surf & Skate en Chile",
+    subtitle: "El corazón de Wave surf club",
     heroImage: "/escuela-concon.jpeg",
     description: "Infraestructura de Clase Mundial: Mega Ramp más grande de Chile y escuela de alto rendimiento. EXPERIENCIA FULL DAY: tabla y traje incluidos durante toda tu jornada. Staff de Élite con profesores certificados y atletas internacionales.",
     stats: {

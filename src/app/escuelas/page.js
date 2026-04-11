@@ -13,7 +13,7 @@ export default function EscuelasPage() {
       id: 'concon',
       title: 'WAVE SURF CLUB CONCÓN',
       subtitle: 'SEDE MATRIZ / PLAYA LA BOCA',
-      slogan: 'El Epicentro del Surf & Skate en Chile',
+      slogan: 'El corazón de Wave surf club',
       desc: 'Mega Ramp más grande de Chile y Staff de Élite. Única con EXPERIENCIA FULL DAY: tu equipo te espera para una segunda sesión sin costo adicional.',
       img: '/fondo-escuela.png',
       features: ['Mega Ramp Pro', 'Duchas Agua Caliente', 'Taller Neoprene', 'Cafetería & Mirador'],
