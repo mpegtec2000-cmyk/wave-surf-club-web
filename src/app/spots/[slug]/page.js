@@ -200,7 +200,8 @@ export default function SpotPage() {
         .hero-title-box {
           position: relative;
           z-index: 3;
-          background: rgba(255, 255, 255, 0.98);
+          background: rgba(11, 17, 32, 0.95);
+          backdrop-filter: blur(10px);
           padding: 30px 60px;
           border-left: 10px solid #38bdf8;
           box-shadow: 30px 30px 0px rgba(56, 189, 248, 0.2);
@@ -223,7 +224,7 @@ export default function SpotPage() {
           gap: 20px;
           text-transform: uppercase;
           margin: 0;
-          color: #000;
+          color: #fff;
           letter-spacing: -0.04em;
         }
         .mag-prefix {
@@ -321,7 +322,7 @@ export default function SpotPage() {
         /* --- MAP --- */
         .tech-map-premium {
           width: 100%;
-          height: 400px;
+          height: 350px;
           background: #0a0a0a;
           border-radius: 4px;
           overflow: hidden;
@@ -358,8 +359,8 @@ export default function SpotPage() {
         .instagram-premium-box {
           width: 100%;
           max-width: 500px;
-          background: #fff;
-          border-radius: 4px;
+          background: #0f172a;
+          border: 1px solid rgba(255,255,255,0.05);
           overflow: hidden;
           box-shadow: 0 30px 60px rgba(0,0,0,0.6);
           transition: transform 0.4s;
