@@ -5,8 +5,8 @@ export const SPOTS_DATA = {
     heroImage: "/concon.jpg",
     description: "Concón representa el núcleo técnico y de alto rendimiento de Wave Surf Club. Nuestra infraestructura cuenta con el Mega Ramp más imponente de Chile, diseñada para atletas que buscan superar sus límites. Ofrecemos una experiencia integral de jornada completa, donde el equipamiento premium está a su disposición durante todo el día, permitiendo sesiones múltiples con total flexibilidad. Ubicados estratégicamente en Playa La Boca, combinamos la mejor formación deportiva con un entorno gastronómico y hotelero de primer nivel.",
     stats: {
-      area: "Clase Mundial",
-      capacity: "Mega Ramp Chile",
+      area: "Región de Valparaíso, Concón",
+      capacity: "100 personas",
       features: "High Performance",
     },
     amenities: [
