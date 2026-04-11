@@ -12,7 +12,7 @@ export default function EventosPage() {
       <Navbar />
 
       {/* Hero Eventos */}
-      <section className="px-section" style={{ minHeight: '60vh', marginTop: '95px' }}>
+      <section className="px-section" style={{ minHeight: '60vh', marginTop: 'var(--nav-height)' }}>
         <div className="px-bg-wrapper">
           <Image 
             src="/fondo-logo.png" 

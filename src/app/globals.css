@@ -30,6 +30,7 @@
   --sidebar-width: 280px;
   --sidebar-width-collapsed: 80px;
   --topbar-height: 80px;
+  --nav-height: 95px; /* Navbar desktop height */
 
   /* Borders & Radius */
   --border-subtle: #e2e8f0;
@@ -42,6 +43,12 @@
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   --font-display: 'Outfit', 'Inter', sans-serif;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --nav-height: 70px; /* Navbar mobile height */
+  }
 }
 
 body {

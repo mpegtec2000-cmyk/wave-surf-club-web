@@ -6,36 +6,6 @@ import Navbar from '@/components/Navbar';
 export default function EquipoPage() {
   return (
     <main className="equipo-pure-container">
-      <style jsx>{`
-        .equipo-pure-container {
-          width: 100%;
-          height: 100vh;
-          padding-top: 95px;
-          background: #000;
-          position: relative;
-          overflow: hidden;
-          box-sizing: border-box;
-        }
-
-        @media (max-width: 1023px) {
-          .equipo-pure-container {
-            padding-top: 70px;
-          }
-        }
-
-        .img-wrapper {
-          position: relative;
-          width: 100%;
-          height: 100%;
-        }
-
-        .pure-img {
-          object-fit: cover;
-          object-position: center;
-        }
-
-      `}</style>
-
       <Navbar />
 
       <div className="img-wrapper">
@@ -47,6 +17,46 @@ export default function EquipoPage() {
           className="pure-img"
         />
       </div>
+
+      <style jsx>{`
+        .equipo-pure-container {
+          width: 100%;
+          height: 100vh;
+          background: #000;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+
+        .img-wrapper {
+          flex: 1;
+          position: relative;
+          width: 100%;
+          margin-top: var(--nav-height);
+        }
+
+        :global(.pure-img) {
+          object-fit: cover !important;
+          object-position: center top !important;
+        }
+
+        @media (max-width: 1023px) {
+          .equipo-pure-container {
+            height: auto;
+            min-height: 100vh;
+            overflow: visible;
+          }
+          .img-wrapper {
+            height: 70vh;
+            flex: none;
+            margin-top: var(--nav-height);
+          }
+          :global(.pure-img) {
+            object-fit: cover !important;
+            object-position: center !important;
+          }
+        }
+      `}</style>
     </main>
   );
 }

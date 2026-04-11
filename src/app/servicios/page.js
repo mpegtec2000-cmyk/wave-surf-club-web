@@ -25,10 +25,12 @@ export default function ServiciosPage() {
       <style jsx>{`
         .servicios-master {
           min-height: 100vh;
+          padding-top: var(--nav-height);
           background: #0b1120;
           color: #f8fafc;
           font-family: var(--font-inter), sans-serif;
           overflow-x: hidden;
+          box-sizing: border-box;
         }
 
         /* --- NAVBAR --- */

@@ -12,7 +12,7 @@ export default function RidersPage() {
         .directory-container {
           min-height: 100vh;
           background: #f8fafc;
-          padding: 80px 20px;
+          padding: calc(var(--nav-height) + 40px) 20px 80px;
           color: #000;
         }
 

@@ -112,8 +112,8 @@ export default function TallerPage() {
         .hero {
           position: relative;
           width: 100vw;
-          height: calc(100vh - 95px);
-          margin-top: 95px;
+          height: calc(100vh - var(--nav-height));
+          margin-top: var(--nav-height);
           overflow: hidden;
           display: flex;
           align-items: center;
@@ -162,8 +162,8 @@ export default function TallerPage() {
 
         @media (max-width: 1024px) {
           .hero {
-            height: calc(85vh - 70px);
-            margin-top: 70px;
+            height: calc(85vh - var(--nav-height));
+            margin-top: var(--nav-height);
           }
           .hero-main-title {
             font-size: clamp(32px, 12vw, 64px);

@@ -68,25 +68,27 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         top: 0,
         left: 0,
         right: 0,
-        backgroundColor: '#ffffff',
+        backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         zIndex: 999999,
-        borderBottom: '2px solid #000',
-        transition: 'all 0.3s ease',
-        boxShadow: scrolled ? '0 10px 30px rgba(0,0,0,0.1)' : 'none'
+        borderBottom: scrolled ? '1px solid rgba(0,0,0,0.1)' : 'none',
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.05)' : 'none'
       }}
       className="nav-luxury-container"
     >
       {/* LOGO BOX - LEFT (Black Square) */}
       <div className="logo-box">
-        <Link href="/" style={{ display: 'block', position: 'relative', width: '100%', height: '100%', padding: '15%' }}>
+        <Link href="/" style={{ display: 'block', position: 'relative', width: '100%', height: '100%', padding: '18%' }}>
           <Image 
             src="/logo-wave.png" 
             alt="Wave Surf Club" 
             fill
-            sizes="(max-width: 1024px) 50px, 95px"
+            sizes="(max-width: 1024px) 70px, 95px"
             priority
             style={{ objectFit: 'contain' }}
           />
@@ -98,7 +100,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         <ul style={{
           display: 'flex',
           listStyle: 'none',
-          gap: '8px',
+          gap: '12px',
           margin: 0,
           padding: 0,
           alignItems: 'center',
@@ -114,10 +116,10 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
                   fontSize: '11px',
                   fontWeight: '900',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.1em',
                   color: '#000',
                   textDecoration: 'none',
-                  padding: '5px 2px',
+                  padding: '10px 4px',
                   transition: 'color 0.2s'
                 }}
               >
@@ -125,9 +127,9 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
               </Link>
               {idx < menuItems.length - 1 && (
                 <span style={{ 
-                  margin: '0 4px', 
+                  margin: '0 2px', 
                   color: '#000', 
-                  opacity: 0.3, 
+                  opacity: 0.15, 
                   fontSize: '14px', 
                   fontWeight: '300' 
                 }}>/</span>
@@ -163,7 +165,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
             border: '2px solid #000',
             minWidth: '200px',
             zIndex: 1000,
-            display: 'none' // Controlled by CSS :hover
+            display: 'none'
           }}>
             <Link href="/login" style={{ display: 'block', padding: '15px', textDecoration: 'none', color: '#000', fontSize: '11px', fontWeight: '900', borderBottom: '1px solid #eee' }}>{t('landing.btn_colaborador')}</Link>
             <Link href="/agenda" style={{ display: 'block', padding: '15px', textDecoration: 'none', color: '#000', fontSize: '11px', fontWeight: '900' }}>{t('landing.btn_cliente')}</Link>
@@ -220,12 +222,12 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
 
         {/* LOGIN ICON (Mobile only) */}
         <Link href="/login" className="mobile-login-icon">
-          <User size={26} />
+          <User size={24} />
         </Link>
 
         {/* MOBILE MENU TOGGLE */}
         <button className="mobile-toggle" onClick={() => setMenuOpen(true)}>
-          <Menu size={32} />
+          <Menu size={28} />
         </button>
       </div>
 
@@ -321,7 +323,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
                         color: lang === l.code ? '#fff' : '#000',
                         border: '2px solid #000',
                         borderRadius: '4px',
-                        fontSize: '13px',
+                        fontSize: '13px', 
                         fontWeight: '900',
                         cursor: 'pointer',
                         flex: 1,
@@ -339,42 +341,43 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
 
       <style jsx>{`
         .nav-luxury-container {
-          height: 95px;
+          height: var(--nav-height, 95px);
           padding: 0 30px 0 0;
         }
         .logo-box {
           background-color: #000;
-          width: 95px;
-          height: 95px;
+          width: var(--nav-height, 95px);
+          height: var(--nav-height, 95px);
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-right: 15px;
+          margin-right: 25px;
           flex-shrink: 0;
+          transition: all 0.4s ease;
         }
         .nav-menu-desktop {
           flex: 1;
           display: flex;
           justify-content: center;
-          overflowX: auto;
+          overflow: hidden;
         }
         .nav-actions {
           display: flex;
           align-items: center;
-          gap: 15px;
-          padding-left: 15px;
+          gap: 20px;
+          padding-left: 20px;
         }
         .mobile-toggle {
           display: none;
           background: none;
           border: none;
           cursor: pointer;
-          color: #38bdf8;
+          color: #000;
         }
         .mobile-login-icon {
           display: none;
           color: #000;
-          padding: 5px;
+          padding: 8px;
         }
 
         .dropdown:hover .dropdown-content { display: block !important; }
@@ -384,17 +387,15 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           color: #38bdf8 !important; 
           text-decoration: underline !important; 
           text-underline-offset: 4px;
-          display: inline-block;
         }
 
         .nav-link-cart {
           background: #000;
           color: #fff !important;
-          padding: 4px 10px !important;
+          padding: 6px 14px !important;
           border-radius: 20px;
         }
         
-        /* Mobile flyout styles */
         .mobile-flyout {
           position: fixed;
           inset: 0;
@@ -402,18 +403,19 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           z-index: 1000000;
           display: flex;
           flex-direction: column;
-          padding: 40px;
+          padding: 50px 40px;
           overflow-y: auto;
         }
-        .flyout-header { display: flex; justify-content: flex-end; margin-bottom: 20px; }
-        .flyout-links { display: flex; flex-direction: column; gap: 15px; }
+        .flyout-header { display: flex; justify-content: flex-end; margin-bottom: 30px; }
+        .flyout-links { display: flex; flex-direction: column; gap: 20px; }
         .flyout-links a { 
-          font-size: 28px; 
+          font-size: 32px; 
           font-weight: 950; 
           text-decoration: none; 
           color: #000; 
           text-transform: uppercase;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.04em;
+          line-height: 1;
         }
 
         @media (max-width: 1023px) {
@@ -423,19 +425,9 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           .mobile-toggle, .mobile-login-icon {
             display: block;
           }
-          .nav-luxury-container {
-            height: 70px;
-            padding: 0 15px 0 0;
-          }
-          .logo-box {
-            width: 70px;
-            height: 70px;
-          }
         }
       `}</style>
-
+      `}</style>
     </nav>
-
-
   );
 }
