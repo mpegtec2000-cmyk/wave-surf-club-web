@@ -1,19 +1,19 @@
 export const SPOTS_DATA = {
   "concon": {
     name: "Wave Surf Club Concón",
-    subtitle: "El Epicentro del Surf & Skate en Chile",
+    subtitle: "La Excelencia del Surf y Skate en Chile",
     heroImage: "/concon.jpg",
-    description: "🚀 Infraestructura de Clase Mundial: Contamos con la Mega Ramp más grande de Chile y una escuela de alto rendimiento.\n\n🏆 Staff de Élite: Entrena con profesores certificados y atletas de talla nacional e internacional. Servicio profesional garantizado.\n\n🏖️ Ubicación Privilegiada: Ubicados en Playa La Boca, a pasos de los mejores hoteles y el distrito gastronómico de Concón.\n\n⚡ EXPERIENCIA FULL DAY: Al tomar una clase o arrendar equipo, la tabla y el traje son tuyos durante toda la jornada. ¿Quieres ir a almorzar o descansar y volver más tarde? Tu equipo te espera para la segunda sesión sin costos extra.",
+    description: "Concón representa el núcleo técnico y de alto rendimiento de Wave Surf Club. Nuestra infraestructura cuenta con el Mega Ramp más imponente de Chile, diseñada para atletas que buscan superar sus límites. Ofrecemos una experiencia integral de jornada completa, donde el equipamiento premium está a su disposición durante todo el día, permitiendo sesiones múltiples con total flexibilidad. Ubicados estratégicamente en Playa La Boca, combinamos la mejor formación deportiva con un entorno gastronómico y hotelero de primer nivel.",
     stats: {
       area: "Clase Mundial",
       capacity: "Mega Ramp Chile",
       features: "High Performance",
     },
     amenities: [
-      { title: "Escuela Pro", desc: "Escuela de Surf & Skate: Niveles Principiante, Medio y Avanzado." },
-      { title: "Comodidad Total", desc: "Duchas de agua, baños, camarines y custodia segura." },
-      { title: "Espacios Sociales", desc: "Mirador panorámico, terrazas relajantes, cafetería y Tienda oficial." },
-      { title: "Taller Técnico", desc: "Reparación profesional de trajes de neoprene." }
+      { title: "Formación de Alto Nivel", desc: "Programas especializados en Surf y Skate para todos los niveles, desde iniciación hasta competición." },
+      { title: "Infraestructura Premium", desc: "Instalaciones equipadas con duchas, vestidores privados y custodia de alta seguridad." },
+      { title: "Entorno Social y Relax", desc: "Terrazas con vista panorámica, cafetería de especialidad y zona lounge diseñada para el descanso." },
+      { title: "Soporte Técnico", desc: "Taller especializado en mantenimiento y reparación de equipamiento técnico." }
     ],
     ctaText: "ASEGURA TU LUGAR CON LOS MEJORES",
     instagramVideos: [

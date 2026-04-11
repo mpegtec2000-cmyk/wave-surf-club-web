@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { SPOTS_DATA } from '@/lib/spots-data';
 import Navbar from '@/components/Navbar';
 
@@ -12,313 +13,424 @@ export default function SpotPage() {
 
   if (!spot) {
     return (
-      <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0b1120', color: '#fff' }}>
+      <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000', color: '#fff' }}>
         <h2>Spot no encontrado</h2>
         <Link href="/" style={{ marginLeft: 20, color: '#38bdf8' }}>Volver</Link>
       </div>
     );
   }
 
+  const formatSpaced = (text) => text.toUpperCase();
+
   return (
     <div className="spot-magazine">
       <Navbar />
 
-      {/* A. Hero: Pantalla Completa */}
-      <section className="spot-hero" style={{ backgroundImage: `url(${spot.heroImage})` }}>
-        <div className="hero-overlay" />
-        <div className="hero-content">
-          <h1>{spot.name.toUpperCase()}</h1>
-          <p className="hero-sub">{spot.subtitle}</p>
+      {/* A. Hero: High-Impact Editorial Style */}
+      <header className="mag-hero">
+        <Image 
+          src={spot.heroImage}
+          alt={spot.name}
+          fill
+          priority
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
+          className="hero-bg-img"
+        />
+        <div className="hero-gradient-overlay" />
+        <div className="hero-title-box">
+          <span className="mag-tag">DESTINATION</span>
+          <h1 className="mag-name">
+            <span className="mag-prefix">S P O T</span> 
+            <span>/</span>
+            <span>{formatSpaced(spot.name)}</span>
+          </h1>
         </div>
-      </section>
+      </header>
 
-      {/* B. Ficha Técnica / Grid Inmobiliario */}
-      <section className="spot-technical">
-        <div className="tech-container">
-          <div className="tech-desc">
-            <h2>El Activo</h2>
-            <p>{spot.description}</p>
-            <div className="stats-box">
-              <div className="stat"><span>Superficie</span> <strong>{spot.stats.area}</strong></div>
-              <div className="stat"><span>Capacidad</span> <strong>{spot.stats.capacity}</strong></div>
-              <div className="stat"><span>Destacado</span> <strong>{spot.stats.features}</strong></div>
+      {/* B. Content: Editorial Row Style */}
+      <main className="mag-content">
+        <div className="editorial-row">
+          <div className="text-col">
+            <h2 className="editorial-title">
+              {slug === 'concon' ? 'ESCUELA CONCON' : 'EL ACTIVO'}
+            </h2>
+            <div className="editorial-p">
+              {spot.description.split('\n\n').map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
+            </div>
+
+            {/* STATS GRID - From Rider Style */}
+            <div className="stats-grid">
+              <div className="stat-item">
+                <h6>UBICACIÓN</h6>
+                <p>{spot.stats.area}</p>
+              </div>
+              <div className="stat-item">
+                <h6>CAPACIDAD</h6>
+                <p>{spot.stats.capacity}</p>
+              </div>
+              <div className="stat-item">
+                <h6>HIGHLIGHTS</h6>
+                <p>{spot.stats.features}</p>
+              </div>
             </div>
             
-            <h3>Amenities</h3>
-            <ul className="amenities-list">
-              {spot.amenities.map((am, i) => (
-                <li key={i}>
-                  <strong>{am.title}</strong>
-                  {am.desc}
-                </li>
-              ))}
-            </ul>
+            <div className="amenities-container">
+              <h3 className="editorial-title" style={{ fontSize: '24px', marginTop: '60px' }}>PREMIUM AMENITIES</h3>
+              <div className="amenities-grid">
+                {spot.amenities.map((am, i) => (
+                  <div key={i} className="amenity-card">
+                    <strong>{am.title}</strong>
+                    <p>{am.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
           
-          <div className="tech-map">
-            <iframe 
-              src={spot.mapUrl} 
-              width="100%" 
-              height="100%" 
-              style={{ border: 0, borderRadius: '12px' }} 
-              allowFullScreen="" 
-              loading="lazy" 
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
+          <div className="img-col sticky-col">
+            <div className="tech-map-premium">
+              <iframe 
+                src={spot.mapUrl} 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* C. Galería de Experiencia (Lookbook) */}
-      <section className="spot-gallery">
-        <h2>Lookbook de Experiencia</h2>
-        <div className="gallery-grid">
-          {spot.gallery.map((img, i) => (
-            <div key={i} className="gallery-item" style={{ backgroundImage: `url(${img})` }}></div>
-          ))}
-        </div>
-      </section>
-      
-      {/* Instagram Content Section */}
-      {spot.instagramVideos && spot.instagramVideos.length > 0 && (
-        <section className="spot-social-vids">
-          <h2>Vive la Experiencia en Tiempo Real</h2>
-          <div className="social-vids-grid">
-            {spot.instagramVideos.map((url, i) => (
-              <div key={i} className="instagram-container">
-                <iframe 
-                  src={`${url}embed`} 
-                  width="100%" 
-                  height="650" 
-                  frameBorder="0" 
-                  scrolling="no" 
-                  allowtransparency="true"
-                  style={{ borderRadius: '12px' }}
-                ></iframe>
+        {/* C. Instagram Content: Premium Sessions Style */}
+        {spot.instagramVideos && spot.instagramVideos.length > 0 && (
+          <section className="mag-social-vids">
+            <span className="sessions-label">LATEST SESSIONS</span>
+            <div className="social-vids-grid">
+              {spot.instagramVideos.map((url, i) => (
+                <div key={i} className="instagram-premium-box">
+                  <iframe 
+                    src={`${url}embed`} 
+                    width="100%" 
+                    height="650" 
+                    frameBorder="0" 
+                    scrolling="no" 
+                    allowtransparency="true"
+                  ></iframe>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* D. Experience Lookbook */}
+        <section className="mag-gallery-section">
+          <h2 className="editorial-title" style={{ textAlign: 'center', marginBottom: '60px' }}>EXPERIENCE LOOKBOOK</h2>
+          <div className="mag-gallery">
+            {spot.gallery.map((img, i) => (
+              <div key={i} className="gal-img-wrapper shadow-xl">
+                 <Image 
+                    src={img} 
+                    fill 
+                    style={{ objectFit: 'cover' }} 
+                    alt={`Spot Gallery ${i}`} 
+                 />
               </div>
             ))}
           </div>
         </section>
-      )}
 
-      {/* D. Call to Action Inmobiliario */}
-      <section className="spot-cta">
-        <h2>¿Listo para vivir la experiencia?</h2>
-        <p>Garantiza tu espacio en {spot.name}</p>
-        <Link href="/agenda" className="btn-cta">{spot.ctaText || "SOLICITAR MEMBRESÍA"}</Link>
-      </section>
+        {/* E. Call to Action: Premium Dark Style */}
+        <section className="mag-cta">
+          <div className="cta-box">
+            <h2 className="mag-name" style={{ color: '#fff', fontSize: ' clamp(32px, 5vw, 64px)', marginBottom: '30px' }}>
+               VIVE LA EXPERIENCIA WAVE
+            </h2>
+            <p className="editorial-p" style={{ color: '#94a3b8', textAlign: 'center', marginBottom: '40px' }}>
+               Únete a la comunidad de surf más exclusiva de Chile.
+            </p>
+            <Link href="/agenda" className="mag-cta-btn">
+              {spot.ctaText || "SOLICITAR MEMBRESÍA"}
+            </Link>
+          </div>
+        </section>
+      </main>
+
+      <footer className="mag-footer">
+        <p>WAVE SURF CLUB © 2015-2026</p>
+      </footer>
 
       <style jsx>{`
         .spot-magazine {
-          background: #0b1120;
-          color: #f8fafc;
+          background: #000;
+          color: #fff;
           min-height: 100vh;
-          font-family: var(--font-inter), sans-serif;
+          font-family: var(--font-archivo), sans-serif;
         }
 
-        /* Hero Fullscreen */
-        .spot-hero {
-          height: 100vh;
-          background-size: cover;
-          background-position: center;
-          background-attachment: fixed;
+        /* --- HERO --- */
+        .mag-hero {
+          height: 85vh;
           position: relative;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
+          align-items: flex-end;
+          padding: 60px 8%;
+          overflow: hidden;
+          background: #000;
+          margin-top: var(--nav-height, 95px);
         }
-        .hero-overlay {
+        .hero-gradient-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to bottom, rgba(11, 17, 32, 0.3) 0%, rgba(11, 17, 32, 1) 100%);
+          background: linear-gradient(to top, rgba(0,0,0,0.9), transparent 50%);
+          z-index: 2;
         }
-        .hero-content {
+        .hero-title-box {
           position: relative;
-          z-index: 10;
-          padding: 20px;
+          z-index: 3;
+          background: rgba(255, 255, 255, 0.98);
+          padding: 30px 60px;
+          border-left: 10px solid #38bdf8;
+          box-shadow: 30px 30px 0px rgba(56, 189, 248, 0.2);
         }
-        .hero-content h1 {
-          font-family: var(--font-playfair), serif;
-          font-size: clamp(60px, 10vw, 120px);
-          font-weight: 800;
-          letter-spacing: -3px;
-          margin: 0 0 16px 0;
-          text-shadow: 0 10px 40px rgba(0,0,0,0.8);
-        }
-        .hero-sub {
-          font-family: var(--font-playfair), serif;
-          font-style: italic;
-          font-size: clamp(20px, 3vw, 36px);
+        .mag-tag {
           color: #38bdf8;
-          max-width: 800px;
-          margin: 0 auto;
-          text-shadow: 0 4px 15px rgba(0,0,0,0.9);
+          font-weight: 800;
+          letter-spacing: 5px;
+          font-size: 11px;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+          display: block;
+        }
+        .mag-name {
+          font-size: clamp(24px, 5vw, 72px);
+          font-weight: 950;
+          line-height: 0.9;
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          text-transform: uppercase;
+          margin: 0;
+          color: #000;
+          letter-spacing: -0.04em;
+        }
+        .mag-prefix {
+          color: #38bdf8;
+          opacity: 0.8;
         }
 
-        /* Tech Container */
-        .spot-technical {
-          padding: 120px 20px;
-          max-width: 1400px;
-          margin: 0 auto;
+        /* --- CONTENT --- */
+        .mag-content {
+          padding: 120px 8%;
+          background: #000;
         }
-        .tech-container {
+        .editorial-row {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 80px;
+          grid-template-columns: 1fr 450px;
+          gap: 100px;
+          margin-bottom: 150px;
           align-items: start;
         }
-        .tech-desc h2 {
-          font-family: var(--font-playfair), serif;
-          font-size: 48px;
-          margin-bottom: 30px;
-          color: #f8fafc;
+        .editorial-title {
+          font-size: clamp(32px, 4vw, 56px);
+          font-weight: 950;
+          letter-spacing: -2px;
+          margin-bottom: 40px;
+          color: #fff;
+          text-transform: uppercase;
+          line-height: 1;
         }
-        .tech-desc p {
-          color: #94a3b8;
+        .editorial-p {
           font-size: 18px;
           line-height: 1.8;
-          margin-bottom: 50px;
+          color: #94a3b8;
+          font-weight: 300;
+          max-width: 800px;
         }
-        
-        .stats-box {
+        .editorial-p p { margin-bottom: 30px; }
+
+        /* --- STATS --- */
+        .stats-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 24px;
-          margin-bottom: 60px;
-          border-top: 1px solid rgba(255,255,255,0.05);
-          border-bottom: 1px solid rgba(255,255,255,0.05);
-          padding: 40px 0;
+          gap: 40px;
+          border-top: 1px solid rgba(255,255,255,0.1);
+          padding-top: 60px;
+          margin-top: 60px;
         }
-        .stat { display: flex; flex-direction: column; gap: 8px; }
-        .stat span { color: #64748b; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; }
-        .stat strong { color: #f8fafc; font-size: 22px; font-weight: 700; font-family: var(--font-playfair), serif; }
+        .stat-item h6 {
+          font-size: 11px;
+          color: #38bdf8;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          margin: 0 0 12px;
+          font-weight: 800;
+        }
+        .stat-item p {
+          font-size: 24px;
+          font-weight: 900;
+          margin: 0;
+          color: #fff;
+          letter-spacing: -1px;
+        }
 
-        .tech-desc h3 {
-          font-family: var(--font-playfair), serif;
-          font-size: 32px;
-          margin-bottom: 30px;
+        /* --- AMENITIES --- */
+        .amenities-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 30px;
+          margin-top: 40px;
         }
-        .amenities-list { list-style: none; padding: 0; margin: 0; }
-        .amenities-list li {
-          background: rgba(255,255,255,0.02);
-          border: 1px solid rgba(255,255,255,0.04);
-          padding: 24px;
-          border-radius: 12px;
-          margin-bottom: 16px;
-          color: #94a3b8;
-          font-size: 16px;
+        .amenity-card {
+          background: #0a0a0a;
+          padding: 30px;
+          border: 1px solid rgba(255,255,255,0.05);
+          border-radius: 4px;
+          transition: border-color 0.3s;
+        }
+        .amenity-card:hover {
+          border-color: #38bdf8;
+        }
+        .amenity-card strong {
+          display: block;
+          font-size: 18px;
+          color: #fff;
+          margin-bottom: 12px;
+          font-weight: 800;
+          text-transform: uppercase;
+        }
+        .amenity-card p {
+          font-size: 14px;
+          color: #64748b;
+          margin: 0;
           line-height: 1.6;
         }
-        .amenities-list li strong { color: #f8fafc; display: block; font-size: 18px; margin-bottom: 8px; font-family: var(--font-playfair), serif; }
 
-        .tech-map {
-          background: rgba(255,255,255,0.01);
-          border-radius: 24px;
-          padding: 10px;
-          height: 700px;
-          border: 1px solid rgba(255,255,255,0.05);
-          box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-          position: sticky;
-          top: 120px;
-        }
-
-        /* Gallery */
-        .spot-gallery {
-          padding: 120px 20px;
-          background: rgba(15, 23, 42, 0.4);
-          text-align: center;
-        }
-        .spot-gallery h2 {
-          font-family: var(--font-playfair), serif;
-          font-size: 48px;
-          margin-bottom: 60px;
-        }
-        .gallery-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 24px;
-          max-width: 1400px;
-          margin: 0 auto;
-        }
-        .gallery-item {
+        /* --- MAP --- */
+        .tech-map-premium {
+          width: 100%;
           height: 600px;
-          background-size: cover;
-          background-position: center;
-          border-radius: 16px;
-          transition: transform 0.5s ease;
+          background: #0a0a0a;
+          border-radius: 4px;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.1);
+          box-shadow: 0 40px 80px rgba(0,0,0,0.8);
         }
-        .gallery-item:hover {
-          transform: scale(1.02);
+        .sticky-col {
+          position: sticky;
+          top: 150px;
         }
 
-        /* Instagram Videos */
-        .spot-social-vids {
-          padding: 100px 20px;
-          max-width: 1400px;
-          margin: 0 auto;
-          text-align: center;
+        /* --- SOCIAL VIDS --- */
+        .mag-social-vids {
+          margin-bottom: 150px;
         }
-        .spot-social-vids h2 {
-          font-family: var(--font-playfair), serif;
-          font-size: 40px;
+        .sessions-label {
+          font-size: 11px;
+          font-weight: 900;
+          letter-spacing: 6px;
+          color: #38bdf8;
+          text-transform: uppercase;
+          display: block;
+          text-align: center;
           margin-bottom: 60px;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+          padding-bottom: 20px;
         }
         .social-vids-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: 40px;
+          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+          gap: 60px;
           justify-items: center;
         }
-        .instagram-container {
+        .instagram-premium-box {
           width: 100%;
-          max-width: 400px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-          border-radius: 12px;
+          max-width: 500px;
+          background: #fff;
+          border-radius: 4px;
           overflow: hidden;
-          background: #000;
+          box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+          transition: transform 0.4s;
+        }
+        .instagram-premium-box:hover {
+          transform: translateY(-15px);
         }
 
-        /* CTA */
-        .spot-cta {
-          padding: 150px 20px;
+        /* --- GALLERY --- */
+        .mag-gallery {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 30px;
+          max-width: 1400px;
+          margin: 0 auto;
+        }
+        .gal-img-wrapper {
+          position: relative;
+          height: 700px;
+          background: #0a0a0a;
+        }
+        .gal-img-wrapper:nth-child(3n) {
+          grid-column: span 2;
+          height: 900px;
+        }
+
+        /* --- CTA --- */
+        .mag-cta {
+          padding: 150px 0;
           text-align: center;
-          background: linear-gradient(to top, rgba(11, 17, 32, 1), rgba(15, 23, 42, 0));
+          background: linear-gradient(to top, #0f172a, #000);
         }
-        .spot-cta h2 {
-          font-family: var(--font-playfair), serif;
-          font-size: 56px;
-          margin-bottom: 20px;
+        .cta-box {
+          max-width: 800px;
+          margin: 0 auto;
         }
-        .spot-cta p {
-          color: #94a3b8;
-          font-size: 22px;
-          margin-bottom: 50px;
-        }
-        .btn-cta {
+        .mag-cta-btn {
           display: inline-block;
-          background: #38bdf8;
-          color: #0b1120;
+          background: #fff;
+          color: #000;
           padding: 24px 60px;
-          border-radius: 8px;
-          font-size: 16px;
-          font-weight: 800;
+          font-weight: 950;
+          text-transform: uppercase;
           letter-spacing: 2px;
+          font-size: 14px;
           text-decoration: none;
-          transition: all 0.3s;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 12px 12px 0px #38bdf8;
         }
-        .btn-cta:hover {
-          background: #f8fafc;
-          transform: translateY(-5px);
-          box-shadow: 0 15px 30px rgba(56, 189, 248, 0.3);
+        .mag-cta-btn:hover {
+          transform: translate(-4px, -4px);
+          box-shadow: 16px 16px 0px #38bdf8;
+          background: #38bdf8;
+          color: #fff;
         }
 
-        @media (max-width: 1024px) {
-          .tech-container { grid-template-columns: 1fr; gap: 40px; }
-          .tech-map { height: 400px; position: static; }
-          .gallery-grid { grid-template-columns: 1fr; }
-          .gallery-item { height: 400px; }
-          .stats-box { grid-template-columns: 1fr; }
+        .mag-footer {
+          padding: 100px 40px;
+          text-align: center;
+          border-top: 1px solid rgba(255,255,255,0.05);
+          color: #475569;
+          font-size: 11px;
+          letter-spacing: 5px;
+          text-transform: uppercase;
+        }
+
+        @media (max-width: 1200px) {
+          .editorial-row { grid-template-columns: 1fr; gap: 60px; }
+          .img-col { order: -1; }
+          .tech-map-premium { height: 400px; }
+          .sticky-col { position: static; }
+        }
+
+        @media (max-width: 768px) {
+          .hero-title-box { padding: 20px 30px; box-shadow: 15px 15px 0px rgba(56, 189, 248, 0.2); }
+          .mag-content { padding: 60px 5%; }
+          .stats-grid { grid-template-columns: 1fr; gap: 30px; }
+          .amenities-grid { grid-template-columns: 1fr; }
+          .social-vids-grid { grid-template-columns: 1fr; }
+          .gal-img-wrapper { height: 400px; }
+          .gal-img-wrapper:nth-child(3n) { height: 400px; grid-column: span 1; }
         }
       `}</style>
     </div>
