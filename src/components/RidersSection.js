@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 const ridersData = [
@@ -25,10 +26,13 @@ export default function RidersSection() {
       <div className="relative w-full max-w-[1200px] aspect-[4/3] sm:aspect-video">
         
         {/* Imagen de Fondo desde tu carpeta public */}
-        <img 
+        <Image 
           src="/FONDO-RIDERS.png" 
           alt="Fondo Riders Wave Surf Club" 
-          className="w-full h-full object-contain"
+          fill
+          priority
+          sizes="(max-width: 1200px) 100vw, 1200px"
+          className="object-contain"
         />
 
         {/* Capa de Cuadros Interactivos (Grid invisible encima) */}

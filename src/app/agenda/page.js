@@ -165,8 +165,38 @@ export default function AgendaPage() {
         }
 
         @media (max-width: 768px) {
-          .booking-card { grid-template-columns: 1fr; }
+          .portal-main {
+            padding: 100px 10px 40px;
+          }
+          .booking-card { 
+            grid-template-columns: 1fr; 
+            border-radius: 20px;
+          }
           .card-visual { display: none; }
+          .card-form {
+            padding: 30px 20px;
+          }
+          .form-title {
+            font-size: 12px;
+            margin-bottom: 30px;
+          }
+          .sede-selector {
+            grid-template-columns: 1fr;
+          }
+          .alumnos-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .time-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .price-summary {
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+          }
+          .price-summary button {
+            width: 100%;
+          }
         }
 
         .card-visual {

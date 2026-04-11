@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 const RiderCard = ({ ryder: rider }) => {
   const isVacio = rider.nombre === "VACÍO";
@@ -13,11 +14,14 @@ const RiderCard = ({ ryder: rider }) => {
   return (
     <Link href={!isVacio ? `/riders/${rider.slug}` : "#"} className="card-link">
       <div className="rider-card group">
-        <div className="img-container">
-          <img 
+        <div className="img-container" style={{ position: 'relative' }}>
+          <Image 
             src={imageSrc} 
             alt={rider.nombre}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="rider-img"
+            style={{ objectFit: 'cover' }}
           />
         </div>
 

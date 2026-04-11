@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getCurrentUser, logoutUser } from '@/lib/data';
@@ -77,7 +78,16 @@ export default function DashboardLayout({ children }) {
 
         <div className="sidebar-header">
           <div className="sidebar-brand">
-            <img src="/logo-pag.png" alt="Logo" className="sidebar-brand-img" />
+            <div style={{ position: 'relative', width: '44px', height: '44px', marginRight: '12px' }}>
+              <Image 
+                src="/logo-pag.png" 
+                alt="Logo" 
+                fill 
+                sizes="44px"
+                className="sidebar-brand-img"
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
             <div>
               <h2>WAVE SURF CLUB</h2>
               <span>Since 2015</span>

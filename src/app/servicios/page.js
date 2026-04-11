@@ -157,7 +157,36 @@ export default function ServiciosPage() {
           writing-mode: vertical-rl;
           text-transform: uppercase;
         }
+
+        @media (max-width: 768px) {
+          .service-section {
+            height: auto;
+            min-height: 80vh;
+            padding: 80px 0;
+          }
+          .content {
+            padding: 0 30px;
+          }
+          .title {
+            font-size: clamp(32px, 12vw, 64px);
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+          }
+          .description {
+            font-size: 18px;
+            margin-bottom: 30px;
+          }
+          .btn-reserve {
+            padding: 16px 30px;
+            font-size: 11px;
+            width: 100%;
+          }
+          .master-label {
+            display: none;
+          }
+        }
       `}</style>
+
 
       {/* CABECERA */}
       <Navbar cartCount={cartItems.length} onCartClick={() => setCartOpen(true)} />

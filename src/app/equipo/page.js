@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 
 export default function EquipoPage() {
@@ -15,13 +15,15 @@ export default function EquipoPage() {
           overflow: hidden;
         }
 
-        .pure-img {
+        .img-wrapper {
+          position: relative;
           width: 100%;
           height: 100%;
+        }
+
+        .pure-img {
           object-fit: cover;
           object-position: center;
-          filter: none !important;
-          opacity: 1 !important;
         }
 
       `}</style>
@@ -29,9 +31,11 @@ export default function EquipoPage() {
       <Navbar />
 
       <div className="img-wrapper">
-        <img 
+        <Image 
           src="/FONDO EQUIPO.jpg" 
           alt="Equipo Wave Surf Club"
+          fill
+          priority
           className="pure-img"
         />
       </div>

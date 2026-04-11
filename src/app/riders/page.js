@@ -106,8 +106,6 @@ export default function RidersPage() {
 
       <header className="header-section">
         <h1 className="title">RIDERS</h1>
-        <p className="subtitle">WAVE FAM: THE NEXT GENERATION</p>
-        <div className="divider" />
       </header>
 
       <div className="grid-container">

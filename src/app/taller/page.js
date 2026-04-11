@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import { Instagram } from 'lucide-react';
 
@@ -10,9 +11,11 @@ export default function TallerPage() {
       
       {/* HERO SECTION - Full Height */}
       <section className="hero">
-        <img 
+        <Image 
           src="/paulo-1.png" 
           alt="Taller Wave Surf Club"
+          fill
+          priority
           className="hero-img"
         />
         <div className="hero-overlay" />

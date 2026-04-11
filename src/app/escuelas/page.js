@@ -116,7 +116,21 @@ export default function EscuelasPage() {
       <style jsx global>{`
         body { margin: 0; padding: 0; background: #000; }
         .school-card:hover { transform: translateY(-10px); }
+
+        @media (max-width: 768px) {
+          section {
+            padding: 100px 15px 40px !important;
+          }
+          .schools-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+          }
+          .school-card {
+            padding: 20px !important;
+          }
+        }
       `}</style>
+
     </main>
   );
 }

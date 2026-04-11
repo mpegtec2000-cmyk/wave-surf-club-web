@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu, X, ChevronDown, Globe, User } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n-context';
 
@@ -25,7 +26,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
 
   // EXACT ORDER PROVIDED BY USER
   const menuItems = [
-    { id: 'inicio', key: 'menu_inicio', href: '/#hero', type: 'anchor' },
+    { id: 'inicio', key: 'menu_inicio', href: '/', type: 'route' },
     { id: 'biografia', key: 'menu_bio', href: '/biografia', type: 'route' },
     { id: 'escuelas', key: 'menu_escuelas', href: '/escuelas', type: 'route' },
     { id: 'servicios', key: 'menu_servicios', href: '/servicios', type: 'route' },
@@ -45,7 +46,8 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
     e.preventDefault();
     const el = document.getElementById(id);
     if (el) {
-      const offset = 95;
+      const isMobile = window.innerWidth < 1024;
+      const offset = isMobile ? 70 : 95;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = el.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -66,12 +68,10 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         top: 0,
         left: 0,
         right: 0,
-        height: '95px',
         backgroundColor: '#ffffff',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 30px 0 0',
         zIndex: 999999,
         borderBottom: '2px solid #000',
         transition: 'all 0.3s ease',
@@ -80,29 +80,21 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
       className="nav-luxury-container"
     >
       {/* LOGO BOX - LEFT (Black Square) */}
-      <div style={{
-        backgroundColor: '#000',
-        width: '95px',
-        height: '95px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: '15px',
-        flexShrink: 0
-      }}>
-        <Link href="/">
-          <img src="/logo-wave.png" alt="Wave Surf Club" style={{ width: '65%', height: 'auto', display: 'block' }} />
+      <div className="logo-box">
+        <Link href="/" style={{ display: 'block', position: 'relative', width: '100%', height: '100%', padding: '15%' }}>
+          <Image 
+            src="/logo-wave.png" 
+            alt="Wave Surf Club" 
+            fill
+            sizes="(max-width: 1024px) 50px, 95px"
+            priority
+            style={{ objectFit: 'contain' }}
+          />
         </Link>
       </div>
 
       {/* MENU - CENTER (Desktop only) */}
-      <div style={{ 
-        flex: 1, 
-        display: 'flex', 
-        justifyContent: 'center', 
-        overflowX: 'auto',
-        scrollbarWidth: 'none' 
-      }} className="hidden lg:flex">
+      <div className="nav-menu-desktop">
         <ul style={{
           display: 'flex',
           listStyle: 'none',
@@ -145,11 +137,11 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         </ul>
       </div>
 
-      {/* RIGHT ACTIONS (Ingresos / Idioma) */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '15px', paddingLeft: '15px' }}>
+      {/* RIGHT ACTIONS */}
+      <div className="nav-actions">
         
-        {/* INGRESOS Dropdown */}
-        <div className="dropdown" style={{ position: 'relative' }}>
+        {/* INGRESOS Dropdown (Desktop only) */}
+        <div className="dropdown nav-action-desktop" style={{ position: 'relative' }}>
           <button className="dropdown-trigger" style={{
             background: 'none',
             border: 'none',
@@ -178,8 +170,8 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           </div>
         </div>
 
-        {/* IDIOMA Dropdown */}
-        <div className="dropdown" style={{ position: 'relative' }}>
+        {/* IDIOMA Dropdown (Desktop only) */}
+        <div className="dropdown nav-action-desktop" style={{ position: 'relative' }}>
           <button className="dropdown-trigger" style={{
             background: 'none',
             border: '1px solid #000',
@@ -227,27 +219,124 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         </div>
 
         {/* MOBILE MENU TOGGLE */}
-        <button className="lg:hidden" onClick={() => setMenuOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-          <Menu size={28} />
+        <button className="mobile-toggle" onClick={() => setMenuOpen(true)}>
+          <Menu size={32} />
         </button>
       </div>
 
+      {/* MOBILE FLYOUT */}
+      {menuOpen && (
+        <div className="mobile-flyout">
+          <div className="flyout-header">
+            <button 
+              onClick={() => setMenuOpen(false)} 
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#000' }}
+            >
+              <X size={32} />
+            </button>
+          </div>
+          <div className="flyout-links">
+            {menuItems.map((item) => (
+              <Link
+                key={item.id}
+                href={item.href}
+                onClick={(e) => {
+                  if (item.type === 'anchor') {
+                    handleScrollTo(e, item.id);
+                  } else if (item.type === 'cart') {
+                    e.preventDefault();
+                    onCartClick && onCartClick();
+                    setMenuOpen(false);
+                  } else {
+                    setMenuOpen(false);
+                  }
+                }}
+                className={item.id === 'agenda' ? 'nav-link-agenda' : ''}
+              >
+                {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
+              </Link>
+            ))}
+          </div>
+          
+          <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '30px', borderTop: '1px solid #eee', paddingTop: '40px' }}>
+             {/* ACCESOS en Mobile */}
+             <div style={{ display: 'flex', gap: '15px' }}>
+                <Link href="/login" onClick={() => setMenuOpen(false)} style={{ fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', color: '#000', padding: '10px 15px', border: '1px solid #000', borderRadius: '4px' }}>{t('landing.btn_colaborador')}</Link>
+                <Link href="/agenda" onClick={() => setMenuOpen(false)} style={{ fontSize: '12px', fontWeight: 900, textTransform: 'uppercase', color: '#000', padding: '10px 15px', border: '1px solid #000', borderRadius: '4px' }}>{t('landing.btn_cliente')}</Link>
+             </div>
+
+             {/* IDIOMA en Mobile */}
+             <div>
+               <span style={{ fontSize: '10px', fontWeight: 900, letterSpacing: '2px', color: '#94a3b8', display: 'block', marginBottom: '10px' }}>LENGUAJE / LANGUAGE</span>
+               <div style={{ display: 'flex', gap: '10px' }}>
+                  {LANGUAGES.map(l => (
+                    <button 
+                      key={l.code} 
+                      onClick={() => { changeLang(l.code); setMenuOpen(false); }}
+                      style={{ 
+                        padding: '8px 12px', 
+                        background: lang === l.code ? '#000' : 'none', 
+                        color: lang === l.code ? '#fff' : '#000',
+                        border: '1px solid #000',
+                        borderRadius: '4px',
+                        fontSize: '12px',
+                        fontWeight: '900'
+                      }}
+                    >
+                      {l.name}
+                    </button>
+                  ))}
+               </div>
+             </div>
+          </div>
+        </div>
+      )}
+
       <style jsx>{`
+        .nav-luxury-container {
+          height: 95px;
+          padding: 0 30px 0 0;
+        }
+        .logo-box {
+          background-color: #000;
+          width: 95px;
+          height: 95px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 15px;
+          flex-shrink: 0;
+        }
+        .nav-menu-desktop {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          overflowX: auto;
+        }
+        .nav-actions {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          padding-left: 15px;
+        }
+        .mobile-toggle {
+          display: none;
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: #38bdf8;
+        }
+
         .dropdown:hover .dropdown-content { display: block !important; }
         .nav-link-luxury:hover { color: #38bdf8 !important; }
-
-        @keyframes jump-attention {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-6px); }
-        }
 
         .nav-link-agenda { 
           color: #38bdf8 !important; 
           text-decoration: underline !important; 
           text-underline-offset: 4px;
           display: inline-block;
-          animation: jump-attention 1.2s infinite ease-in-out;
         }
+
         .nav-link-cart {
           background: #000;
           color: #fff !important;
@@ -264,17 +353,39 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           display: flex;
           flex-direction: column;
           padding: 40px;
+          overflow-y: auto;
         }
-        .flyout-header { display: flex; justify-content: flex-end; margin-bottom: 40px; }
-        .flyout-links { display: flex; flex-direction: column; gap: 20px; }
+        .flyout-header { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+        .flyout-links { display: flex; flex-direction: column; gap: 15px; }
         .flyout-links a { 
-          font-size: 24px; 
-          font-weight: 900; 
+          font-size: 28px; 
+          font-weight: 950; 
           text-decoration: none; 
           color: #000; 
           text-transform: uppercase;
+          letter-spacing: -0.02em;
+        }
+
+        @media (max-width: 1023px) {
+          .nav-menu-desktop, .nav-action-desktop {
+            display: none !important;
+          }
+          .mobile-toggle {
+            display: block;
+          }
+          .nav-luxury-container {
+            height: 70px;
+            padding: 0 15px 0 0;
+          }
+          .logo-box {
+            width: 70px;
+            height: 70px;
+          }
         }
       `}</style>
+
     </nav>
+
+
   );
 }

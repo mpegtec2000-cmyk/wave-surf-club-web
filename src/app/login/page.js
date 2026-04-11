@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { loginUser } from '@/lib/data';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,7 +33,16 @@ export default function LoginPage() {
 
       <div className="login-card">
         <div className="login-logo">
-          <img src="/logo-pag.png" alt="Wave Surf Club" className="login-logo-img" />
+          <div style={{ position: 'relative', width: '80px', height: '80px', margin: '0 auto 16px' }}>
+            <Image 
+              src="/logo-pag.png" 
+              alt="Wave Surf Club" 
+              fill
+              sizes="80px"
+              className="login-logo-img"
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
           <h1>WAVE SURF CLUB</h1>
           <p className="since">⚡ SINCE 2015 · PREMIUM LOGISTICS ⚡</p>
         </div>
