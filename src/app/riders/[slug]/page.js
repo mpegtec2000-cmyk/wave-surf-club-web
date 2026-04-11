@@ -217,7 +217,7 @@ const RIDERS_DATA = {
     name: 'Luca Penna',
     role: 'TEAM RIDER',
     title: 'LUCA PENNA',
-    cover: '/riders/luca-penna/fondo.png',
+    cover: '/riders/luca-penna/FONDO.jpg',
     bio: `
       <p>Luca se crío en Reñaca, creció con la cultura y las historias de esa playa, su acercamiento al surf viene básicamente desde que nació cuando su padre lo llevaba en brazos al agua con un traje que le quedaba grande porque no habían para niños más pequeños, rodeado de antiguos surfistas que le transmitían la pasión por el surf y por el mar.</p>
       <p>Si bien su camino no ha sido el más fácil, siempre que se lo ve en el agua se le puede ver sonriendo, contando algo que le de risa o buscando como superarse, a su forma de verlo el surf siempre será una gran razón para estar alegre, surfear lo conecta con su historia familiar y lo hace reconciliarse con su propia historia.</p>
@@ -225,7 +225,7 @@ const RIDERS_DATA = {
     stats: { board: 'Wave Performance 6\'2"', stance: 'Regular', local: 'Reñaca' },
     gallery: [
       '/riders/luca-penna/1.png',
-      '/riders/luca-penna/2.png',
+      '/riders/luca-penna/2.jpg',
       '/riders/luca-penna/3.png',
       '/riders/luca-penna/4.png',
       '/riders/luca-penna/5.png',
@@ -314,18 +314,19 @@ export default function RiderMagazine() {
 
         /* --- HERO COVER --- */
         .mag-hero {
-          height: calc(100vh - 120px);
-          margin-top: 120px;
+          height: 85vh;
+          margin-top: 95px; /* Navbar height */
           position: relative;
           display: flex;
           align-items: flex-end;
           padding: 60px 8%;
           overflow: hidden;
+          background: #000;
         }
         .hero-bg {
           position: absolute;
           inset: 0;
-          background: #000 url(${rider.cover}) center 15% / cover no-repeat;
+          background: url(${rider.cover}) center top / cover no-repeat;
           z-index: 1;
         }
         .hero-overlay {
@@ -494,9 +495,39 @@ export default function RiderMagazine() {
           height: 800px;
         }
 
+        .instagram-container {
+          display: flex;
+          flex-direction: column;
+          gap: 40px;
+          margin-top: 50px;
+          width: 100%;
+        }
         .instagram-box {
-          margin-top: 40px;
-          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+          width: 100%;
+          max-width: 540px;
+          margin: 0 auto;
+          background: #ffffff;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+          border: 1px solid rgba(0,0,0,0.05);
+          transition: transform 0.3s ease;
+        }
+        .instagram-box:hover {
+          transform: translateY(-5px);
+        }
+        .sessions-label {
+          font-family: var(--font-montserrat);
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 4px;
+          color: #38bdf8;
+          text-transform: uppercase;
+          margin-bottom: 20px;
+          display: block;
+          text-align: center;
+          border-bottom: 1px solid rgba(0,0,0,0.1);
+          padding-bottom: 10px;
         }
 
         @media (max-width: 900px) {
@@ -573,18 +604,23 @@ export default function RiderMagazine() {
               dangerouslySetInnerHTML={{ __html: rider.bio }} 
             />
             {/* INSTAGRAM VIDEOS */}
-            {(rider.instagramUrls || (rider.instagramUrl ? [rider.instagramUrl] : [])).map((url, i) => (
-              <div key={i} className="instagram-box" style={{ width: '100%', minHeight: '500px', display: 'flex', justifyContent: 'center' }}>
-                <blockquote 
-                  className="instagram-media" 
-                  data-instgrm-permalink={url} 
-                  data-instgrm-version="14"
-                  style={{ width: '100%', border: 'none', background: '#fff', margin: '0' }}
-                >
-                  <a href={url}>Cargando video de Instagram...</a>
-                </blockquote>
+            {(rider.instagramUrls || (rider.instagramUrl ? [rider.instagramUrl] : [])).length > 0 && (
+              <div className="instagram-container">
+                <span className="sessions-label">LATEST SESSIONS</span>
+                {(rider.instagramUrls || (rider.instagramUrl ? [rider.instagramUrl] : [])).map((url, i) => (
+                  <div key={i} className="instagram-box">
+                    <blockquote 
+                      className="instagram-media" 
+                      data-instgrm-permalink={url} 
+                      data-instgrm-version="14"
+                      style={{ width: '100%', border: 'none', background: '#fff', margin: '0' }}
+                    >
+                      <a href={url}>Cargando video de Instagram...</a>
+                    </blockquote>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
 
             <Script 
               src="https://www.instagram.com/embed.js" 
