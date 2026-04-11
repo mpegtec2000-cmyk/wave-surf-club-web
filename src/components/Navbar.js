@@ -244,7 +244,6 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           <Menu size={28} />
         </button>
       </div>
-      </div>
     </nav>
 
     {/* MOBILE FLYOUT - MOVED OUTSIDE NAV TO PREVENT CLIPPING */}
