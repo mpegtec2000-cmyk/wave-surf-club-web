@@ -135,22 +135,7 @@ export default function SpotPage() {
           </section>
         )}
 
-        {/* D. Experience Lookbook */}
-        <section className="mag-gallery-section">
-          <h2 className="editorial-title" style={{ textAlign: 'center', marginBottom: '60px' }}>EXPERIENCE LOOKBOOK</h2>
-          <div className="mag-gallery">
-            {spot.gallery.map((img, i) => (
-              <div key={i} className="gal-img-wrapper shadow-xl">
-                 <Image 
-                    src={img} 
-                    fill 
-                    style={{ objectFit: 'cover' }} 
-                    alt={`Spot Gallery ${i}`} 
-                 />
-              </div>
-            ))}
-          </div>
-        </section>
+
 
         {/* E. Call to Action: Premium Dark Style */}
         <section className="mag-cta">
