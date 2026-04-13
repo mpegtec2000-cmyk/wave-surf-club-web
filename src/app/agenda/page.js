@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { addClient, queueNotification } from '@/lib/data';
 import Navbar from '@/components/Navbar';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function AgendaPage() {
   const [step, setStep] = useState('form'); // form, selection, checkout, success
@@ -79,7 +80,7 @@ export default function AgendaPage() {
       await new Promise(r => setTimeout(r, 2000));
       
       const { error } = await supabase.from('transactions').insert({
-        description: `WEB: ${numAlumnos} Alumno(s) @ ${bookingDate} (${formData.sede})`,
+        description: `VENTA ONLINE: ${numAlumnos} Alumno(s) | ${formData.sede} | ${bookingDate} ${bookingTime}`,
         total: calculatedPrice.price_clp,
         type: 'ingreso',
         category: 'clase',
@@ -87,8 +88,14 @@ export default function AgendaPage() {
         client_rut: formData.rut,
         branch_id: formData.sede === 'Concón' ? 1 : (formData.sede === 'Pichilemu' ? 2 : 3),
         payment_status: 'pagado',
-        is_web_tx: true, // Mark as web transaction
-        metadata: { ...formData, date: bookingDate, time: bookingTime, is_external: true }
+        is_web_tx: true,
+        metadata: { 
+          ...formData, 
+          date: bookingDate, 
+          time: bookingTime, 
+          alumnos: numAlumnos,
+          order_id: `WS-${Date.now().toString().slice(-6)}` 
+        }
       });
       if (error) throw error;
 
@@ -502,13 +509,28 @@ export default function AgendaPage() {
 
             {step === 'success' && (
               <div className="step-content" style={{ textAlign: 'center' }}>
-                 <h1 style={{ fontSize: '64px', margin: '20px 0' }}>🤙</h1>
-                 <h2 style={{ fontSize: '24px', fontWeight: 900, marginBottom: '10px' }}>¡Sesión Confirmada!</h2>
-                 <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: 1.6 }}>
-                   Tu reserva para el día <b>{bookingDate}</b> ha sido procesada.<br/>
-                   Te enviamos un correo con los detalles.
+                 <div style={{ width: '80px', height: '80px', background: '#4ade80', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px auto', boxShadow: '0 20px 40px -10px rgba(74, 222, 128, 0.5)' }}>
+                   <CheckCircle2 size={40} color="#000" />
+                 </div>
+                 <h2 style={{ fontSize: '24px', fontWeight: 900, marginBottom: '10px' }}>¡VENTA REGISTRADA!</h2>
+                 <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: 1.6, marginBottom: '30px' }}>
+                   Tu reserva para el día <b>{bookingDate}</b> ha sido procesada exitosamente.<br/>
+                   Se ha enviado un comprobante a <b>{formData.email}</b>.
                  </p>
-                 <Link href="/" className="btn-submit" style={{ marginTop: '30px', display: 'block', textDecoration: 'none', background: '#38bdf8' }}>Volver al Inicio</Link>
+                 
+                 <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'left', marginBottom: '32px' }}>
+                   <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>Detalles de la Operación</div>
+                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                     <span style={{ fontSize: '13px', color: '#94a3b8' }}>ID Operación:</span>
+                     <span style={{ fontSize: '13px', fontWeight: 700 }}>WS-{Date.now().toString().slice(-6)}</span>
+                   </div>
+                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                     <span style={{ fontSize: '13px', color: '#94a3b8' }}>Monto:</span>
+                     <span style={{ fontSize: '13px', fontWeight: 700, color: '#38bdf8' }}>${calculatedPrice.price_clp.toLocaleString()} CLP</span>
+                   </div>
+                 </div>
+
+                 <Link href="/" className="btn-submit" style={{ display: 'block', textDecoration: 'none', background: '#38bdf8' }}>Volver al Inicio</Link>
               </div>
             )}
           </div>

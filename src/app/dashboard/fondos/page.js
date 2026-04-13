@@ -15,7 +15,9 @@ import {
   DollarSign, 
   ArrowUpRight,
   ShieldCheck,
-  TrendingUp
+  TrendingUp,
+  Settings2,
+  Users2
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 
@@ -46,10 +48,15 @@ export default function FondosPage() {
     cvv: ''
   });
 
+  // Tarifas de Clases (service_pricing)
+  const [pricing, setPricing] = useState([]);
+  const [pricingSaving, setPricingSaving] = useState(false);
+
   useEffect(() => {
     const initPage = async () => {
       await fetchFinancials();
       await fetchAccountSettings();
+      await fetchPricing();
       setLoading(false);
     };
     initPage();
@@ -96,6 +103,61 @@ export default function FondosPage() {
       }
     } catch (err) {
       console.error('Error fetching bank settings:', err);
+    }
+  };
+
+  const fetchPricing = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('service_pricing')
+        .select('*')
+        .eq('is_active', true)
+        .order('alumno_count', { ascending: true });
+
+      if (error) throw error;
+      if (data) setPricing(data);
+    } catch (err) {
+      console.error('Error fetching pricing:', err);
+    }
+  };
+
+  const handleUpdatePrice = (id, value) => {
+    setPricing(prev => prev.map(p => p.id === id ? { ...p, price_clp: parseInt(value) || 0 } : p));
+  };
+
+  const handleSavePricing = async () => {
+    setPricingSaving(true);
+    try {
+      const { error } = await supabase
+        .from('service_pricing')
+        .upsert(pricing.map(p => ({
+          id: p.id,
+          category: p.category,
+          alumno_count: p.alumno_count,
+          price_clp: p.price_clp,
+          is_active: true
+        })));
+
+      if (error) throw error;
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Tarifas Actualizadas',
+        text: 'Los nuevos precios ya están vigentes en el portal de agenda.',
+        background: '#0f172a',
+        color: '#fff',
+        confirmButtonColor: '#22c55e'
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudieron guardar las tarifas.',
+        background: '#0f172a',
+        color: '#fff'
+      });
+    } finally {
+      setPricingSaving(false);
     }
   };
 
@@ -248,6 +310,82 @@ export default function FondosPage() {
               {saving ? 'Guardando...' : <><Save size={18} /> Guardar Configuración</>}
             </button>
           </form>
+        </div>
+
+        {/* Configuración de Tarifas de Clases */}
+        <div className="fondos-card">
+          <div className="fondos-card-header">
+            <Settings2 size={24} className="text-amber-500" />
+            <div>
+              <h3>Tarifas de Clases (Agenda Online)</h3>
+              <p>Modifica el valor CLP según la cantidad de alumnos y el día.</p>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            {/* SEMANA */}
+            <div>
+              <h4 style={{ fontSize: '12px', fontWeight: 900, color: '#94a3b8', marginBottom: '15px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                Lunes a Viernes (Semana)
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {pricing.filter(p => p.category === 'SEMANA').map(p => (
+                  <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.03)', padding: '10px', borderRadius: '8px' }}>
+                    <div style={{ flex: 1, fontSize: '13px', fontWeight: 700 }}>
+                      <Users2 size={12} style={{ display: 'inline', marginRight: '6px' }} />
+                       {p.alumno_count} {p.alumno_count === 1 ? 'Alumno' : 'Alumnos'}
+                    </div>
+                    <div style={{ position: 'relative', width: '120px' }}>
+                      <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', fontSize: '12px', color: '#64748b' }}>$</span>
+                      <input 
+                        type="number" 
+                        className="form-input" 
+                        style={{ height: '36px', paddingLeft: '20px', textAlign: 'right', fontSize: '13px' }}
+                        value={p.price_clp}
+                        onChange={e => handleUpdatePrice(p.id, e.target.value)}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* FINDE */}
+            <div>
+              <h4 style={{ fontSize: '12px', fontWeight: 900, color: '#94a3b8', marginBottom: '15px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                Sáb, Dom y Festivos (Finde)
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {pricing.filter(p => p.category === 'FINDE').map(p => (
+                  <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.03)', padding: '10px', borderRadius: '8px' }}>
+                    <div style={{ flex: 1, fontSize: '13px', fontWeight: 700 }}>
+                      <Users2 size={12} style={{ display: 'inline', marginRight: '6px' }} />
+                       {p.alumno_count} {p.alumno_count === 1 ? 'Alumno' : 'Alumnos'}
+                    </div>
+                    <div style={{ position: 'relative', width: '120px' }}>
+                      <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', fontSize: '12px', color: '#64748b' }}>$</span>
+                      <input 
+                        type="number" 
+                        className="form-input" 
+                        style={{ height: '36px', paddingLeft: '20px', textAlign: 'right', fontSize: '13px' }}
+                        value={p.price_clp}
+                        onChange={e => handleUpdatePrice(p.id, e.target.value)}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <button 
+            onClick={handleSavePricing} 
+            className="btn-save" 
+            disabled={pricingSaving}
+            style={{ marginTop: '24px', background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}
+          >
+            {pricingSaving ? 'Guardando...' : <><Save size={18} /> Actualizar Tarifas Web</>}
+          </button>
         </div>
 
         {/* Historial Reciente */}
