@@ -402,7 +402,7 @@ export default function FondosPage() {
             {stats.recentSales.length > 0 ? stats.recentSales.map(sale => (
               <div key={sale.id} className="sale-item">
                 <div className="sale-details">
-                  <div className="sale-title">{sale.description?.replace('WEB: ', '') || 'Reserva de Clase'}</div>
+                  <div className="sale-title">{sale.rental_details?.replace('VENTA ONLINE: ', '') || 'Reserva de Clase'}</div>
                   <div className="sale-meta">
                     {new Date(sale.created_at).toLocaleDateString()} • {sale.client_rut || 'Cliente Web'}
                   </div>

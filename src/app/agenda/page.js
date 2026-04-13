@@ -80,7 +80,7 @@ export default function AgendaPage() {
       await new Promise(r => setTimeout(r, 2000));
       
       const { error } = await supabase.from('transactions').insert({
-        description: `VENTA ONLINE: ${numAlumnos} Alumno(s) | ${formData.sede} | ${bookingDate} ${bookingTime}`,
+        rental_details: `VENTA ONLINE: ${numAlumnos} Alumno(s) | ${formData.sede} | ${bookingDate} ${bookingTime}`,
         total: calculatedPrice.price_clp,
         type: 'ingreso',
         category: 'clase',
@@ -89,7 +89,7 @@ export default function AgendaPage() {
         branch_id: formData.sede === 'Concón' ? 1 : (formData.sede === 'Pichilemu' ? 2 : 3),
         payment_status: 'pagado',
         is_web_tx: true,
-        metadata: { 
+        web_metadata: { 
           ...formData, 
           date: bookingDate, 
           time: bookingTime, 
@@ -497,7 +497,7 @@ export default function AgendaPage() {
                       <span style={{ fontSize: '14px', fontWeight: 700 }}>{receivingCard.holder_name}</span>
                       <span style={{ fontSize: '12px', opacity: 0.7 }}>{receivingCard.card_number}</span>
                     </div>
-                    <p style={{ fontSize: '11px', marginTop: '10px', color: '#94a3b8' }}>Envía el comprobante a mpeg.logistica@gmail.com</p>
+                    <p style={{ fontSize: '11px', marginTop: '10px', color: '#94a3b8' }}>ADJUNTAR COMPROBANTE AL CORREO: MPEG.LOGISTICA@GMAIL.COM ASUNTO COMPROBANTE Y PONER FECHA</p>
                   </div>
                 )}
 
