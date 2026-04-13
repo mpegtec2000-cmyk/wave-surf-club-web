@@ -43,8 +43,8 @@ export default function LoginPage() {
               style={{ objectFit: 'contain' }}
             />
           </div>
-          <h1>LOGISTICA Y GESTION MPEG</h1>
-          <p className="since">⚡ SISTEMA DE CONTROL DE LOGISTICA ⚡</p>
+          <h1>WAVE SURF CLUB</h1>
+          <p className="since">⚡ SINCE 2015 · PREMIUM LOGISTICS ⚡</p>
         </div>
 
         <form className="login-form" onSubmit={handleSubmit}>

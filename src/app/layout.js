@@ -8,8 +8,8 @@ const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat
 const archivo = Archivo_Black({ weight: '400', subsets: ['latin'], variable: '--font-archivo' });
 
 export const metadata = {
-  title: 'LOGISTICA Y GESTION MPEG — Control Logístico',
-  description: 'Sistema Logístico y de Gestión MPEG. Control de inventario, ventas, clientes y sucursales.',
+  title: 'WAVE SURF CLUB — ERP & POS | Since 2015',
+  description: 'Sistema ERP logístico y Punto de Venta para Wave Surf Club. Gestión de inventario, ventas, clientes y sucursales.',
   icons: { icon: '/favicon.ico' },
 };
 

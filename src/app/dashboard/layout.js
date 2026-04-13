@@ -81,7 +81,7 @@ export default function DashboardLayout({ children }) {
           <div className="sidebar-brand">
             <img src="/logo-pag.png" alt="Logo" className="sidebar-brand-img" />
             <div>
-              <h2>LOGISTICA Y GESTION MPEG</h2>
+              <h2>WAVE SURF CLUB</h2>
               <span>Since 2015</span>
             </div>
           </div>
