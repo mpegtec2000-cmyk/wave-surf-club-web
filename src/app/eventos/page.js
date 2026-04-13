@@ -1,11 +1,67 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import { useTranslation } from '@/lib/i18n-context';
+import { addClient, queueNotification } from '@/lib/data';
 
 export default function EventosPage() {
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null); // 'success', 'error'
+  const [formData, setFormData] = useState({
+    name: '', rut: '', phone: '', eventType: 'PASEO DE EMPRESA', 
+    description: '', adults: 1, children: 0
+  });
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatus(null);
+
+    try {
+      // 1. Registrar cliente (si es nuevo) o actualizar datos
+      await addClient({
+        name: formData.name,
+        rut: formData.rut,
+        phone: formData.phone,
+        email: 'mpeg.logistica@gmail.com', // Placeholder for internal use or we can ask for email
+        metadata: { origin: 'cotizacion_evento', type: formData.eventType }
+      });
+
+      // 2. Enviar notificación al correo
+      const content = {
+        mensaje: `Nueva solicitud de cotización de evento desde la web.`,
+        datos: {
+          nombre: formData.name,
+          rut: formData.rut,
+          telefono: formData.phone,
+          tipo_evento: formData.eventType,
+          adultos: formData.adults,
+          niños: formData.children,
+          mensaje_cliente: formData.description
+        }
+      };
+
+      const { error } = await queueNotification(
+        'event_quote_request', 
+        'mpeg.logistica@gmail.com', 
+        `Cotización: ${formData.eventType} - ${formData.name}`, 
+        content
+      );
+
+      if (error) throw error;
+
+      setStatus('success');
+      setFormData({ name: '', rut: '', phone: '', eventType: 'PASEO DE EMPRESA', description: '', adults: 1, children: 0 });
+    } catch (err) {
+      console.error(err);
+      setStatus('error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const categories = [
     {
@@ -135,6 +191,79 @@ export default function EventosPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Quotation Form Section */}
+      <section style={{ padding: '100px 20px', background: '#000' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', background: 'rgba(255,255,255,0.02)', padding: '60px', borderRadius: '32px', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+            <h2 style={{ fontSize: '32px', fontWeight: 900, letterSpacing: '-1px', marginBottom: '10px' }}>COTIZA TU EVENTO</h2>
+            <p style={{ color: '#94a3b8' }}>Cuéntanos qué tienes en mente y te responderemos a la brevedad.</p>
+          </div>
+
+          {status === 'success' ? (
+            <div style={{ textAlign: 'center', padding: '40px', background: 'rgba(34, 197, 94, 0.1)', borderRadius: '20px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+              <h3 style={{ color: '#4ade80', fontSize: '24px', fontWeight: 900 }}>¡Petición Enviada!</h3>
+              <p style={{ color: '#94a3b8', marginTop: '10px' }}>Revisaremos tu solicitud y te contactaremos pronto. 🤙</p>
+              <button onClick={() => setStatus(null)} style={{ marginTop: '20px', background: 'none', border: '1px solid #fff', color: '#fff', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>Enviar otra</button>
+            </div>
+          ) : (
+            <form onSubmit={handleFormSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <div className="field-group" style={{ gridColumn: 'span 2' }}>
+                <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Nombre Completo</label>
+                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} />
+              </div>
+              
+              <div className="field-group">
+                <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>RUT</label>
+                <input required type="text" value={formData.rut} onChange={e => setFormData({...formData, rut: e.target.value})} placeholder="12.345.678-9" style={{ width: '100%', padding: '15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} />
+              </div>
+              
+              <div className="field-group">
+                <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Teléfono</label>
+                <input required type="text" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="+56 9..." style={{ width: '100%', padding: '15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} />
+              </div>
+
+              <div className="field-group" style={{ gridColumn: 'span 2' }}>
+                <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Tipo de Evento</label>
+                <select value={formData.eventType} onChange={e => setFormData({...formData, eventType: e.target.value})} style={{ width: '100%', padding: '15px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '12px', color: '#fff', cursor: 'pointer' }}>
+                  <option value="PASEO DE EMPRESA">PASEO DE EMPRESA</option>
+                  <option value="PASEO DE CURSO">PASEO DE CURSO</option>
+                  <option value="PERSONAS">PERSONAS</option>
+                </select>
+              </div>
+
+              <div className="field-group">
+                <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Adultos (+18)</label>
+                <input type="number" min="0" value={formData.adults} onChange={e => setFormData({...formData, adults: parseInt(e.target.value) || 0})} style={{ width: '100%', padding: '15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} />
+              </div>
+
+              <div className="field-group">
+                <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Niños (-18)</label>
+                <input type="number" min="0" value={formData.children} onChange={e => setFormData({...formData, children: parseInt(e.target.value) || 0})} style={{ width: '100%', padding: '15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} />
+              </div>
+
+              <div className="field-group" style={{ gridColumn: 'span 2' }}>
+                <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Descripción (Máx 500 caracteres)</label>
+                <textarea 
+                  required 
+                  maxLength={500} 
+                  value={formData.description} 
+                  onChange={e => setFormData({...formData, description: e.target.value})} 
+                  placeholder="Cuéntanos más sobre el evento..." 
+                  style={{ width: '100%', padding: '15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', minHeight: '120px', resize: 'vertical' }}
+                />
+                <div style={{ fontSize: '10px', textAlign: 'right', color: '#475569', marginTop: '5px' }}>{formData.description.length}/500</div>
+              </div>
+
+              <button type="submit" disabled={loading} style={{ gridColumn: 'span 2', padding: '20px', background: '#38bdf8', color: '#000', border: 'none', borderRadius: '12px', fontWeight: 900, fontSize: '14px', letterSpacing: '2px', cursor: 'pointer', transition: 'all 0.3s' }}>
+                {loading ? 'ENVIANDO...' : 'SOLICITAR COTIZACIÓN'}
+              </button>
+              
+              {status === 'error' && <p style={{ gridColumn: 'span 2', color: '#f87171', fontSize: '12px', textAlign: 'center', marginTop: '10px' }}>Error al enviar. Por favor intenta de nuevo.</p>}
+            </form>
+          )}
         </div>
       </section>
 
