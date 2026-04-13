@@ -12,7 +12,7 @@ export default function EventosPage() {
   const [status, setStatus] = useState(null); // 'success', 'error'
   const [formData, setFormData] = useState({
     name: '', rut: '', phone: '', eventType: 'PASEO DE EMPRESA', 
-    description: '', adults: 1, children: 0, date: ''
+    description: '', adults: 1, children: 0, date: '', branch: 'Concón'
   });
 
   const handleFormSubmit = async (e) => {
@@ -38,6 +38,7 @@ export default function EventosPage() {
           rut: formData.rut,
           telefono: formData.phone,
           tipo_evento: formData.eventType,
+          sede: formData.branch,
           fecha_deseada: formData.date,
           adultos: formData.adults,
           niños: formData.children,
@@ -48,14 +49,14 @@ export default function EventosPage() {
       const { error } = await queueNotification(
         'event_quote_request', 
         'mpeg.logistica@gmail.com', 
-        `Cotización: ${formData.eventType} (${formData.date}) - ${formData.name}`, 
+        `Cotización: ${formData.eventType} (${formData.branch} - ${formData.date}) - ${formData.name}`, 
         content
       );
 
       if (error) throw error;
 
       setStatus('success');
-      setFormData({ name: '', rut: '', phone: '', eventType: 'PASEO DE EMPRESA', description: '', adults: 1, children: 0, date: '' });
+      setFormData({ name: '', rut: '', phone: '', eventType: 'PASEO DE EMPRESA', description: '', adults: 1, children: 0, date: '', branch: 'Concón' });
     } catch (err) {
       console.error(err);
       setStatus('error');
@@ -232,6 +233,15 @@ export default function EventosPage() {
                   <option value="PASEO DE EMPRESA">PASEO DE EMPRESA</option>
                   <option value="PASEO DE CURSO">PASEO DE CURSO</option>
                   <option value="PERSONAS">PERSONAS</option>
+                </select>
+              </div>
+
+              <div className="field-group">
+                <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Sede de Interés</label>
+                <select value={formData.branch} onChange={e => setFormData({...formData, branch: e.target.value})} style={{ width: '100%', padding: '15px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '12px', color: '#fff', cursor: 'pointer' }}>
+                  <option value="Concón">CONCÓN</option>
+                  <option value="Punta de Piedra">PUNTA DE PIEDRA</option>
+                  <option value="Pichilemu">PICHILEMU</option>
                 </select>
               </div>
 
