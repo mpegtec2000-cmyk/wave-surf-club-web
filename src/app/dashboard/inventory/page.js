@@ -12,9 +12,11 @@ import { Plus, Pencil, Trash2, X, Save } from 'lucide-react';
 const EMPTY_FORM = {
   item_code: '',
   branch_id: 1,
+  category: 'tabla',
   color: '',
   size: '',
   entry_date: new Date().toISOString().split('T')[0],
+  av_override: '',
   is_rented: false,
   notes: '',
 };
@@ -26,6 +28,7 @@ export default function InventoryPage() {
   const [inventory, setInventory] = useState([]);
   const [avFilter, setAvFilter] = useState('ALL');
   const [rentFilter, setRentFilter] = useState('ALL');
+  const [catFilter, setCatFilter] = useState('ALL');
   const [toast, setToast] = useState(null);
 
   // Modal state
@@ -58,11 +61,12 @@ export default function InventoryPage() {
     return inventoryWithAV.filter(item => {
       if (activeBranchId && item.branch_id !== activeBranchId) return false;
       if (avFilter !== 'ALL' && item.av.level !== avFilter) return false;
+      if (catFilter !== 'ALL' && item.category !== catFilter) return false;
       if (rentFilter === 'rented' && !item.is_rented) return false;
       if (rentFilter === 'available' && item.is_rented) return false;
       return true;
     });
-  }, [inventoryWithAV, activeBranchId, avFilter, rentFilter]);
+  }, [inventoryWithAV, activeBranchId, avFilter, rentFilter, catFilter]);
 
   const showToast = (msg, type) => {
     setToast({ msg, type });
@@ -80,9 +84,11 @@ export default function InventoryPage() {
     setFormData({
       item_code: item.item_code,
       branch_id: item.branch_id,
+      category: item.category || (item.item_code.startsWith('TR') ? 'traje' : 'tabla'),
       color: item.color,
       size: item.size,
       entry_date: item.entry_date,
+      av_override: item.av_override || '',
       is_rented: item.is_rented,
       notes: item.notes,
     });
@@ -107,9 +113,11 @@ export default function InventoryPage() {
       showToast(`✅ Ítem ${formData.item_code} agregado`, 'success');
     } else {
       const { error } = await updateInventoryItem(editingCode, {
+        category: formData.category,
         color: formData.color,
         size: formData.size,
         entry_date: formData.entry_date,
+        av_override: formData.av_override || null,
         is_rented: formData.is_rented,
         notes: formData.notes,
         branch_id: Number(formData.branch_id),
@@ -176,6 +184,10 @@ export default function InventoryPage() {
           <button className={`filter-chip ${avFilter === 'AV3' ? 'active' : ''}`} onClick={() => setAvFilter('AV3')}>🔧 AV3</button>
           <button className={`filter-chip ${avFilter === 'URGENTE' ? 'active' : ''}`} onClick={() => setAvFilter('URGENTE')}>⚠️ URGENTE</button>
           <div style={{ width: 1, background: 'var(--border-subtle)', margin: '0 4px' }} />
+          <button className={`filter-chip ${catFilter === 'ALL' ? 'active' : ''}`} onClick={() => setCatFilter('ALL')}>T/TR</button>
+          <button className={`filter-chip ${catFilter === 'tabla' ? 'active' : ''}`} onClick={() => setCatFilter('tabla')}>Tablas</button>
+          <button className={`filter-chip ${catFilter === 'traje' ? 'active' : ''}`} onClick={() => setCatFilter('traje')}>Trajes</button>
+          <div style={{ width: 1, background: 'var(--border-subtle)', margin: '0 4px' }} />
           <button className={`filter-chip ${rentFilter === 'ALL' ? 'active' : ''}`} onClick={() => setRentFilter('ALL')}>Todos</button>
           <button className={`filter-chip ${rentFilter === 'available' ? 'active' : ''}`} onClick={() => setRentFilter('available')}>Disponibles</button>
           <button className={`filter-chip ${rentFilter === 'rented' ? 'active' : ''}`} onClick={() => setRentFilter('rented')}>Arrendados</button>
@@ -188,6 +200,7 @@ export default function InventoryPage() {
               <tr>
                 <th>Código</th>
                 <th>Sucursal</th>
+                <th>Tipo</th>
                 <th>Color</th>
                 <th>Talla</th>
                 <th>Ingreso</th>
@@ -217,6 +230,9 @@ export default function InventoryPage() {
                         {item.item_code}
                       </td>
                       <td>{branch?.emoji} {branch?.shortName}</td>
+                      <td>
+                        {item.category === 'tabla' ? '🏄 Tabla' : item.category === 'traje' ? '👕 Traje' : '📦 Otr.'}
+                      </td>
                       <td>{item.color}</td>
                       <td>{item.size}</td>
                       <td style={{ fontSize: 13 }}>
@@ -225,8 +241,8 @@ export default function InventoryPage() {
                         <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{item.av.months} meses</span>
                       </td>
                       <td>
-                        <span className={`av-badge ${item.av.cssClass}`}>
-                          {item.av.icon} {item.av.level}
+                        <span className={`av-badge ${item.av.cssClass}`} title={item.av.overridden ? 'Manual Override' : 'Automático'}>
+                          {item.av.icon} {item.av.level} {item.av.overridden && '⚙️'}
                         </span>
                       </td>
                       <td>
@@ -325,6 +341,25 @@ export default function InventoryPage() {
                     {BRANCHES.map(b => (
                       <option key={b.id} value={b.id}>{b.emoji} {b.name}</option>
                     ))}
+                  </select>
+                </div>
+                
+                <div className="form-group">
+                  <label>Categoría *</label>
+                  <select className="form-select" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
+                    <option value="tabla">🏄 Tabla</option>
+                    <option value="traje">👕 Traje</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Estado Control AV (Opcional)</label>
+                  <select className="form-select" value={formData.av_override} onChange={e => setFormData({ ...formData, av_override: e.target.value })}>
+                    <option value="">⚙️ Automático (por Fecha)</option>
+                    <option value="AV1">✅ AV1 - Óptimo</option>
+                    <option value="AV2">🕒 AV2 - Revisión</option>
+                    <option value="AV3">🔧 AV3 - Reparación</option>
+                    <option value="URGENTE">⚠️ URGENTE - Bloqueado</option>
                   </select>
                 </div>
 

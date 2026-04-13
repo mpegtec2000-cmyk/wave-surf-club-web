@@ -4,24 +4,31 @@
 
 import { AV_LEVELS } from './constants';
 
-export function calculateAV(entryDate) {
+export function calculateAV(item) {
   const now = new Date();
-  const entry = new Date(entryDate);
+  const entry = typeof item === 'string' ? new Date(item) : new Date(item.entry_date);
   const diffMs = now - entry;
   const months = diffMs / (1000 * 60 * 60 * 24 * 30.44);
 
   let avData;
-  if (months < 3) avData = AV_LEVELS.AV1;
-  else if (months < 6) avData = AV_LEVELS.AV2;
-  else if (months < 9) avData = AV_LEVELS.AV3;
-  else avData = AV_LEVELS.URGENTE;
+  if (item.av_override) {
+    avData = AV_LEVELS[item.av_override] || AV_LEVELS.AV1;
+  } else if (months < 3) {
+    avData = AV_LEVELS.AV1;
+  } else if (months < 6) {
+    avData = AV_LEVELS.AV2;
+  } else if (months < 9) {
+    avData = AV_LEVELS.AV3;
+  } else {
+    avData = AV_LEVELS.URGENTE;
+  }
 
-  return { ...avData, months: Math.floor(months) };
+  return { ...avData, months: Math.floor(months), overridden: !!item.av_override };
 }
 
 export function filterInventoryByRole(items, role) {
   return items
-    .map(item => ({ ...item, av: calculateAV(item.entry_date) }))
+    .map(item => ({ ...item, av: calculateAV(item) }))
     .filter(item => {
       if (role === 'asistente') {
         return item.av.level === 'AV1' || item.av.level === 'AV2';
@@ -31,7 +38,7 @@ export function filterInventoryByRole(items, role) {
 }
 
 export function canRentItem(item) {
-  const av = item.av || calculateAV(item.entry_date);
+  const av = item.av || calculateAV(item);
   if (av.level === 'URGENTE') {
     return { allowed: false, reason: `⚠️ Ítem ${item.item_code} VENCIDO (${av.months} meses). Arriendo bloqueado.` };
   }

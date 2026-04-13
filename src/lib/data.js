@@ -204,10 +204,11 @@ export async function addInventoryItem(item) {
     .insert({
       item_code: item.item_code,
       branch_id: item.branch_id,
-      category: item.item_code.startsWith('TR') ? 'traje' : 'tabla',
+      category: item.category || (item.item_code.startsWith('TR') ? 'traje' : 'tabla'),
       color: item.color,
       size: item.size,
       entry_date: item.entry_date,
+      av_override: item.av_override || null,
       is_rented: item.is_rented || false,
       notes: item.notes,
     })
