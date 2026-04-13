@@ -18,7 +18,7 @@ export const dictionaries = {
       recent: "Transacciones Recientes"
     },
     nav: {
-      dashboard: "Dashboard",
+      dashboard: "Soporte",
       pos: "Caja",
       inventory: "Inventario Logístico",
       clients: "Clientes y Deudas",
