@@ -762,3 +762,12 @@ export async function updateQuoteStatus(id, newStatus) {
     
   return { data, error };
 }
+
+export async function deleteEventQuote(id) {
+  const { error } = await supabase
+    .from('app_notifications')
+    .delete()
+    .eq('id', id);
+    
+  return { error };
+}

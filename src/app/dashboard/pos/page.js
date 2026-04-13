@@ -58,7 +58,7 @@ export default function POSPage() {
 
   useEffect(() => {
     async function fetchBranches() {
-      const { data } = await supabase.from('branches').select('*').eq('is_active', true).order('id');
+      const data = await getBranches();
       if (data) setBranches(data);
     }
     fetchBranches();

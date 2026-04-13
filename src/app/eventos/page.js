@@ -254,6 +254,7 @@ export default function EventosPage() {
               <div className="field-group">
                 <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Fecha Deseada</label>
                 <input required type="date" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} style={{ width: '100%', padding: '15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', colorScheme: 'dark' }} />
+                <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', marginTop: '4px', display: 'block' }}>Selecciona el día aproximado del servicio.</span>
               </div>
 
               <div className="field-group">
@@ -279,8 +280,12 @@ export default function EventosPage() {
                 <div style={{ fontSize: '10px', textAlign: 'right', color: '#475569', marginTop: '5px' }}>{formData.description.length}/500</div>
               </div>
 
-              <button type="submit" disabled={loading} style={{ gridColumn: 'span 2', padding: '20px', background: '#38bdf8', color: '#000', border: 'none', borderRadius: '12px', fontWeight: 900, fontSize: '14px', letterSpacing: '2px', cursor: 'pointer', transition: 'all 0.3s' }}>
-                {loading ? 'ENVIANDO...' : 'SOLICITAR COTIZACIÓN'}
+              <button 
+                type="submit" 
+                disabled={loading}
+                style={{ width: '100%', padding: '20px', background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)', color: '#fff', border: 'none', borderRadius: '12px', fontSize: '14px', fontWeight: 900, letterSpacing: '2px', cursor: loading ? 'not-allowed' : 'pointer', transition: 'all 0.3s', boxShadow: '0 10px 20px -5px rgba(56, 189, 248, 0.4)', opacity: loading ? 0.7 : 1 }}
+              >
+                {loading ? 'PROCESANDO SOLICITUD...' : 'SOLICITAR COTIZACIÓN (PDF)'}
               </button>
               
               {status === 'error' && <p style={{ gridColumn: 'span 2', color: '#f87171', fontSize: '12px', textAlign: 'center', marginTop: '10px' }}>Error al enviar. Por favor intenta de nuevo.</p>}

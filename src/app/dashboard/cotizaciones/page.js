@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getEventQuotes, updateQuoteStatus, getBranches } from '@/lib/data';
-import { ClipboardList, User, MapPin, Search, Calendar, Users, Mail, Phone, CheckCircle2, Clock } from 'lucide-react';
+import { getEventQuotes, updateQuoteStatus, deleteEventQuote, getBranches } from '@/lib/data';
+import { ClipboardList, User, MapPin, Search, Calendar, Users, Mail, Phone, CheckCircle2, Clock, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 
 export default function CotizacionesPage() {
@@ -68,29 +68,52 @@ export default function CotizacionesPage() {
     const currentStatus = (quote.status || 'pending').toLowerCase();
     const nextStatus = currentStatus === 'pending' ? 'lista' : 'pending';
     
+    // Si pasamos a LISTA, mostramos alerta diferente
     const result = await Swal.fire({
-      title: '¿Cambiar estado?',
-      text: `La cotización pasará a estado ${nextStatus === 'lista' ? 'LISTA' : 'PENDIENTE'}`,
+      title: '¿Confirmar como FINALIZADA?',
+      text: `La cotización pasará a estado LISTA (Verde)`,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Sí, cambiar',
+      confirmButtonText: 'Sí, finalizar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#38bdf8'
+      confirmButtonColor: '#22c55e'
     });
 
     if (result.isConfirmed) {
       const { error } = await updateQuoteStatus(quote.id, nextStatus);
       if (error) {
-        Swal.fire('Error', 'No se pudo actualizar el estado', 'error');
+        Swal.fire('Error', 'No se pudo actualizar el estado. Prueba refrescando.', 'error');
       } else {
-        // Actualización local para UX instantánea
         setQuotes(quotes.map(q => q.id === quote.id ? { ...q, status: nextStatus } : q));
         Swal.fire({
-          title: '¡Actualizado!',
+          title: '¡Tarea Finalizada!',
+          text: 'Ya puedes borrarla si lo deseas.',
           icon: 'success',
-          timer: 1500,
+          timer: 2000,
           showConfirmButton: false
         });
+      }
+    }
+  };
+
+  const handleDelete = async (quote) => {
+    const result = await Swal.fire({
+      title: '¿Eliminar Cotización?',
+      text: "Esta acción no se puede deshacer y el registro desaparecerá de la base de datos.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar permanentemente',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#ef4444'
+    });
+
+    if (result.isConfirmed) {
+      const { error } = await deleteEventQuote(quote.id);
+      if (error) {
+        Swal.fire('Error', 'No se pudo eliminar el registro.', 'error');
+      } else {
+        setQuotes(quotes.filter(q => q.id !== quote.id));
+        Swal.fire('Eliminado', 'La cotización ha sido borrada.', 'success');
       }
     }
   };
@@ -205,6 +228,7 @@ export default function CotizacionesPage() {
         <table className="data-table">
           <thead>
             <tr>
+              <th style={{ width: '40px' }}></th>
               <th>Cliente / Contacto</th>
               <th>Sede / Evento</th>
               <th style={{ textAlign: 'center' }}>Participantes</th>
@@ -226,6 +250,19 @@ export default function CotizacionesPage() {
                 
                 return (
                   <tr key={q.id}>
+                    <td style={{ textAlign: 'center' }}>
+                      {currentStatus === 'lista' ? (
+                        <button 
+                          onClick={() => handleDelete(q)}
+                          style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '8px' }}
+                          title="Eliminar Registro"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      ) : (
+                        <div style={{ width: '34px' }} />
+                      )}
+                    </td>
                     <td>
                       <div style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: 14 }}>{d.nombre}</div>
                       <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
