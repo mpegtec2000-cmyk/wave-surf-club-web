@@ -30,6 +30,7 @@ export const PAYMENT_METHODS = [
   { value: 'efectivo', label: 'Efectivo', icon: '💵' },
   { value: 'transferencia', label: 'Transferencia', icon: '🏦' },
   { value: 'tarjeta', label: 'Tarjeta', icon: '💳' },
+  { value: 'debito', label: 'Débito Online', icon: '🏧' },
   { value: 'por_pagar', label: 'Dejar por Pagar (Fiado)', icon: '📋' },
 ];
 

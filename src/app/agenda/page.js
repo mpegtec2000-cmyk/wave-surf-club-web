@@ -84,7 +84,7 @@ export default function AgendaPage() {
         total: calculatedPrice.price_clp,
         type: 'ingreso',
         category: 'clase',
-        method: 'transferencia',
+        method: 'debito',
         client_rut: formData.rut,
         branch_id: formData.sede === 'Concón' ? 2 : (formData.sede === 'Pichilemu' ? 3 : 1),
         payment_status: 'pagado',
@@ -486,19 +486,23 @@ export default function AgendaPage() {
                   </div>
                 </div>
 
-                {receivingCard && (
-                  <div className="checkout-info">
-                    <span className="label">Datos de Transferencia:</span>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-                      <span style={{ fontSize: '14px', fontWeight: 700 }}>{receivingCard.holder_name}</span>
-                      <span style={{ fontSize: '12px', opacity: 0.7 }}>{receivingCard.card_number}</span>
+                <div className="checkout-info" style={{ background: 'rgba(56, 189, 248, 0.1)', borderColor: 'rgba(56, 189, 248, 0.3)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '40px', height: '40px', background: '#38bdf8', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                     </div>
-                    <p style={{ fontSize: '11px', marginTop: '10px', color: '#94a3b8' }}>ADJUNTAR COMPROBANTE AL CORREO: MPEG.LOGISTICA@GMAIL.COM ASUNTO COMPROBANTE Y PONER FECHA</p>
+                    <div>
+                      <span className="label" style={{ marginBottom: '2px' }}>Pago Directo</span>
+                      <p style={{ margin: 0, fontSize: '13px', fontWeight: 700 }}>Redcompra / Débito Online</p>
+                    </div>
                   </div>
-                )}
+                  <p style={{ fontSize: '11px', marginTop: '12px', color: '#94a3b8' }}>
+                    Serás redirigido a la pasarela de pago seguro para completar tu transacción de forma automática.
+                  </p>
+                </div>
 
-                <button onClick={handlePayment} disabled={loading} className="btn-submit" style={{ background: '#4ade80' }}>
-                  {loading ? 'Confirmando...' : 'Confirmar Reserva'}
+                <button onClick={handlePayment} disabled={loading} className="btn-submit" style={{ background: '#38bdf8', color: '#000' }}>
+                  {loading ? 'Procesando Pago...' : 'Pagar con Débito'}
                 </button>
               </div>
             )}
