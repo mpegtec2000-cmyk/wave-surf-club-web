@@ -739,3 +739,26 @@ export async function getSubscriptions() {
     
   return data || [];
 }
+
+// ── EVENT QUOTATIONS ─────────────────────────
+
+export async function getEventQuotes() {
+  const { data, error } = await supabase
+    .from('app_notifications')
+    .select('*')
+    .eq('type', 'event_quote_request')
+    .order('created_at', { ascending: false });
+    
+  return data || [];
+}
+
+export async function updateQuoteStatus(id, newStatus) {
+  const { data, error } = await supabase
+    .from('app_notifications')
+    .update({ status: newStatus })
+    .eq('id', id)
+    .select()
+    .single();
+    
+  return { data, error };
+}

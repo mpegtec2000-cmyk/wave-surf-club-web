@@ -29,6 +29,7 @@ export const dictionaries = {
       'ventas-online': "Ventas Online",
       'ventas-fisicas': "Ventas Físicas",
       'suscripciones': "Suscripciones",
+      'cotizaciones': "Cotizaciones",
       fondos: "Fondos de Caja",
       settings: "Configuración"
     },

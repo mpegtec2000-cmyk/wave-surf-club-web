@@ -11,7 +11,7 @@ export default function EventosPage() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null); // 'success', 'error'
   const [formData, setFormData] = useState({
-    name: '', rut: '', phone: '', eventType: 'PASEO DE EMPRESA', 
+    name: '', rut: '', phone: '', email: '', eventType: 'PASEO DE EMPRESA', 
     description: '', adults: 1, children: 0, date: '', branch: 'Concón'
   });
 
@@ -37,6 +37,7 @@ export default function EventosPage() {
           nombre: formData.name,
           rut: formData.rut,
           telefono: formData.phone,
+          email: formData.email,
           tipo_evento: formData.eventType,
           sede: formData.branch,
           fecha_deseada: formData.date,
@@ -56,7 +57,7 @@ export default function EventosPage() {
       if (error) throw error;
 
       setStatus('success');
-      setFormData({ name: '', rut: '', phone: '', eventType: 'PASEO DE EMPRESA', description: '', adults: 1, children: 0, date: '', branch: 'Concón' });
+      setFormData({ name: '', rut: '', phone: '', email: '', eventType: 'PASEO DE EMPRESA', description: '', adults: 1, children: 0, date: '', branch: 'Concón' });
     } catch (err) {
       console.error(err);
       setStatus('error');
@@ -215,6 +216,11 @@ export default function EventosPage() {
               <div className="field-group" style={{ gridColumn: 'span 2' }}>
                 <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Nombre Completo</label>
                 <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} />
+              </div>
+              
+              <div className="field-group">
+                <label style={{ fontSize: '10px', fontWeight: 900, color: '#38bdf8', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Email para Contacto</label>
+                <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} placeholder="tu@email.com" style={{ width: '100%', padding: '15px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} />
               </div>
               
               <div className="field-group">
