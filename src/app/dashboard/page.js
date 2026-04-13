@@ -1,71 +1,102 @@
 'use client';
 
-import { LifeBuoy, Info, ShoppingCart, Package, Users, Briefcase, FileText, BarChart3, ListOrdered, Globe, Store, TrendingUp, Settings } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { 
+  LifeBuoy, Info, ShoppingCart, Package, Users, Briefcase, 
+  FileText, BarChart3, ListOrdered, Globe, Store, TrendingUp, 
+  Settings, CalendarDays, ClipboardList 
+} from 'lucide-react';
 
 const MODULES = [
   {
     icon: ShoppingCart,
     title: 'Caja',
+    path: '/dashboard/pos',
     color: '#3b82f6',
     description: 'Registra los ingresos y salidas diarias de tu sucursal. Aquí puedes cobrar arriendos, clases, cafetería, y tienda. Es el corazón operativo diario.'
   },
   {
     icon: Package,
     title: 'Inventario Logístico',
+    path: '/dashboard/inventory',
     color: '#8b5cf6',
     description: 'Controla el stock de Tablas y Trajes de surf. También permite revisar y forzar estados de deterioro (AV1, AV2, AV3) en caso de accidentes.'
   },
   {
     icon: Users,
     title: 'Clientes y Deudas',
+    path: '/dashboard/clients',
     color: '#06b6d4',
     description: 'Administra la base de datos de clientes, revisa el historial de transacciones de cada uno y cobra deudas pendientes ("fiado").'
   },
   {
-    icon: Briefcase,
-    title: 'Personal',
-    color: '#10b981',
-    description: 'Gestiona la información de profesores, asistentes y cajeros. Asigna turnos, permisos y mantén el registro de sus contactos.'
+    icon: CalendarDays,
+    title: 'Suscripciones',
+    path: '/dashboard/suscripciones',
+    color: '#ec4899',
+    description: 'Control de mensualidades, membresías y cupos de bodega. Monitorea vencimientos y renovaciones activas.'
+  },
+  {
+    icon: ClipboardList,
+    title: 'Cotizaciones',
+    path: '/dashboard/cotizaciones',
+    color: '#38bdf8',
+    description: 'Gestiona las solicitudes de eventos y paseos de curso. Revisa los detalles de cada pedido y marca su estado de avance.'
   },
   {
     icon: FileText,
     title: 'Cierre de Caja',
+    path: '/dashboard/closing',
     color: '#f59e0b',
     description: 'Genera el informe final del día resumido. Exporta o descarga en archivo .txt los detalles de ingresos físicos vs deudas de cada cajero.'
   },
   {
+    icon: Briefcase,
+    title: 'Personal',
+    path: '/dashboard/staff',
+    color: '#10b981',
+    description: 'Gestiona la información de profesores, asistentes y cajeros. Asigna turnos, permisos y mantén el registro de sus contactos.'
+  },
+  {
     icon: BarChart3,
     title: 'Finanzas Globales',
-    color: '#ec4899',
-    description: 'Reportes y estadísticas globales. Solo accesible por superadministradores para ver y analizar el crecimiento económico mensual/anual de la compañía.'
+    path: '/dashboard/finanzas',
+    color: '#8b5cf6',
+    description: 'Reportes y estadísticas globales. Solo accesible por superadministradores para ver y analizar el crecimiento económico mensual/anual.'
   },
   {
     icon: ListOrdered,
     title: 'Reg. Movimientos',
+    path: '/dashboard/movimientos',
     color: '#64748b',
-    description: 'Bitácora exhaustiva que registra todas y cada una de las transferencias, efectivas y fallidas, indicando responsables y detalles a fondo.'
+    description: 'Bitácora exhaustiva que registra todas y cada una de las transferencias, efectivas y fallidas, indicando responsables.'
   },
   {
     icon: Globe,
     title: 'Ventas Online',
+    path: '/dashboard/ventas-online',
     color: '#6366f1',
-    description: 'Registra y monitorea las compras, reservas de clases o arriendos que suceden a través del sitio web oficial sin intervención manual de la caja.'
+    description: 'Registra y monitorea las compras, reservas de clases o arriendos que suceden a través del sitio web oficial.'
   },
   {
     icon: Store,
     title: 'Ventas Físicas',
+    path: '/dashboard/ventas-fisicas',
     color: '#0284c7',
-    description: 'Sección equivalente a Ventas Online pero exclusiva para el seguimiento granular avanzado de todo lo que ocurre físicamente en las sedes.'
+    description: 'Sección equivalente a Ventas Online pero exclusiva para el seguimiento granular avanzado de todo lo que ocurre físicamente.'
   },
   {
     icon: TrendingUp,
     title: 'Fondos',
+    path: '/dashboard/fondos',
     color: '#f43f5e',
     description: 'Control de la caja chica o fondos de la empresa asignados por sucursal, útil para llevar control de gastos recurrentes internos.'
   },
 ];
 
-export default function SupportPage() {
+export default function MenuPage() {
+  const router = useRouter();
+
   return (
     <div style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto' }}>
       
@@ -76,10 +107,10 @@ export default function SupportPage() {
         </div>
         <div>
           <h1 style={{ fontSize: '36px', fontWeight: 950, color: 'var(--accent-primary)', margin: 0, letterSpacing: '-0.5px' }}>
-            CENTRO DE SOPORTE
+            MENÚ PRINCIPAL
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '15px', marginTop: '6px', fontWeight: 500 }}>
-            Guía de uso oficial del ERP Wave Surf Club. Revisa para qué sirve cada módulo.
+            Bienvenido al sistema ERP Wave Surf Club. Selecciona un módulo para comenzar a trabajar.
           </p>
         </div>
       </header>
@@ -87,28 +118,31 @@ export default function SupportPage() {
       {/* ── Grid ── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '24px' }}>
         {MODULES.map((mod, i) => (
-          <div key={i} style={{ 
-            background: '#fff', 
-            borderRadius: 'var(--radius-xl)', 
-            border: '1.5px solid var(--border-subtle)', 
-            padding: '24px', 
-            boxShadow: 'var(--shadow-sm)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-            transition: 'all 0.2s',
-            cursor: 'default'
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.borderColor = mod.color;
-            e.currentTarget.style.boxShadow = `0 10px 20px -5px ${mod.color}30`;
-            e.currentTarget.style.transform = 'translateY(-2px)';
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.borderColor = 'var(--border-subtle)';
-            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-            e.currentTarget.style.transform = 'none';
-          }}
+          <div 
+            key={i} 
+            onClick={() => router.push(mod.path)}
+            style={{ 
+              background: '#fff', 
+              borderRadius: 'var(--radius-xl)', 
+              border: '1.5px solid var(--border-subtle)', 
+              padding: '24px', 
+              boxShadow: 'var(--shadow-sm)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              transition: 'all 0.2s',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = mod.color;
+              e.currentTarget.style.boxShadow = `0 10px 20px -5px ${mod.color}30`;
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = 'var(--border-subtle)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+              e.currentTarget.style.transform = 'none';
+            }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ 
@@ -132,9 +166,9 @@ export default function SupportPage() {
 
       <div style={{ marginTop: '48px', padding: '32px', background: 'var(--bg-primary)', borderRadius: 'var(--radius-xl)', border: '1.5px dashed var(--border-subtle)', textAlign: 'center' }}>
         <Info size={32} color="var(--text-muted)" style={{ marginBottom: '16px' }} />
-        <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--accent-primary)', margin: '0 0 8px 0' }}>¿Problemas Técnicos?</h3>
+        <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--accent-primary)', margin: '0 0 8px 0' }}>Centro de Soporte</h3>
         <p style={{ color: 'var(--text-muted)', fontSize: '14px', maxWidth: '600px', margin: '0 auto 24px auto' }}>
-          Si experimentas problemas críticos con el sistema que no se resuelvan leyendo las instrucciones de uso, por favor ponte en contacto con el creador y administrador del sistema.
+          Si experimentas problemas técnicos, contacta con el administrador del sistema.
         </p>
         
         {/* Contact Info */}

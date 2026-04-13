@@ -68,7 +68,7 @@ export const LANGUAGES = [
 ];
 
 export const NAV_ITEMS = [
-  { path: '/dashboard', label: 'Soporte', icon: 'LifeBuoy', roles: ['superadmin', 'caja'] },
+  { path: '/dashboard', label: 'MENÚ', icon: 'LifeBuoy', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/pos', label: 'Caja', icon: 'ShoppingCart', roles: ['superadmin', 'caja', 'asistente'] },
   { path: '/dashboard/inventory', label: 'Inventario', icon: 'Package', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/clients', label: 'Clientes', icon: 'Users', roles: ['superadmin', 'caja'] },
