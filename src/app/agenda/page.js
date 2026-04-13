@@ -371,7 +371,7 @@ export default function AgendaPage() {
               <form onSubmit={handleRegister}>
                 <span className="label" style={{ display: 'block', marginBottom: '10px' }}>Selecciona tu Sede</span>
                 <div className="sede-selector">
-                  {['Concón', 'Pichilemu', 'Punta Piedra'].map(s => (
+                  {['Concón'].map(s => (
                     <button 
                       key={s} 
                       type="button" 
