@@ -38,6 +38,8 @@ export const TRANSACTION_CATEGORIES = [
   { value: 'clase', label: 'Clase', icon: '📚' },
   { value: 'tienda', label: 'Tienda', icon: '🛍️' },
   { value: 'cafeteria', label: 'Cafetería', icon: '☕' },
+  { value: 'mensualidad', label: 'Mensualidad', icon: '🗓️' },
+  { value: 'bodega', label: 'Bodega', icon: '🧳' },
   { value: 'pago_deuda', label: 'Pago de Deuda', icon: '✅' },
   { value: 'otro', label: 'Otro', icon: '📦' },
 ];
@@ -76,6 +78,7 @@ export const NAV_ITEMS = [
   { path: '/dashboard/movimientos', label: 'Reg. Movimientos', icon: 'ListOrdered', roles: ['superadmin'] },
   { path: '/dashboard/ventas-online', label: 'Ventas Online', icon: 'Globe', roles: ['superadmin'] },
   { path: '/dashboard/ventas-fisicas', label: 'Ventas Físicas', icon: 'Store', roles: ['superadmin', 'caja'] },
+  { path: '/dashboard/suscripciones', label: 'Suscripciones', icon: 'CalendarDays', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/fondos', label: 'Fondos', icon: 'TrendingUp', roles: ['superadmin'] },
   { path: '/dashboard/settings', label: 'Configuración', icon: 'Settings', roles: ['superadmin'] },
   { path: '/dashboard/antigravity', label: 'Antigravity AI', icon: 'Briefcase', roles: ['superadmin'] },

@@ -34,6 +34,7 @@ export default function POSPage() {
   const [txIsIncident, setTxIsIncident] = useState(false);
   const [txIncidentNote, setTxIncidentNote] = useState('');
   const [rentalDetails, setRentalDetails] = useState('');
+  const [subscriptionPeriod, setSubscriptionPeriod] = useState('mensual');
 
   // Feedback
   const [toast, setToast] = useState(null);
@@ -124,6 +125,7 @@ export default function POSPage() {
       incident_note: txIncidentNote,
       rental_status: 'en_curso',
       rental_details: txCategory === 'arriendo' ? rentalDetails : null,
+      subscription_period: (txCategory === 'mensualidad' || txCategory === 'bodega') ? subscriptionPeriod : null,
       created_at: new Date().toISOString(),
     };
 
@@ -144,6 +146,7 @@ export default function POSPage() {
     setTxIsIncident(false);
     setTxIncidentNote('');
     setRentalDetails('');
+    setSubscriptionPeriod('mensual');
   };
 
   const handleFinalizeIndividual = async (txId, label) => {
@@ -340,6 +343,17 @@ export default function POSPage() {
                       onChange={(e) => setRentalDetails(e.target.value.toUpperCase())} 
                       required 
                     />
+                  </div>
+                )}
+
+                {(txCategory === 'mensualidad' || txCategory === 'bodega') && (
+                  <div className="form-group animate-slide-down">
+                    <label>Período de Contratación</label>
+                    <select className="form-select" value={subscriptionPeriod} onChange={(e) => setSubscriptionPeriod(e.target.value)} required style={{ height: 60, fontSize: 16 }}>
+                      <option value="15_dias">Cada 15 Días</option>
+                      <option value="mensual">Mensual (1 Mes)</option>
+                      <option value="anual">Anual (1 Año)</option>
+                    </select>
                   </div>
                 )}
 

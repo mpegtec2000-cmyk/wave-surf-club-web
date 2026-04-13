@@ -28,7 +28,8 @@ export const dictionaries = {
       movimientos: "Reg. Movimientos",
       'ventas-online': "Ventas Online",
       'ventas-fisicas': "Ventas Físicas",
-      fondos: "Fondos",
+      'suscripciones': "Suscripciones",
+      fondos: "Fondos de Caja",
       settings: "Configuración"
     },
     landing: {

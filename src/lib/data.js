@@ -387,10 +387,20 @@ export async function deleteTransaction(txId) {
 }
 
 export async function addTransaction(tx) {
+  let validUntil = null;
+  if (tx.subscription_period) {
+    const d = new Date();
+    if (tx.subscription_period === 'anual') d.setFullYear(d.getFullYear() + 1);
+    else if (tx.subscription_period === 'mensual') d.setMonth(d.getMonth() + 1);
+    else if (tx.subscription_period === '15_dias') d.setDate(d.getDate() + 15);
+    validUntil = d.toISOString();
+  }
+
   // Asegurar que toda transacción nueva comienza en estado 'en_curso'
   const txWithStatus = {
     ...tx,
     rental_status: tx.rental_status || 'en_curso',
+    valid_until: validUntil,
   };
 
   const { data, error } = await supabase
@@ -712,4 +722,20 @@ export async function getDashboardStats(branchId = null) {
     todayTransactions: todayTxs,
     allTransactions: txs,
   };
+}
+
+// ── SUSCRIPTIONS ─────────────────────────────
+
+export async function getSubscriptions() {
+  const { data, error } = await supabase
+    .from('transactions')
+    .select(`
+      *,
+      profiles ( name, phone, email )
+    `)
+    .in('category', ['mensualidad', 'bodega'])
+    .is('deleted_at', null)
+    .order('valid_until', { ascending: true });
+    
+  return data || [];
 }
