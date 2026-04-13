@@ -33,7 +33,6 @@ const paymentStatusBadge = {
 const categoryInfo = {
   clase:    { icon: '📚', label: 'Clase' },
   arriendo: { icon: '🏄', label: 'Arriendo' },
-  escuela:  { icon: '🎓', label: 'Escuela' },
 };
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -185,7 +184,6 @@ export default function VentasOnline() {
               <option value="todos">Todos</option>
               <option value="clase">📚 Clase</option>
               <option value="arriendo">🏄 Arriendo</option>
-              <option value="escuela">🎓 Escuela</option>
             </select>
           </div>
           <div>

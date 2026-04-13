@@ -38,7 +38,6 @@ export const TRANSACTION_CATEGORIES = [
   { value: 'clase', label: 'Clase', icon: '📚' },
   { value: 'tienda', label: 'Tienda', icon: '🛍️' },
   { value: 'cafeteria', label: 'Cafetería', icon: '☕' },
-  { value: 'escuela', label: 'Escuela', icon: '🎓' },
   { value: 'pago_deuda', label: 'Pago de Deuda', icon: '✅' },
   { value: 'otro', label: 'Otro', icon: '📦' },
 ];

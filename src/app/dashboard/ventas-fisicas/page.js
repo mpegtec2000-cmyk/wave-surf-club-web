@@ -35,7 +35,6 @@ const categoryInfo = {
   arriendo:  { icon: '🏄', label: 'Arriendo' },
   tienda:    { icon: '🛍️', label: 'Tienda' },
   cafeteria: { icon: '☕', label: 'Cafetería' },
-  escuela:   { icon: '🎓', label: 'Escuela' },
 };
 
 // ── Component ─────────────────────────────────────────────────────────────────
