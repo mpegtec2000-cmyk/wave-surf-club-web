@@ -198,7 +198,7 @@ export default function CotizacionesPage() {
             </button>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* ── Table ── */}
       <div className="data-table-wrap">
