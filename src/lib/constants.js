@@ -70,7 +70,7 @@ export const NAV_ITEMS = [
   { path: '/dashboard/pos', label: 'Caja', icon: 'ShoppingCart', roles: ['superadmin', 'caja', 'asistente'] },
   { path: '/dashboard/inventory', label: 'Inventario', icon: 'Package', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/clients', label: 'Clientes', icon: 'Users', roles: ['superadmin', 'caja'] },
-  { path: '/dashboard/staff', label: 'Personas', icon: 'Briefcase', roles: ['superadmin'] },
+  { path: '/dashboard/staff', label: 'Personal', icon: 'Briefcase', roles: ['superadmin'] },
   { path: '/dashboard/closing', label: 'Cierre de Caja', icon: 'FileText', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/finanzas', label: 'Finanzas Globales', icon: 'BarChart3', roles: ['superadmin'] },
   { path: '/dashboard/movimientos', label: 'Reg. Movimientos', icon: 'ListOrdered', roles: ['superadmin'] },

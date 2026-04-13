@@ -22,7 +22,7 @@ export const dictionaries = {
       pos: "Caja",
       inventory: "Inventario Logístico",
       clients: "Clientes y Deudas",
-      staff: "Personas",
+      staff: "Personal",
       closing: "Cierre de Caja",
       finanzas: "Finanzas Globales",
       movimientos: "Reg. Movimientos",
