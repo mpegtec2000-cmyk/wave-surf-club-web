@@ -266,7 +266,7 @@ export async function getOpenTransactions(branchId = null, limit = 50, dateFilte
     .from('transactions')
     .select('*')
     .is('deleted_at', null)
-    .or('is_web_tx.eq.false,is_web_tx.is.null') // Exclude web sales from POS/Cashiers
+    .is('is_web_tx', false) // EXCLUIR transacciones de la web en operaciones de caja
     .or('rental_status.eq.en_curso,rental_status.is.null')
     .order('created_at', { ascending: false });
 
@@ -297,8 +297,8 @@ export async function getClosedTransactions(branchId = null, limit = 50) {
     .from('transactions')
     .select('*')
     .is('deleted_at', null)
+    .is('is_web_tx', false) // EXCLUIR transacciones de la web en dashboard físico
     .eq('rental_status', 'finalizado')
-    .or('is_web_tx.eq.false,is_web_tx.is.null') // Exclude web sales from branch balance
     .order('created_at', { ascending: false })
     .limit(limit);
 
@@ -506,26 +506,35 @@ export async function closeBranchSession(branchId, staffId, notes = '') {
 
 /**
  * FINANZAS GLOBALES: Resumen comparativo por centro de costo
- */
-/**
- * FINANZAS GLOBALES: Resumen comparativo por centro de costo
  * Combina registros consolidados (cash_closings) con transacciones finalizadas aún no cerradas.
+ * @param {string|null} dateFrom - ISO string inicio del rango (opcional)
+ * @param {string|null} dateTo   - ISO string fin del rango (opcional)
  */
-export async function getFinancialSummary() {
-  // 1. Obtener cierres consolidados
-  const { data: closings } = await supabase
+export async function getFinancialSummary(dateFrom = null, dateTo = null) {
+  // 1. Obtener cierres consolidados (filtrado por fecha si se indica)
+  let closingsQuery = supabase
     .from('cash_closings')
     .select('*')
     .order('created_at', { ascending: false });
 
+  if (dateFrom) closingsQuery = closingsQuery.gte('date', dateFrom.slice(0, 10));
+  if (dateTo)   closingsQuery = closingsQuery.lte('date', dateTo.slice(0, 10));
+
+  const { data: closings } = await closingsQuery;
+
   // 2. Obtener transacciones finalizadas que NO están en una sesión consolidada
-  const { data: pendingTxs } = await supabase
+  let pendingQuery = supabase
     .from('transactions')
     .select('*')
     .is('deleted_at', null)
     .eq('rental_status', 'finalizado')
     .is('id_sesion', null);
-    
+
+  if (dateFrom) pendingQuery = pendingQuery.gte('created_at', dateFrom);
+  if (dateTo)   pendingQuery = pendingQuery.lte('created_at', dateTo);
+
+  const { data: pendingTxs } = await pendingQuery;
+
   // Agrupar por branch_id
   const summary = {};
 
@@ -534,10 +543,10 @@ export async function getFinancialSummary() {
     if (!summary[c.branch_id]) {
       summary[c.branch_id] = { income: 0, expense: 0, net: 0, count: 0 };
     }
-    summary[c.branch_id].income += c.total_income;
+    summary[c.branch_id].income  += c.total_income;
     summary[c.branch_id].expense += c.total_expense;
-    summary[c.branch_id].net += c.net_utility;
-    summary[c.branch_id].count += 1;
+    summary[c.branch_id].net     += c.net_utility;
+    summary[c.branch_id].count   += 1;
   });
 
   // Sumar transacciones en tiempo real (finalizadas pero no consolidadas)
@@ -547,15 +556,95 @@ export async function getFinancialSummary() {
     }
     if (t.type === 'ingreso') {
       summary[t.branch_id].income += t.total;
-      summary[t.branch_id].net += t.total;
+      summary[t.branch_id].net   += t.total;
     } else {
       summary[t.branch_id].expense += t.total;
-      summary[t.branch_id].net -= t.total;
+      summary[t.branch_id].net    -= t.total;
     }
   });
 
   return summary;
 }
+// ── REGISTRO DE MOVIMIENTOS ─────────────────
+
+/**
+ * Trae TODOS los movimientos (ingresos + salidas) físicos de la sede,
+ * con filtros opcionales de sede, rango de fechas y tipo de vista.
+ * @param {Object} filters - { branchId, dateFrom, dateTo }
+ */
+export async function getMovimientos({ branchId = null, dateFrom = null, dateTo = null } = {}) {
+  let query = supabase
+    .from('transactions')
+    .select(`
+      id, branch_id, type, category, method, total, client_rut,
+      is_incident, incident_note, rental_status, rental_details,
+      is_web_tx, created_at, finalized_at
+    `)
+    .is('deleted_at', null)
+    .eq('is_web_tx', false) // sólo físicas
+    .order('created_at', { ascending: false });
+
+  if (branchId) {
+    query = query.eq('branch_id', branchId);
+  }
+
+  if (dateFrom) {
+    // Inicio del día en UTC-4 (Chile)
+    const from = new Date(dateFrom);
+    from.setHours(0, 0, 0, 0);
+    query = query.gte('created_at', from.toISOString());
+  }
+
+  if (dateTo) {
+    // Fin del día
+    const to = new Date(dateTo);
+    to.setHours(23, 59, 59, 999);
+    query = query.lte('created_at', to.toISOString());
+  }
+
+  const { data, error } = await query;
+  return { data: data || [], error };
+}
+
+// ── VENTAS ONLINE ────────────────────────────
+
+/**
+ * Trae SÓLO transacciones originadas en la web (is_web_tx = true)
+ * Incluye clases y arriendos agendados vía "Agenda tu clase".
+ * @param {Object} filters - { branchId, dateFrom, dateTo }
+ */
+export async function getVentasOnline({ branchId = null, dateFrom = null, dateTo = null } = {}) {
+  let query = supabase
+    .from('transactions')
+    .select(`
+      id, branch_id, type, category, method, total, client_rut,
+      payment_status, gateway_tx_id, web_metadata,
+      rental_status, created_at, finalized_at
+    `)
+    .is('deleted_at', null)
+    .eq('is_web_tx', true) // sólo ventas web
+    .order('created_at', { ascending: false });
+
+  if (branchId) {
+    query = query.eq('branch_id', branchId);
+  }
+
+  if (dateFrom) {
+    const from = new Date(dateFrom);
+    from.setHours(0, 0, 0, 0);
+    query = query.gte('created_at', from.toISOString());
+  }
+
+  if (dateTo) {
+    const to = new Date(dateTo);
+    to.setHours(23, 59, 59, 999);
+    query = query.lte('created_at', to.toISOString());
+  }
+
+  const { data, error } = await query;
+  return { data: data || [], error };
+}
+
 // ── DASHBOARD STATS ─────────────────────────
 
 export async function getDashboardStats(branchId = null) {

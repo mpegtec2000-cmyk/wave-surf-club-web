@@ -25,6 +25,8 @@ export const dictionaries = {
       staff: "Personas",
       closing: "Cierre de Caja",
       finanzas: "Finanzas Globales",
+      movimientos: "Reg. Movimientos",
+      'ventas-online': "Ventas Online",
       fondos: "Fondos",
       settings: "Configuración"
     },
@@ -35,7 +37,7 @@ export const dictionaries = {
       menu_inicio: 'INICIO',
       menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_servicios: 'SERVICIOS', menu_equipo: 'EQUIPO', menu_taller: 'TALLER',
       menu_riders: 'RIDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO', menu_agenda: 'AGENDA TU CLASE',
-      menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARROS: (0)'
+      menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARRO: (0)'
     }
   },
   en: {
@@ -64,6 +66,8 @@ export const dictionaries = {
       staff: "Staff / HR",
       closing: "Cash Closing",
       finanzas: "Global Finance",
+      movimientos: "Movement Log",
+      'ventas-online': "Online Sales",
       fondos: "Funds",
       settings: "Settings"
     },
@@ -103,6 +107,8 @@ export const dictionaries = {
       staff: "Equipe",
       closing: "Fechamento",
       finanzas: "Finanças",
+      movimentos: "Reg. Movimentos",
+      'ventas-online': "Vendas Online",
       banco: "Banco",
       settings: "Configurações"
     },
@@ -140,6 +146,8 @@ export const dictionaries = {
       staff: "Personal",
       closing: "Abschluss",
       finanzas: "Finanzen",
+      movimientos: "Bewegungsprotokoll",
+      'ventas-online': "Online-Verkäufe",
       banco: "Bank",
       settings: "Einstellungen"
     },
@@ -177,6 +185,8 @@ export const dictionaries = {
       staff: "Personnel",
       closing: "Clôture",
       finanzas: "Finances",
+      movimientos: "Journal Mouvements",
+      'ventas-online': "Ventes en Ligne",
       banco: "Banque",
       settings: "Paramètres"
     },
@@ -214,6 +224,8 @@ export const dictionaries = {
       staff: "员工",
       closing: "结算",
       finanzas: "财务",
+      movimientos: "流水记录",
+      'ventas-online': "网上销售",
       banco: "银行",
       settings: "设置"
     },
@@ -251,6 +263,8 @@ export const dictionaries = {
       staff: "スタッフ",
       closing: "締め作業",
       finanzas: "財務",
+      movimientos: "動き記録",
+      'ventas-online': "オンライン販売",
       banco: "銀行",
       settings: "設定"
     },
@@ -288,6 +302,8 @@ export const dictionaries = {
       staff: "Персонал",
       closing: "Закрытие",
       finanzas: "Финансы",
+      movimientos: "Журнал Движений",
+      'ventas-online': "Онлайн-Продажи",
       banco: "Банк",
       settings: "Настройки"
     },
