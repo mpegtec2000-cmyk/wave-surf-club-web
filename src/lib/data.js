@@ -645,6 +645,45 @@ export async function getVentasOnline({ branchId = null, dateFrom = null, dateTo
   return { data: data || [], error };
 }
 
+// ── VENTAS FÍSICAS ───────────────────────────
+
+/**
+ * Trae SÓLO transacciones físicas de ingreso (is_web_tx = false, type = 'ingreso')
+ * Para igualar la vista de Ventas Online pero en físico.
+ * @param {Object} filters - { branchId, dateFrom, dateTo }
+ */
+export async function getVentasFisicas({ branchId = null, dateFrom = null, dateTo = null } = {}) {
+  let query = supabase
+    .from('transactions')
+    .select(`
+      id, branch_id, type, category, method, total, client_rut,
+      payment_status, rental_status, created_at, finalized_at
+    `)
+    .is('deleted_at', null)
+    .eq('is_web_tx', false) // sólo ventas físicas
+    .eq('type', 'ingreso')  // sólo ingresos (ventas)
+    .order('created_at', { ascending: false });
+
+  if (branchId) {
+    query = query.eq('branch_id', branchId);
+  }
+
+  if (dateFrom) {
+    const from = new Date(dateFrom);
+    from.setHours(0, 0, 0, 0);
+    query = query.gte('created_at', from.toISOString());
+  }
+
+  if (dateTo) {
+    const to = new Date(dateTo);
+    to.setHours(23, 59, 59, 999);
+    query = query.lte('created_at', to.toISOString());
+  }
+
+  const { data, error } = await query;
+  return { data: data || [], error };
+}
+
 // ── DASHBOARD STATS ─────────────────────────
 
 export async function getDashboardStats(branchId = null) {

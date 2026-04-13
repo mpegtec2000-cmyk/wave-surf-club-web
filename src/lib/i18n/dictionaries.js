@@ -27,6 +27,7 @@ export const dictionaries = {
       finanzas: "Finanzas Globales",
       movimientos: "Reg. Movimientos",
       'ventas-online': "Ventas Online",
+      'ventas-fisicas': "Ventas Físicas",
       fondos: "Fondos",
       settings: "Configuración"
     },
@@ -68,6 +69,7 @@ export const dictionaries = {
       finanzas: "Global Finance",
       movimientos: "Movement Log",
       'ventas-online': "Online Sales",
+      'ventas-fisicas': "Physical Sales",
       fondos: "Funds",
       settings: "Settings"
     },
@@ -109,6 +111,7 @@ export const dictionaries = {
       finanzas: "Finanças",
       movimentos: "Reg. Movimentos",
       'ventas-online': "Vendas Online",
+      'ventas-fisicas': "Vendas Físicas",
       banco: "Banco",
       settings: "Configurações"
     },
@@ -148,6 +151,7 @@ export const dictionaries = {
       finanzas: "Finanzen",
       movimientos: "Bewegungsprotokoll",
       'ventas-online': "Online-Verkäufe",
+      'ventas-fisicas': "Physische Verkäufe",
       banco: "Bank",
       settings: "Einstellungen"
     },
@@ -187,6 +191,7 @@ export const dictionaries = {
       finanzas: "Finances",
       movimientos: "Journal Mouvements",
       'ventas-online': "Ventes en Ligne",
+      'ventas-fisicas': "Ventes Physiques",
       banco: "Banque",
       settings: "Paramètres"
     },
@@ -226,6 +231,7 @@ export const dictionaries = {
       finanzas: "财务",
       movimientos: "流水记录",
       'ventas-online': "网上销售",
+      'ventas-fisicas': "实体店销售",
       banco: "银行",
       settings: "设置"
     },
@@ -265,6 +271,7 @@ export const dictionaries = {
       finanzas: "財務",
       movimientos: "動き記録",
       'ventas-online': "オンライン販売",
+      'ventas-fisicas': "店舗販売",
       banco: "銀行",
       settings: "設定"
     },
@@ -304,6 +311,7 @@ export const dictionaries = {
       finanzas: "Финансы",
       movimientos: "Журнал Движений",
       'ventas-online': "Онлайн-Продажи",
+      'ventas-fisicas': "Офлайн-Продажи",
       banco: "Банк",
       settings: "Настройки"
     },

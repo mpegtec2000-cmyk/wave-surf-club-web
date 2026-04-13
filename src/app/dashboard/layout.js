@@ -9,12 +9,12 @@ import { useTranslation } from '@/lib/i18n-context';
 import {
   LayoutDashboard, ShoppingCart, Package, Users,
   FileText, Settings, LogOut, Menu, X, Briefcase, ChevronRight, BarChart3, TrendingUp, TrendingDown,
-  ListOrdered, Globe
+  ListOrdered, Globe, Store
 } from 'lucide-react';
 
 const iconMap = {
   LayoutDashboard, ShoppingCart, Package, Users, FileText, Settings, Briefcase, BarChart3, TrendingUp, TrendingDown,
-  ListOrdered, Globe
+  ListOrdered, Globe, Store
 };
 
 export default function DashboardLayout({ children }) {
