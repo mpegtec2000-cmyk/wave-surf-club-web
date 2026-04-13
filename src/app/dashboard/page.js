@@ -133,9 +133,22 @@ export default function SupportPage() {
       <div style={{ marginTop: '48px', padding: '32px', background: 'var(--bg-primary)', borderRadius: 'var(--radius-xl)', border: '1.5px dashed var(--border-subtle)', textAlign: 'center' }}>
         <Info size={32} color="var(--text-muted)" style={{ marginBottom: '16px' }} />
         <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--accent-primary)', margin: '0 0 8px 0' }}>¿Problemas Técnicos?</h3>
-        <p style={{ color: 'var(--text-muted)', fontSize: '14px', maxWidth: '600px', margin: '0 auto' }}>
-          Si experimentas problemas críticos con el sistema que no se resuelvan leyendo las instrucciones de uso, por favor ponte en contacto con los administradores del sistema o superusuarios encargados de la infraestructura.
+        <p style={{ color: 'var(--text-muted)', fontSize: '14px', maxWidth: '600px', margin: '0 auto 24px auto' }}>
+          Si experimentas problemas críticos con el sistema que no se resuelvan leyendo las instrucciones de uso, por favor ponte en contacto con el creador y administrador del sistema.
         </p>
+        
+        {/* Contact Info */}
+        <div style={{ display: 'inline-block', textAlign: 'left', background: '#fff', padding: '16px 32px', borderRadius: '12px', border: '1px solid var(--border-subtle)', boxShadow: 'var(--shadow-sm)' }}>
+          <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '8px' }}>
+            <span style={{ fontWeight: 800 }}>🧑‍💻 Creador:</span> Matias Patricio Espinoza Guerrero
+          </div>
+          <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '8px' }}>
+            <span style={{ fontWeight: 800 }}>📱 Fono:</span> +56 9 2964 5522
+          </div>
+          <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+            <span style={{ fontWeight: 800 }}>📧 Correo:</span> mpeg.logistica@gmail.com
+          </div>
+        </div>
       </div>
     </div>
   );
