@@ -1,7 +1,7 @@
 export const dictionaries = {
   es: {
     pos: {
-      title: "Punto de Venta",
+      title: "Caja",
       search_rut: "Buscar Cliente por RUT",
       new_transaction: "Nueva Transacción",
       transaction_type: "Tipo de Transacción",
@@ -19,7 +19,7 @@ export const dictionaries = {
     },
     nav: {
       dashboard: "Dashboard",
-      pos: "Punto de Venta",
+      pos: "Caja",
       inventory: "Inventario Logístico",
       clients: "Clientes y Deudas",
       staff: "Personas",
