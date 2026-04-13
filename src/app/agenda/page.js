@@ -86,7 +86,7 @@ export default function AgendaPage() {
         category: 'clase',
         method: 'transferencia',
         client_rut: formData.rut,
-        branch_id: formData.sede === 'Concón' ? 1 : (formData.sede === 'Pichilemu' ? 2 : 3),
+        branch_id: formData.sede === 'Concón' ? 2 : (formData.sede === 'Pichilemu' ? 3 : 1),
         payment_status: 'pagado',
         is_web_tx: true,
         web_metadata: { 
@@ -99,16 +99,12 @@ export default function AgendaPage() {
       });
       if (error) throw error;
 
-      await queueNotification('booking_confirmation', 'mpeg.logistica@gmail.com', `Notificacion de Agenda`, {
-        mensaje: `El día ${bookingDate} a las ${bookingTime} se agendó una nueva sesión.`,
-        cliente: {
-          nombre: formData.name,
-          rut: formData.rut,
-          telefono: formData.phone,
-          correo: formData.email,
-          cantidad_personas: numAlumnos
-        }
-      });
+      await queueNotification(
+        'booking_confirmation', 
+        'mpeg.logistica@gmail.com', 
+        `NUEVA RESERVA: ${formData.sede} - ${formData.name}`,
+        `RESERVA CONFIRMADA\nSede: ${formData.sede}\nFecha: ${bookingDate}\nHora: ${bookingTime}\nAlumnos: ${numAlumnos}\nCliente: ${formData.name}\nRUT: ${formData.rut}\nTeléfono: ${formData.phone}\nEmail: ${formData.email}`
+      );
 
       setStep('success');
     } catch (err) {
@@ -378,7 +374,7 @@ export default function AgendaPage() {
               <form onSubmit={handleRegister}>
                 <span className="label" style={{ display: 'block', marginBottom: '10px' }}>Selecciona tu Sede</span>
                 <div className="sede-selector">
-                  {['Concón'].map(s => (
+                  {['Punta Piedra', 'Concón', 'Pichilemu'].map(s => (
                     <button 
                       key={s} 
                       type="button" 
