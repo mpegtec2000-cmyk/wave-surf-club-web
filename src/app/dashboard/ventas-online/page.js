@@ -228,7 +228,7 @@ export default function VentasOnline() {
             <table style={{ width:'100%',borderCollapse:'collapse' }}>
               <thead>
                 <tr style={{ background:'rgba(15,23,42,0.03)' }}>
-                  {['Fecha y Hora','Sede','Tipo','Método','Estado Pago','RUT Cliente','Total','Gateway ID'].map(h => (
+                  {['Fecha Compra','Sede','Producto / Detalle','Método','Estado Pago','RUT Cliente','Total','Gateway ID'].map(h => (
                     <th key={h} style={{ padding:'10px 16px',fontSize:'11px',fontWeight:800,color:'var(--text-muted)',textAlign:'left',textTransform:'uppercase',whiteSpace:'nowrap' }}>{h}</th>
                   ))}
                 </tr>
@@ -250,9 +250,17 @@ export default function VentasOnline() {
                       </td>
                       <td style={td}><span style={{ fontSize:'13px' }}>{branchName(tx.branch_id)}</span></td>
                       <td style={td}>
-                        <span style={{ background:'#ede9fe',color:'#6d28d9',padding:'3px 10px',borderRadius:'20px',fontSize:'12px',fontWeight:700 }}>
-                          {catI.icon} {catI.label}
-                        </span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <span style={{ background:'#ede9fe',color:'#6d28d9',padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:800, width: 'fit-content' }}>
+                            {catI.icon} {catI.label}
+                          </span>
+                          <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 500 }}>
+                            {tx.rental_details?.split('|')[0] || ''}
+                          </span>
+                          <span style={{ fontSize: '11px', color: 'var(--accent-primary)', fontWeight: 700 }}>
+                            🗓️ {tx.rental_details?.split('|').slice(1).join(' | ') || '—'}
+                          </span>
+                        </div>
                       </td>
                       <td style={td}><span style={{ fontSize:'13px',color:'var(--text-muted)',fontWeight:600 }}>{tx.method || '—'}</span></td>
                       <td style={td}>
