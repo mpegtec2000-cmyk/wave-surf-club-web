@@ -226,7 +226,7 @@ export default function InventoryPage() {
                   const branch = BRANCHES.find(b => b.id === item.branch_id);
                   return (
                     <tr key={item.item_code}>
-                      <td style={{ fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>
+                      <td className="item-code">
                         {item.item_code}
                       </td>
                       <td>{branch?.emoji} {branch?.shortName}</td>
@@ -235,10 +235,9 @@ export default function InventoryPage() {
                       </td>
                       <td>{item.color}</td>
                       <td>{item.size}</td>
-                      <td style={{ fontSize: 13 }}>
+                      <td className="date-cell">
                         {new Date(item.entry_date).toLocaleDateString('es-CL')}
-                        <br />
-                        <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{item.av.months} meses</span>
+                        <div className="sub-text">{item.av.months} m</div>
                       </td>
                       <td>
                         <span className={`av-badge ${item.av.cssClass}`} title={item.av.overridden ? 'Manual Override' : 'Automático'}>
@@ -254,7 +253,7 @@ export default function InventoryPage() {
                           <span className="rent-badge available">✓ Disponible</span>
                         )}
                       </td>
-                      <td style={{ fontSize: 12, color: 'var(--text-muted)', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <td className="notes-cell">
                         {item.notes}
                       </td>
                       <td>
