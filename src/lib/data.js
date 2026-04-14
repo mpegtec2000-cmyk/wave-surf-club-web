@@ -156,7 +156,7 @@ export async function addStaffMember(profileId, role, branchIds) {
   // Update profile to staff
   await supabase
     .from('profiles')
-    .update({ is_staff: true, role })
+    .update({ is_staff: true, role, updated_at: new Date().toISOString() })
     .eq('id', profileId);
 
   // Add branch access
@@ -167,6 +167,46 @@ export async function addStaffMember(profileId, role, branchIds) {
   await supabase
     .from('staff_branch_access')
     .upsert(accessRows, { onConflict: 'profile_id,branch_id' });
+}
+
+/**
+ * Registra un nuevo miembro del personal desde cero con datos detallados.
+ */
+export async function registerStaffMember(staffData) {
+  // 1. Crear el perfil en public.profiles
+  const { data: profile, error: profileErr } = await supabase
+    .from('profiles')
+    .insert({
+      rut: staffData.rut,
+      name: staffData.name,
+      email: staffData.email,
+      phone: staffData.phone,
+      role: staffData.role,
+      is_staff: true,
+      birth_date: staffData.birth_date,
+      marital_status: staffData.marital_status,
+      address: staffData.address,
+      service_start_date: staffData.service_start_date
+    })
+    .select()
+    .single();
+
+  if (profileErr) return { error: profileErr.message };
+
+  // 2. Asignar acceso a sucursales
+  if (staffData.branchIds && staffData.branchIds.length > 0) {
+    const accessRows = staffData.branchIds.map(bid => ({
+      profile_id: profile.id,
+      branch_id: bid,
+    }));
+    const { error: accessErr } = await supabase
+      .from('staff_branch_access')
+      .insert(accessRows);
+    
+    if (accessErr) return { error: accessErr.message };
+  }
+
+  return { data: profile, error: null };
 }
 
 export async function removeStaffMember(profileId) {

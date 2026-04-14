@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getCurrentUser, findClientByRut, getOpenTransactions, addTransaction, finalizeTransaction, deleteTransaction } from '@/lib/data';
+import { getCurrentUser, findClientByRut, getOpenTransactions, addTransaction, finalizeTransaction, deleteTransaction, getBranches } from '@/lib/data';
 import { PAYMENT_METHODS, TRANSACTION_CATEGORIES, TRANSACTION_TYPES } from '@/lib/constants';
 import { formatRut } from '@/lib/rut-validator';
 import { Search, Trash2, CheckCircle, RefreshCcw } from 'lucide-react';

@@ -64,18 +64,34 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
       <style jsx global>{`
         body.menu-open { overflow: hidden !important; }
         
-        .mobile-toggle-btn {
+        .mobile-menu-wrapper {
           display: none;
           position: fixed;
-          top: 20px;
+          top: 13px; /* Centrado respecto al navbar de 70px */
           right: 20px;
           z-index: 10000001;
+          align-items: center;
+        }
+
+        .mobile-menu-label {
+          font-size: 11px;
+          font-weight: 900;
+          margin-right: 12px;
+          letter-spacing: -0.05em;
+          text-transform: uppercase;
+          color: #000;
+          display: flex;
+          align-items: center;
+        }
+
+        .mobile-toggle-btn {
           background: #000;
           color: #fff;
           border: none;
-          width: 48px;
-          height: 48px;
+          width: 44px;
+          height: 44px;
           border-radius: 8px;
+          display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
@@ -119,18 +135,36 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           padding-bottom: 8px;
         }
 
+        .pulse-arrow {
+          animation: customPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          margin-left: 6px;
+          font-size: 15px;
+        }
+        
+        @keyframes customPulse {
+          0%, 100% { opacity: 1; transform: translateX(0); }
+          50% { opacity: .5; transform: translateX(-4px); }
+        }
+
         @media (max-width: 1023px) {
           .nav-luxury-container { height: 70px !important; }
           .desktop-only { display: none !important; }
-          .mobile-toggle-btn { display: flex !important; }
+          .mobile-menu-wrapper { display: flex !important; }
           .logo-box-luxury { width: 70px !important; }
         }
       `}</style>
 
-      {/* MOBILE TOGGLE - ESCAPES ALL NESTING */}
-      <button className="mobile-toggle-btn" onClick={() => setMenuOpen(!menuOpen)}>
-        {menuOpen ? <X size={26} /> : <Menu size={26} />}
-      </button>
+      {/* MOBILE MENU WRAPPER - ESCAPES ALL NESTING */}
+      <div className="mobile-menu-wrapper">
+        {!menuOpen && (
+          <span className="mobile-menu-label">
+            MENÚ FECHA <span className="pulse-arrow">←</span>
+          </span>
+        )}
+        <button className="mobile-toggle-btn" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <X size={26} /> : <Menu size={26} />}
+        </button>
+      </div>
 
       {/* MAIN NAVBAR */}
       <nav 
