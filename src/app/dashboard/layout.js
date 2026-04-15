@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getCurrentUser, logoutUser } from '@/lib/data';
 import { NAV_ITEMS, BRANCHES, LANGUAGES } from '@/lib/constants';
@@ -9,13 +9,24 @@ import { useTranslation } from '@/lib/i18n-context';
 import {
   LayoutDashboard, ShoppingCart, Package, Users,
   FileText, Settings, LogOut, Menu, X, Briefcase, ChevronRight, BarChart3, TrendingUp, TrendingDown,
-  ListOrdered, Globe, Store, LifeBuoy, CalendarDays, ClipboardList
+  ListOrdered, Globe, Store, LifeBuoy, CalendarDays, ClipboardList, Bell, Search,
+  Building2, ChevronDown, Activity, Zap
 } from 'lucide-react';
 
 const iconMap = {
   LayoutDashboard, ShoppingCart, Package, Users, FileText, Settings, Briefcase, BarChart3, TrendingUp, TrendingDown,
   ListOrdered, Globe, Store, LifeBuoy, CalendarDays, ClipboardList
 };
+
+// Group nav items by category for SAP-style grouping
+const NAV_GROUPS = [
+  { label: 'OPERACIONES', keys: ['pos', 'closing', 'cotizaciones'] },
+  { label: 'LOGÍSTICA', keys: ['inventory', 'agenda-ventas'] },
+  { label: 'CLIENTES', keys: ['clients', 'suscripciones'] },
+  { label: 'VENTAS', keys: ['ventas-online', 'ventas-fisicas', 'fondos'] },
+  { label: 'ADMINISTRACIÓN', keys: ['staff', 'finanzas', 'movimientos'] },
+  { label: 'SISTEMA', keys: ['dashboard', 'settings', 'antigravity'] },
+];
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
@@ -24,22 +35,35 @@ export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentTime, setCurrentTime] = useState('');
   const { t, lang, changeLang } = useTranslation();
+  const searchRef = useRef(null);
 
   useEffect(() => {
     const u = getCurrentUser();
-    if (!u) {
-      router.replace('/login');
-      return;
-    }
+    if (!u) { router.replace('/login'); return; }
     setUser(u);
     setSelectedBranch(u.allowed_branches?.[0] || 1);
   }, [router]);
 
-  const handleLogout = () => {
-    logoutUser();
-    router.replace('/login');
-  };
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    if (searchOpen && searchRef.current) searchRef.current.focus();
+  }, [searchOpen]);
+
+  const handleLogout = () => { logoutUser(); router.replace('/login'); };
 
   if (!user) return null;
 
@@ -48,132 +72,672 @@ export default function DashboardLayout({ children }) {
 
   const getPageTitle = () => {
     const item = NAV_ITEMS.find(i => i.path === pathname);
-    if (!item) return t('nav.dashboard');
+    if (!item) return 'Dashboard';
     const key = item.path.split('/').pop() || 'dashboard';
     return t(`nav.${key}`);
   };
 
+  const getNavGroups = () => {
+    return NAV_GROUPS.map(group => {
+      const items = filteredNav.filter(item => {
+        const key = item.path.split('/').pop() || 'dashboard';
+        return group.keys.includes(key);
+      });
+      return { ...group, items };
+    }).filter(g => g.items.length > 0);
+  };
+
+  const searchResults = searchQuery.length > 1
+    ? filteredNav.filter(item => {
+        const key = item.path.split('/').pop() || 'dashboard';
+        const label = t(`nav.${key}`).toLowerCase();
+        return label.includes(searchQuery.toLowerCase());
+      })
+    : [];
+
   return (
     <BranchContext.Provider value={{ activeBranchId: selectedBranch, setActiveBranchId: setSelectedBranch }}>
-    <div className="dashboard-layout">
-      {/* Mobile menu button */}
-      <button className="mobile-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
-        {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
+    <div className="erp-shell">
 
-      {/* Sidebar overlay */}
-      <div
-        className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`}
-        onClick={() => setSidebarOpen(false)}
-      />
-
-      {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? 'open' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
-        <button 
-          className="sidebar-toggle-btn hide-mobile" 
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          title={isCollapsed ? "Expandir Menú" : "Contraer Menú"}
-        >
-          <ChevronRight size={14} />
-        </button>
-
-        <div className="sidebar-header">
-          <div className="sidebar-brand">
-            <img src="/logo-wave.png" alt="Logo" className="sidebar-brand-img" />
-            <div>
-              <h2>WAVE SURF CLUB</h2>
-              <span>Since 2015</span>
+      {/* ── TOPBAR ── */}
+      <header className="erp-topbar">
+        <div className="topbar-left-group">
+          <button className="topbar-brand" onClick={() => router.push('/dashboard')}>
+            <img src="/logo-wave.png" alt="Wave" className="topbar-logo" />
+            <div className="topbar-brand-text">
+              <span className="topbar-brand-name">WAVE SURF CLUB</span>
+              <span className="topbar-brand-sub">ERP & LOGISTICS v2.0</span>
             </div>
+          </button>
+
+          <div className="topbar-divider" />
+
+          <button className="sidebar-collapse-btn" onClick={() => setIsCollapsed(!isCollapsed)} title="Toggle sidebar">
+            <Menu size={18} />
+          </button>
+
+          <div className="topbar-breadcrumb">
+            <span className="breadcrumb-root">Sistema</span>
+            <ChevronRight size={14} className="breadcrumb-sep" />
+            <span className="breadcrumb-current">{getPageTitle()}</span>
           </div>
         </div>
 
-        <nav className="sidebar-nav">
-          {filteredNav.map((item) => {
-            const Icon = iconMap[item.icon];
-            const isActive = pathname === item.path;
-            const navLabel = t(`nav.${item.path.split('/').pop() || 'dashboard'}`);
-            
-            return (
-              <button
-                key={item.path}
-                className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
-                title={isCollapsed ? navLabel : ""}
-                onClick={() => {
-                  router.push(item.path);
-                  setSidebarOpen(false);
-                }}
-              >
-                {Icon && <Icon size={20} className="sidebar-nav-icon" />}
-                <span>{navLabel}</span>
-              </button>
-            );
-          })}
-        </nav>
+        <div className="topbar-center">
+          {/* SAP-style System Status */}
+          <div className="system-status">
+            <span className="status-dot status-green" />
+            <span className="status-label">Sistema Operativo</span>
+          </div>
+        </div>
 
-        <div className="sidebar-footer">
-          <div className="sidebar-user">
-            <div className="sidebar-avatar">
-              {user.name?.charAt(0)?.toUpperCase()}
-            </div>
-            {!isCollapsed && (
-              <div className="sidebar-user-info fade-in">
-                <div className="sidebar-user-name">{user.name}</div>
-                <div className="sidebar-user-role">{user.role}</div>
+        <div className="topbar-right-group">
+          {/* Search */}
+          <div className={`topbar-search-wrap ${searchOpen ? 'open' : ''}`}>
+            <button className="topbar-icon-btn" onClick={() => setSearchOpen(!searchOpen)} title="Buscar módulo">
+              <Search size={16} />
+            </button>
+            {searchOpen && (
+              <div className="topbar-search-panel">
+                <input
+                  ref={searchRef}
+                  className="topbar-search-input"
+                  placeholder="Buscar módulo..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                />
+                {searchResults.length > 0 && (
+                  <div className="search-results">
+                    {searchResults.map(item => {
+                      const key = item.path.split('/').pop() || 'dashboard';
+                      return (
+                        <button key={item.path} className="search-result-item" onClick={() => { router.push(item.path); setSearchOpen(false); setSearchQuery(''); }}>
+                          {t(`nav.${key}`)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
           </div>
-        </div>
-      </aside>
 
-      {/* Main content area */}
-      <main className={`main-content ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
-        {/* Topbar */}
-        <header className="topbar">
-          <div className="topbar-left">
-            <h1 className="topbar-title">{getPageTitle()}</h1>
+          {/* Live clock */}
+          <div className="topbar-clock">
+            <Activity size={12} />
+            <span>{currentTime}</span>
           </div>
 
-          <div className="topbar-right">
-            {/* 8 Language flags */}
-            <div className="lang-selector">
-              {LANGUAGES.map(language => (
-                <button
-                  key={language.code}
-                  className={`lang-btn ${lang === language.code ? 'active' : ''}`}
-                  onClick={() => changeLang(language.code)}
-                  title={language.name}
-                >
-                  {language.flag}
-                </button>
+          {/* Notifications */}
+          <button className="topbar-icon-btn notif-btn" onClick={() => setNotifOpen(!notifOpen)}>
+            <Bell size={16} />
+            <span className="notif-badge">3</span>
+          </button>
+
+          {/* Branch */}
+          <div className="topbar-branch-wrap">
+            <Building2 size={14} />
+            <select
+              className="topbar-branch-select"
+              value={selectedBranch || ''}
+              onChange={(e) => setSelectedBranch(Number(e.target.value))}
+              disabled={user.role !== 'superadmin' && user.allowed_branches?.length <= 1}
+            >
+              {user.role === 'superadmin' && <option value="">Todas las sedes</option>}
+              {BRANCHES.filter(b => user.role === 'superadmin' || user.allowed_branches?.includes(b.id)).map(b => (
+                <option key={b.id} value={b.id}>{b.emoji} {b.shortName}</option>
               ))}
-            </div>
-
-            {/* Branch selector - Now available to anyone, but limited by allowed_branches */}
-            <div className="branch-selector">
-              <select
-                value={selectedBranch || ''}
-                onChange={(e) => setSelectedBranch(Number(e.target.value))}
-                disabled={user.role !== 'superadmin' && user.allowed_branches?.length <= 1}
-              >
-                {user.role === 'superadmin' && <option value="">Todas las sedes</option>}
-                {BRANCHES.filter(b => user.role === 'superadmin' || user.allowed_branches?.includes(b.id)).map(b => (
-                  <option key={b.id} value={b.id}>{b.emoji} {b.shortName}</option>
-                ))}
-              </select>
-            </div>
-
-            <button className="topbar-logout" onClick={handleLogout}>
-              <LogOut size={16} />
-              <span className="hide-mobile">Salir</span>
-            </button>
+            </select>
+            <ChevronDown size={12} />
           </div>
-        </header>
 
-        {/* Page content */}
-        <div className="page-container">
-          {children}
+          {/* Lang flags */}
+          <div className="topbar-lang">
+            {LANGUAGES.slice(0, 4).map(language => (
+              <button
+                key={language.code}
+                className={`lang-flag-btn ${lang === language.code ? 'active' : ''}`}
+                onClick={() => changeLang(language.code)}
+                title={language.name}
+              >
+                {language.flag}
+              </button>
+            ))}
+          </div>
+
+          {/* User */}
+          <div className="topbar-user">
+            <div className="topbar-avatar">{user.name?.charAt(0)?.toUpperCase()}</div>
+            <div className="topbar-user-info hide-mobile">
+              <span className="topbar-user-name">{user.name}</span>
+              <span className="topbar-user-role">{user.role}</span>
+            </div>
+          </div>
+
+          <button className="topbar-logout-btn" onClick={handleLogout} title="Cerrar sesión">
+            <LogOut size={16} />
+          </button>
         </div>
-      </main>
+      </header>
+
+      <div className="erp-body">
+        {/* ── SIDEBAR ── */}
+        <aside className={`erp-sidebar ${isCollapsed ? 'collapsed' : ''} ${sidebarOpen ? 'mobile-open' : ''}`}>
+          <div className="sidebar-scroll">
+            {getNavGroups().map((group) => (
+              <div key={group.label} className="nav-group">
+                {!isCollapsed && <div className="nav-group-label">{group.label}</div>}
+                {group.items.map(item => {
+                  const Icon = iconMap[item.icon];
+                  const isActive = pathname === item.path;
+                  const key = item.path.split('/').pop() || 'dashboard';
+                  const navLabel = t(`nav.${key}`);
+                  return (
+                    <button
+                      key={item.path}
+                      className={`nav-item ${isActive ? 'active' : ''}`}
+                      title={isCollapsed ? navLabel : ''}
+                      onClick={() => { router.push(item.path); setSidebarOpen(false); }}
+                    >
+                      <span className={`nav-item-indicator ${isActive ? 'visible' : ''}`} />
+                      {Icon && <Icon size={17} className="nav-item-icon" />}
+                      {!isCollapsed && <span className="nav-item-label">{navLabel}</span>}
+                      {isActive && !isCollapsed && <span className="nav-item-active-dot" />}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+
+          {!isCollapsed && (
+            <div className="sidebar-system-info">
+              <Zap size={12} />
+              <span>WSC ERP v2.0 — {new Date().toLocaleDateString('es-CL')}</span>
+            </div>
+          )}
+        </aside>
+
+        {/* Overlay */}
+        {sidebarOpen && <div className="sidebar-overlay-mobile" onClick={() => setSidebarOpen(false)} />}
+
+        {/* ── MAIN ── */}
+        <main className="erp-main">
+          <div className="erp-page-content">
+            {children}
+          </div>
+        </main>
+      </div>
+
+      {/* Mobile menu fab */}
+      <button className="mobile-fab" onClick={() => setSidebarOpen(!sidebarOpen)}>
+        {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
+
+      {/* Styles */}
+      <style jsx>{`
+        /* ─── SHELL ─── */
+        .erp-shell {
+          display: flex;
+          flex-direction: column;
+          height: 100vh;
+          background: #0b0f1a;
+          color: #e2e8f0;
+          font-family: var(--font-sans);
+          overflow: hidden;
+        }
+
+        /* ─── TOPBAR ─── */
+        .erp-topbar {
+          height: 52px;
+          min-height: 52px;
+          background: #0f1623;
+          border-bottom: 1px solid #1e2a3a;
+          display: flex;
+          align-items: center;
+          padding: 0 16px;
+          gap: 12px;
+          z-index: 100;
+          position: relative;
+        }
+
+        .topbar-left-group {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex: 1;
+          min-width: 0;
+        }
+
+        .topbar-brand {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 6px 10px;
+          border-radius: 8px;
+          transition: background 0.2s;
+          white-space: nowrap;
+        }
+        .topbar-brand:hover { background: rgba(255,255,255,0.05); }
+
+        .topbar-logo {
+          width: 28px;
+          height: 28px;
+          object-fit: contain;
+          border-radius: 6px;
+        }
+
+        .topbar-brand-text { display: flex; flex-direction: column; text-align: left; }
+        .topbar-brand-name {
+          font-size: 11px;
+          font-weight: 900;
+          color: #38bdf8;
+          letter-spacing: 0.5px;
+          line-height: 1;
+        }
+        .topbar-brand-sub {
+          font-size: 9px;
+          color: #475569;
+          font-weight: 600;
+          letter-spacing: 0.3px;
+          margin-top: 2px;
+        }
+
+        .topbar-divider {
+          width: 1px;
+          height: 24px;
+          background: #1e2a3a;
+        }
+
+        .sidebar-collapse-btn {
+          background: none;
+          border: none;
+          color: #64748b;
+          cursor: pointer;
+          padding: 6px;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          transition: all 0.2s;
+        }
+        .sidebar-collapse-btn:hover { color: #e2e8f0; background: rgba(255,255,255,0.05); }
+
+        .topbar-breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12px;
+        }
+        .breadcrumb-root { color: #475569; }
+        .breadcrumb-sep { color: #334155; }
+        .breadcrumb-current { color: #94a3b8; font-weight: 600; }
+
+        /* Center */
+        .topbar-center {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .system-status {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 10px;
+          background: rgba(16, 185, 129, 0.08);
+          border: 1px solid rgba(16, 185, 129, 0.2);
+          border-radius: 20px;
+        }
+        .status-dot {
+          width: 6px; height: 6px;
+          border-radius: 50%;
+        }
+        .status-green {
+          background: #10b981;
+          box-shadow: 0 0 6px #10b981;
+          animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+        .status-label { font-size: 10px; font-weight: 700; color: #10b981; letter-spacing: 0.5px; }
+
+        /* Right group */
+        .topbar-right-group {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .topbar-icon-btn {
+          background: none;
+          border: none;
+          color: #64748b;
+          cursor: pointer;
+          padding: 7px;
+          border-radius: 7px;
+          display: flex;
+          align-items: center;
+          transition: all 0.2s;
+          position: relative;
+        }
+        .topbar-icon-btn:hover { color: #e2e8f0; background: rgba(255,255,255,0.06); }
+
+        .notif-btn { position: relative; }
+        .notif-badge {
+          position: absolute;
+          top: 3px; right: 3px;
+          width: 14px; height: 14px;
+          background: #ef4444;
+          border-radius: 50%;
+          font-size: 8px;
+          font-weight: 800;
+          color: #fff;
+          display: flex; align-items: center; justify-content: center;
+        }
+
+        .topbar-clock {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 11px;
+          color: #475569;
+          font-family: var(--font-mono, monospace);
+          padding: 4px 8px;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid #1e2a3a;
+          border-radius: 6px;
+        }
+
+        /* Search */
+        .topbar-search-wrap { position: relative; }
+        .topbar-search-panel {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          width: 260px;
+          background: #0f1623;
+          border: 1px solid #1e2a3a;
+          border-radius: 10px;
+          overflow: hidden;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+          z-index: 200;
+        }
+        .topbar-search-input {
+          width: 100%;
+          padding: 12px 14px;
+          background: transparent;
+          border: none;
+          color: #e2e8f0;
+          font-size: 13px;
+          outline: none;
+          border-bottom: 1px solid #1e2a3a;
+        }
+        .search-results { }
+        .search-result-item {
+          width: 100%;
+          padding: 10px 14px;
+          background: none;
+          border: none;
+          color: #94a3b8;
+          cursor: pointer;
+          text-align: left;
+          font-size: 13px;
+          transition: all 0.15s;
+          display: block;
+        }
+        .search-result-item:hover { background: rgba(56,189,248,0.08); color: #38bdf8; }
+
+        /* Branch */
+        .topbar-branch-wrap {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 10px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid #1e2a3a;
+          border-radius: 7px;
+          color: #64748b;
+        }
+        .topbar-branch-select {
+          background: transparent;
+          border: none;
+          color: #94a3b8;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          outline: none;
+        }
+        .topbar-branch-select option {
+          background: #0f1623;
+          color: #e2e8f0;
+        }
+
+        /* Lang */
+        .topbar-lang { display: flex; gap: 2px; }
+        .lang-flag-btn {
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-size: 16px;
+          padding: 4px;
+          border-radius: 4px;
+          opacity: 0.4;
+          transition: 0.2s;
+        }
+        .lang-flag-btn:hover { opacity: 0.8; }
+        .lang-flag-btn.active { opacity: 1; }
+
+        /* User */
+        .topbar-user {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 4px 10px;
+          border-radius: 8px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid #1e2a3a;
+        }
+        .topbar-avatar {
+          width: 28px; height: 28px;
+          background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+          border-radius: 7px;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 13px;
+          font-weight: 800;
+          color: #fff;
+        }
+        .topbar-user-info { display: flex; flex-direction: column; }
+        .topbar-user-name { font-size: 12px; font-weight: 700; color: #cbd5e1; }
+        .topbar-user-role { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .topbar-logout-btn {
+          background: none;
+          border: 1px solid #1e2a3a;
+          color: #64748b;
+          cursor: pointer;
+          padding: 7px 9px;
+          border-radius: 7px;
+          display: flex; align-items: center;
+          transition: all 0.2s;
+        }
+        .topbar-logout-btn:hover { color: #ef4444; border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.05); }
+
+        /* ─── BODY ─── */
+        .erp-body {
+          display: flex;
+          flex: 1;
+          min-height: 0;
+          overflow: hidden;
+        }
+
+        /* ─── SIDEBAR ─── */
+        .erp-sidebar {
+          width: 230px;
+          min-width: 230px;
+          background: #0d1220;
+          border-right: 1px solid #1a2236;
+          display: flex;
+          flex-direction: column;
+          transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.25s;
+          overflow: hidden;
+          z-index: 50;
+        }
+        .erp-sidebar.collapsed { width: 56px; min-width: 56px; }
+
+        .sidebar-scroll {
+          flex: 1;
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding: 12px 8px;
+          scrollbar-width: thin;
+          scrollbar-color: #1e2a3a transparent;
+        }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #1e2a3a; border-radius: 4px; }
+
+        /* Nav groups */
+        .nav-group { margin-bottom: 6px; }
+        .nav-group-label {
+          font-size: 9px;
+          font-weight: 800;
+          letter-spacing: 1.2px;
+          color: #334155;
+          padding: 8px 10px 4px;
+          text-transform: uppercase;
+          white-space: nowrap;
+        }
+
+        .nav-item {
+          position: relative;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 9px 10px;
+          border-radius: 8px;
+          background: none;
+          border: none;
+          color: #64748b;
+          cursor: pointer;
+          transition: all 0.15s;
+          text-align: left;
+          white-space: nowrap;
+          overflow: hidden;
+          margin-bottom: 2px;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: #cbd5e1; }
+        .nav-item.active {
+          background: linear-gradient(90deg, rgba(56,189,248,0.12) 0%, transparent 100%);
+          color: #38bdf8;
+        }
+
+        .nav-item-indicator {
+          position: absolute;
+          left: 0; top: 6px; bottom: 6px;
+          width: 3px;
+          background: #38bdf8;
+          border-radius: 0 3px 3px 0;
+          opacity: 0;
+          transition: opacity 0.15s;
+        }
+        .nav-item-indicator.visible { opacity: 1; }
+
+        .nav-item-icon { flex-shrink: 0; }
+        .nav-item-label { font-size: 12.5px; font-weight: 600; flex: 1; }
+        .nav-item-active-dot {
+          width: 6px; height: 6px;
+          border-radius: 50%;
+          background: #38bdf8;
+          flex-shrink: 0;
+        }
+
+        .sidebar-system-info {
+          padding: 10px 14px;
+          border-top: 1px solid #1a2236;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 10px;
+          color: #334155;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+
+        /* Mobile overlay */
+        .sidebar-overlay-mobile {
+          display: none;
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.6);
+          z-index: 49;
+        }
+
+        /* ─── MAIN ─── */
+        .erp-main {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          background: #10151f;
+        }
+
+        .erp-page-content {
+          flex: 1;
+          overflow-y: auto;
+          padding: 28px 32px;
+          scrollbar-width: thin;
+          scrollbar-color: #1e2a3a transparent;
+        }
+        .erp-page-content::-webkit-scrollbar { width: 6px; }
+        .erp-page-content::-webkit-scrollbar-track { background: transparent; }
+        .erp-page-content::-webkit-scrollbar-thumb { background: #1e2a3a; border-radius: 6px; }
+
+        /* Mobile FAB */
+        .mobile-fab {
+          display: none;
+          position: fixed;
+          bottom: 20px; right: 20px;
+          width: 48px; height: 48px;
+          background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+          border: none;
+          border-radius: 14px;
+          color: #fff;
+          cursor: pointer;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 8px 24px rgba(14,165,233,0.4);
+          z-index: 101;
+        }
+
+        /* Utilities */
+        .hide-mobile { }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 1023px) {
+          .erp-sidebar {
+            position: fixed;
+            top: 52px; left: 0;
+            bottom: 0;
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+            z-index: 90;
+            width: 230px !important;
+            min-width: 230px !important;
+          }
+          .erp-sidebar.mobile-open { transform: translateX(0); }
+          .sidebar-overlay-mobile { display: block; }
+          .mobile-fab { display: flex; }
+          .hide-mobile { display: none !important; }
+          .topbar-center { display: none; }
+          .topbar-clock { display: none; }
+          .erp-page-content { padding: 20px 16px; }
+        }
+      `}</style>
     </div>
     </BranchContext.Provider>
   );
