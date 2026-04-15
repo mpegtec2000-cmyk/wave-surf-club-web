@@ -157,6 +157,16 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           display: inline-block;
         }
 
+        @keyframes logo-pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.08); }
+        }
+
+        .logo-pulsing {
+          animation: logo-pulse 2s ease-in-out infinite;
+          display: block;
+        }
+
         @media (max-width: 1023px) {
           .nav-luxury-container { height: 70px !important; }
           .desktop-only { display: none !important; }
@@ -199,7 +209,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
         }}
       >
         <div className="logo-box-luxury" style={{ backgroundColor: '#000', width: '95px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-          <Link href="/" style={{ position: 'relative', width: '60%', height: '60%' }}>
+          <Link href="/" className="logo-pulsing" style={{ position: 'relative', width: '60%', height: '60%' }}>
             <Image src="/logo-wave.png" alt="Wave" fill style={{ objectFit: 'contain' }} priority />
           </Link>
         </div>
@@ -243,7 +253,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
       {/* MOBILE FLYOUT */}
       {menuOpen && (
         <div className="mobile-flyout-overlay">
-          <Image src="/logo-wave.png" alt="Logo" width={50} height={50} style={{ filter: 'invert(1)' }} />
+          <Image src="/logo-wave.png" alt="Logo" width={50} height={50} className="logo-pulsing" style={{ filter: 'invert(1)' }} />
           
           <div className="flyout-links">
             {menuItems.map((item) => (

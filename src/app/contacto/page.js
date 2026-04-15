@@ -13,11 +13,11 @@ export default function ContactoPage() {
         {/* Background Background */}
         <div className="contact-bg">
           <Image 
-            src="/FONDO OFICIAL.png" 
-            alt="Wave Surf Club" 
+            src="/contacto.jpg" 
+            alt="Wave Surf Club Contacto" 
             fill 
             priority
-            style={{ objectFit: 'cover', filter: 'brightness(0.2) blur(20px)' }}
+            style={{ objectFit: 'cover', filter: 'brightness(0.25) blur(10px)' }}
           />
         </div>
 
