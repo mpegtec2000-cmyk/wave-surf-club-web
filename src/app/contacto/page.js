@@ -53,9 +53,9 @@ export default function ContactoPage() {
             <div className="contact-card">
               <div className="card-icon"><Phone size={24} /></div>
               <div className="card-info">
-                <span className="label">COORDINADOR DIRECTO</span>
-                <a href="tel:+56975803044" className="contact-link">+56 9 7580 3044</a>
-                <p className="helper-text">Atención 24/7 vía WhatsApp</p>
+                <span className="label">TELÉFONO DIRECTO</span>
+                <a href="tel:+56993456177" className="contact-link">+56 9 9345 6177</a>
+                <p className="helper-text">WhatsApp 24/7 | Llamadas 08:00 - 22:00</p>
               </div>
             </div>
 
@@ -75,7 +75,7 @@ export default function ContactoPage() {
               <Clock size={16} />
               <span>HORARIO DE ATENCIÓN: 08:00 AM - 22:00 PM</span>
             </div>
-            <a href="https://wa.me/56975803044" target="_blank" className="whatsapp-btn">
+            <a href="https://wa.me/56993456177" target="_blank" className="whatsapp-btn">
               <MessageCircle size={20} />
               HABLAR POR WHATSAPP
             </a>
