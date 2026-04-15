@@ -149,6 +149,7 @@ export default function TallerPage() {
               </div>
             </div>
           </div>
+        </div>
       </section>
 
       <footer>
