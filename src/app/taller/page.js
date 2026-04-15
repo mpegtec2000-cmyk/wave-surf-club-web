@@ -350,12 +350,15 @@ export default function TallerPage() {
           align-items: start;
         }
         .section-title {
-          font-size: 12px;
-          letter-spacing: 6px;
+          font-size: 14px;
+          letter-spacing: 4px;
           color: #38bdf8;
-          margin-bottom: 40px;
+          margin-bottom: 25px;
           font-weight: 900;
-          text-align: center;
+          text-transform: uppercase;
+          text-align: left;
+          border-left: 2px solid #38bdf8;
+          padding-left: 15px;
         }
         .carousel-frame.vertical {
           position: relative;
