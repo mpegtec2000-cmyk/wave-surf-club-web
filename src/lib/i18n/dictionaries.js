@@ -40,7 +40,7 @@ export const dictionaries = {
       menu_inicio: 'INICIO',
       menu_bio: 'BIOGRAFÍA', menu_escuelas: 'ESCUELAS', menu_servicios: 'SERVICIOS', menu_equipo: 'EQUIPO', menu_taller: 'TALLER',
       menu_riders: 'RIDERS', menu_tienda: 'TIENDA', menu_contenido: 'CONTENIDO', menu_agenda: 'AGENDA TU CLASE',
-      menu_contacto: 'CONTACTO', menu_eventos: 'SERVICIOS Y EVENTOS', menu_carro: 'CARRO: (0)'
+      menu_contacto: 'CONTACTO', menu_eventos: 'EVENTOS', menu_carro: 'CARRO: (0)'
     }
   },
   en: {

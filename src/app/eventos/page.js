@@ -122,22 +122,22 @@ export default function EventosPage() {
       <section className="px-section" style={{ minHeight: '60vh', marginTop: 'var(--nav-height)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
         <div className="px-bg-wrapper">
           <Image 
-            src="/PORTADA.jpg" 
-            alt="Wave Adventure" 
+            src="/eventos.jpg" 
+            alt="Eventos Wave Surf Club" 
             fill 
             priority
-            style={{ objectFit: 'cover', opacity: 0.4 }}
+            style={{ objectFit: 'cover', opacity: 1 }}
           />
         </div>
-        <div className="px-content" style={{ zIndex: 10 }}>
+        <div className="px-content" style={{ zIndex: 10, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', padding: '60px 80px', borderRadius: '32px', border: '1px solid rgba(255,255,255,0.1)' }}>
           <h1 style={{ 
             fontSize: 'clamp(40px, 10vw, 120px)', 
             fontWeight: 950, 
-            letterSpacing: '-2px',
+            letterSpacing: '-5px',
             textTransform: 'uppercase',
             margin: 0,
             lineHeight: 0.9
-          }}>WAVE ADVENTURE</h1>
+          }}>EVENTOS</h1>
           <p style={{ 
             fontSize: '14px', 
             letterSpacing: '10px', 
@@ -145,7 +145,7 @@ export default function EventosPage() {
             marginTop: '20px',
             fontWeight: 800,
             textTransform: 'uppercase'
-          }}>EXPLORA LA COSTA CON LOS EXPERTOS</p>
+          }}>EVENTOS</p>
         </div>
       </section>
 
