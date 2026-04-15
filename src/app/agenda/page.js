@@ -108,7 +108,7 @@ export default function AgendaPage() {
 
       setStep('success');
     } catch (err) {
-      setMsg({ type: 'error', text: 'Error procesando la reserva.' });
+      setMsg({ type: 'error', text: 'Error procesando la reserva: ' + (err.message || 'Error desconocido') });
     } finally {
       setLoading(false);
     }
@@ -507,6 +507,21 @@ export default function AgendaPage() {
                       <p style={{ margin: 0, fontSize: '13px', fontWeight: 700 }}>Redcompra / Débito Online</p>
                     </div>
                   </div>
+                  
+                  {receivingCard && (
+                    <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                      <div style={{ fontSize: '9px', textTransform: 'uppercase', color: '#64748b', marginBottom: '8px' }}>Cuenta Receptora</div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '4px' }}>
+                        <span style={{ color: '#94a3b8' }}>Titular:</span>
+                        <span style={{ fontWeight: 600 }}>{receivingCard.holder_name}</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                        <span style={{ color: '#94a3b8' }}>Banco:</span>
+                        <span style={{ fontWeight: 600 }}>{receivingCard.bank || 'Estado'}</span>
+                      </div>
+                    </div>
+                  )}
+
                   <p style={{ fontSize: '11px', marginTop: '12px', color: '#94a3b8' }}>
                     Serás redirigido a la pasarela de pago seguro para completar tu transacción de forma automática.
                   </p>
