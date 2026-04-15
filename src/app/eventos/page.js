@@ -115,20 +115,27 @@ export default function EventosPage() {
   ];
 
   return (
-    <main className="dark-landing" style={{ background: '#000', color: '#fff' }}>
+    <main className="dark-landing" style={{ background: '#000' }}>
+      {/* Fixed Background Image */}
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 0
+      }}>
+        <Image 
+          src="/eventos.jpg" 
+          alt="Eventos Background" 
+          fill 
+          priority
+          style={{ objectFit: 'cover', filter: 'brightness(0.3)' }}
+        />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.8))' }} />
+      </div>
+
       <Navbar />
 
       {/* Hero section */}
       <section className="px-section" style={{ minHeight: '60vh', marginTop: 'var(--nav-height)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-        <div className="px-bg-wrapper">
-          <Image 
-            src="/eventos.jpg" 
-            alt="Eventos Wave Surf Club" 
-            fill 
-            priority
-            style={{ objectFit: 'cover', opacity: 1 }}
-          />
-        </div>
         <div className="px-content" style={{ zIndex: 10, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', padding: '60px 80px', borderRadius: '32px', border: '1px solid rgba(255,255,255,0.1)' }}>
           <h1 style={{ 
             fontSize: 'clamp(40px, 10vw, 120px)', 
@@ -150,7 +157,7 @@ export default function EventosPage() {
       </section>
 
       {/* Categories Section */}
-      <section style={{ padding: '100px 20px', maxWidth: '1400px', margin: '0 auto' }}>
+      <section style={{ padding: '100px 20px', maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '60px' }}>
           {categories.map((cat, idx) => (
             <div key={idx}>
@@ -177,7 +184,7 @@ export default function EventosPage() {
       </section>
 
       {/* Stations Section */}
-      <section style={{ padding: '100px 20px', background: '#0b1120' }}>
+      <section style={{ padding: '100px 20px', background: 'rgba(0,0,0,0.5)', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ fontSize: '12px', letterSpacing: '8px', color: '#38bdf8', marginBottom: '30px', fontWeight: 900 }}>NUESTRAS ESTACIONES</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px', marginTop: '60px' }}>
@@ -198,7 +205,7 @@ export default function EventosPage() {
       </section>
 
       {/* Quotation Form Section */}
-      <section style={{ padding: '100px 20px', background: '#000' }}>
+      <section style={{ padding: '100px 20px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', background: 'rgba(255,255,255,0.02)', padding: '60px', borderRadius: '32px', border: '1px solid rgba(255,255,255,0.05)' }}>
           <div style={{ textAlign: 'center', marginBottom: '50px' }}>
             <h2 style={{ fontSize: '32px', fontWeight: 900, letterSpacing: '-1px', marginBottom: '10px' }}>COTIZA TU EVENTO</h2>
@@ -295,7 +302,7 @@ export default function EventosPage() {
       </section>
 
       {/* Performed Adventures Gallery */}
-      <section style={{ padding: '100px 20px' }}>
+      <section style={{ padding: '100px 20px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <h2 style={{ fontSize: '12px', letterSpacing: '8px', color: '#38bdf8', marginBottom: '60px', fontWeight: 900, textAlign: 'center' }}>AVENTURAS REALIZADAS</h2>
           
@@ -330,10 +337,10 @@ export default function EventosPage() {
       </section>
 
       {/* Simple Footer */}
-      <footer style={{ padding: '80px 20px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', background: '#000' }}>
+      <footer style={{ padding: '80px 20px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', position: 'relative', zIndex: 1 }}>
         <div style={{ opacity: 0.3 }}>
           <p style={{ fontSize: '10px', letterSpacing: '5px', textTransform: 'uppercase', fontWeight: 700 }}>
-            WAVE ADVENTURE — AGENCIA DE TURISMO DEPORTAIVO — CHILE
+            WAVE SURF CLUB — EVENTOS Y PRODUCCIÓN — CHILE
           </p>
         </div>
       </footer>
