@@ -33,9 +33,9 @@ export default function ContactoPage() {
             <div className="contact-card responsible-card">
               <div className="card-icon"><User size={24} /></div>
               <div className="card-info">
-                <span className="label">DUEÑO / FUNDADOR</span>
-                <h3>Paulo Muñoz</h3>
-                <p>Gestión Wave Surf Club</p>
+                <span className="label">FUNDADOR</span>
+                <h3>Luisiño Cornejo</h3>
+                <p>Wave Surf Club Central</p>
               </div>
             </div>
 
@@ -43,9 +43,9 @@ export default function ContactoPage() {
             <div className="contact-card">
               <div className="card-icon"><Mail size={24} /></div>
               <div className="card-info">
-                <span className="label">CORREOS DE CONTACTO</span>
+                <span className="label">CORREO OFICIAL</span>
                 <a href="mailto:WAVE_SURF_CLUB@outlook.com" className="contact-link">WAVE_SURF_CLUB@outlook.com</a>
-                <a href="mailto:mpeg.logistica@gmail.com" className="contact-link">info@wavesurfclub.cl</a>
+                <p className="helper-text">Consultas y Logística</p>
               </div>
             </div>
 
@@ -53,8 +53,8 @@ export default function ContactoPage() {
             <div className="contact-card">
               <div className="card-icon"><Phone size={24} /></div>
               <div className="card-info">
-                <span className="label">TELÉFONO DIRECTO</span>
-                <a href="tel:+56993456177" className="contact-link">+56 9 9345 6177</a>
+                <span className="label">COORDINADOR DIRECTO</span>
+                <a href="tel:+56975803044" className="contact-link">+56 9 7580 3044</a>
                 <p className="helper-text">Atención 24/7 vía WhatsApp</p>
               </div>
             </div>
@@ -63,9 +63,9 @@ export default function ContactoPage() {
             <div className="contact-card">
               <div className="card-icon"><MapPin size={24} /></div>
               <div className="card-info">
-                <span className="label">UBICACIÓN Y SEDES</span>
-                <h3>Sector La Boca, Concón</h3>
-                <p>Pichilemu & Punta de Piedra</p>
+                <span className="label">OFICINA CENTRAL</span>
+                <h3>Playa La Boca, Concón</h3>
+                <p>Wave Surf Club — Chile</p>
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function ContactoPage() {
               <Clock size={16} />
               <span>HORARIO DE ATENCIÓN: 09:00 - 20:00 HRS</span>
             </div>
-            <a href="https://wa.me/56912345678" target="_blank" className="whatsapp-btn">
+            <a href="https://wa.me/56975803044" target="_blank" className="whatsapp-btn">
               <MessageCircle size={20} />
               HABLAR POR WHATSAPP
             </a>
