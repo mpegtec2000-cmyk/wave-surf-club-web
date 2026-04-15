@@ -1,11 +1,29 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import { Instagram } from 'lucide-react';
 
+const workshopImages = [
+  '/Taller/2.jpg',
+  '/Taller/3.jpg',
+  '/Taller/4.jpg',
+  '/Taller/5.jpg',
+  '/Taller/6.jpg',
+  '/Taller/7.jpg',
+  '/Taller/8.jpg'
+];
+
 export default function TallerPage() {
-  return (
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % workshopImages.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
     <div className="taller-page">
       <Navbar />
       
@@ -79,6 +97,35 @@ export default function TallerPage() {
                 </svg>
                 COTIZAR REPARACIÓN
               </a>
+            </div>
+          </div>
+
+          {/* --- CAROUSEL DE IMÁGENES DEL TRABAJO --- */}
+          <div className="carousel-container">
+            <h3 className="carousel-title">PROCESO Y TRABAJO</h3>
+            <div className="carousel-frame">
+              {workshopImages.map((img, idx) => (
+                <div 
+                  key={idx} 
+                  className={`carousel-slide ${idx === currentIdx ? 'active' : ''}`}
+                >
+                  <Image 
+                    src={img} 
+                    alt="Trabajo en Taller" 
+                    fill 
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="carousel-dots">
+              {workshopImages.map((_, idx) => (
+                <div 
+                  key={idx} 
+                  className={`dot ${idx === currentIdx ? 'active' : ''}`}
+                  onClick={() => setCurrentIdx(idx)}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -295,12 +342,82 @@ export default function TallerPage() {
           }
         }
 
+        @media (max-width: 768px) {
+          .quote-content {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+          }
+          .quote-bar {
+            padding: 30px 20px;
+          }
+          .quote-whatsapp {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
+        /* --- CAROUSEL --- */
+        .carousel-container {
+          margin-top: 100px;
+          text-align: center;
+        }
+        .carousel-title {
+          font-size: 12px;
+          letter-spacing: 6px;
+          color: #38bdf8;
+          margin-bottom: 40px;
+          font-weight: 900;
+        }
+        .carousel-frame {
+          position: relative;
+          width: 100%;
+          height: 600px;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+          border: 1px solid rgba(255,255,255,0.05);
+        }
+        .carousel-slide {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+          transform: scale(1.1);
+        }
+        .carousel-slide.active {
+          opacity: 1;
+          transform: scale(1);
+        }
+        .carousel-dots {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin-top: 30px;
+        }
+        .dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.2);
+          cursor: pointer;
+          transition: all 0.3s;
+        }
+        .dot.active {
+          background: #38bdf8;
+          width: 24px;
+          border-radius: 10px;
+        }
+
         @media (max-width: 1024px) {
           .hero {
             height: 60vh;
           }
           .info-section {
             padding: 60px 20px;
+          }
+          .carousel-frame {
+            height: 400px;
           }
         }
       `}</style>
