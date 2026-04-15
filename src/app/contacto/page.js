@@ -33,9 +33,9 @@ export default function ContactoPage() {
             <div className="contact-card responsible-card">
               <div className="card-icon"><User size={24} /></div>
               <div className="card-info">
-                <span className="label">RESPONSABLE DE GESTIÓN</span>
+                <span className="label">DUEÑO / FUNDADOR</span>
                 <h3>Paulo Muñoz</h3>
-                <p>Fundador & Coordinador General</p>
+                <p>Gestión Wave Surf Club</p>
               </div>
             </div>
 
@@ -43,9 +43,9 @@ export default function ContactoPage() {
             <div className="contact-card">
               <div className="card-icon"><Mail size={24} /></div>
               <div className="card-info">
-                <span className="label">CORREOS ELECTRÓNICOS</span>
+                <span className="label">CORREOS DE CONTACTO</span>
                 <a href="mailto:WAVE_SURF_CLUB@outlook.com" className="contact-link">WAVE_SURF_CLUB@outlook.com</a>
-                <a href="mailto:mpeg.logistica@gmail.com" className="contact-link">mpeg.logistica@gmail.com</a>
+                <a href="mailto:mpeg.logistica@gmail.com" className="contact-link">info@wavesurfclub.cl</a>
               </div>
             </div>
 
@@ -53,9 +53,9 @@ export default function ContactoPage() {
             <div className="contact-card">
               <div className="card-icon"><Phone size={24} /></div>
               <div className="card-info">
-                <span className="label">TELÉFONO / WHATSAPP</span>
-                <a href="tel:+56912345678" className="contact-link">+56 9 1234 5678</a>
-                <p className="helper-text">Atención inmediata (Lunes a Domingo)</p>
+                <span className="label">TELÉFONO DIRECTO</span>
+                <a href="tel:+56993456177" className="contact-link">+56 9 9345 6177</a>
+                <p className="helper-text">Atención 24/7 vía WhatsApp</p>
               </div>
             </div>
 
@@ -63,9 +63,9 @@ export default function ContactoPage() {
             <div className="contact-card">
               <div className="card-icon"><MapPin size={24} /></div>
               <div className="card-info">
-                <span className="label">UBICACIÓN SEDES</span>
-                <h3>Concón & Pichilemu</h3>
-                <p>Chile — Escuelas Operativas</p>
+                <span className="label">UBICACIÓN Y SEDES</span>
+                <h3>Sector La Boca, Concón</h3>
+                <p>Pichilemu & Punta de Piedra</p>
               </div>
             </div>
           </div>
