@@ -337,6 +337,17 @@ export default function AgendaPage() {
         
         .receipt-card { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); padding: 25px; border-radius: 16px; margin: 20px 0; }
         .checkout-info { margin: 20px 0; padding: 20px; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2); }
+        
+        @keyframes attention-pulse {
+          0%, 100% { transform: scale(1); text-shadow: 0 0 0px rgba(56, 189, 248, 0); }
+          50% { transform: scale(1.05); text-shadow: 0 0 15px rgba(56, 189, 248, 0.6); }
+        }
+
+        .celeste-animate {
+          color: #38bdf8 !important;
+          animation: attention-pulse 2.5s ease-in-out infinite;
+          display: inline-block;
+        }
       `}</style>
 
       <Navbar />
@@ -360,7 +371,7 @@ export default function AgendaPage() {
               <Image src="/fondo-escuela.png" alt="Visual" fill style={{ objectFit: 'cover', objectPosition: 'center' }} />
             </div>
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <h2 style={{ fontSize: '32px', lineHeight: '1.2', letterSpacing: '-1px' }}>Agenda tu clase con profesionales del deporte.</h2>
+              <h2 className="celeste-animate" style={{ fontSize: '32px', lineHeight: '1.2', letterSpacing: '-1px' }}>Agenda tu clase con profesionales del deporte.</h2>
               <p>Agenda tu primera sesión y conviértete en parte de la familia Wave Surf Club.</p>
             </div>
           </div>

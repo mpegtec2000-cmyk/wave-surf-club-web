@@ -146,6 +146,17 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
           50% { opacity: .5; transform: translateX(-4px); }
         }
 
+        @keyframes attention-pulse {
+          0%, 100% { transform: scale(1); text-shadow: 0 0 0px rgba(56, 189, 248, 0); }
+          50% { transform: scale(1.05); text-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
+        }
+
+        .agenda-attention {
+          color: #38bdf8 !important;
+          animation: attention-pulse 2s ease-in-out infinite;
+          display: inline-block;
+        }
+
         @media (max-width: 1023px) {
           .nav-luxury-container { height: 70px !important; }
           .desktop-only { display: none !important; }
@@ -201,8 +212,14 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
                   href={item.href}
                   onClick={(e) => item.type === 'anchor' && handleScrollTo(e, item.id)}
                   style={{
-                    fontSize: '11px', fontWeight: 900, textTransform: 'uppercase', color: '#000', textDecoration: 'none', letterSpacing: '1px'
+                    fontSize: '11px', 
+                    fontWeight: 900, 
+                    textTransform: 'uppercase', 
+                    color: item.id === 'agenda' ? '#38bdf8' : '#000', 
+                    textDecoration: 'none', 
+                    letterSpacing: '1px'
                   }}
+                  className={item.id === 'agenda' ? 'agenda-attention' : ''}
                 >
                   {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
                 </Link>
@@ -244,6 +261,8 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
                     setMenuOpen(false);
                   }
                 }}
+                className={item.id === 'agenda' ? 'agenda-attention' : ''}
+                style={item.id === 'agenda' ? { color: '#38bdf8' } : {}}
               >
                 {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
               </Link>

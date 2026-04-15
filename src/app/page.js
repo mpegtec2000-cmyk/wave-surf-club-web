@@ -44,9 +44,9 @@ export default function LandingPage() {
         {/* FLOATING BOOKING CTA */}
         {showBooking && (
           <div className="floating-booking-banner">
-            <a href="/agenda" className="booking-link">
+            <a href="/agenda" className="booking-link agenda-attention">
               <span className="booking-dot"></span>
-              RESERVAR CLASE
+              AGENDA TU CLASE
             </a>
             <button onClick={() => setShowBooking(false)} className="close-booking">×</button>
           </div>
@@ -288,6 +288,16 @@ export default function LandingPage() {
           0% { transform: scale(1); opacity: 1; }
           50% { transform: scale(1.5); opacity: 0.5; }
           100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes attention-pulse {
+          0%, 100% { transform: scale(1); text-shadow: 0 0 0px rgba(56, 189, 248, 0); }
+          50% { transform: scale(1.03); text-shadow: 0 0 8px rgba(56, 189, 248, 0.4); }
+        }
+
+        .agenda-attention {
+          color: #38bdf8 !important;
+          animation: attention-pulse 2s ease-in-out infinite;
         }
 
         @media (max-width: 1024px) {
