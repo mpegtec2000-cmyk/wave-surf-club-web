@@ -140,7 +140,7 @@ export default function TallerPage() {
                 <iframe 
                   src="https://www.instagram.com/p/DHGdS7BMufO/embed" 
                   width="100%" 
-                  height="700" 
+                  height="720" 
                   frameBorder="0" 
                   scrolling="no" 
                   allowtransparency="true"
@@ -362,7 +362,7 @@ export default function TallerPage() {
         }
         .carousel-frame.vertical {
           position: relative;
-          height: 700px;
+          height: 720px;
           border-radius: 24px;
           overflow: hidden;
           background: #050505;
@@ -374,7 +374,11 @@ export default function TallerPage() {
           overflow: hidden;
           box-shadow: 0 40px 80px rgba(0,0,0,0.6);
           border: 1px solid rgba(255,255,255,0.05);
-          background: #0a0a0a;
+          background: #000;
+          height: auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         /* --- CAROUSEL --- */
