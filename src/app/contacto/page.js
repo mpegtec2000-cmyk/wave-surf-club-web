@@ -17,7 +17,7 @@ export default function ContactoPage() {
             alt="Wave Surf Club Contacto" 
             fill 
             priority
-            style={{ objectFit: 'cover', filter: 'brightness(0.25) blur(10px)' }}
+            style={{ objectFit: 'cover' }}
           />
         </div>
 
