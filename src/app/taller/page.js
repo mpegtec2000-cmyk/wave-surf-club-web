@@ -24,6 +24,8 @@ export default function TallerPage() {
     }, 3000);
     return () => clearInterval(timer);
   }, []);
+
+  return (
     <div className="taller-page">
       <Navbar />
       
