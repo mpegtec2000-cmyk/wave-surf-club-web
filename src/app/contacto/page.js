@@ -73,7 +73,7 @@ export default function ContactoPage() {
           <div className="contact-footer">
             <div className="hours-card">
               <Clock size={16} />
-              <span>HORARIO DE ATENCIÓN: 09:00 - 20:00 HRS</span>
+              <span>HORARIO DE ATENCIÓN: 08:00 AM - 22:00 PM</span>
             </div>
             <a href="https://wa.me/56975803044" target="_blank" className="whatsapp-btn">
               <MessageCircle size={20} />
