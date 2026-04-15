@@ -30,6 +30,7 @@ export async function loginUser(email, password) {
     'francisco@wavesurf.cl': 'francisco2026',
     'caja@wavesurf.cl': 'caja2026',
     'asistente@wavesurf.cl': 'asistente2026',
+    'ana@wavesurf.cl': 'ana2026',
   };
 
   if (STAFF_PASSWORDS[email] !== password) {
@@ -125,13 +126,25 @@ export async function queueNotification(type, recipient, subject, content) {
 }
 
 export async function findClientByRut(rut) {
-  const clean = rut.replace(/[^0-9kK.\-]/g, '');
-  const { data } = await supabase
+  if (!rut) return null;
+  const cleanSearch = rut.replace(/[^0-9kK]/g, '').toUpperCase();
+  
+  // Primero intentamos búsqueda exacta por si acaso
+  const { data: exact } = await supabase
     .from('profiles')
     .select('*')
-    .eq('rut', clean)
+    .eq('rut', rut)
     .single();
-  return data || null;
+  
+  if (exact) return exact;
+
+  // Si no, buscamos uno que al limpiarlo sea igual (esto requiere traer más datos o usar una función RPC, 
+  // pero para pocos registros podemos filtrar localmente o usar 'ilike')
+  const { data: all } = await supabase
+    .from('profiles')
+    .select('*');
+  
+  return all?.find(c => c.rut.replace(/[^0-9kK]/g, '').toUpperCase() === cleanSearch) || null;
 }
 
 // ── STAFF ───────────────────────────────────

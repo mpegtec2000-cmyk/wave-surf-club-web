@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { getCurrentUser, getClients, addClient, getTransactions } from '@/lib/data';
+import { getCurrentUser, getClients, addClient, getTransactions, findClientByRut } from '@/lib/data';
 import { Search, UserPlus, X, Save, User } from 'lucide-react';
-import { formatRut } from '@/lib/rut-validator';
+import { formatRut, validateRut } from '@/lib/rut-validator';
 
 export default function ClientsPage() {
   const [user, setUser] = useState(null);
@@ -99,11 +99,19 @@ export default function ClientsPage() {
       showToast('Por favor completa RUT, Nombre y Apellidos', 'error');
       return;
     }
+
+    const rutCheck = validateRut(formData.rut);
+    if (!rutCheck.valid) {
+      showToast(rutCheck.error, 'error');
+      return;
+    }
     
-    // Verificar si ya existe
-    const exists = clientsData.find(c => c.rut === formData.rut);
-    if (exists) {
-      showToast('Este RUT ya se encuentra registrado', 'error');
+    // Verificar si ya existe en TODO el sistema (no solo clientes locales)
+    const normalizedRut = formData.rut.replace(/[^0-9kK]/g, '').toUpperCase();
+    const existingGlobal = await findClientByRut(normalizedRut);
+    
+    if (existingGlobal) {
+      showToast(`Este RUT ya existe como ${existingGlobal.role}: ${existingGlobal.name}`, 'error');
       return;
     }
 
