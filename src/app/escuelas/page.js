@@ -16,7 +16,7 @@ export default function EscuelasPage() {
       slogan: 'El corazón de Wave surf club',
       desc: 'Mega Ramp más grande de Chile y Staff de Élite. Única con EXPERIENCIA FULL DAY: tu equipo te espera para una segunda sesión sin costo adicional.',
       img: '/fondo-escuela.png',
-      features: ['Mega Ramp Pro', 'Duchas Agua Caliente', 'Taller Neoprene', 'Cafetería & Mirador'],
+      features: ['Mega Ramp Pro', 'Duchas Agua Potable', 'Taller Neoprene', 'Cafetería & Mirador'],
       cta: 'ASEGURA TU LUGAR CON LOS MEJORES',
       highlight: 'RESERVA FULL DAY'
     },
