@@ -41,7 +41,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
     { id: 'riders', key: 'menu_riders', href: '/riders', type: 'route' },
     { id: 'tienda', key: 'menu_tienda', href: '/tienda', type: 'route' },
     { id: 'agenda', key: 'menu_agenda', href: '/agenda', type: 'route' },
-    { id: 'contacto', key: 'menu_contacto', href: '/#contacto', type: 'anchor' },
+    { id: 'contacto', key: 'menu_contacto', href: '/contacto', type: 'route' },
     { id: 'eventos', key: 'menu_eventos', href: '/eventos', type: 'route' },
     { id: 'carro', key: 'menu_carro', href: '#', type: 'cart' },
   ];
