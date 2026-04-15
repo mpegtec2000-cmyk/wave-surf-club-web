@@ -72,6 +72,13 @@ const MODULES = [
     description: 'Bitácora exhaustiva que registra todas y cada una de las transferencias, efectivas y fallidas, indicando responsables.'
   },
   {
+    icon: CalendarDays,
+    title: 'Agenda de Clases y Arriendos',
+    path: '/dashboard/agenda-ventas',
+    color: '#06b6d4',
+    description: 'Visualiza quién tiene agendada una clase o arriendo. Revisa el nombre, teléfono y cantidad de alumnos que vendrán cada día.'
+  },
+  {
     icon: Globe,
     title: 'Ventas Online',
     path: '/dashboard/ventas-online',
@@ -87,10 +94,10 @@ const MODULES = [
   },
   {
     icon: TrendingUp,
-    title: 'Fondos',
+    title: 'BANCO ONLINE',
     path: '/dashboard/fondos',
     color: '#f43f5e',
-    description: 'Control de la caja chica o fondos de la empresa asignados por sucursal, útil para llevar control de gastos recurrentes internos.'
+    description: 'Configuración del banco receptor de ventas web y control de ingresos por internet (Agenda/Clases).'
   },
 ];
 

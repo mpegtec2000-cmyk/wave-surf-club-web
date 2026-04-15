@@ -1,6 +1,7 @@
 import { Inter, Playfair_Display, Montserrat, Archivo_Black } from 'next/font/google';
 import './globals.css';
 import { I18nProvider } from '@/lib/i18n-context';
+import { CartProvider } from '@/lib/cart-context';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
@@ -18,7 +19,9 @@ export default function RootLayout({ children }) {
     <html lang="es">
       <body className={`${inter.variable} ${playfair.variable} ${montserrat.variable} ${archivo.variable} ${inter.className} antialiased`}>
         <I18nProvider>
-          {children}
+          <CartProvider>
+            {children}
+          </CartProvider>
         </I18nProvider>
       </body>
     </html>

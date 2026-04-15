@@ -11,6 +11,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.3",
     "@supabase/supabase-js": "^2.45.1",
+    "flow-api-client": "^1.0.0",
     "lucide-react": "^0.439.0",
     "next": "16.2.2",
     "react": "^19.0.0",

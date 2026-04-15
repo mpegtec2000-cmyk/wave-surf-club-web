@@ -5,8 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Globe, User, ChevronDown } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n-context';
+import { useCart } from '@/lib/cart-context';
 
-export default function Navbar({ cartCount = 0, onCartClick }) {
+export default function Navbar() {
+  const { cart } = useCart();
+  const cartCount = cart.length;
   const { lang, changeLang, t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -43,7 +46,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
     { id: 'agenda', key: 'menu_agenda', href: '/agenda', type: 'route' },
     { id: 'contacto', key: 'menu_contacto', href: '/contacto', type: 'route' },
     { id: 'eventos', key: 'menu_eventos', href: '/eventos', type: 'route' },
-    { id: 'carro', key: 'menu_carro', href: '#', type: 'cart' },
+    { id: 'carro', key: 'menu_carro', href: '/cart', type: 'route', target: '_blank' },
   ];
 
   const handleScrollTo = (e, id) => {
@@ -220,6 +223,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
               <li key={item.id}>
                 <Link
                   href={item.href}
+                  target={item.target || '_self'}
                   onClick={(e) => item.type === 'anchor' && handleScrollTo(e, item.id)}
                   style={{
                     fontSize: '11px', 
