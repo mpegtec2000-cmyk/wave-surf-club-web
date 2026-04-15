@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getCurrentUser, getStaff, findClientByRut, addStaffMember, removeStaffMember } from '@/lib/data';
+import { getCurrentUser, getStaff, findClientByRut, addStaffMember, removeStaffMember, registerStaffMember } from '@/lib/data';
 import { BRANCHES, ROLES, ROLE_LABELS } from '@/lib/constants';
-import { Search, Briefcase, Plus, Shield, UserMinus } from 'lucide-react';
+import { Search, Briefcase, Plus, Shield, UserMinus, UserPlus, FileText, MapPin, Calendar, Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { formatRut } from '@/lib/rut-validator';
 
 export default function StaffPage() {
   const router = useRouter();
@@ -17,6 +18,20 @@ export default function StaffPage() {
   const [selectedRole, setSelectedRole] = useState('caja');
   const [selectedBranches, setSelectedBranches] = useState([]);
   const [toast, setToast] = useState(null);
+
+  // New Staff Registration State
+  const [regMode, setRegMode] = useState(false);
+  const [newStaff, setNewStaff] = useState({
+    name: '',
+    rut: '',
+    email: '',
+    phone: '',
+    birth_date: '',
+    marital_status: 'soltero',
+    address: '',
+    service_start_date: new Date().toISOString().split('T')[0],
+    role: 'caja'
+  });
 
   useEffect(() => {
     const u = getCurrentUser();
@@ -81,12 +96,36 @@ export default function StaffPage() {
     const updated = await getStaff();
     setStaffList(updated);
     
-    showToast(`Personal asignado correctamente: ${foundClient.name} (${ROLE_LABELS[selectedRole]})`, 'success');
-    
+    showToast(`Personal asignado correctamente: ${foundClient.name}`, 'success');
     setRut('');
     setFoundClient(null);
-    setSelectedRole('caja');
-    setSelectedBranches([]);
+  };
+
+  const handleFullRegistration = async (e) => {
+    e.preventDefault();
+    if (selectedRole !== 'superadmin' && selectedBranches.length === 0) {
+      showToast('Seleccione al menos una sucursal', 'error');
+      return;
+    }
+
+    const result = await registerStaffMember({
+      ...newStaff,
+      role: selectedRole,
+      branchIds: selectedRole === 'superadmin' ? [1,2,3] : selectedBranches
+    });
+
+    if (result.error) {
+      showToast('Error: ' + result.error, 'error');
+    } else {
+      showToast('Personal registrado y contratado exitosamente', 'success');
+      const updated = await getStaff();
+      setStaffList(updated);
+      setRegMode(false);
+      setNewStaff({
+        name: '', rut: '', email: '', phone: '', birth_date: '',
+        marital_status: 'soltero', address: '', service_start_date: '', role: 'caja'
+      });
+    }
   };
 
   const handleRemoveStaff = async (staffId) => {
@@ -117,91 +156,176 @@ export default function StaffPage() {
       <div className="pos-layout" style={{ gridTemplateColumns: '1fr 2fr' }}>
         
         {/* LEFT: Agregar Personal */}
-        <div className="pos-panel">
-          <div className="pos-panel-header">
-            <span style={{ fontSize: 20 }}>➕</span>
-            <h2>Agregar Personal</h2>
+        <div className="pos-panel industrial-card">
+          <div className="pos-panel-header industrial-header">
+            <UserPlus size={20} />
+            <h2 className="industrial-title">Módulo de Contratación</h2>
           </div>
-          <div className="pos-panel-body">
-            <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16 }}>
-              Para asignar permisos, la persona debe existir primero como Cliente.
-            </p>
-            
-            <div className="rut-search-wrap">
-              <input
-                type="text"
-                className="form-input"
-                placeholder="RUT (Ej: 12.345.678-5)"
-                value={rut}
-                onChange={(e) => setRut(formatRut(e.target.value))}
-              />
-              <button className="rut-search-btn" onClick={handleSearchRUT}>
-                <Search size={18} />
+          
+          <div className="pos-panel-body scrollable-panel">
+            <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+              <button 
+                className={`btn-sap-tab ${!regMode ? 'active' : ''}`}
+                onClick={() => setRegMode(false)}
+              >
+                Asignar Existente
+              </button>
+              <button 
+                className={`btn-sap-tab ${regMode ? 'active' : ''}`}
+                onClick={() => setRegMode(true)}
+              >
+                Nuevo Ingreso
               </button>
             </div>
 
-            {searchError && (
-              <div style={{
-                marginTop: 12, padding: '12px',
-                background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
-                borderRadius: 'var(--radius-md)', color: '#fca5a5', fontSize: 13
-              }}>
-                {searchError}
-              </div>
-            )}
-
-            {foundClient && (
-              <div className="fade-in" style={{ marginTop: 24 }}>
-                <div className="client-card" style={{ marginBottom: 20 }}>
-                  <div className="client-info">
-                    <h4>{foundClient.name}</h4>
-                    <p>{foundClient.rut}</p>
-                  </div>
+            {!regMode ? (
+              <div className="fade-in">
+                <label className="industrial-label">Búsqueda por RUT (Ficha Base)</label>
+                <div className="rut-search-wrap industrial-search">
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Ej: 12.345.678-5"
+                    value={rut}
+                    onChange={(e) => setRut(formatRut(e.target.value))}
+                  />
+                  <button className="rut-search-btn" onClick={handleSearchRUT}>
+                    <Search size={18} />
+                  </button>
                 </div>
 
-                <div className="form-group">
-                  <label>Asignar Rol (Cargo)</label>
-                  <select 
-                    className="form-select"
-                    value={selectedRole}
-                    onChange={e => setSelectedRole(e.target.value)}
-                  >
-                    <option value="superadmin">Administrador (Acceso Total)</option>
-                    <option value="caja">Base (Caja)</option>
-                    <option value="asistente">Asistente</option>
-                  </select>
-                </div>
+                {searchError && <div className="industrial-alert error">{searchError}</div>}
 
-                {selectedRole !== 'superadmin' ? (
-                  <div className="form-group">
-                    <label>Sucursales Permitidas (Centros de Costo)</label>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
-                      {BRANCHES.map(b => (
-                        <label key={b.id} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 14 }}>
-                          <input 
-                            type="checkbox" 
-                            checked={selectedBranches.includes(b.id)}
-                            onChange={() => handleToggleBranch(b.id)}
-                            style={{ width: 18, height: 18, accentColor: 'var(--accent-primary)' }}
-                          />
-                          {b.emoji} {b.name}
-                        </label>
-                      ))}
+                {foundClient && (
+                  <div className="found-box industrial-box">
+                    <div className="sap-info-row">
+                      <span className="label">NOMBRE:</span>
+                      <span className="value">{foundClient.name?.toUpperCase()}</span>
                     </div>
-                  </div>
-                ) : (
-                  <div style={{
-                    padding: '12px', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.3)',
-                    borderRadius: 'var(--radius-md)', color: '#93c5fd', fontSize: 13, marginBottom: 16
-                  }}>
-                    🛡️ Los administradores tienen acceso global a todas las sucursales por defecto.
+                    <div className="sap-info-row">
+                      <span className="label">ESTADO:</span>
+                      <span className="value status-ok">DISPONIBLE PARA CONTRATO</span>
+                    </div>
+                    
+                    <div style={{ marginTop: 20 }}>
+                      <label className="industrial-label">ROL A DESEMPEÑAR</label>
+                      <select className="form-select" value={selectedRole} onChange={e => setSelectedRole(e.target.value)}>
+                        <option value="caja">Personal Base (Caja/Operativo)</option>
+                        <option value="profesor">Profesor / Instructor</option>
+                        <option value="asistente">Asistente Técnico</option>
+                        <option value="superadmin">Administrador Global</option>
+                      </select>
+                    </div>
+
+                    <BranchSelector 
+                      selectedBranches={selectedBranches} 
+                      onToggle={handleToggleBranch} 
+                      isGlobal={selectedRole === 'superadmin'} 
+                    />
+
+                    <button className="btn-sap btn-finalize" onClick={handleAddStaff}>
+                      CONFIRMAR CONTRATACIÓN
+                    </button>
                   </div>
                 )}
-
-                <button className="btn btn-primary btn-full" onClick={handleAddStaff}>
-                  <Plus size={16} /> Contratar y Asignar Permisos
-                </button>
               </div>
+            ) : (
+              <form className="fade-in" onSubmit={handleFullRegistration}>
+                <div className="industrial-grid">
+                  <div className="form-group">
+                    <label className="industrial-label">Nombre Completo</label>
+                    <input 
+                      type="text" required className="form-input" 
+                      value={newStaff.name} 
+                      onChange={e => setNewStaff({...newStaff, name: e.target.value})} 
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="industrial-label">RUT</label>
+                    <input 
+                      type="text" required className="form-input" 
+                      value={newStaff.rut} 
+                      onChange={e => setNewStaff({...newStaff, rut: formatRut(e.target.value)})} 
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="industrial-label">Correo Electrónico</label>
+                    <input 
+                      type="email" required className="form-input" 
+                      value={newStaff.email} 
+                      onChange={e => setNewStaff({...newStaff, email: e.target.value})} 
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="industrial-label">Teléfono</label>
+                    <input 
+                      type="text" className="form-input" 
+                      value={newStaff.phone} 
+                      onChange={e => setNewStaff({...newStaff, phone: e.target.value})} 
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="industrial-label">Fecha de Nacimiento</label>
+                    <input 
+                      type="date" required className="form-input" 
+                      value={newStaff.birth_date} 
+                      onChange={e => setNewStaff({...newStaff, birth_date: e.target.value})} 
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="industrial-label">Estado Civil</label>
+                    <select 
+                      className="form-select"
+                      value={newStaff.marital_status}
+                      onChange={e => setNewStaff({...newStaff, marital_status: e.target.value})}
+                    >
+                      <option value="soltero">Soltero/a</option>
+                      <option value="casado">Casado/a</option>
+                      <option value="divorciado">Divorciado/a</option>
+                      <option value="viudo">Viudo/a</option>
+                    </select>
+                  </div>
+                  <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                    <label className="industrial-label">Dirección Particular</label>
+                    <textarea 
+                      className="form-input" rows="2"
+                      value={newStaff.address}
+                      onChange={e => setNewStaff({...newStaff, address: e.target.value})}
+                    ></textarea>
+                  </div>
+                  <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                    <label className="industrial-label">Fecha Inicio de Servicio (Ingreso)</label>
+                    <input 
+                      type="date" required className="form-input" 
+                      value={newStaff.service_start_date} 
+                      onChange={e => setNewStaff({...newStaff, service_start_date: e.target.value})} 
+                    />
+                  </div>
+                  <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                    <label className="industrial-label">Tipo de Personal / Rol</label>
+                    <select 
+                      className="form-select" required
+                      value={selectedRole}
+                      onChange={e => setSelectedRole(e.target.value)}
+                    >
+                      <option value="caja">Base / Caja</option>
+                      <option value="profesor">Profesor / Instructor</option>
+                      <option value="asistente">Asistente</option>
+                      <option value="superadmin">Administrador</option>
+                    </select>
+                  </div>
+                </div>
+
+                <BranchSelector 
+                  selectedBranches={selectedBranches} 
+                  onToggle={handleToggleBranch} 
+                  isGlobal={selectedRole === 'superadmin'} 
+                />
+
+                <button type="submit" className="btn-sap btn-finalize" style={{ marginTop: 24 }}>
+                  REGISTRAR E INGRESAR A PLANILLA
+                </button>
+              </form>
             )}
           </div>
         </div>
@@ -271,7 +395,6 @@ export default function StaffPage() {
             </table>
           </div>
         </div>
-
       </div>
 
       {toast && (
@@ -279,6 +402,36 @@ export default function StaffPage() {
           <span className="toast-message">{toast.msg}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+// Subcomponente para selector de sucursales
+function BranchSelector({ selectedBranches, onToggle, isGlobal }) {
+  if (isGlobal) {
+    return (
+      <div className="industrial-alert info" style={{ marginTop: 16 }}>
+        🛡️ ACCESO GLOBAL: Administradores acceden a todas las sucursales por defecto.
+      </div>
+    );
+  }
+
+  return (
+    <div className="form-group" style={{ marginTop: 16 }}>
+      <label className="industrial-label">Centros de Costo (Sedes Permitidas)</label>
+      <div className="industrial-branch-grid">
+        {BRANCHES.map(b => (
+          <label key={b.id} className={`branch-check-chip ${selectedBranches.includes(b.id) ? 'active' : ''}`}>
+            <input 
+              type="checkbox" 
+              checked={selectedBranches.includes(b.id)}
+              onChange={() => onToggle(b.id)}
+              hidden
+            />
+            {b.emoji} {b.shortName}
+          </label>
+        ))}
+      </div>
     </div>
   );
 }

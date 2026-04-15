@@ -232,14 +232,13 @@ export default function POSPage() {
               <div className="rut-search-wrap" style={{ maxWidth: 540 }}>
                 <input
                   type="text"
-                  className="form-input"
-                  style={{ fontSize: 18, height: 64, border: '2px solid var(--border-subtle)', paddingLeft: 24 }}
+                  className="form-input search-input-pos"
                   placeholder="Ingrese RUT del Cliente..."
                   value={rut}
                   onChange={(e) => setRut(formatRut(e.target.value))}
                   onKeyDown={handleKeyDown}
                 />
-                <button className="rut-search-btn" onClick={handleSearchRUT} style={{ height: 64, padding: '0 24px' }}>
+                <button className="rut-search-btn search-button-pos" onClick={handleSearchRUT}>
                   <Search size={24} />
                 </button>
               </div>
@@ -252,16 +251,16 @@ export default function POSPage() {
 
               {clientData && (
                 <div className={`client-card ${debtAlert ? 'has-debt' : ''}`} style={{ marginTop: 24, padding: 24, borderRadius: 'var(--radius-lg)', background: 'var(--bg-primary)', border: '1.5px solid var(--border-subtle)', display: 'flex', alignItems: 'center', gap: 24 }}>
-                  <div style={{ width: 72, height: 72, borderRadius: '50%', background: debtAlert ? 'var(--color-danger)' : 'var(--color-success)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 900 }}>
+                  <div className="client-avatar">
                     {clientData.name?.charAt(0).toUpperCase()}
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <h3 style={{ margin: 0, fontSize: 22, color: 'var(--accent-primary)', fontWeight: 800 }}>{clientData.name}</h3>
-                    <p style={{ margin: '4px 0', color: 'var(--text-muted)', fontSize: 14 }}>{clientData.rut} · {clientData.email}</p>
+                  <div className="client-data-box">
+                    <h3 className="client-name-title">{clientData.name}</h3>
+                    <p className="client-details-text">{clientData.rut} · {clientData.email}</p>
                     {debtAlert ? (
-                      <span style={{ color: 'var(--color-danger)', fontWeight: 800 }}>⚠️ SALDO DEUDOR: {formatMoney(clientData.debt_balance)}</span>
+                      <span className="debt-status deudora">⚠️ SALDO DEUDOR: {formatMoney(clientData.debt_balance)}</span>
                     ) : (
-                      <span style={{ color: 'var(--color-success)', fontWeight: 800 }}>✅ CLIENTE AL DÍA</span>
+                      <span className="debt-status al-dia">✅ CLIENTE AL DÍA</span>
                     )}
                   </div>
                 </div>
@@ -320,14 +319,13 @@ export default function POSPage() {
                   <div style={{ position: 'relative' }}>
                     <input
                       type="number"
-                      className="form-input"
-                      style={{ fontSize: 44, height: 100, textAlign: 'right', fontWeight: 950, fontFamily: 'var(--font-mono)', border: '2.5px solid var(--accent-action)', color: 'var(--accent-action)', paddingRight: 32, borderRadius: 'var(--radius-lg)' }}
+                      className="form-input total-input-pos"
                       placeholder="0"
                       value={txTotal}
                       onChange={(e) => setTxTotal(e.target.value)}
                       required
                     />
-                    <span style={{ position: 'absolute', left: 24, top: '50%', transform: 'translateY(-50%)', fontSize: 32, fontWeight: 900, color: 'var(--text-muted)' }}>$</span>
+                    <span className="currency-symbol">$</span>
                   </div>
                 </div>
 
