@@ -102,59 +102,53 @@ export default function TallerPage() {
             </div>
           </div>
 
-          {/* --- CAROUSEL DE IMÁGENES DEL TRABAJO --- */}
-          <div className="carousel-container">
-            <h3 className="carousel-title">PROCESO Y TRABAJO</h3>
-            <div className="carousel-frame">
-              {workshopImages.map((img, idx) => (
-                <div 
-                  key={idx} 
-                  className={`carousel-slide ${idx === currentIdx ? 'active' : ''}`}
-                >
-                  <Image 
-                    src={img} 
-                    alt="Trabajo en Taller" 
-                    fill 
-                    style={{ objectFit: 'cover' }}
+          {/* --- SECCIÓN DE TRABAJO Y FILOSOFÍA (2 COLUMNAS) --- */}
+          <div className="work-display-grid">
+            {/* Columna Izquierda: Carrusel Vertical */}
+            <div className="carousel-column">
+              <h3 className="section-title">PROCESO Y TRABAJO</h3>
+              <div className="carousel-frame vertical">
+                {workshopImages.map((img, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`carousel-slide ${idx === currentIdx ? 'active' : ''}`}
+                  >
+                    <Image 
+                      src={img} 
+                      alt="Trabajo en Taller" 
+                      fill 
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="carousel-dots">
+                {workshopImages.map((_, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`dot ${idx === currentIdx ? 'active' : ''}`}
+                    onClick={() => setCurrentIdx(idx)}
                   />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-            <div className="carousel-dots">
-              {workshopImages.map((_, idx) => (
-                <div 
-                  key={idx} 
-                  className={`dot ${idx === currentIdx ? 'active' : ''}`}
-                  onClick={() => setCurrentIdx(idx)}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
 
-        {/* Sección de Video Instagram - Matías Espinoza */}
-        <div style={{ marginTop: '100px', textAlign: 'center' }}>
-          <h3 style={{ color: '#38bdf8', fontSize: '12px', letterSpacing: '6px', marginBottom: '40px', textTransform: 'uppercase', fontWeight: 900 }}>FILOSOFÍA DEL PROYECTO</h3>
-          <div style={{ 
-            maxWidth: '540px', 
-            margin: '0 auto', 
-            borderRadius: '24px', 
-            overflow: 'hidden',
-            boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
-            background: '#0a0a0a',
-            border: '1px solid rgba(255,255,255,0.05)'
-          }}>
-            <iframe 
-              src="https://www.instagram.com/p/DHGdS7BMufO/embed" 
-              width="100%" 
-              height="650" 
-              frameBorder="0" 
-              scrolling="no" 
-              allowtransparency="true"
-              style={{ display: 'block' }}
-            ></iframe>
+            {/* Columna Derecha: Video Filosofía */}
+            <div className="video-column">
+              <h3 className="section-title">FILOSOFÍA DEL PROYECTO</h3>
+              <div className="video-frame">
+                <iframe 
+                  src="https://www.instagram.com/p/DHGdS7BMufO/embed" 
+                  width="100%" 
+                  height="700" 
+                  frameBorder="0" 
+                  scrolling="no" 
+                  allowtransparency="true"
+                  style={{ display: 'block' }}
+                ></iframe>
+              </div>
+            </div>
           </div>
-        </div>
       </section>
 
       <footer>
@@ -344,42 +338,40 @@ export default function TallerPage() {
           }
         }
 
-        @media (max-width: 768px) {
-          .quote-content {
-            flex-direction: column;
-            text-align: center;
-            padding: 20px;
-          }
-          .quote-bar {
-            padding: 30px 20px;
-          }
-          .quote-whatsapp {
-            width: 100%;
-            justify-content: center;
-          }
-        }
 
-        /* --- CAROUSEL --- */
-        .carousel-container {
+
+        /* --- WORK DISPLAY GRID --- */
+        .work-display-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 60px;
           margin-top: 100px;
-          text-align: center;
+          align-items: start;
         }
-        .carousel-title {
+        .section-title {
           font-size: 12px;
           letter-spacing: 6px;
           color: #38bdf8;
           margin-bottom: 40px;
           font-weight: 900;
+          text-align: center;
         }
-        .carousel-frame {
-          position: relative;
-          width: 100%;
-          height: 600px;
+        .carousel-frame.vertical {
+          height: 700px;
           border-radius: 24px;
           overflow: hidden;
           box-shadow: 0 40px 80px rgba(0,0,0,0.6);
           border: 1px solid rgba(255,255,255,0.05);
         }
+        .video-frame {
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+          border: 1px solid rgba(255,255,255,0.05);
+          background: #0a0a0a;
+        }
+
+        /* --- CAROUSEL --- */
         .carousel-slide {
           position: absolute;
           inset: 0;
@@ -412,14 +404,18 @@ export default function TallerPage() {
         }
 
         @media (max-width: 1024px) {
+          .work-display-grid {
+            grid-template-columns: 1fr;
+            gap: 80px;
+          }
           .hero {
             height: 60vh;
           }
           .info-section {
             padding: 60px 20px;
           }
-          .carousel-frame {
-            height: 400px;
+          .carousel-frame.vertical {
+            height: 500px;
           }
         }
       `}</style>
