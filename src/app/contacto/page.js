@@ -122,6 +122,11 @@ export default function ContactoPage() {
         .contact-header {
           text-align: center;
           margin-bottom: 60px;
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(12px);
+          padding: 40px;
+          border-radius: 24px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .subtitle {
