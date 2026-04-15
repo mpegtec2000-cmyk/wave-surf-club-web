@@ -16,7 +16,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body className="antialiased">
+      <body className={`${inter.variable} ${playfair.variable} ${montserrat.variable} ${archivo.variable} ${inter.className} antialiased`}>
         <I18nProvider>
           {children}
         </I18nProvider>

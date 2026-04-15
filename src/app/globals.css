@@ -39,11 +39,11 @@
   --radius-md: 10px;
   --radius-lg: 12px;
 
-  /* Fonts - SAP/Industrial Style */
-  --font-sans: 'Courier New', Courier, monospace;
-  --font-mono: 'Courier New', Courier, monospace;
-  --font-display: 'Courier New', Courier, monospace;
-  --font-size-base: 14px;
+  /* Fonts - Modern Premium Style */
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: var(--font-archivo), var(--font-inter), sans-serif;
+  --font-size-base: 15px;
 }
 
 @media (max-width: 1023px) {
@@ -57,16 +57,15 @@ body {
   font-size: var(--font-size-base);
   background: var(--bg-primary);
   color: var(--text-primary);
-  line-height: 1.4;
-  -webkit-font-smoothing: initial; /* Mejor para mono en Windows */
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   letter-spacing: -0.01em;
 }
 
 h1, h2, h3, .amount, .total {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
+  letter-spacing: -0.02em;
 }
 
 /* ---- Professional Glassmorphism & Effects ---- */
@@ -1007,7 +1006,7 @@ a:hover { color: var(--accent-secondary); }
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--font-sans);
 }
 
 .data-table th {
@@ -1218,7 +1217,7 @@ a:hover { color: var(--accent-secondary); }
   height: 60px !important;
   border: 2px solid #cbd5e1 !important;
   padding-left: 20px !important;
-  font-family: 'Courier New', Courier, monospace !important;
+  font-family: var(--font-mono) !important;
 }
 
 .search-button-pos {
@@ -1267,7 +1266,7 @@ a:hover { color: var(--accent-secondary); }
   height: 80px !important;
   text-align: right !important;
   font-weight: 900 !important;
-  font-family: 'Courier New', Courier, monospace !important;
+  font-family: var(--font-mono) !important;
   border: 2px solid #0f172a !important;
   color: #0f172a !important;
   padding-right: 20px !important;
@@ -1551,7 +1550,7 @@ a:hover { color: var(--accent-secondary); }
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   padding: 24px;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.7;
