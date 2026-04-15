@@ -42,7 +42,7 @@ export default function TallerPage() {
 
       {/* RESTORED CONTENT SECTION */}
       <section className="info-section">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           
           {/* Encabezado Estilo Wave - Sin Título Principal */}
           <div className="header-block">
@@ -358,9 +358,11 @@ export default function TallerPage() {
           text-align: center;
         }
         .carousel-frame.vertical {
+          position: relative;
           height: 700px;
           border-radius: 24px;
           overflow: hidden;
+          background: #050505;
           box-shadow: 0 40px 80px rgba(0,0,0,0.6);
           border: 1px solid rgba(255,255,255,0.05);
         }
