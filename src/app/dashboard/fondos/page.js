@@ -22,7 +22,7 @@ import {
 import Swal from 'sweetalert2';
 
 /**
- * PÁGINA: FONDOS - VENTAS POR INTERNET
+ * PÁGINA: BANCO ONLINE - VENTAS POR INTERNET
  * -----------------------------------
  * Control exclusivo de ingresos vía web y configuración de fondo receptor.
  * Estos movimientos son externos a la operación diaria de caja.
@@ -205,12 +205,7 @@ export default function FondosPage() {
   return (
     <div className="fondos-container">
       {/* Header Informativo */}
-      <div className="fondos-notice">
-        <ShieldCheck size={20} className="shrink-0" />
-        <div>
-          <strong>Control de Fondos Web:</strong> Estos movimientos corresponden únicamente a transacciones vía internet (Agenda de Clases) y se gestionan independientemente de la caja física.
-        </div>
-      </div>
+          <strong>Control de Banco Online:</strong> Estos movimientos corresponden únicamente a transacciones vía internet (Agenda de Clases) y se gestionan independientemente de la caja física.
 
       <div className="stats-grid">
         <div className="stat-card accent">

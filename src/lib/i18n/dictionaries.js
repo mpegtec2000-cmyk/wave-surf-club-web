@@ -28,9 +28,10 @@ export const dictionaries = {
       movimientos: "Reg. Movimientos",
       'ventas-online': "Ventas Online",
       'ventas-fisicas': "Ventas Físicas",
+      'agenda-ventas': "Agenda de Clases y Arriendos",
       'suscripciones': "Suscripciones",
       'cotizaciones': "Cotizaciones",
-      fondos: "Fondos de Caja",
+      fondos: "BANCO ONLINE",
       settings: "Configuración"
     },
     landing: {
@@ -72,7 +73,8 @@ export const dictionaries = {
       movimientos: "Movement Log",
       'ventas-online': "Online Sales",
       'ventas-fisicas': "Physical Sales",
-      fondos: "Funds",
+      'agenda-ventas': "Classes & Rentals Agenda",
+      fondos: "Online Bank",
       settings: "Settings"
     },
     landing: {
@@ -114,6 +116,7 @@ export const dictionaries = {
       movimentos: "Reg. Movimentos",
       'ventas-online': "Vendas Online",
       'ventas-fisicas': "Vendas Físicas",
+      'agenda-ventas': "Agenda de Aulas e Aluguéis",
       banco: "Banco",
       settings: "Configurações"
     },
@@ -154,6 +157,7 @@ export const dictionaries = {
       movimientos: "Bewegungsprotokoll",
       'ventas-online': "Online-Verkäufe",
       'ventas-fisicas': "Physische Verkäufe",
+      'agenda-ventas': "Agenda für Klassen & Verleih",
       banco: "Bank",
       settings: "Einstellungen"
     },
@@ -194,6 +198,7 @@ export const dictionaries = {
       movimientos: "Journal Mouvements",
       'ventas-online': "Ventes en Ligne",
       'ventas-fisicas': "Ventes Physiques",
+      'agenda-ventas': "Agenda Cours & Locations",
       banco: "Banque",
       settings: "Paramètres"
     },
@@ -234,6 +239,7 @@ export const dictionaries = {
       movimientos: "流水记录",
       'ventas-online': "网上销售",
       'ventas-fisicas': "实体店销售",
+      'agenda-ventas': "课程和租赁议程",
       banco: "银行",
       settings: "设置"
     },
@@ -274,6 +280,7 @@ export const dictionaries = {
       movimientos: "動き記録",
       'ventas-online': "オンライン販売",
       'ventas-fisicas': "店舗販売",
+      'agenda-ventas': "クラスとレンタルのアジェンダ",
       banco: "銀行",
       settings: "設定"
     },
@@ -314,6 +321,7 @@ export const dictionaries = {
       movimientos: "Журнал Движений",
       'ventas-online': "Онлайн-Продажи",
       'ventas-fisicas': "Офлайн-Продажи",
+      'agenda-ventas': "Агенда уроков и аренды",
       banco: "Банк",
       settings: "Настройки"
     },
