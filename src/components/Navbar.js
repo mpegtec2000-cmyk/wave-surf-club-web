@@ -8,8 +8,8 @@ import { useTranslation } from '@/lib/i18n-context';
 import { useCart } from '@/lib/cart-context';
 
 export default function Navbar() {
-  const { cart } = useCart();
-  const cartCount = cart.length;
+  const { cartItems } = useCart();
+  const cartCount = cartItems.length;
   const { lang, changeLang, t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
