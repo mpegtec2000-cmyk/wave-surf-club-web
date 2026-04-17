@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import { getCurrentUser } from '@/lib/data';
 import { 
   ShoppingCart, Package, Users, Briefcase, 
@@ -28,7 +28,6 @@ const MODULES = [
   { icon: CalendarDays, title: 'Agenda Clases', code: 'AGD', path: '/dashboard/agenda-ventas', color: '#0891b2', tag: 'LOGÍSTICA', desc: 'Clases y arriendos agendados online' },
   { icon: Globe, title: 'Ventas Online', code: 'VON', path: '/dashboard/ventas-online', color: '#6366f1', tag: 'E-COMMERCE', desc: 'Reservas y compras vía web' },
   { icon: Store, title: 'Ventas Físicas', code: 'VFI', path: '/dashboard/ventas-fisicas', color: '#0284c7', tag: 'POS', desc: 'Seguimiento granular de ventas presenciales' },
-  { icon: TrendingUp, title: 'Banco Online', code: 'BNK', path: '/dashboard/fondos', color: '#f43f5e', tag: 'FINANZAS', desc: 'Banco receptor y control de ingresos web' },
   { icon: Settings, title: 'Configuración', code: 'CFG', path: '/dashboard/settings', color: '#94a3b8', tag: 'SISTEMA', desc: 'Credenciales, Flow y parámetros del sistema' },
 ];
 
@@ -50,6 +49,7 @@ export default function MenuPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [kpis, setKpis] = useState({ totalHoy: 0, txHoy: 0, clientes: 0, inventario: 0 });
+  const [tiendaKpis, setTiendaKpis] = useState({ totalHoy: 0, totalMes: 0, cantidadMes: 0, ultimas5: [] });
   const [loading, setLoading] = useState(true);
   const [systemTime, setSystemTime] = useState('');
   const [activeFilter, setActiveFilter] = useState('TODOS');
@@ -82,6 +82,27 @@ export default function MenuPage() {
         clientes: clientRes.count || 0,
         inventario: invRes.count || 0,
       });
+
+      // Tienda KPI fetch
+      try {
+        const inicioMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+        const [ventasHoyRes, ventasMesRes] = await Promise.all([
+          supabase.from('ordenes_tienda').select('total').eq('estado', 'pagado').gte('created_at', `${today}T00:00:00`),
+          supabase.from('ordenes_tienda').select('id, total, nombre_cliente, productos, created_at').eq('estado', 'pagado').gte('created_at', inicioMes).order('created_at', { ascending: false })
+        ]);
+        
+        const ventasHoy = ventasHoyRes.data || [];
+        const ventasMes = ventasMesRes.data || [];
+        
+        setTiendaKpis({
+          totalHoy: ventasHoy.reduce((s, o) => s + o.total, 0),
+          totalMes: ventasMes.reduce((s, o) => s + o.total, 0),
+          cantidadMes: ventasMes.length,
+          ultimas5: ventasMes.slice(0, 5)
+        });
+      } catch (err) {
+        console.error("No se pudo cargar ordenes_tienda:", err);
+      }
     } catch (e) { /* silent */ }
     setLoading(false);
   };
@@ -152,6 +173,52 @@ export default function MenuPage() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* ── Tienda Online Banner ── */}
+      <div className="tienda-dashboard-card">
+        <div className="tienda-card-header">
+          <div className="tienda-header-left">
+            <Globe size={18} color="#38bdf8" />
+            <h3>Ventas Tienda Online</h3>
+          </div>
+          <button className="tienda-ver-todas" onClick={() => router.push('/dashboard/tienda/ordenes')}>
+            Ver todas las órdenes <ArrowUpRight size={14} />
+          </button>
+        </div>
+        <div className="tienda-card-body">
+          <div className="tienda-stats-col">
+            <div className="tienda-stat">
+              <span className="stat-label">Hoy</span>
+              <span className="stat-val">${tiendaKpis.totalHoy.toLocaleString('es-CL')}</span>
+            </div>
+            <div className="tienda-stat">
+              <span className="stat-label">Este Mes</span>
+              <span className="stat-val highlight">${tiendaKpis.totalMes.toLocaleString('es-CL')}</span>
+              <span className="stat-sub">{tiendaKpis.cantidadMes} órdenes completadas</span>
+            </div>
+          </div>
+          <div className="tienda-list-col">
+            <h4>Últimas 5 Órdenes</h4>
+            {tiendaKpis.ultimas5.length > 0 ? (
+              <ul className="tienda-orders-list">
+                {tiendaKpis.ultimas5.map(ord => (
+                  <li key={ord.id}>
+                    <div className="ord-left">
+                      <span className="ord-date">{new Date(ord.created_at).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })}</span>
+                      <span className="ord-name">{ord.nombre_cliente}</span>
+                    </div>
+                    <div className="ord-right">
+                      ${ord.total.toLocaleString('es-CL')}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="tienda-no-orders">No hay órdenes recientes.</p>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* ── Module Grid Header ── */}
@@ -428,6 +495,139 @@ export default function MenuPage() {
           .system-banner { flex-direction: column; align-items: flex-start; }
           .banner-right { display: none; }
           .system-footer { flex-direction: column; text-align: center; }
+          .tienda-card-body { flex-direction: column; }
+        }
+
+        /* ── Tienda Card ── */
+        .tienda-dashboard-card {
+          background: #0d1220;
+          border: 1px solid #1a2236;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        .tienda-card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 14px 20px;
+          border-bottom: 1px solid #1a2236;
+          background: rgba(255,255,255,0.02);
+        }
+        .tienda-header-left {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .tienda-header-left h3 {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 700;
+          color: #e2e8f0;
+        }
+        .tienda-ver-todas {
+          background: none;
+          border: none;
+          color: #38bdf8;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          transition: 0.2s;
+        }
+        .tienda-ver-todas:hover {
+          color: #7dd3fc;
+        }
+        .tienda-card-body {
+          display: flex;
+          gap: 24px;
+          padding: 20px;
+        }
+        .tienda-stats-col {
+          flex: 0 0 30%;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          padding-right: 20px;
+          border-right: 1px solid #1a2236;
+        }
+        .tienda-stat {
+          display: flex;
+          flex-direction: column;
+        }
+        .tienda-stat .stat-label {
+          font-size: 11px;
+          color: #64748b;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 700;
+          margin-bottom: 4px;
+        }
+        .tienda-stat .stat-val {
+          font-size: 24px;
+          font-weight: 900;
+          color: #e2e8f0;
+          font-family: var(--font-mono, monospace);
+        }
+        .tienda-stat .stat-val.highlight {
+          color: #38bdf8;
+        }
+        .tienda-stat .stat-sub {
+          font-size: 11px;
+          color: #475569;
+          margin-top: 4px;
+        }
+        .tienda-list-col {
+          flex: 1;
+        }
+        .tienda-list-col h4 {
+          margin: 0 0 12px 0;
+          font-size: 11px;
+          color: #64748b;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .tienda-orders-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .tienda-orders-list li {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 12px;
+          background: rgba(255,255,255,0.03);
+          border-radius: 6px;
+        }
+        .ord-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .ord-date {
+          font-size: 11px;
+          color: #94a3b8;
+          font-weight: 600;
+        }
+        .ord-name {
+          font-size: 13px;
+          color: #e2e8f0;
+          font-weight: 500;
+        }
+        .ord-right {
+          font-size: 13px;
+          font-weight: 700;
+          color: #10b981;
+          font-family: var(--font-mono, monospace);
+        }
+        .tienda-no-orders {
+          font-size: 13px;
+          color: #64748b;
         }
       `}</style>
     </div>

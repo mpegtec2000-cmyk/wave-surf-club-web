@@ -44,7 +44,7 @@ export default function LandingPage() {
         {/* FLOATING BOOKING CTA */}
         {showBooking && (
           <div className="floating-booking-banner">
-            <a href="/agenda" className="booking-link agenda-attention">
+            <a href="/tienda" className="booking-link agenda-attention">
               <span className="booking-dot"></span>
               AGENDA TU CLASE
             </a>

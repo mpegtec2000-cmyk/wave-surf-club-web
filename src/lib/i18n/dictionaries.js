@@ -31,7 +31,6 @@ export const dictionaries = {
       'agenda-ventas': "Agenda de Clases y Arriendos",
       'suscripciones': "Suscripciones",
       'cotizaciones': "Cotizaciones",
-      fondos: "BANCO ONLINE",
       settings: "Configuración"
     },
     landing: {

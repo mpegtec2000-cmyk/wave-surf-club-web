@@ -23,7 +23,7 @@ const NAV_GROUPS = [
   { label: 'OPERACIONES', keys: ['pos', 'closing', 'cotizaciones'] },
   { label: 'LOGÍSTICA', keys: ['inventory', 'agenda-ventas'] },
   { label: 'CLIENTES', keys: ['clients', 'suscripciones'] },
-  { label: 'VENTAS', keys: ['ventas-online', 'ventas-fisicas', 'fondos'] },
+  { label: 'VENTAS', keys: ['ventas-online', 'ventas-fisicas'] },
   { label: 'ADMINISTRACIÓN', keys: ['staff', 'finanzas', 'movimientos'] },
   { label: 'SISTEMA', keys: ['dashboard', 'settings', 'antigravity'] },
 ];
