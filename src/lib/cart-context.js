@@ -55,8 +55,17 @@ export function CartProvider({ children }) {
 
 export function useCart() {
   const context = useContext(CartContext);
+  // Return safe defaults during SSR pre-rendering when CartProvider is not yet available
   if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
+    return {
+      cartItems: [],
+      isCartOpen: false,
+      setIsCartOpen: () => {},
+      addToCart: () => {},
+      removeFromCart: () => {},
+      clearCart: () => {},
+      total: 0,
+    };
   }
   return context;
 }
