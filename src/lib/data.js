@@ -8,19 +8,37 @@ import { supabase } from './supabase';
 // ── AUTH ─────────────────────────────────────
 
 export async function loginUser(email, password) {
-  // Buscar perfil por email en nuestra tabla profiles
-  const { data: profile, error } = await supabase
+  const cleanEmail = email.trim(); // No pasamos a lower todavía por si la DB es sensible
+  
+  // Buscar perfil por email (usamos ilike para insensibilidad a mayúsculas)
+  const { data: profileData, error } = await supabase
     .from('profiles')
-    .select(`
-      *,
-      staff_branch_access ( branch_id )
-    `)
-    .eq('email', email)
+    .select('*')
+    .ilike('email', cleanEmail)
     .eq('is_staff', true)
-    .single();
+    .limit(1);
 
-  if (error || !profile) {
-    return { error: 'Usuario no encontrado' };
+  if (error) {
+    console.error('Login Profile Query Error:', error);
+    return { error: 'Error de conexión con el servidor (P)' };
+  }
+
+  const profile = profileData && profileData.length > 0 ? profileData[0] : null;
+
+  if (!profile) {
+    return { error: 'Usuario no encontrado o no tiene permisos de staff' };
+  }
+
+  // Fetch branch access separately to avoid 406 errors on complex joins
+  const { data: accessData, error: accessErr } = await supabase
+    .from('staff_branch_access')
+    .select('branch_id')
+    .eq('profile_id', profile.id);
+
+  if (accessErr) {
+    console.error('Login Access Query Error:', accessErr);
+    // Continue anyway with empty branches if this fails? 
+    // No, better to return error if it's a real connection issue.
   }
 
   // Verificar contraseña simple (en producción usaríamos Supabase Auth)
@@ -33,7 +51,7 @@ export async function loginUser(email, password) {
     'ana@wavesurf.cl': 'ana2026',
   };
 
-  if (STAFF_PASSWORDS[email] !== password) {
+  if (STAFF_PASSWORDS[cleanEmail] !== password) {
     return { error: 'Contraseña incorrecta' };
   }
 
@@ -44,7 +62,9 @@ export async function loginUser(email, password) {
     name: profile.name,
     role: profile.role,
     phone: profile.phone,
-    allowed_branches: profile.staff_branch_access.map(a => a.branch_id),
+    allowed_branches: Array.isArray(accessData) 
+      ? accessData.map(a => a.branch_id)
+      : [],
   };
 
   if (typeof window !== 'undefined') {

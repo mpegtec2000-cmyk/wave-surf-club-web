@@ -7,6 +7,8 @@ import {
   Settings, CalendarDays, ClipboardList 
 } from 'lucide-react';
 
+
+
 const MODULES = [
   {
     icon: ShoppingCart,

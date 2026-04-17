@@ -7,18 +7,10 @@ import Cart from '@/components/Cart';
 import { ShoppingBag } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
+import { useCart } from '@/lib/cart-context';
+
 export default function ServiciosPage() {
-  const [cartOpen, setCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
-
-  const addToCart = (service) => {
-    setCartItems([...cartItems, service]);
-    setCartOpen(true);
-  };
-
-  const removeFromCart = (index) => {
-    setCartItems(cartItems.filter((_, i) => i !== index));
-  };
+  const { cartItems, isCartOpen, setIsCartOpen, addToCart, removeFromCart } = useCart();
 
   return (
     <div className="servicios-master">
@@ -191,13 +183,13 @@ export default function ServiciosPage() {
 
 
       {/* CABECERA */}
-      <Navbar cartCount={cartItems.length} onCartClick={() => setCartOpen(true)} />
+      <Navbar cartCount={cartItems.length} onCartClick={() => setIsCartOpen(true)} />
 
       <div className="master-label">Servicios Wave Surf Club</div>
 
       <Cart 
-        isOpen={cartOpen} 
-        onClose={() => setCartOpen(false)} 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
         items={cartItems} 
         onRemove={removeFromCart} 
       />

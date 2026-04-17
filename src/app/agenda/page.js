@@ -1,394 +1,114 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useCart } from '@/lib/cart-context';
+import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 import Image from 'next/image';
-import { supabase } from '@/lib/supabase';
-import { addClient, queueNotification } from '@/lib/data';
-import Navbar from '@/components/Navbar';
-import { CheckCircle2 } from 'lucide-react';
+import { 
+  Calendar, 
+  Clock, 
+  Users, 
+  MapPin, 
+  ChevronRight, 
+  CheckCircle2, 
+  ArrowRight,
+  ShieldCheck,
+  AlertCircle
+} from 'lucide-react';
 
 export default function AgendaPage() {
-  const [step, setStep] = useState('form'); // form, selection, checkout, success
+  const { addToCart } = useCart();
+  const [step, setStep] = useState('form'); // form, selection, confirmar, success
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState(null);
 
+  // Form Data
   const [formData, setFormData] = useState({
-    name: '', rut: '', email: '', phone: '', sede: 'Concón'
+    name: '',
+    rut: '',
+    email: '',
+    phone: '',
+    sede: 'Concón'
   });
 
-  // Date/Time/Students States
+  const [numAlumnos, setNumAlumnos] = useState(1);
   const [bookingDate, setBookingDate] = useState('');
   const [bookingTime, setBookingTime] = useState('');
-  const [numAlumnos, setNumAlumnos] = useState(1);
-  const [pricingLevels, setPricingLevels] = useState([]);
-  const [calculatedPrice, setCalculatedPrice] = useState(null);
-  const [receivingCard, setReceivingCard] = useState(null);
-  const [dateRange, setDateRange] = useState({ min: '', max: '' });
 
-  useEffect(() => {
-    // 14 day window
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const future = new Date(today);
-    future.setDate(future.getDate() + 15);
+  const timeSlots = ["09:00", "10:30", "12:00", "15:00", "16:30", "18:00"];
 
-    setDateRange({
-      min: tomorrow.toISOString().split('T')[0],
-      max: future.toISOString().split('T')[0]
+  const getPrice = () => {
+    const base = 25000;
+    const discount = numAlumnos > 1 ? 0.9 : 1;
+    return {
+      price_clp: base * numAlumnos * discount,
+      num: numAlumnos
+    };
+  };
+
+  const calculatedPrice = getPrice();
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    setStep('selection');
+  };
+
+  const handleGoToConfirm = () => {
+    if (!bookingDate || !bookingTime) return;
+    setStep('confirmar');
+  };
+
+  const handleFinalConfirm = async () => {
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 600));
+    
+    addToCart({
+      name: `CLASE DE SURF - ${formData.sede}`,
+      category: 'Clase / Coaching',
+      price: calculatedPrice.price_clp,
+      metadata: {
+        ...formData,
+        date: bookingDate,
+        time: bookingTime,
+        alumnos: numAlumnos
+      }
     });
 
-    // Fetch prices and receiving card info
-    const fetchData = async () => {
-      const { data: prices } = await supabase.from('service_pricing').select('*').eq('is_active', true);
-      if (prices) setPricingLevels(prices);
-
-      const { data: settings } = await supabase.from('site_settings').select('value').eq('key', 'receiving_card_info').single();
-      if (settings) setReceivingCard(JSON.parse(settings.value));
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (!bookingDate || !numAlumnos || pricingLevels.length === 0) return;
-    const dateObj = new Date(bookingDate + 'T12:00:00');
-    const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
-    const category = isWeekend ? 'FINDE' : 'SEMANA';
-    const match = pricingLevels.find(p => p.category === category && p.alumno_count === parseInt(numAlumnos));
-    if (match) setCalculatedPrice(match);
-  }, [bookingDate, numAlumnos, pricingLevels]);
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMsg(null);
-    try {
-      await addClient({ ...formData, metadata: { origin: 'website_agenda_portal' } });
-      setStep('selection');
-    } catch (err) {
-      setMsg({ type: 'error', text: 'Error al registrar tus datos. Reintenta.' });
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
+    setStep('success');
   };
-
-  const handlePayment = async () => {
-    setLoading(true);
-    try {
-      // Simulate processing
-      await new Promise(r => setTimeout(r, 2000));
-      
-      const { error } = await supabase.from('transactions').insert({
-        rental_details: `VENTA ONLINE: ${numAlumnos} Alumno(s) | ${formData.sede} | ${bookingDate} ${bookingTime}`,
-        total: calculatedPrice.price_clp,
-        type: 'ingreso',
-        category: 'clase',
-        method: 'debito',
-        client_rut: formData.rut,
-        branch_id: formData.sede === 'Concón' ? 2 : (formData.sede === 'Pichilemu' ? 3 : 1),
-        payment_status: 'pagado',
-        is_web_tx: true,
-        web_metadata: { 
-          ...formData, 
-          date: bookingDate, 
-          time: bookingTime, 
-          alumnos: numAlumnos,
-          order_id: `WS-${Date.now().toString().slice(-6)}` 
-        }
-      });
-      if (error) throw error;
-
-      await queueNotification(
-        'booking_confirmation', 
-        'mpeg.logistica@gmail.com', 
-        `NUEVA RESERVA: ${formData.sede} - ${formData.name}`,
-        `RESERVA CONFIRMADA\nSede: ${formData.sede}\nFecha: ${bookingDate}\nHora: ${bookingTime}\nAlumnos: ${numAlumnos}\nCliente: ${formData.name}\nRUT: ${formData.rut}\nTeléfono: ${formData.phone}\nEmail: ${formData.email}`
-      );
-
-      setStep('success');
-    } catch (err) {
-      setMsg({ type: 'error', text: 'Error procesando la reserva: ' + (err.message || 'Error desconocido') });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const timeSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
 
   return (
-    <div className="agenda-portal">
-      <style jsx>{`
-        .agenda-portal {
-          min-height: 100vh;
-          background: #000;
-          color: #f8fafc;
-          font-family: var(--font-inter), sans-serif;
-          display: flex;
-          flex-direction: column;
-          overflow-x: hidden;
-        }
-
-        /* --- MAIN CONTENT --- */
-        .portal-main {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 120px 20px 80px;
-          position: relative;
-          width: 100%;
-        }
-        .bg-overlay {
-          position: fixed;
-          inset: 0;
-          z-index: 1;
-          opacity: 0.4;
-        }
-
-        .booking-card {
-          position: relative;
-          z-index: 2;
-          width: 100%;
-          max-width: 1000px;
-          background: rgba(15, 23, 42, 0.4);
-          backdrop-filter: blur(40px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 32px;
-          overflow: hidden;
-          display: grid;
-          grid-template-columns: 1fr 1.2fr;
-          box-shadow: 0 50px 100px rgba(0,0,0,0.6);
-          animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes slideUp {
-          from { transform: translateY(40px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-
-        @media (max-width: 768px) {
-          .portal-main {
-            padding: 100px 10px 40px;
-          }
-          .booking-card { 
-            grid-template-columns: 1fr; 
-            border-radius: 20px;
-          }
-          .card-visual { display: none; }
-          .card-form {
-            padding: 30px 20px;
-          }
-          .form-title {
-            font-size: 12px;
-            margin-bottom: 30px;
-          }
-          .sede-selector {
-            grid-template-columns: 1fr;
-          }
-          .alumnos-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-          .time-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-          .price-summary {
-            flex-direction: column;
-            gap: 20px;
-            text-align: center;
-          }
-          .price-summary button {
-            width: 100%;
-          }
-        }
-
-        .card-visual {
-          position: relative;
-          background: #38bdf8;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-          padding: 40px;
-          color: #0b1120;
-        }
-        .card-visual h2 {
-          font-family: var(--font-archivo), sans-serif;
-          font-size: 64px;
-          font-weight: 900;
-          line-height: 0.8;
-          margin-bottom: 24px;
-          text-transform: uppercase;
-          letter-spacing: -3px;
-        }
-        .card-visual p {
-          font-family: var(--font-playfair), serif;
-          font-style: italic;
-          font-size: 18px;
-        }
-
-        .card-form {
-          padding: 60px;
-        }
-        .form-title {
-          font-family: var(--font-archivo), sans-serif;
-          font-size: 14px;
-          font-weight: 900;
-          letter-spacing: 3px;
-          text-transform: uppercase;
-          margin-bottom: 40px;
-          color: #38bdf8;
-        }
-
-        .sede-selector {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 10px;
-          margin-bottom: 30px;
-        }
-        .sede-btn {
-          padding: 12px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #fff;
-          border-radius: 8px;
-          font-size: 10px;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          cursor: pointer;
-          transition: all 0.3s;
-        }
-        .sede-btn.active {
-          background: #38bdf8;
-          color: #0b1120;
-          border-color: #38bdf8;
-        }
-
-        .form-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 20px;
-          margin-bottom: 30px;
-        }
-        @media (max-width: 640px) {
-          .form-grid { grid-template-columns: 1fr; }
-        }
-
-        .field-group { display: flex; flex-direction: column; gap: 8px; }
-        .label {
-          font-size: 10px;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          color: #94a3b8;
-        }
-        .input {
-          background: rgba(15, 23, 42, 0.5);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 14px;
-          border-radius: 8px;
-          color: #fff;
-          outline: none;
-          transition: border-color 0.3s;
-        }
-        .input:focus { border-color: #38bdf8; }
-
-        .btn-submit {
-          width: 100%;
-          background: #38bdf8;
-          color: #0b1120;
-          font-family: var(--font-archivo), sans-serif;
-          font-size: 13px;
-          font-weight: 900;
-          padding: 18px;
-          border: none;
-          border-radius: 8px;
-          text-transform: uppercase;
-          letter-spacing: 2px;
-          cursor: pointer;
-          transition: all 0.3s;
-        }
-        .btn-submit:hover {
-          background: #fff;
-          transform: translateY(-2px);
-        }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .msg {
-          padding: 15px;
-          border-radius: 8px;
-          font-size: 13px;
-          margin-bottom: 25px;
-          text-align: center;
-        }
-        .msg.error { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
-        .msg.success { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.2); }
-
-        .alumnos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; }
-        .al-pill { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; font-weight: 800; transition: 0.2s; font-size: 14px; }
-        .al-pill.active { background: #38bdf8; color: #0b1120; border-color: #38bdf8; }
-        
-        .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; max-height: 180px; overflow-y: auto; padding-right: 5px; }
-        .time-pill { font-size: 11px; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); text-align: center; cursor: pointer; }
-        .time-pill.active { background: #38bdf8; color: #0b1120; }
-        
-        .price-summary { background: #38bdf8; color: #0b1120; padding: 25px; border-radius: 20px; margin-top: 30px; display: flex; align-items: center; justify-content: space-between; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .receipt-card { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); padding: 25px; border-radius: 16px; margin: 20px 0; }
-        .checkout-info { margin: 20px 0; padding: 20px; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2); }
-        
-        @keyframes attention-pulse {
-          0%, 100% { transform: scale(1); text-shadow: 0 0 0px rgba(56, 189, 248, 0); }
-          50% { transform: scale(1.05); text-shadow: 0 0 15px rgba(56, 189, 248, 0.6); }
-        }
-
-        .celeste-animate {
-          color: #38bdf8 !important;
-          animation: attention-pulse 2.5s ease-in-out infinite;
-          display: inline-block;
-        }
-      `}</style>
-
+    <div className="agenda-master">
       <Navbar />
-
-      {/* CONTENIDO PRINCIPAL */}
-      <main className="portal-main">
-        <div className="bg-overlay">
-          <Image 
-            src="/PORTADA.jpg" 
-            alt="Wave School" 
-            fill 
-            priority
-            style={{ objectFit: 'cover', objectPosition: 'center' }} 
-          />
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1 }} />
+      
+      <main className="booking-main">
+        <div className="hero-bg">
+          <Image src="/fondo-surf.jpg" alt="Background" fill priority style={{ objectFit: 'cover' }} />
+          <div className="overlay" />
         </div>
 
         <div className="booking-card">
           <div className="card-visual">
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.6, zIndex: 0 }}>
-              <Image src="/fondo-escuela.png" alt="Visual" fill style={{ objectFit: 'cover', objectPosition: 'center' }} />
+            <div className="visual-image">
+              <Image src="/fondo-escuela.png" alt="School" fill style={{ objectFit: 'cover' }} />
             </div>
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <h2 className="celeste-animate" style={{ fontSize: '32px', lineHeight: '1.2', letterSpacing: '-1px' }}>Agenda tu clase con profesionales del deporte.</h2>
-              <p>Agenda tu primera sesión y conviértete en parte de la familia Wave Surf Club.</p>
+            <div className="visual-content">
+              <h2 className="celeste-animate">AGENDA TU CLASE CON PROFESIONALES.</h2>
+              <p>Únete a la familia Wave Surf Club y vive la experiencia del mar.</p>
             </div>
           </div>
 
           <div className="card-form">
-            <h2 className="form-title">Portal de Reservas</h2>
-
-            {msg && <div className={`msg ${msg.type}`}>{msg.text}</div>}
+            <h2 className="portal-title">PORTAL DE RESERVAS</h2>
 
             {step === 'form' && (
-              <form onSubmit={handleRegister}>
-                <span className="label" style={{ display: 'block', marginBottom: '10px' }}>Selecciona tu Sede</span>
+              <form onSubmit={handleRegister} className="anim-fade">
+                <span className="label">SELECCIONA TU SEDE</span>
                 <div className="sede-selector">
                   {['Punta Piedra', 'Concón', 'Pichilemu'].map(s => (
                     <button 
-                      key={s} 
-                      type="button" 
+                      key={s} type="button" 
                       className={`sede-btn ${formData.sede === s ? 'active' : ''}`}
                       onClick={() => setFormData({...formData, sede: s})}
                     >
@@ -398,173 +118,132 @@ export default function AgendaPage() {
                 </div>
 
                 <div className="form-grid">
-                  <div className="field-group">
-                    <label className="label">Nombre Completo</label>
-                    <input required type="text" className="input" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="Ej: Juan Pérez" />
-                  </div>
-                  <div className="field-group">
-                    <label className="label">RUT</label>
-                    <input required type="text" className="input" value={formData.rut} onChange={e => setFormData({...formData, rut: e.target.value})} placeholder="12.345.678-9" />
-                  </div>
-                  <div className="field-group">
-                    <label className="label">Email</label>
-                    <input required type="email" className="input" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} placeholder="tu@email.com" />
-                  </div>
-                  <div className="field-group">
-                    <label className="label">Teléfono</label>
-                    <input required type="text" className="input" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="+56 9..." />
-                  </div>
+                  <input required className="input" placeholder="Nombre Completo" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                  <input required className="input" placeholder="RUT" value={formData.rut} onChange={e => setFormData({...formData, rut: e.target.value})} />
+                  <input required className="input" placeholder="Email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                  <input required className="input" placeholder="Teléfono" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
                 </div>
 
-                <button type="submit" className="btn-submit" disabled={loading}>
-                  {loading ? 'Procesando...' : 'Siguiente Paso'}
-                </button>
+                <button type="submit" className="btn-primary">SIGUIENTE PASO <ChevronRight size={18} /></button>
               </form>
             )}
 
             {step === 'selection' && (
-              <div className="step-content">
+              <div className="anim-fade">
                 <div className="field-group">
-                  <span className="label">¿Cuántos alumnos serán?</span>
+                  <span className="label">¿CUÁNTOS ALUMNOS?</span>
                   <div className="alumnos-grid">
                     {[1,2,3,4].map(n => (
-                      <div key={n} className={`al-pill ${numAlumnos === n ? 'active' : ''}`} onClick={() => setNumAlumnos(n)}>{n}</div>
+                      <button key={n} className={`al-pill ${numAlumnos === n ? 'active' : ''}`} onClick={() => setNumAlumnos(n)}>{n}</button>
                     ))}
                   </div>
                 </div>
 
-                <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
+                <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div className="field-group">
-                    <label className="label">Fecha de tu Sesión</label>
-                    <div style={{ position: 'relative' }}>
-                      <input 
-                        type="date" 
-                        className="input" 
-                        value={bookingDate} 
-                        onChange={e => setBookingDate(e.target.value)}
-                        min={dateRange.min}
-                        max={dateRange.max}
-                        style={{
-                          width: '100%',
-                          fontSize: '18px',
-                          padding: '20px',
-                          background: '#fff',
-                          color: '#000',
-                          fontWeight: 800,
-                          borderRadius: '16px',
-                          border: 'none',
-                          boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
-                        }}
-                      />
-                      <div style={{ fontSize: '10px', marginTop: '10px', color: '#94a3b8', fontStyle: 'italic' }}>
-                        * Selecciona o escribe la fecha (Día / Mes / Año)
-                      </div>
-                    </div>
+                    <label className="label">FECHA</label>
+                    <input type="date" className="input" value={bookingDate} onChange={e => setBookingDate(e.target.value)} />
                   </div>
                   <div className="field-group">
-                    <label className="label">Horario Preferido</label>
-                    <div className="time-grid" style={{ maxHeight: '320px' }}>
-                      {timeSlots.map(t => (
-                        <div key={t} className={`time-pill ${bookingTime === t ? 'active' : ''}`} onClick={() => setBookingTime(t)}>{t}</div>
-                      ))}
-                    </div>
+                    <label className="label">HORA</label>
+                    <select className="input" value={bookingTime} onChange={e => setBookingTime(e.target.value)}>
+                      <option value="">Seleccionar...</option>
+                      {timeSlots.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
                   </div>
                 </div>
 
-                {calculatedPrice && (
-                  <div className="price-summary" style={{ marginTop: '50px' }}>
-                    <div>
-                      <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800 }}>Total Sesión</span>
-                      <h3 style={{ fontSize: '24px', margin: 0 }}>${calculatedPrice.price_clp.toLocaleString()} CLP</h3>
-                    </div>
-                    <button onClick={() => setStep('checkout')} className="btn-submit" style={{ width: 'auto', padding: '12px 24px', background: '#000', color: '#fff' }}>Continuar</button>
-                  </div>
-                )}
+                <button onClick={handleGoToConfirm} disabled={!bookingDate || !bookingTime} className="btn-primary">REVISAR RESUMEN <ChevronRight size={18} /></button>
+                <button onClick={() => setStep('form')} className="btn-ghost">Volver</button>
               </div>
             )}
 
-            {step === 'checkout' && (
-              <div className="step-content">
-                <span className="label">Resumen de Reserva</span>
-                <div className="receipt-card">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', marginBottom: '10px' }}>
-                    <span>Sede {formData.sede}</span>
-                    <span>{numAlumnos} Alumno(s)</span>
+            {step === 'confirmar' && (
+              <div className="anim-fade">
+                <h3 className="section-subtitle">RESUMEN DE RESERVA</h3>
+                <div className="summary-box">
+                  <div className="summary-row">
+                    <div className="s-info">
+                      <strong>Sede {formData.sede}</strong>
+                      <span>{numAlumnos} Alumno(s)</span>
+                    </div>
+                    <span>{bookingDate} @ {bookingTime}</span>
                   </div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8' }}>{bookingDate} @ {bookingTime}</div>
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '20px', paddingTop: '20px', fontSize: '28px', fontWeight: 900 }}>
-                    ${calculatedPrice.price_clp.toLocaleString()} CLP
+                  <div className="total-row">
+                    <span>Monto Total</span>
+                    <span>${calculatedPrice.price_clp.toLocaleString()} CLP</span>
                   </div>
                 </div>
 
-                <div className="checkout-info" style={{ background: 'rgba(56, 189, 248, 0.1)', borderColor: 'rgba(56, 189, 248, 0.3)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '40px', height: '40px', background: '#38bdf8', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                    </div>
-                    <div>
-                      <span className="label" style={{ marginBottom: '2px' }}>Pago Directo</span>
-                      <p style={{ margin: 0, fontSize: '13px', fontWeight: 700 }}>Redcompra / Débito Online</p>
-                    </div>
-                  </div>
-                  
-                  {receivingCard && (
-                    <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                      <div style={{ fontSize: '9px', textTransform: 'uppercase', color: '#64748b', marginBottom: '8px' }}>Cuenta Receptora</div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '4px' }}>
-                        <span style={{ color: '#94a3b8' }}>Titular:</span>
-                        <span style={{ fontWeight: 600 }}>{receivingCard.holder_name}</span>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-                        <span style={{ color: '#94a3b8' }}>Banco:</span>
-                        <span style={{ fontWeight: 600 }}>{receivingCard.bank || 'Estado'}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  <p style={{ fontSize: '11px', marginTop: '12px', color: '#94a3b8' }}>
-                    Serás redirigido a la pasarela de pago seguro para completar tu transacción de forma automática.
-                  </p>
+                <div className="info-alert">
+                  <AlertCircle size={18} />
+                  <p>Tu clase se añadirá a la bolsa de compras para el pago final.</p>
                 </div>
 
-                <button onClick={handlePayment} disabled={loading} className="btn-submit" style={{ background: '#38bdf8', color: '#000' }}>
-                  {loading ? 'Procesando Pago...' : 'Pagar con Débito'}
+                <button onClick={handleFinalConfirm} disabled={loading} className="btn-primary-blue">
+                  {loading ? 'AGREGANDO...' : 'CONFIRMAR Y AÑADIR A LA BOLSA'}
                 </button>
+                <button onClick={() => setStep('selection')} className="btn-ghost">Editar selección</button>
               </div>
             )}
 
             {step === 'success' && (
-              <div className="step-content" style={{ textAlign: 'center' }}>
-                 <div style={{ width: '80px', height: '80px', background: '#4ade80', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px auto', boxShadow: '0 20px 40px -10px rgba(74, 222, 128, 0.5)' }}>
-                   <CheckCircle2 size={40} color="#000" />
-                 </div>
-                 <h2 style={{ fontSize: '24px', fontWeight: 900, marginBottom: '10px' }}>¡VENTA REGISTRADA!</h2>
-                 <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: 1.6, marginBottom: '30px' }}>
-                   Tu reserva para el día <b>{bookingDate}</b> ha sido procesada exitosamente.<br/>
-                   Se ha enviado un comprobante a <b>{formData.email}</b>.
-                 </p>
-                 
-                 <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'left', marginBottom: '32px' }}>
-                   <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>Detalles de la Operación</div>
-                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                     <span style={{ fontSize: '13px', color: '#94a3b8' }}>ID Operación:</span>
-                     <span style={{ fontSize: '13px', fontWeight: 700 }}>WS-{Date.now().toString().slice(-6)}</span>
-                   </div>
-                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                     <span style={{ fontSize: '13px', color: '#94a3b8' }}>Monto:</span>
-                     <span style={{ fontSize: '13px', fontWeight: 700, color: '#38bdf8' }}>${calculatedPrice.price_clp.toLocaleString()} CLP</span>
-                   </div>
-                 </div>
-
-                 <Link href="/" className="btn-submit" style={{ display: 'block', textDecoration: 'none', background: '#38bdf8' }}>Volver al Inicio</Link>
+              <div className="anim-fade text-center">
+                <div className="success-icon">
+                  <CheckCircle2 size={48} color="#000" />
+                </div>
+                <h2>¡AGREGADO!</h2>
+                <div className="mini-card">
+                  <div className="row"><span>Sede:</span> <strong>{formData.sede}</strong></div>
+                  <div className="row"><span>Monto:</span> <strong className="celeste">${calculatedPrice.price_clp.toLocaleString()}</strong></div>
+                </div>
+                <Link href="/cart" className="btn-primary-pink">PAGAR AHORA (IR AL CARRO)</Link>
+                <Link href="/servicios" className="btn-ghost" style={{ marginTop: '10px' }}>Ver más servicios</Link>
               </div>
             )}
           </div>
         </div>
       </main>
 
+      {/* STYLES INTERNOS PARA ASEGURAR COMPILACION */}
+      <style jsx>{`
+        .agenda-master { min-height: 100vh; background: #0b1120; color: #fff; padding-top: var(--nav-height); font-family: sans-serif; }
+        .booking-main { max-width: 1200px; margin: 0 auto; padding: 60px 20px; position: relative; }
+        .hero-bg { position: fixed; inset: 0; z-index: 0; }
+        .overlay { position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(15,23,42,0.6) 0%, #0b1120 100%); }
+        .booking-card { position: relative; z-index: 1; display: grid; grid-template-columns: 450px 1fr; background: #0f172a; border-radius: 32px; overflow: hidden; }
+        .card-visual { position: relative; padding: 60px 40px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .visual-image { position: absolute; inset: 0; opacity: 0.4; }
+        .visual-content { position: relative; z-index: 10; }
+        .celeste-animate { color: #38bdf8; font-size: 32px; font-weight: 900; margin-bottom: 20px; }
+        .card-form { padding: 60px; background: rgba(15,23,42,0.8); }
+        .portal-title { font-size: 14px; font-weight: 900; color: #38bdf8; margin-bottom: 40px; }
+        .label { font-size: 11px; font-weight: 800; color: #64748b; margin-bottom: 12px; display: block; }
+        .sede-selector { display: flex; gap: 10px; margin-bottom: 30px; }
+        .sede-btn { flex: 1; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; cursor: pointer; }
+        .sede-btn.active { background: #38bdf8; color: #000; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .input { width: 100%; padding: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; }
+        .btn-primary, .btn-primary-blue { width: 100%; height: 60px; background: #38bdf8; color: #000; border: none; border-radius: 16px; font-weight: 900; cursor: pointer; margin-top: 10px; }
+        .btn-primary-pink { width: 100%; height: 60px; background: #ec4899; color: #fff; border: none; border-radius: 16px; font-weight: 900; text-decoration: none; display: flex; align-items: center; justify-content: center; margin-top: 30px; }
+        .btn-ghost { width: 100%; padding: 15px; background: none; border: none; color: #64748b; font-weight: 700; cursor: pointer; text-align: center; }
+        .alumnos-grid { display: flex; gap: 10px; margin-bottom: 30px; }
+        .al-pill { flex: 1; height: 50px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .al-pill.active { background: #38bdf8; color: #000; }
+        .summary-box { background: rgba(255,255,255,0.03); border-radius: 20px; padding: 30px; margin-bottom: 25px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .total-row { display: flex; justify-content: space-between; font-size: 24px; font-weight: 900; }
+        .info-alert { display: flex; gap: 10px; color: #94a3b8; font-size: 13px; margin-bottom: 30px; }
+        .success-icon { width: 80px; height: 80px; background: #4ade80; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; }
+        .mini-card { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; margin-top: 30px; }
+        .mini-card .row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .celeste { color: #38bdf8; }
+        .anim-fade { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      `}</style>
+
       <footer style={{ textAlign: 'center', paddingBottom: '40px', opacity: 0.3, fontSize: '10px', textTransform: 'uppercase', letterSpacing: '3px' }}>
-        Wave Surf Club © 2026 — Reserva de Clases y Coaching
+        Wave Surf Club © 2026
       </footer>
     </div>
   );

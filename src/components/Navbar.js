@@ -43,7 +43,7 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
     { id: 'agenda', key: 'menu_agenda', href: '/agenda', type: 'route' },
     { id: 'contacto', key: 'menu_contacto', href: '/contacto', type: 'route' },
     { id: 'eventos', key: 'menu_eventos', href: '/eventos', type: 'route' },
-    { id: 'carro', key: 'menu_carro', href: '#', type: 'cart' },
+    { id: 'carro', key: 'menu_carro', href: '/cart', type: 'route' },
   ];
 
   const handleScrollTo = (e, id) => {
@@ -229,6 +229,8 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
                     textDecoration: 'none', 
                     letterSpacing: '1px'
                   }}
+                  target={item.id === 'carro' ? '_blank' : undefined}
+                  rel={item.id === 'carro' ? 'noopener noreferrer' : undefined}
                   className={item.id === 'agenda' ? 'agenda-attention' : ''}
                 >
                   {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
@@ -263,16 +265,14 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
                 onClick={(e) => {
                   if (item.type === 'anchor') {
                     handleScrollTo(e, item.id);
-                  } else if (item.type === 'cart') {
-                    e.preventDefault();
-                    onCartClick && onCartClick();
-                    setMenuOpen(false);
                   } else {
                     setMenuOpen(false);
                   }
                 }}
                 className={item.id === 'agenda' ? 'agenda-attention' : ''}
                 style={item.id === 'agenda' ? { color: '#38bdf8' } : {}}
+                target={item.id === 'carro' ? '_blank' : undefined}
+                rel={item.id === 'carro' ? 'noopener noreferrer' : undefined}
               >
                 {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
               </Link>

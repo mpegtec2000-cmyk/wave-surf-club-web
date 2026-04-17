@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ShoppingCart, X, Trash2, ChevronRight, CreditCard } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Cart({ isOpen, onClose, items, onRemove }) {
   if (!isOpen) return null;
@@ -51,9 +52,11 @@ export default function Cart({ isOpen, onClose, items, onRemove }) {
             <span className="total-amount">${total.toLocaleString('es-CL')}</span>
           </div>
           <p className="cart-note">Los precios finales pueden variar según disponibilidad de sede.</p>
-          <button className="checkout-btn" disabled={items.length === 0}>
-            AGENDAR Y PAGAR <CreditCard size={18} style={{marginLeft: '10px'}} />
-          </button>
+          <Link href="/checkout" onClick={onClose} style={{ textDecoration: 'none', display: 'block' }}>
+            <button className="checkout-btn" disabled={items.length === 0}>
+              AGENDAR Y PAGAR <CreditCard size={18} style={{marginLeft: '10px'}} />
+            </button>
+          </Link>
         </footer>
       </div>
 
