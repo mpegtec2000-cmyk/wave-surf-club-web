@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getCurrentUser, logoutUser } from '@/lib/data';
+import { supabase } from '@/lib/supabase';
 import { NAV_ITEMS, BRANCHES, LANGUAGES } from '@/lib/constants';
 import { BranchContext } from '@/lib/branch-context';
 import { useTranslation } from '@/lib/i18n-context';
