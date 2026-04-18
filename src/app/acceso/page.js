@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { User, Briefcase, Lock, Mail, UserPlus, LogIn, Key, Phone, CreditCard, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { loginUser } from '@/lib/data';
 
-export default function AccesoPage() {
+function AccesoContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'cliente');
@@ -489,5 +489,13 @@ export default function AccesoPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+export default function AccesoPage() {
+  return (
+    <Suspense fallback={<div style={{minHeight: '100vh', background: '#000'}}></div>}>
+      <AccesoContent />
+    </Suspense>
   );
 }
