@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { 
   Package, Truck, CheckCircle, Clock, Search, 
   ChevronRight, Filter, ShoppingBag, User, 
-  MapPin, Phone, Mail, Calendar, Info, X
+  MapPin, Phone, Mail, Calendar, Info
 } from 'lucide-react';
 
 export default function PedidosLogisticaPage() {
@@ -20,7 +20,7 @@ export default function PedidosLogisticaPage() {
     fetchPedidos();
     
     const channel = supabase
-      .channel('pedidos-logs-root')
+      .channel('pedidos-logs-erp')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'ordenes_tienda' }, () => {
         fetchPedidos();
       })
@@ -337,5 +337,25 @@ export default function PedidosLogisticaPage() {
         .loading-state, .empty-state { text-align: center; padding: 100px; color: #475569; }
       `}</style>
     </div>
+  );
+}
+
+function X(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
   );
 }
