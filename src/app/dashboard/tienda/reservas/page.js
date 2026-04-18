@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Calendar, Clock, Plus, CheckCircle, Search } from 'lucide-react';
+import { Calendar, Clock, Plus, CheckCircle, Search, ClipboardList } from 'lucide-react';
 
 export default function TiendaReservasPage() {
   const [reservas, setReservas] = useState([]);
