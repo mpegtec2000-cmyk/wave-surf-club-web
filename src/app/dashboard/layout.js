@@ -839,8 +839,8 @@ export default function DashboardLayout({ children }) {
           cursor: pointer;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 8px 24px rgba(14,165,233,0.4);
-          z-index: 101;
+          z-index: 9999;
+          touch-action: manipulation;
         }
 
         /* Utilities */
