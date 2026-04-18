@@ -21,6 +21,13 @@ function PagoExitosoContent() {
     } else {
       setLoading(false);
     }
+
+    // Redirect to home after 10 seconds
+    const timer = setTimeout(() => {
+      router.push('/');
+    }, 10000);
+
+    return () => clearTimeout(timer);
   }, [ordenId]);
 
   const fetchOrden = async () => {
@@ -56,7 +63,14 @@ function PagoExitosoContent() {
         </div>
         
         <h1>¡PAGO EXITOSO!</h1>
-        <p className="subtitle">Tu compra ha sido procesada correctamente.</p>
+        <p className="subtitle">
+          Gracias por tu compra. Nuestro equipo te contactará pronto. 
+          ¡Te esperamos en nuestra escuela <strong>WAVE SURF CLUB</strong>!
+        </p>
+        
+        <p style={{ fontSize: '12px', color: '#555', marginBottom: '20px' }}>
+          Serás redirigido al inicio en unos segundos...
+        </p>
 
         {loading ? (
           <p>Cargando detalles de la orden...</p>
@@ -97,8 +111,8 @@ function PagoExitosoContent() {
           <p>No se encontró la orden.</p>
         )}
 
-        <Link href="/tienda" className="btn-volver">
-          <ArrowLeft size={16} /> VOLVER A LA TIENDA
+        <Link href="/" className="btn-volver">
+          <ArrowLeft size={16} /> VOLVER AL INICIO
         </Link>
       </div>
 
