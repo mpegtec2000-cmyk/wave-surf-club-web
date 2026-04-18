@@ -2553,4 +2553,14 @@ a:hover { color: var(--accent-secondary); }
     position: relative;
     width: 100%;
   }
+
+  .rut-search-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  
+  .rut-search-grid > div {
+    justify-content: center !important;
+    width: 100% !important;
+  }
 }

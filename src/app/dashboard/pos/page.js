@@ -325,17 +325,17 @@ export default function POSPage() {
               </h3>
             </div>
             <div style={{ padding: '32px' }}>
-              <div className="rut-search-wrap" style={{ maxWidth: 800, display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <div className="rut-search-grid" style={{ maxWidth: 800, display: 'grid', gridTemplateColumns: '1fr auto', gap: '12px', alignItems: 'center' }}>
                 <input
                   type="text"
                   className="form-input search-input-pos"
-                  style={{ flex: '1 1 200px', margin: 0, borderRadius: 'var(--radius-md)', minWidth: '150px' }}
+                  style={{ width: '100%', margin: 0, borderRadius: 'var(--radius-md)', height: 60 }}
                   placeholder="Ingrese RUT del Cliente..."
                   value={rut}
                   onChange={(e) => setRut(formatRut(e.target.value))}
                   onKeyDown={handleKeyDown}
                 />
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '12px', flexShrink: 0 }}>
                   <button 
                     className="rut-search-btn search-button-pos" 
                     style={{ borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 60, height: 60 }}
@@ -343,6 +343,9 @@ export default function POSPage() {
                   >
                     <Search size={24} />
                   </button>
+                  
+                  <div style={{ width: '2px', height: '40px', background: 'var(--border-subtle)', margin: '0 4px' }} />
+
                   <button 
                     className="rut-search-btn" 
                     style={{ background: '#3b82f6', height: 60, width: 60, borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '20px' }}
