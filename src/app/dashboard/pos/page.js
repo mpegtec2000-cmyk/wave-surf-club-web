@@ -41,6 +41,11 @@ export default function POSPage() {
   const [recentTx, setRecentTx] = useState([]);
   const [txDateFilter, setTxDateFilter] = useState('hoy');
 
+  // Quick Stock (Contingency Mode)
+  const [showQuickStock, setShowQuickStock] = useState(false);
+  const [qsTablas, setQsTablas] = useState('');
+  const [qsTrajes, setQsTrajes] = useState('');
+
   useEffect(() => {
     const u = getCurrentUser();
     setUser(u);
@@ -149,6 +154,45 @@ export default function POSPage() {
     setSubscriptionPeriod('mensual');
   };
 
+  const handleQuickStockSubmit = async () => {
+    if (!qsTablas && !qsTrajes) {
+      showToast('Ingrese cantidades', 'error');
+      return;
+    }
+
+    setLoading(true);
+    // Logic for quick stock exit could be a special transaction category or a log
+    const note = `SALIDA RÁPIDA (CONTINGENCIA): ${qsTablas || 0} Tablas, ${qsTrajes || 0} Trajes`;
+    
+    // We register it as an 'incident' or special 'salida' with zero cost or a generic cost if needed.
+    // For now, just a success feedback as a "log" entry in transactions.
+    const newTx = {
+      branch_id: selectedBranchId,
+      staff_id: user.id,
+      client_rut: 'CONTINGENCIA',
+      type: 'salida',
+      category: 'otros',
+      method: 'efectivo',
+      total: 0,
+      is_incident: true,
+      incident_note: note,
+      created_at: new Date().toISOString(),
+    };
+
+    const { error } = await addTransaction(newTx);
+    setLoading(false);
+
+    if (error) {
+      showToast('Error: ' + error.message, 'error');
+    } else {
+      showToast('✅ Salida de Stock Registrada', 'success');
+      setQsTablas('');
+      setQsTrajes('');
+      setShowQuickStock(false);
+      await loadOpenTx();
+    }
+  };
+
   const handleFinalizeIndividual = async (txId, label) => {
     const { isConfirmed } = await MySwal.fire({
       title: '¿Finalizar esta tarea?',
@@ -248,13 +292,49 @@ export default function POSPage() {
                 </button>
                 <button 
                   className="rut-search-btn" 
-                  style={{ background: 'var(--accent-action)', height: 60, padding: '0 20px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  onClick={() => MySwal.fire('Registro Rápido', 'Módulo de creación de cliente express próximamente.', 'info')}
-                  title="Nuevo Cliente"
+                  style={{ background: '#3b82f6', height: 60, padding: '0 20px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '20px' }}
+                  onClick={() => setShowQuickStock(!showQuickStock)}
+                  title="Contingencia Stock (S)"
                 >
-                  <UserPlus size={24} />
+                  S
                 </button>
               </div>
+
+              {/* QUICK STOCK CONTINGENCY SECTION */}
+              {showQuickStock && (
+                <div className="animate-slide-down" style={{ marginTop: 20, padding: 20, background: '#0f172a', borderRadius: 'var(--radius-lg)', border: '1px solid #3b82f6' }}>
+                  <h4 style={{ color: '#60a5fa', margin: '0 0 16px 0', fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>🚀 REGISTRO RÁPIDO (SIN ETIQUETA)</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div style={{ background: '#1e293b', padding: 12, borderRadius: 'var(--radius-md)' }}>
+                      <label style={{ display: 'block', fontSize: 10, color: '#94a3b8', marginBottom: 4 }}>TABLAS</label>
+                      <input 
+                        type="number" 
+                        placeholder="Cant." 
+                        value={qsTablas}
+                        onChange={(e) => setQsTablas(e.target.value)}
+                        style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: '1px solid #475569', color: '#fff', outline: 'none', fontSize: 18, fontWeight: 'bold' }} 
+                      />
+                    </div>
+                    <div style={{ background: '#1e293b', padding: 12, borderRadius: 'var(--radius-md)' }}>
+                      <label style={{ display: 'block', fontSize: 10, color: '#94a3b8', marginBottom: 4 }}>TRAJES</label>
+                      <input 
+                        type="number" 
+                        placeholder="Cant." 
+                        value={qsTrajes}
+                        onChange={(e) => setQsTrajes(e.target.value)}
+                        style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: '1px solid #475569', color: '#fff', outline: 'none', fontSize: 18, fontWeight: 'bold' }} 
+                      />
+                    </div>
+                  </div>
+                  <button 
+                    onClick={handleQuickStockSubmit}
+                    disabled={loading}
+                    style={{ width: '100%', marginTop: 16, background: 'var(--color-success)', color: '#fff', padding: '12px', borderRadius: 'var(--radius-md)', border: 'none', fontWeight: 800, cursor: 'pointer', transition: '0.2s' }}
+                  >
+                    {loading ? 'REGISTRANDO...' : 'REGISTRAR SALIDA'}
+                  </button>
+                </div>
+              )}
 
               {searchError && (
                 <div style={{ marginTop: 16, padding: '16px', borderRadius: 'var(--radius-md)', background: 'rgba(239,68,68,0.05)', border: '1.5px solid rgba(239,68,68,0.2)', color: 'var(--color-danger)', fontWeight: 600 }}>

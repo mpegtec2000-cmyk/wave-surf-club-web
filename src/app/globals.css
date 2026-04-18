@@ -2498,25 +2498,29 @@ a:hover { color: var(--accent-secondary); }
 /* ============================================= */
 /* IPHONE 12 PRO MAX & MOBILE OPTIMIZATIONS      */
 /* ============================================= */
-@media (max-width: 768px) {
+@media (max-width: 430px), (max-width: 768px) {
   .pos-page-wrap {
-    overflow-x: hidden;
+    overflow-x: hidden !important;
     max-width: 100vw;
+    position: relative;
   }
   
   .pos-grid {
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
     gap: 16px;
   }
 
-  .data-section {
-    width: 100%;
+  /* Force all divs and sections to not exceed viewport */
+  .data-section, div, section {
+    max-width: 100vw !important;
+    box-sizing: border-box;
     min-width: unset !important;
   }
 
   .rut-search-wrap {
     max-width: 100% !important;
+    flex-wrap: wrap; /* Fallback if too many buttons */
   }
 
   .total-input-pos {
@@ -2526,10 +2530,27 @@ a:hover { color: var(--accent-secondary); }
   .branch-tabs {
     overflow-x: auto;
     padding-bottom: 8px;
+    display: flex !important;
+    flex-direction: row !important; /* Keep tabs horizontal */
   }
   
   .branch-tab {
     flex-shrink: 0;
     font-size: 11px !important;
+  }
+
+  .pos-sidebar {
+    width: 100% !important;
+    position: static !important;
+    margin-top: 20px;
+    padding-bottom: 60px; /* Safe area for bottom navigation */
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  body, html {
+    overflow-x: hidden !important;
+    position: relative;
+    width: 100%;
   }
 }
