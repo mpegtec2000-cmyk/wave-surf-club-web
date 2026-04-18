@@ -96,7 +96,10 @@ export default function MenuPage() {
     try {
       const today = new Date().toISOString().split('T')[0];
       const [txRes, clientRes, invRes] = await Promise.all([
-        supabase.from('transactions').select('total, type').gte('created_at', today),
+        supabase.from('transactions')
+          .select('total, type')
+          .eq('rental_status', 'finalizado')
+          .gte('created_at', today),
         supabase.from('clients').select('id', { count: 'exact', head: true }),
         supabase.from('inventory').select('id', { count: 'exact', head: true }),
       ]);

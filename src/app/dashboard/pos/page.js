@@ -14,7 +14,7 @@ import { useTranslation } from '@/lib/i18n-context';
 const MySwal = withReactContent(Swal);
 
 export default function POSPage() {
-  const { activeBranchId } = useBranch();
+  const { activeBranchId, setActiveBranchId } = useBranch();
   const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [rut, setRut] = useState('');
@@ -23,7 +23,7 @@ export default function POSPage() {
   const [searchError, setSearchError] = useState('');
   const [deletingId, setDeletingId] = useState(null);
   const [branches, setBranches] = useState([]);
-  const [selectedBranchId, setSelectedBranchId] = useState(1);
+  const [selectedBranchId, setSelectedBranchId] = useState(activeBranchId || 1);
   const [loading, setLoading] = useState(false);
 
   // Transaction form
@@ -59,14 +59,22 @@ export default function POSPage() {
   }, []);
 
   const loadOpenTx = async () => {
-    const branchId = activeBranchId || selectedBranchId;
+    // Priority to the local selected tab in POS
+    const branchId = selectedBranchId;
     const txs = await getOpenTransactions(branchId, 50, txDateFilter);
     setRecentTx(txs);
   };
 
   useEffect(() => {
     loadOpenTx();
-  }, [activeBranchId, selectedBranchId, txDateFilter]);
+  }, [selectedBranchId, txDateFilter]);
+
+  // Sync local selection when global branch changes (e.g. from Topbar)
+  useEffect(() => {
+    if (activeBranchId && activeBranchId !== selectedBranchId) {
+      setSelectedBranchId(activeBranchId);
+    }
+  }, [activeBranchId]);
 
   useEffect(() => {
     async function fetchBranches() {
@@ -321,7 +329,10 @@ export default function POSPage() {
           <button
             key={b.id}
             className={`branch-tab ${selectedBranchId === b.id ? 'active' : ''}`}
-            onClick={() => setSelectedBranchId(b.id)}
+            onClick={() => {
+              setSelectedBranchId(b.id);
+              setActiveBranchId(b.id); // Also update global context for consistency
+            }}
           >
             <span style={{ fontSize: 20 }}>{b.id === 1 ? '🏖️' : b.id === 2 ? '🌊' : '🏄'}</span>
             {b.short_name?.toUpperCase() || b.name?.toUpperCase()}
