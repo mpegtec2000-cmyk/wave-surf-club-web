@@ -72,32 +72,46 @@ export default function TiendaOrdenesPage() {
               <tr>
                 <th>ID Orden</th>
                 <th>Fecha</th>
+                <th>Reserva (Día/Hora)</th>
                 <th>Cliente</th>
                 <th>Monto Total</th>
-                <th>Comisión Flow</th>
                 <th>Estado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {filteredOrdenes.map(o => (
-                <tr key={o.id}>
-                  <td><strong>{o.id.split('-')[0].toUpperCase()}</strong></td>
-                  <td>{new Date(o.created_at).toLocaleString('es-CL')}</td>
-                  <td>
-                    <div className="flex flex-col">
-                      <span>{o.nombre_cliente}</span>
-                      <span className="text-sm text-gray">{o.email_cliente}</span>
-                    </div>
-                  </td>
-                  <td className="font-bold">${o.total.toLocaleString('es-CL')}</td>
-                  <td className="text-gray">${o.comision_flow.toLocaleString('es-CL')}</td>
-                  <td>{getStatusBadge(o.estado)}</td>
-                  <td>
-                    <button onClick={() => setViewingOrden(o)} className="action-btn view"><Eye size={16} /></button>
-                  </td>
-                </tr>
-              ))}
+              {filteredOrdenes.map(o => {
+                // Find first item with reservation
+                const firstReserva = o.productos?.find(p => p.reserva)?.reserva;
+                
+                return (
+                  <tr key={o.id}>
+                    <td><strong>{o.id.split('-')[0].toUpperCase()}</strong></td>
+                    <td>{new Date(o.created_at).toLocaleString('es-CL')}</td>
+                    <td>
+                      {firstReserva ? (
+                        <div className="reserva-tag">
+                          <span className="reserva-date">📅 {firstReserva.fecha.split('-').reverse().join('-')}</span>
+                          <span className="reserva-time">⏰ {firstReserva.hora_inicio}</span>
+                        </div>
+                      ) : (
+                        <span className="text-gray">—</span>
+                      )}
+                    </td>
+                    <td>
+                      <div className="flex flex-col">
+                        <span>{o.nombre_cliente}</span>
+                        <span className="text-sm text-gray">{o.email_cliente}</span>
+                      </div>
+                    </td>
+                    <td className="font-bold">${o.total.toLocaleString('es-CL')}</td>
+                    <td>{getStatusBadge(o.estado)}</td>
+                    <td>
+                      <button onClick={() => setViewingOrden(o)} className="action-btn view"><Eye size={16} /></button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
@@ -157,6 +171,9 @@ export default function TiendaOrdenesPage() {
         .search-box input { background: transparent; border: none; color: #fff; outline: none; width: 100%; }
 
         .table-container { background: #1a2236; border-radius: 12px; overflow: hidden; }
+        .reserva-tag { display: flex; flex-direction: column; gap: 2px; background: rgba(56,189,248,0.1); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(56,189,248,0.2); width: fit-content; }
+        .reserva-date { font-size: 11px; font-weight: 800; color: #38bdf8; }
+        .reserva-time { font-size: 11px; font-weight: 800; color: #fff; }
         .erp-table { width: 100%; border-collapse: collapse; text-align: left; }
         .erp-table th { background: #0f1623; padding: 15px; font-size: 12px; text-transform: uppercase; color: #888; }
         .erp-table td { padding: 15px; border-bottom: 1px solid #2a3441; font-size: 14px; vertical-align: middle; }
