@@ -159,6 +159,21 @@ export default function POSPage() {
     setTxIncidentNote('');
     setRentalDetails('');
     setSubscriptionPeriod('mensual');
+    // Clear client after success
+    setRut('');
+    setClientData(null);
+  };
+
+  const handleGenericClient = () => {
+    setRut('1-9');
+    setClientData({
+      rut: '1-9',
+      name: 'CONSUMIDOR FINAL',
+      email: 'ventas@wavesurfclub.cl',
+      debt_balance: 0
+    });
+    setSearchError('');
+    setDebtAlert(false);
   };
 
   const handleQuickStockSubmit = async () => {
@@ -329,13 +344,13 @@ export default function POSPage() {
                 <input
                   type="text"
                   className="form-input search-input-pos"
-                  style={{ width: '100%', margin: 0, borderRadius: 'var(--radius-md)', height: 60 }}
+                  style={{ width: '100%', margin: 0, borderRadius: 'var(--radius-md)', height: 60, flex: 1 }}
                   placeholder="Ingrese RUT del Cliente..."
                   value={rut}
                   onChange={(e) => setRut(formatRut(e.target.value))}
                   onKeyDown={handleKeyDown}
                 />
-                <div style={{ display: 'flex', gap: '12px', flexShrink: 0 }}>
+                <div className="pos-search-actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                   <button 
                     className="rut-search-btn search-button-pos" 
                     style={{ borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 60, height: 60 }}
@@ -344,7 +359,15 @@ export default function POSPage() {
                     <Search size={24} />
                   </button>
                   
-                  <div style={{ width: '2px', height: '40px', background: 'var(--border-subtle)', margin: '0 4px' }} />
+                  <button 
+                    className="rut-search-btn" 
+                    style={{ background: '#f59e0b', height: 60, flex: 1, minWidth: 140, borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+                    onClick={handleGenericClient}
+                  >
+                    👤 CONSUMIDOR FINAL
+                  </button>
+
+                  <div className="search-divider-v" style={{ width: '2px', height: '40px', background: 'var(--border-subtle)', margin: '10px 4px' }} />
 
                   <button 
                     className="rut-search-btn" 
@@ -485,7 +508,7 @@ export default function POSPage() {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
+                <div className="pos-form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                   <div className="form-group">
                     <label>Categoría del Movimiento</label>
                     <select className="form-select" value={txCategory} onChange={(e) => setTxCategory(e.target.value)} required style={{ height: 60, fontSize: 16 }}>
