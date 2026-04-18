@@ -113,7 +113,14 @@ export default function Navbar() {
           flex-direction: column;
           padding: 30px;
           overflow-y: auto;
+          overflow-x: hidden;
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE */
           animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mobile-flyout-overlay::-webkit-scrollbar {
+          display: none; /* Chrome/Safari */
         }
 
         @keyframes slideUp {

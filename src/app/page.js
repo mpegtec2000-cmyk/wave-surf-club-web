@@ -32,6 +32,11 @@ export default function LandingPage() {
 
           {/* REAL TEXT TITLES - Never get cut off */}
           <div className="hero-content">
+            <span className="since">SINCE 2015</span>
+            <h1 className="main-brand-title">WAVE SURF CLUB</h1>
+            <p className="hero-description">
+              Todo partió como un sueño y se hizo realidad. Dedicados a la enseñanza del Skate y Surf en las mejores playas de Chile.
+            </p>
             <div className="hero-actions">
               <a href="/riders" className="btn-pill-premium">
                 <span className="booking-dot"></span>
@@ -128,26 +133,33 @@ export default function LandingPage() {
           margin-bottom: 15px;
           font-weight: 800;
           text-transform: uppercase;
+          word-break: break-word;
+          overflow-wrap: break-word;
         }
 
         .main-brand-title {
-          font-size: clamp(40px, 10vw, 120px);
+          font-size: clamp(2.5rem, 10vw, 120px);
           font-weight: 950;
           line-height: 0.85;
           letter-spacing: -0.05em;
           margin: 0 0 30px 0;
           text-transform: uppercase;
+          width: 100%;
+          word-break: break-word;
+          overflow-wrap: break-word;
         }
 
         .hero-description {
-          font-size: clamp(16px, 2.5vw, 24px);
+          font-size: clamp(14px, 2.5vw, 24px);
           font-weight: 400;
           color: rgba(255,255,255,0.8);
           margin-bottom: 40px;
           line-height: 1.4;
+          width: calc(100% - 2rem);
           max-width: 600px;
           margin-left: auto;
           margin-right: auto;
+          overflow-wrap: break-word;
         }
 
         .hero-actions {
