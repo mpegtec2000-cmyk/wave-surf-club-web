@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Calendar, Clock, Plus, CheckCircle, Search } from 'lucide-react';
+import { Calendar, Clock, Plus, CheckCircle, Search, ClipboardList } from 'lucide-react';
 
 export default function TiendaReservasPage() {
   const [reservas, setReservas] = useState([]);
@@ -24,6 +24,9 @@ export default function TiendaReservasPage() {
   });
   const [saving, setSaving] = useState(false);
 
+  const [typeFilter, setTypeFilter] = useState('todos'); // 'todos', 'clase', 'arriendo'
+  const [isReportOpen, setIsReportOpen] = useState(false);
+
   useEffect(() => {
     fetchReservas();
   }, [dateFilter, viewMode]);
@@ -35,7 +38,7 @@ export default function TiendaReservasPage() {
         .from('reservas')
         .select(`
           *,
-          productos_tienda(nombre),
+          productos_tienda(nombre, categoria),
           ordenes_tienda(nombre_cliente, rut_cliente, telefono_cliente)
         `);
       
@@ -119,8 +122,24 @@ export default function TiendaReservasPage() {
     fetchReservas();
   };
 
+  // Helper to determine type
+  const getTipo = (prod) => {
+    if (!prod) return 'Otro';
+    const name = prod.nombre?.toLowerCase() || '';
+    if (name.includes('clase') || name.includes('curso')) return 'Clase';
+    if (name.includes('arriendo') || name.includes('rent')) return 'Arriendo';
+    return 'Otro';
+  };
+
+  // Filter reservations by type
+  const filteredReservas = (reservas || []).filter(r => {
+    if (typeFilter === 'todos') return true;
+    const tipo = getTipo(r.productos_tienda).toLowerCase();
+    return tipo === typeFilter;
+  });
+
   // Group reservations by date
-  const groupedReservas = (reservas || []).reduce((acc, r) => {
+  const groupedReservas = filteredReservas.reduce((acc, r) => {
     if (!acc[r.fecha]) acc[r.fecha] = [];
     acc[r.fecha].push(r);
     return acc;
@@ -132,16 +151,29 @@ export default function TiendaReservasPage() {
     <div className="tienda-admin">
       <div className="header-actions">
         <h1>Agenda de Reservas (Tienda)</h1>
-        <button className="btn-primary" onClick={handleOpenFastReg}>
-          <Plus size={16} /> REGISTRO RÁPIDO LOCAL
-        </button>
+        <div className="header-btns">
+          <button className="btn-report" onClick={() => setIsReportOpen(true)}>
+            <ClipboardList size={16} /> GENERAR TABLA
+          </button>
+          <button className="btn-primary" onClick={handleOpenFastReg}>
+            <Plus size={16} /> REGISTRO RÁPIDO LOCAL
+          </button>
+        </div>
       </div>
 
       <div className="toolbar">
-        <div className="view-tabs">
-          <button className={viewMode === 'day' ? 'active' : ''} onClick={() => setViewMode('day')}>DÍA</button>
-          <button className={viewMode === 'week' ? 'active' : ''} onClick={() => setViewMode('week')}>SEMANA</button>
-          <button className={viewMode === 'month' ? 'active' : ''} onClick={() => setViewMode('month')}>MES</button>
+        <div className="tool-group">
+          <div className="view-tabs">
+            <button className={viewMode === 'day' ? 'active' : ''} onClick={() => setViewMode('day')}>DÍA</button>
+            <button className={viewMode === 'week' ? 'active' : ''} onClick={() => setViewMode('week')}>SEMANA</button>
+            <button className={viewMode === 'month' ? 'active' : ''} onClick={() => setViewMode('month')}>MES</button>
+          </div>
+
+          <div className="type-tabs">
+            <button className={typeFilter === 'todos' ? 'active' : ''} onClick={() => setTypeFilter('todos')}>TODOS</button>
+            <button className={typeFilter === 'clase' ? 'active' : ''} onClick={() => setTypeFilter('clase')}>CLASES</button>
+            <button className={typeFilter === 'arriendo' ? 'active' : ''} onClick={() => setTypeFilter('arriendo')}>ARRIENDOS</button>
+          </div>
         </div>
 
         <div className="date-filter">
@@ -161,7 +193,7 @@ export default function TiendaReservasPage() {
         {loading ? (
           <div className="loading">Cargando agenda...</div>
         ) : sortedDates.length === 0 ? (
-          <div className="empty-state">No hay reservas agendadas para este periodo.</div>
+          <div className="empty-state">No hay {typeFilter !== 'todos' ? typeFilter + 's' : 'reservas'} agendadas para este periodo.</div>
         ) : (
           sortedDates.map(date => (
             <div key={date} className="date-group">
@@ -179,6 +211,7 @@ export default function TiendaReservasPage() {
                       <span className={`rc-status ${r.estado}`}>{r.estado}</span>
                     </div>
                     <div className="rc-body">
+                      <div className="rc-type-tag">{getTipo(r.productos_tienda)}</div>
                       <h3>{r.productos_tienda?.nombre}</h3>
                       <div className="client-info">
                         <p><strong>Cliente:</strong> {r.ordenes_tienda?.nombre_cliente || 'N/A'}</p>
@@ -201,6 +234,53 @@ export default function TiendaReservasPage() {
           ))
         )}
       </div>
+
+      {/* REPORT MODAL */}
+      {isReportOpen && (
+        <div className="modal-overlay" onClick={() => setIsReportOpen(false)}>
+          <div className="modal-content report-modal" onClick={e => e.stopPropagation()}>
+            <div className="report-header">
+              <div>
+                <h2>Tabla de Control de Reservas</h2>
+                <p>Periodo: {viewMode.toUpperCase()} | Filtro: {typeFilter.toUpperCase()}</p>
+              </div>
+              <button className="btn-print" onClick={() => window.print()}>IMPRIMIR / PDF</button>
+            </div>
+            
+            <div className="report-body">
+              <table className="report-table">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Tipo</th>
+                    <th>Producto</th>
+                    <th>Cliente</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredReservas.map(r => (
+                    <tr key={r.id}>
+                      <td>{r.fecha.split('-').reverse().join('/')}</td>
+                      <td>{r.hora_inicio.substring(0,5)}</td>
+                      <td><strong>{getTipo(r.productos_tienda)}</strong></td>
+                      <td>{r.productos_tienda?.nombre}</td>
+                      <td>{r.ordenes_tienda?.nombre_cliente}</td>
+                    </tr>
+                  ))}
+                  {filteredReservas.length === 0 && (
+                    <tr><td colSpan="5" className="text-center">Sin datos para el reporte</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setIsReportOpen(false)}>Cerrar Reporte</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* FAST REGISTRATION MODAL */}
       {isModalOpen && (
@@ -267,13 +347,18 @@ export default function TiendaReservasPage() {
       <style jsx>{`
         .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .header-actions h1 { font-size: 20px; margin: 0; color: #fff; font-weight: 900; }
+        .header-btns { display: flex; gap: 10px; }
         .btn-primary { background: #38bdf8; color: #000; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .btn-report { background: #1a2236; color: #fff; border: 1px solid #2a3441; padding: 10px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-report:hover { border-color: #38bdf8; color: #38bdf8; }
         
         .toolbar { margin-bottom: 20px; background: #1a2236; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; gap: 15px; border: 1px solid #2a3441; }
-        
-        .view-tabs { display: flex; background: #0f1623; padding: 4px; border-radius: 8px; border: 1px solid #2a3441; }
-        .view-tabs button { background: transparent; border: none; color: #64748b; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
+        .tool-group { display: flex; gap: 15px; }
+
+        .view-tabs, .type-tabs { display: flex; background: #0f1623; padding: 4px; border-radius: 8px; border: 1px solid #2a3441; }
+        .view-tabs button, .type-tabs button { background: transparent; border: none; color: #64748b; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
         .view-tabs button.active { background: #38bdf8; color: #000; }
+        .type-tabs button.active { background: #3b82f6; color: #fff; }
         
         .date-filter { display: flex; align-items: center; gap: 10px; }
         .date-filter label { font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; }
@@ -298,6 +383,7 @@ export default function TiendaReservasPage() {
         .rc-status.completada { background: rgba(100,116,139,0.2); color: #94a3b8; }
 
         .rc-body { padding: 15px; flex: 1; }
+        .rc-type-tag { font-size: 9px; font-weight: 900; color: #3b82f6; text-transform: uppercase; margin-bottom: 5px; }
         .rc-body h3 { margin: 0 0 12px 0; font-size: 15px; color: #fff; font-weight: 800; }
         
         .client-info { font-size: 12px; color: #94a3b8; }
@@ -308,6 +394,19 @@ export default function TiendaReservasPage() {
         .rc-footer { padding: 10px 15px; border-top: 1px solid #2a3441; background: #0f1623; display: flex; justify-content: flex-end; }
         .btn-complete { background: #10b981; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 800; font-size: 11px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; }
         .btn-complete:hover { background: #059669; }
+
+        /* Report Modal Styles */
+        .report-modal { max-width: 800px !important; }
+        .report-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #2a3441; padding-bottom: 15px; }
+        .report-header h2 { margin: 0; }
+        .report-header p { margin: 5px 0 0; color: #64748b; font-size: 12px; }
+        .btn-print { background: #fff; color: #000; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 900; font-size: 11px; cursor: pointer; }
+        
+        .report-body { background: #0f1623; border-radius: 12px; overflow: hidden; }
+        .report-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .report-table th { background: #1a2236; padding: 12px 15px; font-size: 11px; text-transform: uppercase; color: #64748b; border-bottom: 1px solid #2a3441; }
+        .report-table td { padding: 12px 15px; font-size: 13px; border-bottom: 1px solid #2a3441; color: #fff; }
+        .text-center { text-align: center; }
 
         .empty-state, .loading { text-align: center; padding: 60px; color: #64748b; font-weight: 800; font-size: 14px; background: #1a2236; border-radius: 12px; border: 1px dashed #2a3441; grid-column: 1 / -1; }
 
