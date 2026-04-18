@@ -11,6 +11,9 @@ export default function TiendaPage() {
   const { cartItems, addToCart, removeFromCart, getCartTotal, clearCart } = useCart();
   const router = useRouter();
 
+  // Hydration safety
+  const [mounted, setMounted] = useState(false);
+
   // Data states
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -42,28 +45,45 @@ export default function TiendaPage() {
   });
 
   useEffect(() => {
+    setMounted(true);
     fetchData();
     checkUser();
+
+    // Global error listener for debugging
+    const handleError = (e) => {
+      console.error("CRASH DETECTADO:", e);
+      // alert("Error en página: " + (e.message || "Error desconocido"));
+    };
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleError);
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleError);
+    };
   }, []);
 
   const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data: clienteData } = await supabase
-        .from('clientes')
-        .select('*')
-        .eq('auth_user_id', user.id)
-        .single();
-      
-      if (clienteData) {
-        setCliente({
-          nombre: clienteData.nombre || '',
-          apellido: clienteData.apellido || '',
-          rut: clienteData.rut || '',
-          email: clienteData.email || '',
-          telefono: clienteData.telefono || ''
-        });
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: clienteData } = await supabase
+          .from('clientes')
+          .select('*')
+          .eq('auth_user_id', user.id)
+          .maybeSingle();
+        
+        if (clienteData) {
+          setCliente({
+            nombre: clienteData.nombre || '',
+            apellido: clienteData.apellido || '',
+            rut: clienteData.rut || '',
+            email: clienteData.email || '',
+            telefono: clienteData.telefono || ''
+          });
+        }
       }
+    } catch (e) {
+      console.warn("User session check failed", e);
     }
   };
 
@@ -100,7 +120,7 @@ export default function TiendaPage() {
         .in('estado', ['pendiente', 'confirmada']);
       
       if (data) {
-        setOccupiedSlots(data.map(r => r.hora_inicio.substring(0, 5)));
+        setOccupiedSlots(data.map(r => r.hora_inicio?.substring(0, 5) || ''));
       } else {
         setOccupiedSlots([]);
       }
@@ -112,6 +132,7 @@ export default function TiendaPage() {
   };
 
   const handleAddToCart = (product) => {
+    if (!product) return;
     if (product.requiere_reserva) {
       // Get tomorrow's date as default
       const tomorrow = new Date();
@@ -126,26 +147,50 @@ export default function TiendaPage() {
   };
 
   const handleConfirmReservation = () => {
-    if (!selectedDate || !selectedTime) return;
+    if (!selectedDate || !selectedTime || !reservationModal.product) return;
     
-    // Calculate end time
-    const [h, m] = selectedTime.split(':');
-    const endDate = new Date(2000, 0, 1, parseInt(h), parseInt(m));
-    endDate.setMinutes(endDate.getMinutes() + (reservationModal.product.duracion_bloque || 60));
-    const hora_fin = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
+    try {
+      // Calculate end time
+      const timeStr = String(selectedTime || "08:00");
+      const parts = timeStr.split(':');
+      if (parts.length < 2) throw new Error("Invalid time format");
+      
+      const hour = parseInt(parts[0]) || 8;
+      const min = parseInt(parts[1]) || 0;
+      
+      const endDate = new Date(2000, 0, 1, hour, min);
+      const duration = parseInt(reservationModal.product.duracion_bloque) || 60;
+      endDate.setMinutes(endDate.getMinutes() + duration);
+      
+      const hora_fin = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
 
-    addToCart({ 
-      ...reservationModal.product, 
-      cartItemId: Date.now(),
-      reserva: {
-        fecha: selectedDate,
-        hora_inicio: selectedTime,
-        hora_fin: hora_fin
-      }
-    });
-    
-    setReservationModal({ open: false, product: null });
-    setCartOpen(true);
+      addToCart({ 
+        ...reservationModal.product, 
+        cartItemId: Date.now(),
+        reserva: {
+          fecha: selectedDate,
+          hora_inicio: selectedTime,
+          hora_fin: hora_fin
+        }
+      });
+      
+      setReservationModal({ open: false, product: null });
+      setCartOpen(true);
+    } catch (e) {
+      console.error("Reservation confirm failed", e);
+      // Fallback: add anyway without end time if calculation fails
+      addToCart({ 
+        ...reservationModal.product, 
+        cartItemId: Date.now(),
+        reserva: {
+          fecha: selectedDate,
+          hora_inicio: selectedTime,
+          hora_fin: selectedTime // fallback
+        }
+      });
+      setReservationModal({ open: false, product: null });
+      setCartOpen(true);
+    }
   };
 
   const handleCheckout = async () => {
@@ -159,8 +204,8 @@ export default function TiendaPage() {
 
     try {
       // Calculate totals
-      const subtotal = cartItems.reduce((acc, item) => acc + item.precio, 0);
-      const total = cartItems.reduce((acc, item) => acc + item.precio_final, 0);
+      const subtotal = cartItems.reduce((acc, item) => acc + (item.precio || 0), 0);
+      const total = cartItems.reduce((acc, item) => acc + (item.precio_final || 0), 0);
 
       const reservas = cartItems
         .filter(item => item.requiere_reserva && item.reserva)
@@ -199,10 +244,13 @@ export default function TiendaPage() {
     }
   };
 
+  if (!mounted) return <div className="loading-full">Cargando Tienda Wave Surf...</div>;
+
   // Filter products
   const filteredProducts = productos.filter(p => {
+    if (!p) return false;
     if (activeTab !== 'todos' && p.categorias_tienda?.slug !== activeTab) return false;
-    if (searchTerm && !p.nombre.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    if (searchTerm && !(p.nombre || '').toLowerCase().includes(searchTerm.toLowerCase())) return false;
     return true;
   });
 
@@ -281,11 +329,11 @@ export default function TiendaPage() {
                     
                     <div className="product-price-box">
                       <div className="price-final">
-                        ${prod.precio_final.toLocaleString('es-CL')}
+                        ${(prod.precio_final || 0).toLocaleString('es-CL')}
                       </div>
                       {prod.aplica_comision_flow && (
                         <div className="price-comision">
-                          Precio base ${prod.precio.toLocaleString('es-CL')} + {prod.porcentaje_comision}% comisión Flow
+                          Precio base ${(prod.precio || 0).toLocaleString('es-CL')} + {prod.porcentaje_comision}% comisión Flow
                         </div>
                       )}
                     </div>
@@ -327,17 +375,16 @@ export default function TiendaPage() {
             {cartItems.length === 0 ? (
               <div className="cart-empty">Tu carrito está vacío.</div>
             ) : (
-              cartItems.map(item => (
-                <div key={item.cartItemId} className="cart-item">
+              cartItems.map((item, idx) => (
+                <div key={item.cartItemId || idx} className="cart-item">
                   <div className="item-details">
-                    <h4>{item.nombre}</h4>
-                    {item.reserva && (
+                    <h4>{String(item?.nombre || 'Producto')}</h4>
+                    {item?.reserva && (
                       <div className="item-reserva">
-                        <Calendar size={12} /> {item.reserva.fecha.split('-').reverse().join('-')} &nbsp; 
-                        <Clock size={12} /> {item.reserva.hora_inicio}
+                        {String(item.reserva.fecha || '')} | {String(item.reserva.hora_inicio || '')}
                       </div>
                     )}
-                    <div className="item-price">${item.precio_final.toLocaleString('es-CL')}</div>
+                    <div className="item-price">${String(item?.precio_final || 0)}</div>
                   </div>
                   <button className="item-remove" onClick={() => removeFromCart(item.cartItemId)}>
                     <X size={16} />
@@ -351,26 +398,26 @@ export default function TiendaPage() {
             <div className="cart-footer">
               <div className="cart-total">
                 <span>Total a pagar</span>
-                <strong>${getCartTotal().toLocaleString('es-CL')}</strong>
+                <strong>${(getCartTotal() || 0).toLocaleString('es-CL')}</strong>
               </div>
 
               <div className="checkout-form">
                 <h3>Tus Datos</h3>
                 <div className="c-form-group">
                   <User size={14} />
-                  <input type="text" placeholder="Nombre completo" required value={cliente.nombre} onChange={e => setCliente({...cliente, nombre: e.target.value})} />
+                  <input type="text" placeholder="Nombre completo" value={cliente.nombre} onChange={e => setCliente({...cliente, nombre: e.target.value})} />
                 </div>
                 <div className="c-form-group">
                   <CreditCard size={14} />
-                  <input type="text" placeholder="RUT (ej: 12.345.678-9)" required value={cliente.rut} onChange={e => setCliente({...cliente, rut: e.target.value})} />
+                  <input type="text" placeholder="RUT (ej: 12.345.678-9)" value={cliente.rut} onChange={e => setCliente({...cliente, rut: e.target.value})} />
                 </div>
                 <div className="c-form-group">
                   <Mail size={14} />
-                  <input type="email" placeholder="Correo electrónico" required value={cliente.email} onChange={e => setCliente({...cliente, email: e.target.value})} />
+                  <input type="email" placeholder="Correo electrónico" value={cliente.email} onChange={e => setCliente({...cliente, email: e.target.value})} />
                 </div>
                 <div className="c-form-group">
                   <Phone size={14} />
-                  <input type="tel" placeholder="Teléfono" required value={cliente.telefono} onChange={e => setCliente({...cliente, telefono: e.target.value})} />
+                  <input type="tel" placeholder="Teléfono" value={cliente.telefono} onChange={e => setCliente({...cliente, telefono: e.target.value})} />
                 </div>
               </div>
 
@@ -387,7 +434,7 @@ export default function TiendaPage() {
       </div>
 
       {/* RESERVATION MODAL */}
-      {reservationModal.open && (
+      {reservationModal.open && reservationModal.product && (
         <div className="modal-overlay" onClick={() => setReservationModal({ open: false, product: null })}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
@@ -447,6 +494,17 @@ export default function TiendaPage() {
       )}
 
       <style jsx>{`
+        .loading-full {
+          min-height: 100vh;
+          background: #000;
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: var(--font-sans);
+          font-weight: 800;
+          letter-spacing: 2px;
+        }
         .tienda-main {
           min-height: 100vh;
           background: #000;

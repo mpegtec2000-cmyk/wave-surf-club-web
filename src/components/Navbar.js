@@ -9,7 +9,8 @@ import { useCart } from '@/lib/cart-context';
 
 export default function Navbar() {
   const { cartItems } = useCart();
-  const cartCount = cartItems.length;
+  const safeCartItems = Array.isArray(cartItems) ? cartItems : [];
+  const cartCount = safeCartItems.length;
   const { lang, changeLang, t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -223,7 +224,6 @@ export default function Navbar() {
               <li key={item.id}>
                 <Link
                   href={item.href}
-                  target={item.target || '_self'}
                   onClick={(e) => item.type === 'anchor' && handleScrollTo(e, item.id)}
                   style={{
                     fontSize: '11px', 
@@ -233,11 +233,9 @@ export default function Navbar() {
                     textDecoration: 'none', 
                     letterSpacing: '1px'
                   }}
-                  target={item.id === 'carro' ? '_blank' : undefined}
-                  rel={item.id === 'carro' ? 'noopener noreferrer' : undefined}
                   className={item.id === 'agenda' ? 'agenda-attention' : ''}
                 >
-                  {item.id === 'carro' ? t('landing.menu_carro').replace('(0)', `(${cartCount})`) : t(`landing.${item.key}`)}
+                  {item.id === 'carro' ? `CARRO (${cartCount})` : t(`landing.${item.key}`)}
                 </Link>
               </li>
             ))}
