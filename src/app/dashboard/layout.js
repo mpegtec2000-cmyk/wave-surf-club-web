@@ -210,7 +210,7 @@ export default function DashboardLayout({ children }) {
           </div>
 
           {/* Live clock */}
-          <div className="topbar-clock">
+          <div className="topbar-clock hide-mobile">
             <Activity size={12} />
             <span>{currentTime}</span>
           </div>
@@ -273,7 +273,7 @@ export default function DashboardLayout({ children }) {
           </div>
 
           {/* Lang flags */}
-          <div className="topbar-lang">
+          <div className="topbar-lang hide-mobile">
             {LANGUAGES.slice(0, 4).map(language => (
               <button
                 key={language.code}
@@ -864,7 +864,18 @@ export default function DashboardLayout({ children }) {
           .hide-mobile { display: none !important; }
           .topbar-center { display: none; }
           .topbar-clock { display: none; }
+          .topbar-lang { display: none; }
+          .topbar-brand-sub { display: none; }
+          .topbar-brand-name { font-size: 10px !important; }
+          .topbar-logo { height: 20px !important; }
+          .topbar-divider { display: none; }
+          .topbar-breadcrumb { display: none; }
           .erp-page-content { padding: 20px 16px; }
+          .topbar-branch-wrap { 
+            padding: 4px 6px; 
+            max-width: 100px;
+          }
+          .topbar-branch-select { font-size: 10px; }
         }
       `}</style>
     </div>
