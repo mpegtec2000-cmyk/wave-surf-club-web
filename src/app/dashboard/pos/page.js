@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { getCurrentUser, findClientByRut, getOpenTransactions, addTransaction, finalizeTransaction, deleteTransaction, getBranches } from '@/lib/data';
 import { PAYMENT_METHODS, TRANSACTION_CATEGORIES, TRANSACTION_TYPES } from '@/lib/constants';
 import { formatRut } from '@/lib/rut-validator';
-import { Search, Trash2, CheckCircle, RefreshCcw } from 'lucide-react';
+import { Search, Trash2, CheckCircle, RefreshCcw, UserPlus } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -229,17 +229,30 @@ export default function POSPage() {
               </h3>
             </div>
             <div style={{ padding: '32px' }}>
-              <div className="rut-search-wrap" style={{ maxWidth: 540 }}>
+              <div className="rut-search-wrap" style={{ maxWidth: 540, display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <input
                   type="text"
                   className="form-input search-input-pos"
+                  style={{ flex: 1, margin: 0, borderRadius: 'var(--radius-md)' }}
                   placeholder="Ingrese RUT del Cliente..."
                   value={rut}
                   onChange={(e) => setRut(formatRut(e.target.value))}
                   onKeyDown={handleKeyDown}
                 />
-                <button className="rut-search-btn search-button-pos" onClick={handleSearchRUT}>
+                <button 
+                  className="rut-search-btn search-button-pos" 
+                  style={{ borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  onClick={handleSearchRUT}
+                >
                   <Search size={24} />
+                </button>
+                <button 
+                  className="rut-search-btn" 
+                  style={{ background: 'var(--accent-action)', height: 60, padding: '0 20px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  onClick={() => MySwal.fire('Registro Rápido', 'Módulo de creación de cliente express próximamente.', 'info')}
+                  title="Nuevo Cliente"
+                >
+                  <UserPlus size={24} />
                 </button>
               </div>
 

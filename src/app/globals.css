@@ -104,7 +104,6 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
 }
 
 body {
@@ -1099,17 +1098,31 @@ a:hover { color: var(--accent-secondary); }
   align-items: start;
 }
 
+@media (max-width: 1200px) {
+  .pos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .pos-sidebar {
   background: #fff;
   border-radius: var(--radius-lg);
   border: 1.5px solid var(--border-subtle);
-  height: calc(100vh - 160px);
+  height: auto;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
   position: sticky;
   top: 100px;
   box-shadow: var(--shadow-sm);
   overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+  .pos-sidebar {
+    position: static;
+    width: 100% !important;
+  }
 }
 
 .pos-sidebar-header {
@@ -2481,4 +2494,42 @@ a:hover { color: var(--accent-secondary); }
 
 .value.status-ok {
   color: #16a34a !important;
+}
+/* ============================================= */
+/* IPHONE 12 PRO MAX & MOBILE OPTIMIZATIONS      */
+/* ============================================= */
+@media (max-width: 768px) {
+  .pos-page-wrap {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  .pos-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .data-section {
+    width: 100%;
+    min-width: unset !important;
+  }
+
+  .rut-search-wrap {
+    max-width: 100% !important;
+  }
+
+  .total-input-pos {
+    font-size: 32px !important;
+  }
+
+  .branch-tabs {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  
+  .branch-tab {
+    flex-shrink: 0;
+    font-size: 11px !important;
+  }
 }

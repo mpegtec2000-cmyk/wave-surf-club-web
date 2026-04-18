@@ -63,7 +63,32 @@ export default function MenuPage() {
     };
     tick();
     const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
+
+    // Initialize Antigravity Controller for console
+    window.googleAntiGravity = {
+      wakeAll: () => {
+        document.querySelectorAll('.kpi-card, .module-card').forEach(el => {
+          el.style.animation = 'antigravity-float 3s ease-in-out infinite alternate';
+        });
+        console.log("🚀 Antigravity: Todos los elementos despiertos.");
+      },
+      resetPositions: () => {
+        document.querySelectorAll('.kpi-card, .module-card').forEach(el => {
+          el.style.animation = 'none';
+          el.style.transform = 'none';
+        });
+        console.log("🔄 Antigravity: Posiciones reseteadas.");
+      },
+      setGravity: (val) => {
+        document.documentElement.style.setProperty('--gravity-strength', `${val}s`);
+        console.log(`🌌 Antigravity: Fuerza de gravedad ajustada a ${val}`);
+      }
+    };
+
+    return () => {
+      clearInterval(id);
+      delete window.googleAntiGravity;
+    };
   }, []);
 
   const loadKPIs = async () => {
@@ -628,6 +653,32 @@ export default function MenuPage() {
         .tienda-no-orders {
           font-size: 13px;
           color: #64748b;
+        }
+
+        /* ── Antigravity Animations ── */
+        @keyframes antigravity-float {
+          0% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-5px) rotate(1deg); }
+          100% { transform: translateY(5px) rotate(-1deg); }
+        }
+
+        @keyframes subtle-icon-float {
+          from { transform: translateY(0); }
+          to { transform: translateY(-4px); }
+        }
+
+        .kpi-icon-wrap, .module-icon-wrap {
+          animation: subtle-icon-float 3s ease-in-out infinite alternate;
+        }
+
+        .kpi-card:nth-child(2n) .kpi-icon-wrap, 
+        .module-card:nth-child(2n) .module-icon-wrap {
+          animation-delay: 1s;
+        }
+
+        .kpi-card:nth-child(3n) .kpi-icon-wrap, 
+        .module-card:nth-child(3n) .module-icon-wrap {
+          animation-delay: 2s;
         }
       `}</style>
     </div>
