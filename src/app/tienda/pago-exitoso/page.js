@@ -11,12 +11,13 @@ function PagoExitosoContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const ordenId = searchParams.get('orden');
+  const token = searchParams.get('token');
   const [orden, setOrden] = useState(null);
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (ordenId) {
+    if (ordenId || token) {
       fetchOrden();
     } else {
       setLoading(false);
@@ -28,15 +29,21 @@ function PagoExitosoContent() {
     }, 10000);
 
     return () => clearTimeout(timer);
-  }, [ordenId]);
+  }, [ordenId, token]);
 
   const fetchOrden = async () => {
     try {
-      const { data: ordenData } = await supabase
-        .from('ordenes_tienda')
-        .select('*')
-        .eq('id', ordenId)
-        .single();
+      let query = supabase.from('ordenes_tienda').select('*');
+      
+      if (ordenId) {
+        query = query.eq('id', ordenId);
+      } else if (token) {
+        query = query.eq('flow_token', token);
+      } else {
+        return;
+      }
+
+      const { data: ordenData } = await query.single();
       
       setOrden(ordenData);
 
@@ -44,7 +51,7 @@ function PagoExitosoContent() {
         const { data: reservasData } = await supabase
           .from('reservas')
           .select('*, productos_tienda(nombre)')
-          .eq('orden_id', ordenId);
+          .eq('orden_id', ordenData.id);
         
         setReservas(reservasData || []);
       }

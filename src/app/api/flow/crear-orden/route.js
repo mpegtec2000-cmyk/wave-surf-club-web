@@ -56,7 +56,7 @@ export async function POST(request) {
     const amount = total;
     const email = cliente.email;
     const urlConfirmation = `${NEXT_PUBLIC_URL}/api/flow/confirmar`;
-    const urlReturn = `${NEXT_PUBLIC_URL}/tienda/pago-exitoso?orden=${orden.id}`;
+    const urlReturn = `${NEXT_PUBLIC_URL}/api/flow/return`;
 
     const params = {
       apiKey: FLOW_API_KEY,
