@@ -20,10 +20,15 @@ export async function POST(request) {
 
     // Guardar orden en Supabase primero
     const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    );
+    
+    const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://oghqbrtfcmrmucqgehkc.supabase.co';
+    const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9naHFicnRmY21ybXVjcWdlaGtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzA2OTksImV4cCI6MjA5MTAwNjY5OX0.30PI9RTwqtxpKDSQdFhB9pExEV-gTnKDztm0mn8B1_A';
+
+    if (!FLOW_API_KEY || !FLOW_SECRET_KEY) {
+      throw new Error('Configuración de Flow (API_KEY o SECRET) faltante en el servidor.');
+    }
+
+    const supabase = createClient(SB_URL, SB_KEY);
 
     const { data: orden, error } = await supabase
       .from('ordenes_tienda')
