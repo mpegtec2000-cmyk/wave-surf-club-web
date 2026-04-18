@@ -10,7 +10,7 @@ import {
   LayoutDashboard, ShoppingCart, Package, Users,
   FileText, Settings, LogOut, Menu, X, Briefcase, ChevronRight, BarChart3, TrendingUp, TrendingDown,
   ListOrdered, Globe, Store, LifeBuoy, CalendarDays, ClipboardList, Bell, Search,
-  Building2, ChevronDown, Activity, Zap
+  Building2, ChevronDown, Activity, Zap, CheckCircle
 } from 'lucide-react';
 
 const iconMap = {
@@ -37,11 +37,13 @@ export default function DashboardLayout({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentTime, setCurrentTime] = useState('');
   const { t, lang, changeLang } = useTranslation();
   const searchRef = useRef(null);
+  const notifRef = useRef(null);
 
   useEffect(() => {
     const u = getCurrentUser();
@@ -49,6 +51,49 @@ export default function DashboardLayout({ children }) {
     setUser(u);
     setSelectedBranch(u.allowed_branches?.[0] || 1);
   }, [router]);
+
+  // Notifications logic
+  const fetchNotifications = async () => {
+    const { data } = await supabase
+      .from('ordenes_tienda')
+      .select('id, nombre_cliente, total, created_at, estado')
+      .neq('estado', 'revisado')
+      .order('created_at', { ascending: false })
+      .limit(10);
+    setNotifications(data || []);
+  };
+
+  const markNotifAsReviewed = async (id) => {
+    await supabase.from('ordenes_tienda').update({ estado: 'revisado' }).eq('id', id);
+    fetchNotifications();
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+    const channel = supabase
+      .channel('schema-db-changes-root')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'ordenes_tienda' }, payload => {
+        fetchNotifications();
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'ordenes_tienda' }, payload => {
+        fetchNotifications();
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setNotifOpen(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(event.target) && !event.target.closest('.topbar-icon-btn')) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const tick = () => {
@@ -170,10 +215,44 @@ export default function DashboardLayout({ children }) {
           </div>
 
           {/* Notifications */}
-          <button className="topbar-icon-btn notif-btn" onClick={() => setNotifOpen(!notifOpen)}>
-            <Bell size={16} />
-            <span className="notif-badge">3</span>
-          </button>
+          <div className="topbar-notif-wrap" ref={notifRef}>
+            <button className="topbar-icon-btn notif-btn" onClick={() => setNotifOpen(!notifOpen)}>
+              <Bell size={16} />
+              {notifications.length > 0 && <span className="notif-badge">{notifications.length}</span>}
+            </button>
+            
+            {notifOpen && (
+              <div className="notif-panel">
+                <div className="notif-header">
+                  <span>Notificaciones de Venta</span>
+                  <span className="notif-count">{notifications.length} nuevas</span>
+                </div>
+                <div className="notif-list">
+                  {notifications.length === 0 ? (
+                    <div className="notif-empty">No hay nuevas ventas por revisar</div>
+                  ) : (
+                    notifications.map(n => (
+                      <div key={n.id} className="notif-item" onClick={() => markNotifAsReviewed(n.id)}>
+                        <div className="notif-info">
+                          <span className="notif-title">Nueva Venta: {n.id.split('-')[0].toUpperCase()}</span>
+                          <span className="notif-client">{n.nombre_cliente} — ${n.total.toLocaleString('es-CL')}</span>
+                          <span className="notif-time">{new Date(n.created_at).toLocaleTimeString('es-CL')}</span>
+                        </div>
+                        <div className="notif-status-icon">
+                          <CheckCircle size={14} />
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+                {notifications.length > 0 && (
+                  <button className="notif-footer" onClick={() => { router.push('/dashboard/tienda/ordenes'); setNotifOpen(false); }}>
+                    Ver todas las órdenes
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Branch */}
           <div className="topbar-branch-wrap">
@@ -438,7 +517,55 @@ export default function DashboardLayout({ children }) {
           font-weight: 800;
           color: #fff;
           display: flex; align-items: center; justify-content: center;
+          border: 2px solid #0f1623;
+          animation: bounce 0.5s ease-out;
         }
+        @keyframes bounce {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.2); }
+        }
+
+        .topbar-notif-wrap { position: relative; }
+        .notif-panel {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          width: 320px;
+          background: #0f1623;
+          border: 1px solid #1e2a3a;
+          border-radius: 12px;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+          z-index: 300;
+          overflow: hidden;
+          animation: slideDown 0.2s ease-out;
+        }
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .notif-header { padding: 12px 16px; background: #1a2236; border-bottom: 1px solid #1e2a3a; display: flex; justify-content: space-between; align-items: center; }
+        .notif-header span { font-size: 11px; font-weight: 800; color: #fff; text-transform: uppercase; }
+        .notif-count { background: #38bdf8; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 9px !important; }
+
+        .notif-list { max-height: 400px; overflow-y: auto; }
+        .notif-empty { padding: 40px 20px; text-align: center; color: #475569; font-size: 12px; }
+
+        .notif-item { padding: 12px 16px; border-bottom: 1px solid #1e2a3a; display: flex; gap: 12px; align-items: center; transition: all 0.2s; cursor: pointer; }
+        .notif-item:hover { background: rgba(56,189,248,0.05); }
+        .notif-item:hover .notif-title { color: #fff; }
+        .notif-item:last-child { border-bottom: none; }
+
+        .notif-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        .notif-title { font-size: 12px; font-weight: 700; color: #38bdf8; transition: 0.2s; }
+        .notif-client { font-size: 11px; color: #cbd5e1; }
+        .notif-time { font-size: 10px; color: #475569; font-family: var(--font-mono); }
+
+        .notif-status-icon { color: #64748b; opacity: 0.3; transition: 0.2s; }
+        .notif-item:hover .notif-status-icon { color: #10b981; opacity: 1; transform: scale(1.1); }
+
+        .notif-footer { width: 100%; padding: 10px; background: #0d1220; border: none; border-top: 1px solid #1e2a3a; color: #475569; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        .notif-footer:hover { color: #38bdf8; background: #0f1623; }
 
         .topbar-clock {
           display: flex;
