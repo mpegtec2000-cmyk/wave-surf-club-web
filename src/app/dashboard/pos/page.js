@@ -46,6 +46,13 @@ export default function POSPage() {
   const [qsTablas, setQsTablas] = useState('');
   const [qsTrajes, setQsTrajes] = useState('');
 
+  // New Client Form
+  const [showNewClient, setShowNewClient] = useState(false);
+  const [newClientName, setNewClientName] = useState('');
+  const [newClientRut, setNewClientRut] = useState('');
+  const [newClientEmail, setNewClientEmail] = useState('');
+  const [newClientPhone, setNewClientPhone] = useState('');
+
   useEffect(() => {
     const u = getCurrentUser();
     setUser(u);
@@ -193,6 +200,51 @@ export default function POSPage() {
     }
   };
 
+  const handleRegisterNewClient = async (e) => {
+    e.preventDefault();
+    if (!newClientName || !newClientRut || !newClientEmail) {
+      showToast('Nombre, RUT y Email son obligatorios', 'error');
+      return;
+    }
+
+    setLoading(true);
+    const { data: client, error } = await addClient({
+      name: newClientName,
+      rut: newClientRut,
+      email: newClientEmail,
+      phone: newClientPhone,
+      role: 'cliente'
+    });
+
+    if (error) {
+      setLoading(false);
+      showToast('Error al registrar: ' + (error.message || 'RUT ya existe?'), 'error');
+      return;
+    }
+
+    // MARKETING: Queue Welcome Email
+    await queueNotification(
+      'email',
+      newClientEmail,
+      '¡Bienvenido a Wave Surf Club! 🏄‍♂️',
+      `Estimado ${newClientName}, ¡bienvenido a www.wavesurfclub.cl! Agradecemos tu visita a nuestra sede. Ya eres parte de la Wave Fam. Marketing puro bro! 😎`
+    );
+
+    setLoading(false);
+    showToast('✅ Cliente registrado y correo enviado', 'success');
+    
+    // Auto-select
+    setRut(newClientRut);
+    setClientData(client);
+    
+    // Reset and close
+    setNewClientName('');
+    setNewClientRut('');
+    setNewClientEmail('');
+    setNewClientPhone('');
+    setShowNewClient(false);
+  };
+
   const handleFinalizeIndividual = async (txId, label) => {
     const { isConfirmed } = await MySwal.fire({
       title: '¿Finalizar esta tarea?',
@@ -273,32 +325,72 @@ export default function POSPage() {
               </h3>
             </div>
             <div style={{ padding: '32px' }}>
-              <div className="rut-search-wrap" style={{ maxWidth: 540, display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <div className="rut-search-wrap" style={{ maxWidth: 800, display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input
                   type="text"
                   className="form-input search-input-pos"
-                  style={{ flex: 1, margin: 0, borderRadius: 'var(--radius-md)' }}
+                  style={{ flex: '1 1 200px', margin: 0, borderRadius: 'var(--radius-md)', minWidth: '150px' }}
                   placeholder="Ingrese RUT del Cliente..."
                   value={rut}
                   onChange={(e) => setRut(formatRut(e.target.value))}
                   onKeyDown={handleKeyDown}
                 />
-                <button 
-                  className="rut-search-btn search-button-pos" 
-                  style={{ borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  onClick={handleSearchRUT}
-                >
-                  <Search size={24} />
-                </button>
-                <button 
-                  className="rut-search-btn" 
-                  style={{ background: '#3b82f6', height: 60, padding: '0 20px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '20px' }}
-                  onClick={() => setShowQuickStock(!showQuickStock)}
-                  title="Contingencia Stock (S)"
-                >
-                  S
-                </button>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    className="rut-search-btn search-button-pos" 
+                    style={{ borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 60, height: 60 }}
+                    onClick={handleSearchRUT}
+                  >
+                    <Search size={24} />
+                  </button>
+                  <button 
+                    className="rut-search-btn" 
+                    style={{ background: '#3b82f6', height: 60, width: 60, borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '20px' }}
+                    onClick={() => { setShowQuickStock(!showQuickStock); setShowNewClient(false); }}
+                    title="Contingencia Stock (S)"
+                  >
+                    S
+                  </button>
+                  <button 
+                    className="rut-search-btn" 
+                    style={{ background: 'var(--color-success)', height: 60, width: 60, borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    onClick={() => { setShowNewClient(!showNewClient); setShowQuickStock(false); }}
+                    title="Nuevo Cliente (+)"
+                  >
+                    <UserPlus size={24} />
+                  </button>
+                </div>
               </div>
+
+              {/* NEW CLIENT REGISTRATION FORM */}
+              {showNewClient && (
+                <div className="animate-slide-down" style={{ marginTop: 20, padding: 24, background: 'var(--bg-primary)', borderRadius: 'var(--radius-lg)', border: '1.5px solid var(--color-success)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+                  <h4 style={{ color: 'var(--color-success)', margin: '0 0 20px 0', fontSize: 14, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em' }}>👤 REGISTRO EXPRESS DE CLIENTE</h4>
+                  <form onSubmit={handleRegisterNewClient} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
+                    <div className="form-group">
+                      <label style={{ fontSize: 11 }}>Nombre Completo *</label>
+                      <input type="text" className="form-input" value={newClientName} onChange={e => setNewClientName(e.target.value)} required placeholder="Ej: Juan Perez" style={{ height: 48 }} />
+                    </div>
+                    <div className="form-group">
+                      <label style={{ fontSize: 11 }}>RUT *</label>
+                      <input type="text" className="form-input" value={newClientRut} onChange={e => setNewClientRut(formatRut(e.target.value))} required placeholder="12.345.678-9" style={{ height: 48 }} />
+                    </div>
+                    <div className="form-group">
+                      <label style={{ fontSize: 11 }}>Email *</label>
+                      <input type="email" className="form-input" value={newClientEmail} onChange={e => setNewClientEmail(e.target.value)} required placeholder="email@ejemplo.com" style={{ height: 48 }} />
+                    </div>
+                    <div className="form-group">
+                      <label style={{ fontSize: 11 }}>Teléfono (Opcional)</label>
+                      <input type="text" className="form-input" value={newClientPhone} onChange={e => setNewClientPhone(e.target.value)} placeholder="+56 9..." style={{ height: 48 }} />
+                    </div>
+                    <div style={{ gridColumn: '1 / -1', marginTop: 8 }}>
+                      <button type="submit" disabled={loading} className="btn-finalize" style={{ background: 'var(--color-success)', height: 54, fontSize: 16 }}>
+                        {loading ? 'REGISTRANDO...' : 'GUARDAR Y ENVIAR BIENVENIDA'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
 
               {/* QUICK STOCK CONTINGENCY SECTION */}
               {showQuickStock && (

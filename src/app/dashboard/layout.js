@@ -273,13 +273,14 @@ export default function DashboardLayout({ children }) {
           </div>
 
           {/* Lang flags */}
-          <div className="topbar-lang hide-mobile">
-            {LANGUAGES.slice(0, 4).map(language => (
+          <div className="topbar-lang" style={{ display: 'flex', gap: '4px', margin: '0 8px' }}>
+            {LANGUAGES.slice(0, 3).map(language => (
               <button
                 key={language.code}
                 className={`lang-flag-btn ${lang === language.code ? 'active' : ''}`}
                 onClick={() => changeLang(language.code)}
                 title={language.name}
+                style={{ fontSize: '18px', padding: '4px' }}
               >
                 {language.flag}
               </button>
