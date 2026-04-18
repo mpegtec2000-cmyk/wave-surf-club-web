@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
 const FLOW_API_URL = process.env.FLOW_API_URL || 'https://www.flow.cl/api';
-const FLOW_API_KEY = process.env.FLOW_API_KEY;
-const FLOW_SECRET_KEY = process.env.FLOW_SECRET_KEY;
+const FLOW_API_KEY = process.env.FLOW_API_KEY || '546AEF54-FFF9-4305-BC63-6E266EL45C7B';
+const FLOW_SECRET_KEY = process.env.FLOW_SECRET_KEY || 'd3930102502eb35ae78e943b6b92ff9b95576717';
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || 'https://wavesurfclub.cl';
 
 function signParams(params, secretKey) {
