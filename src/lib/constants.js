@@ -79,6 +79,7 @@ export const NAV_ITEMS = [
   { path: '/dashboard/movimientos', label: 'Reg. Movimientos', icon: 'ListOrdered', roles: ['superadmin'] },
   { path: '/dashboard/ventas-online', label: 'Ventas Online', icon: 'Globe', roles: ['superadmin'] },
   { path: '/dashboard/agenda-ventas', label: 'Agenda de Clases y Arriendos', icon: 'CalendarDays', roles: ['superadmin', 'caja'] },
+  { path: '/dashboard/inventory/pedidos', label: 'Pedidos Tienda Online', icon: 'Truck', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/ventas-fisicas', label: 'Ventas Físicas', icon: 'Store', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/suscripciones', label: 'Suscripciones', icon: 'CalendarDays', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/cotizaciones', label: 'Cotizaciones', icon: 'ClipboardList', roles: ['superadmin', 'caja'] },

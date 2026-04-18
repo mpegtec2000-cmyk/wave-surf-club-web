@@ -11,18 +11,18 @@ import {
   LayoutDashboard, ShoppingCart, Package, Users,
   FileText, Settings, LogOut, Menu, X, Briefcase, ChevronRight, BarChart3, TrendingUp, TrendingDown,
   ListOrdered, Globe, Store, LifeBuoy, CalendarDays, ClipboardList, Bell, Search,
-  Building2, ChevronDown, Activity, Zap, CheckCircle
+  Building2, ChevronDown, Activity, Zap, CheckCircle, Truck
 } from 'lucide-react';
 
 const iconMap = {
   LayoutDashboard, ShoppingCart, Package, Users, FileText, Settings, Briefcase, BarChart3, TrendingUp, TrendingDown,
-  ListOrdered, Globe, Store, LifeBuoy, CalendarDays, ClipboardList
+  ListOrdered, Globe, Store, LifeBuoy, CalendarDays, ClipboardList, Truck
 };
 
 // Group nav items by category for SAP-style grouping
 const NAV_GROUPS = [
   { label: 'OPERACIONES', keys: ['pos', 'closing', 'cotizaciones'] },
-  { label: 'LOGÍSTICA', keys: ['inventory', 'agenda-ventas'] },
+  { label: 'LOGÍSTICA', keys: ['inventory', 'agenda-ventas', 'pedidos'] },
   { label: 'TIENDA', keys: ['tienda', 'categorias', 'reservas', 'ordenes'] },
   { label: 'CLIENTES', keys: ['clients', 'suscripciones'] },
   { label: 'VENTAS', keys: ['ventas-online', 'ventas-fisicas'] },
