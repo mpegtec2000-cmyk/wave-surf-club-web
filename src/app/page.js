@@ -125,6 +125,12 @@ export default function LandingPage() {
           max-width: 900px;
         }
 
+        @media (min-width: 1025px) {
+          .hero-content {
+            display: none !important;
+          }
+        }
+
         .since {
           display: block;
           font-size: 14px;
