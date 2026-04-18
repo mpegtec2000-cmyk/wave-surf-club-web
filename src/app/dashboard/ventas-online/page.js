@@ -1,314 +1,367 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { getVentasOnline, getBranches } from '@/lib/data';
-import {
-  Globe, TrendingUp, ShoppingBag, BookOpen, Clock,
-  Download, RefreshCw, Filter, CheckCircle2, XCircle, AlertCircle
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+import { 
+  Globe, Search, Eye, CheckCircle, XCircle, Clock,
+  TrendingUp, ShoppingBag, CalendarDays, RefreshCw
 } from 'lucide-react';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const fmt = (n) => '$ ' + (n || 0).toLocaleString('es-CL');
-const TIME_OFFSET = -4;
-
-function toChileTime(isoString) {
-  if (!isoString) return { date: '—', time: '—', full: '—' };
-  const d = new Date(isoString);
-  const chile = new Date(d.getTime() + TIME_OFFSET * 3600000);
-  return {
-    date: chile.toISOString().slice(0, 10),
-    time: chile.toISOString().slice(11, 16),
-    full: chile.toLocaleString('es-CL', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-  };
-}
-
-const paymentStatusBadge = {
-  pendiente:  { label: '⏳ Pendiente',  bg: '#fef9c3', color: '#854d0e' },
-  pagado:     { label: '✅ Pagado',      bg: '#d1fae5', color: '#065f46' },
-  rechazado:  { label: '❌ Rechazado',  bg: '#fee2e2', color: '#991b1b' },
-  reembolsado:{ label: '↩ Reembolsado',bg: '#dbeafe', color: '#1e3a8a' },
-};
-
-const categoryInfo = {
-  clase:    { icon: '📚', label: 'Clase' },
-  arriendo: { icon: '🏄', label: 'Arriendo' },
-};
-
-// ── Component ─────────────────────────────────────────────────────────────────
 
 export default function VentasOnline() {
-  const today = new Date().toISOString().slice(0, 10);
-
-  const [branches, setBranches] = useState([]);
-  const [txs, setTxs] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Filters
-  const [branchId, setBranchId] = useState('');
-  const [dateFrom, setDateFrom] = useState('');
-  const [dateTo, setDateTo] = useState('');
-  const [catFilter, setCatFilter] = useState('todos');
+  const [ordenes, setOrdenes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
+  
+  // Modal states
+  const [viewingOrden, setViewingOrden] = useState(null);
 
-  useEffect(() => { getBranches().then(setBranches); }, []);
+  useEffect(() => {
+    fetchOrdenes();
+  }, []);
 
-  const load = useCallback(async () => {
-    setLoading(true); setError(null);
-    const { data, error: err } = await getVentasOnline({
-      branchId: branchId ? Number(branchId) : null,
-      dateFrom: dateFrom || null,
-      dateTo:   dateTo   || null,
-    });
-    if (err) setError(err.message);
-    setTxs(data);
-    setLoading(false);
-  }, [branchId, dateFrom, dateTo]);
-
-  useEffect(() => { load(); }, [load]);
-
-  const filtered = txs.filter(tx => {
-    if (catFilter !== 'todos' && tx.category !== catFilter) return false;
-    if (statusFilter !== 'todos' && tx.payment_status !== statusFilter) return false;
-    return true;
-  });
-
-  const totalPagado = filtered
-    .filter(t => t.payment_status === 'pagado')
-    .reduce((s, t) => s + t.total, 0);
-
-  const totalPendiente = filtered
-    .filter(t => t.payment_status === 'pendiente')
-    .reduce((s, t) => s + t.total, 0);
-
-  const countClases    = filtered.filter(t => t.category === 'clase').length;
-  const countArriendos = filtered.filter(t => t.category === 'arriendo').length;
-
-  const branchName = (id) => {
-    const b = branches.find(b => b.id === Number(id));
-    return b ? `${b.emoji} ${b.short_name}` : `Sede ${id}`;
-  };
-
-  const setPreset = (preset) => {
-    const d = new Date();
-    if (preset === 'hoy')   { setDateFrom(today); setDateTo(today); }
-    else if (preset === 'semana') {
-      const mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay()+6)%7));
-      setDateFrom(mon.toISOString().slice(0,10)); setDateTo(today);
-    } else if (preset === 'mes') {
-      setDateFrom(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`); setDateTo(today);
-    } else if (preset === 'todo') {
-      setDateFrom(''); setDateTo('');
+  const fetchOrdenes = async () => {
+    setLoading(true);
+    try {
+      const { data } = await supabase
+        .from('ordenes_tienda')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      setOrdenes(data || []);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const downloadCSV = () => {
-    const rows = [
-      ['Fecha', 'Hora', 'Sede', 'Categoría', 'Método', 'Estado Pago', 'Total', 'RUT', 'Gateway ID'],
-      ...filtered.map(tx => {
-        const { date, time } = toChileTime(tx.created_at);
-        return [date, time, branchName(tx.branch_id), tx.category, tx.method,
-                tx.payment_status, tx.total, tx.client_rut || '', tx.gateway_tx_id || ''];
-      }),
-    ];
-    const csv = rows.map(r => r.join(';')).join('\n');
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `ventas_online_${today}.csv`; a.click();
+  const markAsReviewed = async (id) => {
+    try {
+      await supabase
+        .from('ordenes_tienda')
+        .update({ estado: 'revisado' })
+        .eq('id', id);
+      fetchOrdenes();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  return (
-    <div style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto' }}>
+  const getStatusBadge = (estado) => {
+    switch(estado) {
+      case 'pagado': return <span className="badge-status bg-green"><CheckCircle size={11}/> Pagado</span>;
+      case 'revisado': return <span className="badge-status bg-blue"><CheckCircle size={11}/> Revisado</span>;
+      case 'fallido': return <span className="badge-status bg-red"><XCircle size={11}/> Fallido</span>;
+      default: return <span className="badge-status bg-yellow"><Clock size={11}/> Pendiente</span>;
+    }
+  };
 
+  const filteredOrdenes = ordenes.filter(o => {
+    const matchesSearch = o.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      (o.nombre_cliente && o.nombre_cliente.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesStatus = statusFilter === 'todos' || o.estado === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  const totalRecaudado = filteredOrdenes
+    .filter(o => o.estado === 'pagado' || o.estado === 'revisado')
+    .reduce((sum, o) => sum + o.total, 0);
+
+  const totalPendiente = filteredOrdenes
+    .filter(o => o.estado === 'pendiente')
+    .reduce((sum, o) => sum + o.total, 0);
+
+  return (
+    <div className="ventas-online-container">
       {/* ── Header ── */}
-      <header style={{ marginBottom: '32px', borderBottom: '2px solid var(--border-subtle)', paddingBottom: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+      <header className="page-header">
+        <div className="header-title">
+          <div className="title-icon">
+            <Globe size={20} color="#fff" />
+          </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Globe size={22} color="#fff" />
-              </div>
-              <h1 style={{ fontSize: '30px', fontWeight: 950, color: 'var(--accent-primary)', margin: 0 }}>
-                VENTAS ONLINE
-              </h1>
-            </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '8px', marginLeft: '54px' }}>
-              Clases y Arriendos agendados vía portal web — Solo tú controlas este departamento.
-            </p>
+            <h1>Órdenes de Tienda Online</h1>
+            <p className="subtitle">Gestión integral de ventas realizadas vía portal web</p>
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button onClick={load} style={{ display:'flex',alignItems:'center',gap:'6px',padding:'9px 18px',background:'var(--bg-primary)',border:'1.5px solid var(--border-subtle)',borderRadius:'var(--radius-md)',fontWeight:700,cursor:'pointer',fontSize:'13px' }}>
-              <RefreshCw size={14} /> Actualizar
-            </button>
-            <button onClick={downloadCSV} disabled={filtered.length===0} style={{ display:'flex',alignItems:'center',gap:'6px',padding:'9px 18px',background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',border:'none',borderRadius:'var(--radius-md)',fontWeight:700,cursor:'pointer',fontSize:'13px',opacity:filtered.length===0?.5:1 }}>
-              <Download size={14} /> Exportar CSV
-            </button>
-          </div>
+        </div>
+        <div className="header-actions">
+          <button onClick={fetchOrdenes} className="refresh-btn">
+            <RefreshCw size={14} /> Actualizar
+          </button>
         </div>
       </header>
 
-      {/* ── KPI Cards ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
-        <OnlineKpi icon="💰" label="Total Cobrado" value={fmt(totalPagado)} color="#6366f1" />
-        <OnlineKpi icon="⏳" label="Pendiente de Cobro" value={fmt(totalPendiente)} color="#d97706" />
-        <OnlineKpi icon="📚" label="Clases Agendadas" value={countClases} color="#0891b2" unit="clases" />
-        <OnlineKpi icon="🏄" label="Arriendos Agendados" value={countArriendos} color="#059669" unit="arriendos" />
-      </div>
-
-      {/* ── Filters ── */}
-      <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1.5px solid var(--border-subtle)', padding: '24px', marginBottom: '28px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-          <Filter size={16} color="#6366f1" />
-          <h2 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--accent-primary)' }}>FILTROS</h2>
+      {/* ── KPIs ── */}
+      <div className="kpi-grid">
+        <div className="kpi-card">
+          <div className="kpi-info">
+            <span className="kpi-label">TOTAL COBRADO</span>
+            <span className="kpi-value">{fmt(totalRecaudado)}</span>
+          </div>
+          <div className="kpi-icon blue"><TrendingUp size={24} /></div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '14px' }}>
-          <div>
-            <label style={lbl}>🏖️ Sede</label>
-            <select value={branchId} onChange={e => setBranchId(e.target.value)} style={sel}>
-              <option value="">Todas</option>
-              {branches.map(b => <option key={b.id} value={b.id}>{b.emoji} {b.short_name}</option>)}
-            </select>
+        <div className="kpi-card">
+          <div className="kpi-info">
+            <span className="kpi-label">PENDIENTE DE REVISIÓN</span>
+            <span className="kpi-value">{filteredOrdenes.filter(o => o.estado !== 'revisado' && o.estado !== 'fallido').length}</span>
           </div>
-          <div>
-            <label style={lbl}>📅 Desde</label>
-            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} style={inp} />
-          </div>
-          <div>
-            <label style={lbl}>📅 Hasta</label>
-            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} style={inp} />
-          </div>
-          <div>
-            <label style={lbl}>🏷️ Tipo</label>
-            <select value={catFilter} onChange={e => setCatFilter(e.target.value)} style={sel}>
-              <option value="todos">Todos</option>
-              <option value="clase">📚 Clase</option>
-              <option value="arriendo">🏄 Arriendo</option>
-            </select>
-          </div>
-          <div>
-            <label style={lbl}>💳 Estado Pago</label>
-            <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={sel}>
-              <option value="todos">Todos</option>
-              <option value="pendiente">⏳ Pendiente</option>
-              <option value="pagado">✅ Pagado</option>
-              <option value="rechazado">❌ Rechazado</option>
-              <option value="reembolsado">↩ Reembolsado</option>
-            </select>
-          </div>
+          <div className="kpi-icon yellow"><Clock size={24} /></div>
         </div>
-        <div style={{ marginTop: '14px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {[['hoy','Hoy'],['semana','Esta Semana'],['mes','Este Mes'],['todo','Todo']].map(([k,l]) => (
-            <button key={k} onClick={() => setPreset(k)} style={{ padding:'4px 12px',borderRadius:'20px',fontSize:'12px',fontWeight:700,border:'1.5px solid var(--border-subtle)',background:'var(--bg-primary)',cursor:'pointer' }}>{l}</button>
-          ))}
+        <div className="kpi-card">
+          <div className="kpi-info">
+            <span className="kpi-label">ÓRDENES TOTALES</span>
+            <span className="kpi-value">{filteredOrdenes.length}</span>
+          </div>
+          <div className="kpi-icon purple"><ShoppingBag size={24} /></div>
         </div>
       </div>
 
-      {/* Error / Loading */}
-      {error && <div style={{ display:'flex',gap:'10px',alignItems:'center',background:'#fee2e2',color:'#991b1b',padding:'12px 18px',borderRadius:'var(--radius-md)',marginBottom:'20px' }}><AlertCircle size={16}/>{error}</div>}
-      {loading && <div style={{ textAlign:'center',padding:'60px',color:'var(--text-muted)',fontWeight:700 }}>Cargando ventas online...</div>}
-
-      {/* Empty */}
-      {!loading && filtered.length === 0 && !error && (
-        <div style={{ textAlign:'center',padding:'80px',color:'var(--text-muted)' }}>
-          <p style={{ fontSize:'48px',margin:'0 0 16px' }}>🌐</p>
-          <p style={{ fontWeight:700,fontSize:'16px' }}>No hay ventas online registradas aún.</p>
-          <p style={{ fontSize:'13px',marginTop:'8px' }}>Las ventas aparecerán aquí cuando un cliente agende una clase o arriendo desde el portal web.</p>
+      {/* ── Toolbar ── */}
+      <div className="toolbar">
+        <div className="search-wrap">
+          <Search size={16} className="search-icon" />
+          <input 
+            type="text" 
+            placeholder="Buscar por ID o cliente..." 
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+          />
         </div>
-      )}
+
+        <div className="status-tabs">
+          <button className={statusFilter === 'todos' ? 'active' : ''} onClick={() => setStatusFilter('todos')}>TODOS</button>
+          <button className={statusFilter === 'pendiente' ? 'active' : ''} onClick={() => setStatusFilter('pendiente')}>PENDIENTES</button>
+          <button className={statusFilter === 'pagado' ? 'active' : ''} onClick={() => setStatusFilter('pagado')}>PAGADOS</button>
+          <button className={statusFilter === 'revisado' ? 'active' : ''} onClick={() => setStatusFilter('revisado')}>REVISADOS</button>
+        </div>
+      </div>
 
       {/* ── Table ── */}
-      {!loading && filtered.length > 0 && (
-        <div style={{ background:'#fff',borderRadius:'var(--radius-xl)',border:'1.5px solid var(--border-subtle)',overflow:'hidden',boxShadow:'var(--shadow-sm)' }}>
-          <div style={{ padding:'16px 24px',borderBottom:'1.5px solid var(--border-subtle)',display:'flex',justifyContent:'space-between',alignItems:'center' }}>
-            <span style={{ fontWeight:900,fontSize:'15px',color:'var(--accent-primary)' }}>Detalle de Ventas Online</span>
-            <span style={{ background:'#ede9fe',color:'#6d28d9',padding:'4px 12px',borderRadius:'20px',fontSize:'12px',fontWeight:800 }}>{filtered.length} ventas</span>
+      <div className="table-wrapper">
+        {loading ? (
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <span>Procesando datos de ventas...</span>
           </div>
-          <div style={{ overflowX:'auto' }}>
-            <table style={{ width:'100%',borderCollapse:'collapse' }}>
-              <thead>
-                <tr style={{ background:'rgba(15,23,42,0.03)' }}>
-                  {['Fecha Compra','Sede','Producto / Detalle','Método','Estado Pago','RUT Cliente','Total','Gateway ID'].map(h => (
-                    <th key={h} style={{ padding:'10px 16px',fontSize:'11px',fontWeight:800,color:'var(--text-muted)',textAlign:'left',textTransform:'uppercase',whiteSpace:'nowrap' }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map(tx => {
-                  const { full } = toChileTime(tx.created_at);
-                  const statusB = paymentStatusBadge[tx.payment_status] || { label: tx.payment_status, bg:'#f3f4f6',color:'#374151' };
-                  const catI = categoryInfo[tx.category] || { icon:'📦', label: tx.category };
-                  return (
-                    <tr key={tx.id}
-                        style={{ borderTop:'1px solid var(--border-subtle)' }}
-                        onMouseEnter={e => e.currentTarget.style.background='rgba(99,102,241,.04)'}
-                        onMouseLeave={e => e.currentTarget.style.background=''}>
-                      <td style={td}>
-                        <span style={{ display:'flex',alignItems:'center',gap:'5px',fontSize:'13px',fontWeight:600 }}>
-                          <Clock size={12} color="#6366f1" /> {full}
-                        </span>
-                      </td>
-                      <td style={td}><span style={{ fontSize:'13px' }}>{branchName(tx.branch_id)}</span></td>
-                      <td style={td}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          <span style={{ background:'#ede9fe',color:'#6d28d9',padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:800, width: 'fit-content' }}>
-                            {catI.icon} {catI.label}
-                          </span>
-                          <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 500 }}>
-                            {tx.rental_details?.split('|')[0] || ''}
-                          </span>
-                          <span style={{ fontSize: '11px', color: 'var(--accent-primary)', fontWeight: 700 }}>
-                            🗓️ {tx.rental_details?.split('|').slice(1).join(' | ') || '—'}
-                          </span>
+        ) : filteredOrdenes.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">🌐</div>
+            <h3>No se encontraron órdenes</h3>
+            <p>No hay registros que coincidan con los filtros seleccionados.</p>
+          </div>
+        ) : (
+          <table className="sap-table">
+            <thead>
+              <tr>
+                <th>ID Orden</th>
+                <th>Fecha</th>
+                <th>Reserva (Día/Hora)</th>
+                <th>Cliente</th>
+                <th>Monto Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOrdenes.map(o => {
+                const firstReserva = o.productos?.find(p => p.reserva)?.reserva;
+                return (
+                  <tr key={o.id}>
+                    <td><span className="order-id">#{o.id.split('-')[0].toUpperCase()}</span></td>
+                    <td>
+                      <div className="date-cell">
+                        <CalendarDays size={12} />
+                        {new Date(o.created_at).toLocaleString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                    </td>
+                    <td>
+                      {firstReserva ? (
+                        <div className="reserva-tag">
+                          <span className="reserva-date">📅 {firstReserva.fecha.split('-').reverse().join('-')}</span>
+                          <span className="reserva-time">⏰ {firstReserva.hora_inicio}</span>
                         </div>
-                      </td>
-                      <td style={td}><span style={{ fontSize:'13px',color:'var(--text-muted)',fontWeight:600 }}>{tx.method || '—'}</span></td>
-                      <td style={td}>
-                        <span style={{ background:statusB.bg,color:statusB.color,padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:800 }}>
-                          {statusB.label}
-                        </span>
-                      </td>
-                      <td style={{ ...td,fontFamily:'monospace',fontSize:'12px',color:'var(--text-muted)' }}>
-                        {tx.client_rut || '—'}
-                      </td>
-                      <td style={td}>
-                        <span style={{ fontWeight:950,fontSize:'15px',color:'#6366f1' }}>{fmt(tx.total)}</span>
-                      </td>
-                      <td style={{ ...td,fontFamily:'monospace',fontSize:'11px',color:'var(--text-muted)' }}>
-                        {tx.gateway_tx_id ? tx.gateway_tx_id.slice(0,16)+'…' : '—'}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      ) : (
+                        <span className="no-data">—</span>
+                      )}
+                    </td>
+                    <td>
+                      <div className="client-info">
+                        <span className="client-name">{o.nombre_cliente}</span>
+                        <span className="client-email">{o.email_cliente}</span>
+                      </div>
+                    </td>
+                    <td><span className="total-amount">${o.total.toLocaleString('es-CL')}</span></td>
+                    <td>{getStatusBadge(o.estado)}</td>
+                    <td className="actions-cell">
+                      <button onClick={() => setViewingOrden(o)} className="action-btn view" title="Ver detalles"><Eye size={16} /></button>
+                      {o.estado !== 'revisado' && (
+                        <button onClick={() => markAsReviewed(o.id)} className="action-btn check" title="Marcar como revisado"><CheckCircle size={16} /></button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* ── Modal ── */}
+      {viewingOrden && (
+        <div className="modal-overlay" onClick={() => setViewingOrden(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Detalles de la Orden {viewingOrden.id.split('-')[0].toUpperCase()}</h2>
+              <button className="modal-close-btn" onClick={() => setViewingOrden(null)}>×</button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="info-grid">
+                <div className="info-section">
+                  <div className="section-title">Información del Cliente</div>
+                  <div className="section-content">
+                    <p><strong>Nombre:</strong> {viewingOrden.nombre_cliente}</p>
+                    <p><strong>RUT:</strong> {viewingOrden.rut_cliente}</p>
+                    <p><strong>Email:</strong> {viewingOrden.email_cliente}</p>
+                    <p><strong>Teléfono:</strong> {viewingOrden.telefono_cliente}</p>
+                  </div>
+                </div>
+                <div className="info-section">
+                  <div className="section-title">Detalles Financieros</div>
+                  <div className="section-content">
+                    <p><strong>Estado:</strong> {getStatusBadge(viewingOrden.estado)}</p>
+                    <p><strong>Subtotal:</strong> ${viewingOrden.subtotal?.toLocaleString('es-CL')}</p>
+                    <p><strong>Comisión Flow:</strong> ${viewingOrden.comision_flow?.toLocaleString('es-CL')}</p>
+                    <p className="highlight"><strong>Total Pagado:</strong> ${viewingOrden.total?.toLocaleString('es-CL')}</p>
+                    <p className="text-muted">ID Transacción: {viewingOrden.flow_order_id || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="items-section">
+                <div className="section-title">Productos Adquiridos</div>
+                <div className="items-list">
+                  {viewingOrden.productos?.map((p, i) => (
+                    <div key={i} className="item-row">
+                      <div className="item-main">
+                        <span className="item-name">{p.nombre}</span>
+                        {p.reserva && <span className="item-extra">🗓️ {p.reserva.fecha} @ {p.reserva.hora_inicio}</span>}
+                      </div>
+                      <span className="item-price">${p.precio_final?.toLocaleString('es-CL')}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        .ventas-online-container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header-title { display: flex; align-items: center; gap: 15px; }
+        .title-icon { width: 42px; height: 42px; background: linear-gradient(135deg, #0ea5e9, #3b82f6); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(14,165,233,0.3); }
+        .header-title h1 { font-size: 24px; font-weight: 900; margin: 0; color: #fff; }
+        .subtitle { font-size: 13px; color: #64748b; margin: 4px 0 0; }
+        .refresh-btn { background: #1a2236; border: 1px solid #2a3441; color: #94a3b8; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .refresh-btn:hover { background: #2a3441; color: #fff; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .kpi-card { background: #0f1623; border: 1px solid #1e2a3a; padding: 20px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .kpi-card:hover { border-color: #3b82f6; transform: translateY(-2px); }
+        .kpi-info { display: flex; flex-direction: column; gap: 4px; }
+        .kpi-label { font-size: 11px; font-weight: 800; color: #475569; letter-spacing: 0.5px; }
+        .kpi-value { font-size: 24px; font-weight: 950; color: #fff; }
+        .kpi-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .kpi-icon.blue { background: rgba(14,165,233,0.1); color: #0ea5e9; }
+        .kpi-icon.yellow { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .kpi-icon.purple { background: rgba(139,92,246,0.1); color: #8b5cf6; }
+
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 20px; }
+        .search-wrap { position: relative; flex: 1; max-width: 350px; }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #475569; }
+        .search-wrap input { width: 100%; background: #0f1623; border: 1px solid #1e2a3a; padding: 12px 16px 12px 42px; border-radius: 10px; color: #fff; font-size: 14px; outline: none; transition: 0.2s; }
+        .search-wrap input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.1); }
+
+        .status-tabs { display: flex; background: #0f1623; padding: 4px; border-radius: 10px; border: 1px solid #1e2a3a; }
+        .status-tabs button { background: transparent; border: none; color: #64748b; padding: 8px 16px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .status-tabs button:hover { color: #fff; }
+        .status-tabs button.active { background: #3b82f6; color: #fff; box-shadow: 0 4px 12px rgba(59,130,246,0.2); }
+
+        .table-wrapper { background: #0f1623; border: 1px solid #1e2a3a; border-radius: 16px; overflow: hidden; }
+        .sap-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .sap-table th { background: rgba(255,255,255,0.02); padding: 16px 20px; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e2a3a; }
+        .sap-table td { padding: 16px 20px; border-bottom: 1px solid #1e2a3a; font-size: 14px; vertical-align: middle; color: #cbd5e1; }
+        .sap-table tr:last-child td { border-bottom: none; }
+        .sap-table tr:hover td { background: rgba(255,255,255,0.01); }
+
+        .order-id { font-family: var(--font-mono); font-weight: 800; color: #3b82f6; background: rgba(59,130,246,0.1); padding: 4px 8px; border-radius: 6px; }
+        .date-cell { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #94a3b8; }
+        .reserva-tag { display: flex; flex-direction: column; gap: 2px; background: rgba(56,189,248,0.08); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.1); }
+        .reserva-date { font-size: 11px; font-weight: 900; color: #0ea5e9; }
+        .reserva-time { font-size: 11px; font-weight: 700; color: #fff; }
+        .no-data { color: #334155; font-weight: 900; }
+        
+        .client-info { display: flex; flex-direction: column; }
+        .client-name { font-weight: 700; color: #fff; }
+        .client-email { font-size: 12px; color: #475569; }
+        .total-amount { font-weight: 900; color: #fff; font-size: 15px; }
+
+        .badge-status { padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
+        .bg-green { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .bg-blue { background: rgba(14,165,233,0.1); color: #0ea5e9; border: 1px solid rgba(14,165,233,0.2); }
+        .bg-red { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .bg-yellow { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+
+        .actions-cell { display: flex; gap: 10px; }
+        .action-btn { background: #1a2236; border: 1px solid #2a3441; color: #64748b; padding: 8px; border-radius: 10px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .action-btn.view:hover { background: #3b82f6; color: #fff; border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .action-btn.check:hover { background: #10b981; color: #fff; border-color: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+
+        .loading-state { padding: 100px; display: flex; flex-direction: column; align-items: center; gap: 16px; color: #475569; }
+        .spinner { width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.05); border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state { padding: 100px; text-align: center; }
+        .empty-icon { font-size: 48px; margin-bottom: 20px; opacity: 0.5; }
+        .empty-state h3 { margin: 0; color: #fff; font-size: 18px; }
+        .empty-state p { color: #475569; font-size: 14px; margin-top: 8px; }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: #0f1623; width: 100%; max-width: 800px; border-radius: 24px; border: 1px solid #1e2a3a; box-shadow: 0 30px 60px rgba(0,0,0,0.5); overflow: hidden; animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .modal-header { padding: 24px 30px; border-bottom: 1px solid #1e2a3a; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { margin: 0; font-size: 20px; font-weight: 900; color: #fff; }
+        .modal-close-btn { background: #1a2236; border: none; color: #64748b; font-size: 24px; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .modal-close-btn:hover { color: #fff; background: #ef4444; }
+
+        .modal-body { padding: 30px; max-height: 70vh; overflow-y: auto; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 30px; }
+        .section-title { font-size: 11px; font-weight: 900; color: #3b82f6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .section-content { background: #1a2236; padding: 20px; border-radius: 16px; border: 1px solid #2a3441; }
+        .section-content p { margin: 0 0 10px 0; font-size: 14px; color: #94a3b8; }
+        .section-content p:last-child { margin-bottom: 0; }
+        .section-content strong { color: #fff; font-weight: 700; margin-right: 8px; }
+        .highlight { font-size: 18px !important; color: #3b82f6 !important; margin-top: 15px !important; padding-top: 15px !important; border-top: 1px solid #2a3441; }
+        
+        .items-list { background: #1a2236; border: 1px solid #2a3441; border-radius: 16px; overflow: hidden; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid #2a3441; }
+        .item-row:last-child { border-bottom: none; }
+        .item-main { display: flex; flex-direction: column; gap: 4px; }
+        .item-name { font-weight: 700; color: #fff; font-size: 14px; }
+        .item-extra { font-size: 11px; color: #3b82f6; font-weight: 800; }
+        .item-price { font-weight: 900; color: #fff; font-size: 15px; }
+      `}</style>
     </div>
   );
 }
-
-// ── Sub-components ────────────────────────────────────────────────────────────
-
-function OnlineKpi({ icon, label, value, color, unit }) {
-  return (
-    <div style={{ background:'#fff',borderRadius:'var(--radius-xl)',border:'1.5px solid var(--border-subtle)',padding:'20px',boxShadow:'var(--shadow-sm)' }}>
-      <div style={{ display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px' }}>
-        <span style={{ fontSize:'11px',fontWeight:800,color:'var(--text-muted)',textTransform:'uppercase' }}>{label}</span>
-        <span style={{ fontSize:'20px' }}>{icon}</span>
-      </div>
-      <div className="mono" style={{ fontSize:'24px',fontWeight:950,color }}>
-        {typeof value === 'number' && !unit ? value : value}
-        {unit && <span style={{ fontSize:'12px',fontWeight:700,color:'var(--text-muted)',marginLeft:'6px' }}>{unit}</span>}
-      </div>
-    </div>
-  );
-}
-
-// ── Shared styles ─────────────────────────────────────────────────────────────
-
-const lbl = { display:'block',fontSize:'11px',fontWeight:800,color:'var(--text-muted)',textTransform:'uppercase',marginBottom:'6px' };
-const inp = { width:'100%',padding:'9px 12px',borderRadius:'var(--radius-md)',border:'1.5px solid var(--border-subtle)',fontSize:'14px',fontFamily:'inherit',background:'var(--bg-primary)',boxSizing:'border-box' };
-const sel = { ...inp, cursor:'pointer' };
-const td  = { padding:'11px 16px',fontSize:'13px',verticalAlign:'middle' };
