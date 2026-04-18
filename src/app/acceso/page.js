@@ -63,18 +63,34 @@ function AccesoContent() {
       });
       if (authError) throw authError;
 
-      // 2. Insert into clientes table
-      const { error: dbError } = await supabase.from('clientes').insert({
+      // When "Confirm email" is turned on and a user re-registers, 
+      // Supabase returns data.user with identities = [] to prevent email enumeration.
+      if (!data?.user) {
+        throw new Error('No se pudo crear el usuario. Intenta de nuevo.');
+      }
+
+      if (data.user.identities && data.user.identities.length === 0) {
+        throw new Error('Este correo ya está registrado. Por favor, inicia sesión o verifica tu bandeja de entrada si aún no confirmaste tu cuenta.');
+      }
+
+      // 2. Insert into clientes table using upsert to avoid crashing if partially created
+      const { error: dbError } = await supabase.from('clientes').upsert({
         auth_user_id: data.user.id,
         nombre: cForm.nombre,
         apellido: cForm.apellido,
         rut: cForm.rut,
         email: cForm.email,
         telefono: cForm.telefono
-      });
-      if (dbError) throw dbError;
+      }, { onConflict: 'email' });
+      
+      if (dbError) {
+        if (dbError.message.includes('rut')) {
+           throw new Error('Este RUT ya se encuentra asociado a otra cuenta.');
+        }
+        throw dbError;
+      }
 
-      setSuccess('¡Registro exitoso! Ya puedes iniciar sesión o agendar en la tienda.');
+      setSuccess('¡Registro exitoso! Por favor revisa tu correo electrónico para confirmar tu cuenta y luego inicia sesión.');
       setClienteView('login');
       setCForm({...cForm, password: ''}); // Clear password field
     } catch (err) {
