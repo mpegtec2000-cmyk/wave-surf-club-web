@@ -82,6 +82,10 @@ export const NAV_ITEMS = [
   { path: '/dashboard/ventas-fisicas', label: 'Ventas Físicas', icon: 'Store', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/suscripciones', label: 'Suscripciones', icon: 'CalendarDays', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/cotizaciones', label: 'Cotizaciones', icon: 'ClipboardList', roles: ['superadmin', 'caja'] },
+  { path: '/dashboard/tienda', label: 'Productos Tienda', icon: 'Package', roles: ['superadmin', 'caja'] },
+  { path: '/dashboard/tienda/categorias', label: 'Categorías Tienda', icon: 'ListOrdered', roles: ['superadmin', 'caja'] },
+  { path: '/dashboard/tienda/reservas', label: 'Reservas Tienda', icon: 'CalendarDays', roles: ['superadmin', 'caja'] },
+  { path: '/dashboard/tienda/ordenes', label: 'Órdenes Tienda', icon: 'ShoppingCart', roles: ['superadmin', 'caja'] },
   { path: '/dashboard/settings', label: 'Configuración', icon: 'Settings', roles: ['superadmin'] },
   { path: '/dashboard/antigravity', label: 'Antigravity AI', icon: 'Briefcase', roles: ['superadmin'] },
 ];

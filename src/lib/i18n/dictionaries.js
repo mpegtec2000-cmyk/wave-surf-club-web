@@ -31,6 +31,10 @@ export const dictionaries = {
       'agenda-ventas': "Agenda de Clases y Arriendos",
       'suscripciones': "Suscripciones",
       'cotizaciones': "Cotizaciones",
+      'tienda': "Productos Tienda",
+      'categorias': "Categorías Tienda",
+      'reservas': "Reservas Tienda",
+      'ordenes': "Órdenes Tienda",
       settings: "Configuración"
     },
     landing: {

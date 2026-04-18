@@ -22,6 +22,7 @@ const iconMap = {
 const NAV_GROUPS = [
   { label: 'OPERACIONES', keys: ['pos', 'closing', 'cotizaciones'] },
   { label: 'LOGÍSTICA', keys: ['inventory', 'agenda-ventas'] },
+  { label: 'TIENDA', keys: ['tienda', 'categorias', 'reservas', 'ordenes'] },
   { label: 'CLIENTES', keys: ['clients', 'suscripciones'] },
   { label: 'VENTAS', keys: ['ventas-online', 'ventas-fisicas'] },
   { label: 'ADMINISTRACIÓN', keys: ['staff', 'finanzas', 'movimientos'] },

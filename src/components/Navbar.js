@@ -245,7 +245,10 @@ export default function Navbar() {
         </div>
 
         <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '20px', paddingRight: '30px' }}>
-          <Link href="/login" style={{ fontSize: '11px', fontWeight: 900, color: '#000', textDecoration: 'none' }}>{t('landing.btn_colaborador')}</Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Link href="/acceso?tab=cliente" style={{ fontSize: '11px', fontWeight: 900, color: '#fff', background: '#000', padding: '8px 14px', borderRadius: '4px', textDecoration: 'none' }}>ACCESO CLIENTES</Link>
+            <Link href="/acceso?tab=colaborador" style={{ fontSize: '10px', fontWeight: 700, color: '#666', textDecoration: 'none' }}>COLABORADOR</Link>
+          </div>
           <div style={{ display: 'flex', gap: '8px' }}>
             {LANGUAGES.map(l => (
               <button key={l.code} onClick={() => changeLang(l.code)} style={{ background: lang === l.code ? '#000' : 'none', color: lang === l.code ? '#fff' : '#000', border: '1px solid #000', borderRadius: '4px', fontSize: '10px', fontWeight: 900, cursor: 'pointer', padding: '4px 8px' }}>
@@ -284,9 +287,14 @@ export default function Navbar() {
           </div>
 
           <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-             <Link href="/login" onClick={() => setMenuOpen(false)} style={{ background: '#fff', color: '#000', padding: '16px', textAlign: 'center', borderRadius: '8px', fontWeight: 900, textDecoration: 'none', fontSize: '14px' }}>
-               {t('landing.btn_colaborador')}
-             </Link>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+               <Link href="/acceso?tab=cliente" onClick={() => setMenuOpen(false)} style={{ background: '#fff', color: '#000', padding: '16px', textAlign: 'center', borderRadius: '8px', fontWeight: 900, textDecoration: 'none', fontSize: '14px' }}>
+                 ACCESO CLIENTES
+               </Link>
+               <Link href="/acceso?tab=colaborador" onClick={() => setMenuOpen(false)} style={{ background: 'transparent', color: '#666', padding: '10px', textAlign: 'center', fontWeight: 700, textDecoration: 'none', fontSize: '12px' }}>
+                 ACCESO COLABORADOR
+               </Link>
+             </div>
              <div style={{ display: 'flex', gap: '10px' }}>
                 {LANGUAGES.map(l => (
                   <button key={l.code} onClick={() => { changeLang(l.code); setMenuOpen(false); }} style={{ flex: 1, background: lang === l.code ? '#38bdf8' : 'none', color: '#fff', border: '1px solid #fff', borderRadius: '4px', padding: '12px', fontWeight: 900 }}>
