@@ -144,6 +144,12 @@ export default function VentasFisicas() {
             <button onClick={load} style={{ display:'flex',alignItems:'center',gap:'6px',padding:'9px 18px',background:'var(--bg-primary)',border:'1.5px solid var(--border-subtle)',borderRadius:'var(--radius-md)',fontWeight:700,cursor:'pointer',fontSize:'13px' }}>
               <RefreshCw size={14} /> Actualizar
             </button>
+            <button 
+              onClick={() => window.location.href = '/dashboard/closing'} 
+              style={{ display:'flex',alignItems:'center',gap:'6px',padding:'9px 18px',background:'#f59e0b',color:'#fff',border:'none',borderRadius:'var(--radius-md)',fontWeight:700,cursor:'pointer',fontSize:'13px' }}
+            >
+              <ShoppingBag size={14} /> Cierre de Caja
+            </button>
             <button onClick={downloadCSV} disabled={filtered.length===0} style={{ display:'flex',alignItems:'center',gap:'6px',padding:'9px 18px',background:'var(--accent-action)',color:'#fff',border:'none',borderRadius:'var(--radius-md)',fontWeight:700,cursor:'pointer',fontSize:'13px',opacity:filtered.length===0?.5:1 }}>
               <Download size={14} /> Exportar CSV
             </button>
