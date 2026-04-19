@@ -725,24 +725,69 @@ export default function POSPage() {
                 className="btn-finalize"
                 disabled={loading}
                 onClick={async () => {
+                   // Cálculos detallados para el cierre
+                   const totalEfectivo = recentTx.filter(t => t.method === 'efectivo').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0);
+                   const totalTransferencia = recentTx.filter(t => t.method === 'transferencia').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0);
+                   const totalTarjeta = recentTx.filter(t => t.method === 'tarjeta').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0);
+                   const totalDebito = recentTx.filter(t => t.method === 'debito').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0);
+                   
+                   const totalIngresos = recentTx.filter(t=>t.type==='ingreso').reduce((s,t)=>s+t.total,0);
+                   const totalEgresos = recentTx.filter(t=>t.type==='salida').reduce((s,t)=>s+t.total,0);
+                   const totalNeto = totalIngresos - totalEgresos;
+
                    const { value: notes, isConfirmed } = await MySwal.fire({
-                    title: '¿CONSOLIDAR CIERRE DE CAJA?',
+                    title: 'CIERRE DE CAJA OPERATIVA',
                     html: `
-                      <div style="text-align:left; font-size: 14px;">
-                        <p>Se consolidarán <b>${recentTx.length}</b> registros para <b>${currentBranch.short_name}</b>.</p>
-                        <p>Total Ingresos: <b>${formatMoney(recentTx.filter(t=>t.type==='ingreso').reduce((s,t)=>s+t.total,0))}</b></p>
-                        <p>Total Egresos: <b>${formatMoney(recentTx.filter(t=>t.type==='salida').reduce((s,t)=>s+t.total,0))}</b></p>
-                        <hr/>
-                        <p>¿Coincide el saldo físico con lo registrado?</p>
+                      <div style="text-align:left; font-size: 14px; font-family: system-ui, sans-serif;">
+                        <h4 style="margin: 0 0 15px 0; color: #0f172a; text-align: center; text-transform: uppercase;">Resumen — ${currentBranch.short_name}</h4>
+                        
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+                          <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; margin-bottom: 6px;">
+                            <span style="color: #64748b; font-weight: 600;">Efectivo Físico:</span> 
+                            <strong style="color: #10b981; font-family: monospace; font-size: 15px;">${formatMoney(totalEfectivo)}</strong>
+                          </div>
+                          <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; margin-bottom: 6px;">
+                            <span style="color: #64748b; font-weight: 600;">Débito:</span> 
+                            <strong style="font-family: monospace; font-size: 15px;">${formatMoney(totalDebito)}</strong>
+                          </div>
+                          <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; margin-bottom: 6px;">
+                            <span style="color: #64748b; font-weight: 600;">Crédito:</span> 
+                            <strong style="font-family: monospace; font-size: 15px;">${formatMoney(totalTarjeta)}</strong>
+                          </div>
+                          <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; margin-bottom: 6px;">
+                            <span style="color: #64748b; font-weight: 600;">Transferencias:</span> 
+                            <strong style="color: #0ea5e9; font-family: monospace; font-size: 15px;">${formatMoney(totalTransferencia)}</strong>
+                          </div>
+                          <div style="display: flex; justify-content: space-between; font-size: 16px; margin-top: 12px; background: #e2e8f0; padding: 8px; border-radius: 4px;">
+                            <span><strong>TOTAL GENERAL:</strong></span> 
+                            <strong style="color: #0f172a; font-family: monospace; font-size: 18px;">${formatMoney(totalNeto)}</strong>
+                          </div>
+                        </div>
+                        
+                        <div style="margin-top: 15px;">
+                          <label style="display: block; font-weight: 800; color: #334155; margin-bottom: 5px; font-size: 11px; text-transform: uppercase;">1. Seleccione su Turno</label>
+                          <select id="swal-turno" style="width: 100%; padding: 10px; border: 2px solid #cbd5e1; border-radius: 6px; margin-bottom: 15px; font-size: 14px; outline: none; background: #fff;">
+                            <option value="Mañana">☀️ Turno Mañana</option>
+                            <option value="Tarde">🌙 Turno Tarde</option>
+                            <option value="Día Completo">⏳ Día Completo</option>
+                          </select>
+                          
+                          <label style="display: block; font-weight: 800; color: #334155; margin-bottom: 5px; font-size: 11px; text-transform: uppercase;">2. Notas de Cuadratura</label>
+                          <input id="swal-notas" type="text" placeholder="Ej: Cuadratura perfecta, o faltan $2.000..." style="width: 100%; padding: 10px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none;">
+                        </div>
                       </div>
                     `,
-                    input: 'text',
-                    inputPlaceholder: 'Notas de cierre (opcional)...',
-                    icon: 'warning',
+                    icon: 'info',
                     showCancelButton: true,
-                    confirmButtonText: 'SÍ, CERRAR SESIÓN',
+                    confirmButtonText: '✅ CONFIRMAR CIERRE',
                     confirmButtonColor: 'var(--color-success)',
-                    cancelButtonColor: 'var(--border-subtle)'
+                    cancelButtonColor: 'var(--border-subtle)',
+                    cancelButtonText: 'Revisar Montos',
+                    preConfirm: () => {
+                      const turno = document.getElementById('swal-turno').value;
+                      const notas = document.getElementById('swal-notas').value;
+                      return `[TURNO: ${turno}] ${notas}`;
+                    }
                   });
                   if (isConfirmed) {
                     setLoading(true);
