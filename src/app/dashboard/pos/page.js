@@ -1,7 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getCurrentUser, findClientByRut, getOpenTransactions, addTransaction, finalizeTransaction, deleteTransaction, getBranches } from '@/lib/data';
+import { 
+  getCurrentUser, 
+  findClientByRut, 
+  getOpenTransactions, 
+  addTransaction, 
+  finalizeTransaction, 
+  deleteTransaction, 
+  getBranches,
+  addClient,
+  queueNotification 
+} from '@/lib/data';
 import { PAYMENT_METHODS, TRANSACTION_CATEGORIES, TRANSACTION_TYPES } from '@/lib/constants';
 import { formatRut } from '@/lib/rut-validator';
 import { Search, Trash2, CheckCircle, RefreshCcw, UserPlus } from 'lucide-react';
@@ -25,6 +35,7 @@ export default function POSPage() {
   const [branches, setBranches] = useState([]);
   const [selectedBranchId, setSelectedBranchId] = useState(activeBranchId || 1);
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
 
   // Transaction form
   const [txType, setTxType] = useState('ingreso');
@@ -85,23 +96,33 @@ export default function POSPage() {
   }, []);
 
   useEffect(() => {
-    if (rut.length >= 11) {
-      handleSearchRUT();
-    } else {
-      setClientData(null);
-      setDebtAlert(false);
-      setSearchError('');
-    }
+    const timer = setTimeout(() => {
+      if (rut.length >= 11) {
+        handleSearchRUT();
+      } else {
+        setClientData(null);
+        setDebtAlert(false);
+        setSearchError('');
+      }
+    }, 400); // Debounce de 400ms para no saturar la red
+
+    return () => clearTimeout(timer);
   }, [rut]);
 
   const handleSearchRUT = async () => {
     setSearchError('');
     setClientData(null);
     setDebtAlert(false);
+    setSearching(true);
 
-    if (!rut.trim()) return;
+    if (!rut.trim()) {
+      setSearching(false);
+      return;
+    }
 
     const data = await findClientByRut(rut);
+    setSearching(false);
+    
     if (data) {
       setClientData(data);
       setDebtAlert(data.debt_balance > 0);
@@ -167,9 +188,10 @@ export default function POSPage() {
     setTxIncidentNote('');
     setRentalDetails('');
     setSubscriptionPeriod('mensual');
-    // Clear client after success
+    // Clear client and refocus
     setRut('');
     setClientData(null);
+    document.querySelector('.search-input-pos')?.focus();
   };
 
   const handleGenericClient = () => {
@@ -350,54 +372,66 @@ export default function POSPage() {
                 <Search size={22} style={{ color: 'var(--accent-action)' }} /> IDENTIFICAR CLIENTE
               </h3>
             </div>
-            <div style={{ padding: '32px' }}>
-              <div className="rut-search-grid" style={{ maxWidth: 800, display: 'grid', gridTemplateColumns: '1fr auto', gap: '12px', alignItems: 'center' }}>
-                <input
-                  type="text"
-                  className="form-input search-input-pos"
-                  style={{ width: '100%', margin: 0, borderRadius: 'var(--radius-md)', height: 60, flex: 1 }}
-                  placeholder="Ingrese RUT del Cliente..."
-                  value={rut}
-                  onChange={(e) => setRut(formatRut(e.target.value))}
-                  onKeyDown={handleKeyDown}
-                />
-                <div className="pos-search-actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <div style={{ padding: '20px' }}>
+              
+              {/* Contenedor Simple y Seguro */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                
+                {/* BUSCADOR DE RUT (Tamaño Reducido) */}
+                <div style={{ width: '400px', position: 'relative' }}>
+                  <Search size={20} style={{ position: 'absolute', left: 12, top: 20, color: '#94a3b8' }} />
+                  <input
+                    type="text"
+                    className="form-input"
+                    style={{ 
+                      width: '100%', height: 60, paddingLeft: '40px', fontSize: '16px', borderRadius: '8px',
+                      border: '1px solid #cbd5e1', margin: 0
+                    }}
+                    placeholder="Ingrese RUT del Cliente..."
+                    value={rut}
+                    onChange={(e) => setRut(formatRut(e.target.value))}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+
+                {/* BOTÓN NUEVO CLIENTE (Pegado al RUT) */}
+                <button 
+                  onClick={() => { 
+                    setNewClientRut(rut);
+                    setShowNewClient(true); 
+                    setShowQuickStock(false);
+                  }}
+                  style={{ 
+                    background: '#10b981', color: '#fff', border: 'none', 
+                    height: 60, padding: '0 20px', borderRadius: '8px',
+                    display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer',
+                    fontWeight: 'bold', fontSize: '14px'
+                  }}
+                >
+                  <UserPlus size={24} />
+                  NUEVO CLIENTE
+                </button>
+
+                {/* OTROS BOTONES (Opcionales, empujados a la derecha) */}
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '10px' }}>
                   <button 
-                    className="rut-search-btn search-button-pos" 
-                    style={{ borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 60, height: 60 }}
-                    onClick={handleSearchRUT}
-                  >
-                    <Search size={24} />
-                  </button>
-                  
-                  <button 
-                    className="rut-search-btn" 
-                    style={{ background: '#f59e0b', height: 60, flex: 1, minWidth: 140, borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.05em' }}
                     onClick={handleGenericClient}
+                    style={{ background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', height: 60, padding: '0 15px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}
                   >
-                    👤 CONSUMIDOR FINAL
+                    👤 FINAL
                   </button>
-
-                  <div className="search-divider-v" style={{ width: '2px', height: '40px', background: 'var(--border-subtle)', margin: '10px 4px' }} />
-
                   <button 
-                    className="rut-search-btn" 
-                    style={{ background: '#3b82f6', height: 60, width: 60, borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '20px' }}
                     onClick={() => { setShowQuickStock(!showQuickStock); setShowNewClient(false); }}
-                    title="Contingencia Stock (S)"
+                    style={{ background: '#0f172a', color: '#fff', border: 'none', height: 60, width: 60, borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '18px' }}
                   >
                     S
                   </button>
-                  <button 
-                    className="rut-search-btn" 
-                    style={{ background: 'var(--color-success)', height: 60, width: 60, borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    onClick={() => { setShowNewClient(!showNewClient); setShowQuickStock(false); }}
-                    title="Nuevo Cliente (+)"
-                  >
-                    <UserPlus size={24} />
-                  </button>
                 </div>
+
               </div>
+
+            </div>
+          </div>
 
               {/* NEW CLIENT REGISTRATION FORM */}
               {showNewClient && (
@@ -406,7 +440,7 @@ export default function POSPage() {
                   <form onSubmit={handleRegisterNewClient} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
                     <div className="form-group">
                       <label style={{ fontSize: 11 }}>Nombre Completo *</label>
-                      <input type="text" className="form-input" value={newClientName} onChange={e => setNewClientName(e.target.value)} required placeholder="Ej: Juan Perez" style={{ height: 48 }} />
+                      <input type="text" className="form-input new-client-name-input" value={newClientName} onChange={e => setNewClientName(e.target.value)} required placeholder="Ej: Juan Perez" style={{ height: 48 }} />
                     </div>
                     <div className="form-group">
                       <label style={{ fontSize: 11 }}>RUT *</label>
@@ -466,8 +500,18 @@ export default function POSPage() {
               )}
 
               {searchError && (
-                <div style={{ marginTop: 16, padding: '16px', borderRadius: 'var(--radius-md)', background: 'rgba(239,68,68,0.05)', border: '1.5px solid rgba(239,68,68,0.2)', color: 'var(--color-danger)', fontWeight: 600 }}>
-                  ⚠️ {searchError}
+                <div style={{ marginTop: 16, padding: '20px', borderRadius: 'var(--radius-md)', background: 'rgba(239,68,68,0.05)', border: '1.5px solid rgba(239,68,68,0.2)', color: 'var(--color-danger)', fontWeight: 600, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>⚠️ {searchError}</span>
+                  <button 
+                    onClick={() => {
+                      setNewClientRut(rut);
+                      setShowNewClient(true);
+                      setSearchError('');
+                    }}
+                    style={{ background: 'var(--color-danger)', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: 12, fontWeight: 800 }}
+                  >
+                    REGISTRAR AHORA
+                  </button>
                 </div>
               )}
 
@@ -487,8 +531,6 @@ export default function POSPage() {
                   </div>
                 </div>
               )}
-            </div>
-          </div>
 
           {/* NUEVA TRANSACCION */}
           <div className="data-section" style={{ background: '#fff', borderRadius: 'var(--radius-lg)' }}>
@@ -610,6 +652,24 @@ export default function POSPage() {
           </div>
 
           <div className="pos-sidebar-content" style={{ background: 'var(--bg-primary)' }}>
+            {/* Cash Breakdown Summary */}
+            {recentTx.length > 0 && (
+              <div className="pos-summary-bar" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: 'var(--border-subtle)', borderBottom: '2px solid var(--border-subtle)' }}>
+                <div style={{ background: '#fff', padding: '12px 8px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 800 }}>💵 EFECTIVO</div>
+                  <div style={{ fontSize: 13, fontWeight: 900, color: 'var(--color-success)' }}>{formatMoney(recentTx.filter(t => t.method === 'efectivo').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}</div>
+                </div>
+                <div style={{ background: '#fff', padding: '12px 8px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 800 }}>🏦 TRANSF.</div>
+                  <div style={{ fontSize: 13, fontWeight: 900, color: 'var(--accent-action)' }}>{formatMoney(recentTx.filter(t => t.method === 'transferencia').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}</div>
+                </div>
+                <div style={{ background: '#fff', padding: '12px 8px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 800 }}>💳 TARJETA</div>
+                  <div style={{ fontSize: 13, fontWeight: 900, color: '#8b5cf6' }}>{formatMoney(recentTx.filter(t => t.method === 'tarjeta' || t.method === 'debito').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}</div>
+                </div>
+              </div>
+            )}
+
             {recentTx.length === 0 ? (
               <div style={{ padding: '64px 32px', textAlign: 'center', color: 'var(--text-muted)' }}>
                 <div style={{ fontSize: 64, marginBottom: 20 }}>📦</div>

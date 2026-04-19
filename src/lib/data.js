@@ -149,22 +149,19 @@ export async function findClientByRut(rut) {
   if (!rut) return null;
   const cleanSearch = rut.replace(/[^0-9kK]/g, '').toUpperCase();
   
-  // Primero intentamos búsqueda exacta por si acaso
-  const { data: exact } = await supabase
+  // Búsqueda directa por RUT formateado o limpio para máxima compatibilidad
+  const { data, error } = await supabase
     .from('profiles')
     .select('*')
-    .eq('rut', rut)
-    .single();
+    .or(`rut.eq."${rut}",rut.eq."${cleanSearch}"`)
+    .limit(1);
+    
+  if (error) {
+    console.error('findClientByRut Error:', error);
+    return null;
+  }
   
-  if (exact) return exact;
-
-  // Si no, buscamos uno que al limpiarlo sea igual (esto requiere traer más datos o usar una función RPC, 
-  // pero para pocos registros podemos filtrar localmente o usar 'ilike')
-  const { data: all } = await supabase
-    .from('profiles')
-    .select('*');
-  
-  return all?.find(c => c.rut.replace(/[^0-9kK]/g, '').toUpperCase() === cleanSearch) || null;
+  return data && data.length > 0 ? data[0] : null;
 }
 
 // ── STAFF ───────────────────────────────────
@@ -316,17 +313,17 @@ export async function deleteInventoryItem(itemCode) {
 async function toggleItemsRented(text, isRented) {
   if (!text) return;
   
-  // Regex para encontrar códigos T-XXXX o TR-XXXX
   const codes = text.match(/(T-|TR-)[A-Z0-9-]+/gi);
   if (!codes || codes.length === 0) return;
 
-  for (const code of codes) {
-    const cleanCode = code.toUpperCase().trim();
-    await supabase
-      .from('inventory')
-      .update({ is_rented: isRented, updated_at: new Date().toISOString() })
-      .eq('item_code', cleanCode);
-  }
+  const cleanCodes = [...new Set(codes.map(c => c.toUpperCase().trim()))];
+
+  const { error } = await supabase
+    .from('inventory')
+    .update({ is_rented: isRented, updated_at: new Date().toISOString() })
+    .in('item_code', cleanCodes);
+    
+  if (error) console.error('Error toggling inventory:', error);
 }
 
 // ── TRANSACTIONS (SAP-STYLE LIFECYCLE) ──────
@@ -568,22 +565,24 @@ export async function closeBranchSession(branchId, staffId, notes = '') {
 
   if (sessionErr) return { error: sessionErr.message };
 
-  // 4. Actualizar todas las transacciones vinculándolas a esta sesión y marcando como finalizadas
+  // 4. Actualizar todas las transacciones masivamente marcándolas como finalizadas
+  const txIds = txs.map(t => t.id);
+  
+  // Liberar equipo masivamente si aplica
   for (const t of txs) {
-    // Liberar equipo si era arriendo
-    if (t.rental_details) {
-      await toggleItemsRented(t.rental_details, false);
-    }
-
-    await supabase
-      .from('transactions')
-      .update({ 
-        rental_status: 'finalizado', 
-        finalized_at: new Date().toISOString(),
-        id_sesion: sessionId 
-      })
-      .eq('id', t.id);
+    if (t.rental_details) await toggleItemsRented(t.rental_details, false);
   }
+
+  const { error: updateErr } = await supabase
+    .from('transactions')
+    .update({ 
+      rental_status: 'finalizado', 
+      finalized_at: new Date().toISOString(),
+      id_sesion: sessionId 
+    })
+    .in('id', txIds);
+
+  if (updateErr) return { error: updateErr.message };
 
   return { data: session, error: null };
 }
