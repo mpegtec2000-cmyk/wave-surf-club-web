@@ -20,15 +20,15 @@ export default function FinanzasGlobales() {
   // Build date range from current filter
   const getRange = useCallback(() => {
     if (periodMode === 'dia') {
-      return { from: `${selectedDay}T00:00:00`, to: `${selectedDay}T23:59:59.999` };
+      return { from: `${selectedDay}T00:00:00-04:00`, to: `${selectedDay}T23:59:59.999-04:00` };
     }
     if (periodMode === 'mes') {
       const [y, m] = selectedMonth.split('-');
       const last = new Date(Number(y), Number(m), 0).getDate();
-      return { from: `${selectedMonth}-01T00:00:00`, to: `${selectedMonth}-${String(last).padStart(2,'0')}T23:59:59.999` };
+      return { from: `${selectedMonth}-01T00:00:00-04:00`, to: `${selectedMonth}-${String(last).padStart(2,'0')}T23:59:59.999-04:00` };
     }
     if (periodMode === 'año') {
-      return { from: `${selectedYear}-01-01T00:00:00`, to: `${selectedYear}-12-31T23:59:59.999` };
+      return { from: `${selectedYear}-01-01T00:00:00-04:00`, to: `${selectedYear}-12-31T23:59:59.999-04:00` };
     }
     return {}; // total — sin filtro de fecha
   }, [periodMode, selectedDay, selectedMonth, selectedYear]);

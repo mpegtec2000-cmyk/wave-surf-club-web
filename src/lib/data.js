@@ -672,17 +672,11 @@ export async function getMovimientos({ branchId = null, dateFrom = null, dateTo 
   }
 
   if (dateFrom) {
-    // Inicio del día en UTC-4 (Chile)
-    const from = new Date(dateFrom);
-    from.setHours(0, 0, 0, 0);
-    query = query.gte('created_at', from.toISOString());
+    query = query.gte('created_at', `${dateFrom}T00:00:00-04:00`);
   }
 
   if (dateTo) {
-    // Fin del día
-    const to = new Date(dateTo);
-    to.setHours(23, 59, 59, 999);
-    query = query.lte('created_at', to.toISOString());
+    query = query.lte('created_at', `${dateTo}T23:59:59.999-04:00`);
   }
 
   const { data, error } = await query;
@@ -713,15 +707,11 @@ export async function getVentasOnline({ branchId = null, dateFrom = null, dateTo
   }
 
   if (dateFrom) {
-    const from = new Date(dateFrom);
-    from.setHours(0, 0, 0, 0);
-    query = query.gte('created_at', from.toISOString());
+    query = query.gte('created_at', `${dateFrom}T00:00:00-04:00`);
   }
 
   if (dateTo) {
-    const to = new Date(dateTo);
-    to.setHours(23, 59, 59, 999);
-    query = query.lte('created_at', to.toISOString());
+    query = query.lte('created_at', `${dateTo}T23:59:59.999-04:00`);
   }
 
   const { data, error } = await query;
@@ -752,15 +742,11 @@ export async function getVentasFisicas({ branchId = null, dateFrom = null, dateT
   }
 
   if (dateFrom) {
-    const from = new Date(dateFrom);
-    from.setHours(0, 0, 0, 0);
-    query = query.gte('created_at', from.toISOString());
+    query = query.gte('created_at', `${dateFrom}T00:00:00-04:00`);
   }
 
   if (dateTo) {
-    const to = new Date(dateTo);
-    to.setHours(23, 59, 59, 999);
-    query = query.lte('created_at', to.toISOString());
+    query = query.lte('created_at', `${dateTo}T23:59:59.999-04:00`);
   }
 
   const { data, error } = await query;
