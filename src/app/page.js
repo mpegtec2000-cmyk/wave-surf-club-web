@@ -17,7 +17,7 @@ export default function LandingPage() {
           {/* Background Image with subtle gradient overlay */}
           <div className="hero-bg-wrapper">
             <Image 
-              src="/FONDO OFICIAL.png" 
+              src="/Diseño sin título.jpg" 
               alt="Wave Surf Club - Portada Oficial" 
               fill 
               priority
