@@ -957,7 +957,7 @@ a:hover { color: var(--accent-secondary); }
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .data-section-actions {
@@ -996,10 +996,10 @@ a:hover { color: var(--accent-secondary); }
 
 /* ---- Data Tables - SAP Style ---- */
 .data-table-wrap {
-  background: #fff;
-  border: 1px solid #cbd5e1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
   overflow-x: auto;
-  border-radius: 0px;
+  border-radius: var(--radius-lg);
 }
 
 .data-table {
@@ -1010,12 +1010,12 @@ a:hover { color: var(--accent-secondary); }
 }
 
 .data-table th {
-  background: #f1f5f9;
-  color: #334155;
+  background: var(--bg-secondary);
+  color: #ffffff;
   font-weight: 700;
   text-align: left;
   padding: 8px 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-subtle);
   text-transform: uppercase;
   white-space: nowrap;
   letter-spacing: 0.02em;
@@ -1024,8 +1024,8 @@ a:hover { color: var(--accent-secondary); }
 .data-table td {
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-primary);
-  border-bottom: 1px solid #f1f5f9;
+  color: #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
   border-right: none;
   vertical-align: middle;
   transition: background 0.2s;
@@ -1033,11 +1033,11 @@ a:hover { color: var(--accent-secondary); }
 
 /* Banking Zebra & Hover */
 .data-table tbody tr:nth-child(even) {
-  background: #fafafa;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .data-table tbody tr:hover {
-  background: #f0f9ff !important;
+  background: rgba(255, 255, 255, 0.05) !important;
 }
 
 .data-table tbody tr:last-child td {

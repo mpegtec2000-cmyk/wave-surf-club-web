@@ -335,5 +335,87 @@ export const dictionaries = {
       menu_riders: 'РАЙДЕРЫ', menu_tienda: 'МАГАЗИН', menu_contenido: 'КОНТЕНТ', menu_agenda: 'КЛАССЫ',
       menu_contacto: 'КОНТАКТЫ', menu_eventos: 'СОБЫТИЯ', menu_carro: 'КОРЗИНА: (0)'
     }
+  },
+  ar: {
+    pos: {
+      title: "نقطة البيع",
+      search_rut: "البحث عن العميل بالـ RUT",
+      new_transaction: "معاملة جديدة",
+      transaction_type: "نوع المعاملة",
+      category: "الفئة",
+      payment_method: "طريقة الدفع",
+      methods: {
+        efectivo: "نقداً",
+        transferencia: "تحويل بنكي",
+        tarjeta: "بطاقة",
+        por_pagar: "الدفع لاحقاً (آجل)"
+      },
+      total: "الإجمالي ($)",
+      process: "تنفيذ المعاملة",
+      recent: "المعاملات الأخيرة"
+    },
+    nav: {
+      dashboard: "لوحة التحكم",
+      pos: "نقطة البيع",
+      inventory: "المخزون",
+      clients: "العملاء",
+      staff: "الموظفون",
+      closing: "إغلاق الصندوق",
+      finanzas: "المالية",
+      movimientos: "سجل الحركات",
+      'ventas-online': "المبيعات الإلكترونية",
+      'ventas-fisicas': "المبيعات المادية",
+      'agenda-ventas': "جدول الدروس والإيجارات",
+      banco: "البنك",
+      settings: "الإعدادات"
+    },
+    landing: {
+      btn_ingreso: 'دخول :', btn_cliente: 'أ) عميل (تسجيل جديد)', btn_colaborador: 'ب) موظف (النظام)',
+      menu_inicio: 'الرئيسية',
+      menu_bio: 'السيرة الذاتية', menu_escuelas: 'المدارس', menu_servicios: 'الخدمات', menu_equipo: 'الفريق', menu_taller: 'الورشة',
+      menu_riders: 'الراكبون', menu_tienda: 'المتجر', menu_contenido: 'المحتوى', menu_agenda: 'احجز درسك',
+      menu_contacto: 'اتصل بنا', menu_eventos: 'الفعاليات', menu_carro: 'السلة: (0)'
+    }
+  },
+  ko: {
+    pos: {
+      title: "판매 시점",
+      search_rut: "RUT으로 고객 검색",
+      new_transaction: "새 거래",
+      transaction_type: "거래 유형",
+      category: "카테고리",
+      payment_method: "결제 방법",
+      methods: {
+        efectivo: "현금",
+        transferencia: "이체",
+        tarjeta: "카드",
+        por_pagar: "나중에 결제 (외상)"
+      },
+      total: "청구 합계 ($)",
+      process: "거래 처리",
+      recent: "최근 거래"
+    },
+    nav: {
+      dashboard: "대시보드",
+      pos: "계산대",
+      inventory: "재고 관리",
+      clients: "고객 관리",
+      staff: "직원",
+      closing: "마감",
+      finanzas: "재무",
+      movimientos: "이동 기록",
+      'ventas-online': "온라인 판매",
+      'ventas-fisicas': "오프라인 판매",
+      'agenda-ventas': "수업 및 대여 일정",
+      banco: "은행",
+      settings: "설정"
+    },
+    landing: {
+      btn_ingreso: '로그인 :', btn_cliente: 'A) 고객 (신규 등록)', btn_colaborador: 'B) 직원 (ERP)',
+      menu_inicio: '홈',
+      menu_bio: '소개', menu_escuelas: '스쿨', menu_servicios: '서비스', menu_equipo: '팀', menu_taller: '워크샵',
+      menu_riders: '라이더', menu_tienda: '쇼핑', menu_contenido: '콘텐츠', menu_agenda: '수업 예약',
+      menu_contacto: '문의', menu_eventos: '이벤트', menu_carro: '장바구니: (0)'
+    }
   }
 };

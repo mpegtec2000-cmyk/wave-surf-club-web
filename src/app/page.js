@@ -27,7 +27,6 @@ export default function LandingPage() {
                 objectPosition: 'center'
               }}
             />
-            {/* Filter removed as requested */}
           </div>
 
           {/* REAL TEXT TITLES - Never get cut off */}
@@ -44,6 +43,19 @@ export default function LandingPage() {
               </a>
             </div>
           </div>
+          
+          {/* Subtle scroll indicator */}
+          <div className="scroll-hint">
+            <div className="mouse">
+              <div className="wheel"></div>
+            </div>
+            <span>SCROLL</span>
+          </div>
+        </div>
+
+        {/* Following section to show snap effect */}
+        <div id="tienda" className="tienda-section">
+           {/* Section content can go here, using it to enable snap */}
         </div>
 
         {/* FLOATING BOOKING CTA */}
@@ -69,6 +81,11 @@ export default function LandingPage() {
           }
         }
 
+        html {
+          scroll-snap-type: y mandatory;
+          scroll-behavior: smooth;
+        }
+
         body { 
           margin: 0; 
           padding: 0; 
@@ -78,7 +95,6 @@ export default function LandingPage() {
         }
 
         .landing-main {
-          margin-top: var(--nav-height);
           width: 100%;
           position: relative;
         }
@@ -86,12 +102,13 @@ export default function LandingPage() {
         .hero-section {
           position: relative;
           width: 100%;
-          height: calc(100vh - var(--nav-height));
+          height: 100vh;
           display: flex;
-          align-items: flex-end;
-          padding-bottom: 60px;
+          align-items: center;
           justify-content: center;
           background: #000;
+          scroll-snap-align: start;
+          scroll-snap-stop: always;
         }
 
         .tienda-section {
@@ -99,21 +116,13 @@ export default function LandingPage() {
           width: 100%;
           height: 100vh;
           background: #000;
-        }
-
-        .tienda-bg-wrapper {
-          position: absolute;
-          inset: 0;
+          scroll-snap-align: start;
         }
 
         .hero-bg-wrapper {
           position: absolute;
           inset: 0;
           z-index: 1;
-        }
-
-        .hero-overlay {
-          display: none;
         }
 
         .hero-content {
@@ -123,6 +132,7 @@ export default function LandingPage() {
           color: #fff;
           padding: 0 20px;
           max-width: 900px;
+          margin-top: 60px;
         }
 
         @media (min-width: 1025px) {
@@ -139,8 +149,6 @@ export default function LandingPage() {
           margin-bottom: 15px;
           font-weight: 800;
           text-transform: uppercase;
-          word-break: break-word;
-          overflow-wrap: break-word;
         }
 
         .main-brand-title {
@@ -150,9 +158,6 @@ export default function LandingPage() {
           letter-spacing: -0.05em;
           margin: 0 0 30px 0;
           text-transform: uppercase;
-          width: 100%;
-          word-break: break-word;
-          overflow-wrap: break-word;
         }
 
         .hero-description {
@@ -161,36 +166,15 @@ export default function LandingPage() {
           color: rgba(255,255,255,0.8);
           margin-bottom: 40px;
           line-height: 1.4;
-          width: calc(100% - 2rem);
           max-width: 600px;
           margin-left: auto;
           margin-right: auto;
-          overflow-wrap: break-word;
         }
 
         .hero-actions {
           display: flex;
           gap: 20px;
           justify-content: center;
-        }
-
-        .btn-primary-luxury {
-          background: #fff;
-          color: #000;
-          padding: 18px 36px;
-          text-decoration: none;
-          font-weight: 900;
-          font-size: 14px;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          transition: all 0.3s ease;
-          border: 2px solid #fff;
-        }
-
-        .btn-primary-luxury:hover {
-          background: #38bdf8;
-          border-color: #38bdf8;
-          color: #fff;
         }
 
         .btn-pill-premium {
@@ -216,27 +200,52 @@ export default function LandingPage() {
           color: #fff;
         }
 
-        .btn-pill-premium:hover .booking-dot {
-          background: #fff;
+        /* SCROLL HINT */
+        .scroll-hint {
+          position: absolute;
+          bottom: 30px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          z-index: 10;
+          color: rgba(255,255,255,0.5);
+          font-size: 10px;
+          font-weight: 900;
+          letter-spacing: 2px;
+        }
+
+        .mouse {
+          width: 22px;
+          height: 35px;
+          border: 2px solid rgba(255,255,255,0.3);
+          border-radius: 20px;
+          position: relative;
+        }
+
+        .wheel {
+          width: 2px;
+          height: 6px;
+          background: #38bdf8;
+          position: absolute;
+          top: 6px;
+          left: 50%;
+          transform: translateX(-50%);
+          border-radius: 2px;
+          animation: scroll-wheel 2s infinite;
+        }
+
+        @keyframes scroll-wheel {
+          0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+          100% { transform: translateX(-50%) translateY(15px); opacity: 0; }
         }
 
         @media (max-width: 768px) {
-          .hero-actions {
-            flex-direction: column;
-            gap: 15px;
-          }
-          .btn-primary-luxury, .btn-outline-luxury {
-            width: 100%;
-            padding: 15px 20px;
-            font-size: 12px;
-          }
-          .since {
-            font-size: 10px;
-            letter-spacing: 4px;
-          }
-          .main-brand-title {
-            margin-bottom: 20px;
-          }
+          .hero-content { margin-top: 40px; }
+          .hero-actions { flex-direction: column; gap: 15px; }
+          .since { font-size: 10px; letter-spacing: 4px; }
         }
 
         /* FLOATING BOOKING BANNER */
@@ -290,11 +299,6 @@ export default function LandingPage() {
           font-size: 18px;
           font-weight: 300;
           transition: all 0.2s;
-        }
-
-        .close-booking:hover {
-          background: #000;
-          color: #fff;
         }
 
         @keyframes slideInRight {

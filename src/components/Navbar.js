@@ -19,7 +19,13 @@ export default function Navbar() {
     { code: 'es', name: 'ES' },
     { code: 'en', name: 'EN' },
     { code: 'pt', name: 'PT' },
-    { code: 'de', name: 'DE' }
+    { code: 'fr', name: 'FR' },
+    { code: 'de', name: 'DE' },
+    { code: 'zh', name: 'ZH' },
+    { code: 'ar', name: 'AR' },
+    { code: 'ru', name: 'RU' },
+    { code: 'ja', name: 'JA' },
+    { code: 'ko', name: 'KO' },
   ];
 
   useEffect(() => {
