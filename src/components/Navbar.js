@@ -192,6 +192,23 @@ export default function Navbar() {
           .mobile-menu-wrapper { display: flex !important; }
           .logo-box-luxury { width: 70px !important; }
         }
+
+        /* Language Slider Styles */
+        .lang-slider::-webkit-slider-thumb {
+          appearance: none;
+          width: 30px;
+          height: 6px;
+          background: #000;
+          border-radius: 3px;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+        .lang-slider::-webkit-slider-thumb:hover {
+          background: #38bdf8;
+        }
+        .lang-scroll-container::-webkit-scrollbar {
+          display: none;
+        }
       `}</style>
 
       {/* MOBILE MENU WRAPPER - ESCAPES ALL NESTING */}
@@ -330,23 +347,6 @@ export default function Navbar() {
               }}
               className="lang-slider"
             />
-            <style jsx>{`
-              .lang-slider::-webkit-slider-thumb {
-                appearance: none;
-                width: 30px;
-                height: 6px;
-                background: #000;
-                border-radius: 3px;
-                cursor: pointer;
-                transition: background 0.2s;
-              }
-              .lang-slider::-webkit-slider-thumb:hover {
-                background: #38bdf8;
-              }
-              .lang-scroll-container::-webkit-scrollbar {
-                display: none;
-              }
-            `}</style>
           </div>
         </div>
       </nav>
