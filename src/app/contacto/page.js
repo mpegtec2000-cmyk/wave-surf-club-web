@@ -63,7 +63,7 @@ export default function ContactoPage() {
             <div className="contact-card">
               <div className="card-icon"><MapPin size={24} /></div>
               <div className="card-info">
-                <span className="label">OFICINA CENTRAL</span>
+                <span className="label">SEDE CENTRAL</span>
                 <h3>Playa La Boca, Concón</h3>
                 <p>Wave Surf Club — Chile</p>
               </div>
