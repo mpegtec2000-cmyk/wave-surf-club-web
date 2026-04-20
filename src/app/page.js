@@ -16,7 +16,7 @@ export default function LandingPage() {
         <div id="hero" className="hero-section">
           <div className="hero-bg-wrapper">
             <Image 
-              src="/FONDO V1.jpg" 
+              src="/FONDO V2.png" 
               alt="Wave Surf Club" 
               fill 
               priority
