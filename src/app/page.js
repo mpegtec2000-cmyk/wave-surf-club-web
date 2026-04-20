@@ -16,8 +16,8 @@ export default function LandingPage() {
         <div id="hero" className="hero-section">
           <div className="hero-bg-wrapper">
             <Image 
-              src="/Diseño sin título.jpg" 
-              alt="Wave Surf Club - Portada Oficial" 
+              src="/FONDO V1.jpg" 
+              alt="Wave Surf Club - Portada 1" 
               fill 
               priority
               quality={100}
@@ -51,12 +51,12 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* SECOND SECTION: TOMAS BOCK */}
-        <div id="tomas-bock" className="official-section">
+        {/* SECOND SECTION: FONDO V2 */}
+        <div id="official-v2" className="official-section">
           <div className="hero-bg-wrapper">
             <Image 
-              src="/tomi-bock-fondo.png" 
-              alt="Tomas Bock - Wave Surf Club" 
+              src="/FONDO V2.png" 
+              alt="Wave Surf Club - Portada 2" 
               fill 
               quality={100}
               style={{ 
