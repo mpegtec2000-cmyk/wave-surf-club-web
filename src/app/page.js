@@ -14,7 +14,6 @@ export default function LandingPage() {
       <Navbar />
       <main className="landing-main">
         <div id="hero" className="hero-section">
-          {/* Background Image with subtle gradient overlay */}
           <div className="hero-bg-wrapper">
             <Image 
               src="/Diseño sin título.jpg" 
@@ -29,7 +28,7 @@ export default function LandingPage() {
             />
           </div>
 
-          {/* REAL TEXT TITLES - Never get cut off */}
+          {/* REAL TEXT TITLES - Visible only on mobile to avoid overlap on desktop */}
           <div className="hero-content">
             <span className="since">SINCE 2015</span>
             <h1 className="main-brand-title">WAVE SURF CLUB</h1>
@@ -44,7 +43,6 @@ export default function LandingPage() {
             </div>
           </div>
           
-          {/* Subtle scroll indicator */}
           <div className="scroll-hint">
             <div className="mouse">
               <div className="wheel"></div>
@@ -53,9 +51,20 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Following section to show snap effect */}
-        <div id="tienda" className="tienda-section">
-           {/* Section content can go here, using it to enable snap */}
+        {/* SECOND SECTION: TOMAS BOCK */}
+        <div id="tomas-bock" className="official-section">
+          <div className="hero-bg-wrapper">
+            <Image 
+              src="/tomi-bock-fondo.png" 
+              alt="Tomas Bock - Wave Surf Club" 
+              fill 
+              quality={100}
+              style={{ 
+                objectFit: 'cover',
+                objectPosition: 'center'
+              }}
+            />
+          </div>
         </div>
 
         {/* FLOATING BOOKING CTA */}
@@ -97,26 +106,20 @@ export default function LandingPage() {
         .landing-main {
           width: 100%;
           position: relative;
+          margin-top: var(--nav-height);
         }
 
-        .hero-section {
+        .hero-section, .official-section {
           position: relative;
           width: 100%;
-          height: 100vh;
+          height: calc(100vh - var(--nav-height));
           display: flex;
           align-items: center;
           justify-content: center;
           background: #000;
           scroll-snap-align: start;
           scroll-snap-stop: always;
-        }
-
-        .tienda-section {
-          position: relative;
-          width: 100%;
-          height: 100vh;
-          background: #000;
-          scroll-snap-align: start;
+          overflow: hidden;
         }
 
         .hero-bg-wrapper {
@@ -132,7 +135,7 @@ export default function LandingPage() {
           color: #fff;
           padding: 0 20px;
           max-width: 900px;
-          margin-top: 60px;
+          margin-top: 40px;
         }
 
         @media (min-width: 1025px) {
