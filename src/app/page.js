@@ -17,7 +17,7 @@ export default function LandingPage() {
           <div className="hero-bg-wrapper">
             <Image 
               src="/FONDO V1.jpg" 
-              alt="Wave Surf Club - Portada 1" 
+              alt="Wave Surf Club" 
               fill 
               priority
               quality={100}
@@ -41,29 +41,6 @@ export default function LandingPage() {
                 Conoce a tu profesor
               </a>
             </div>
-          </div>
-          
-          <div className="scroll-hint">
-            <div className="mouse">
-              <div className="wheel"></div>
-            </div>
-            <span>SCROLL</span>
-          </div>
-        </div>
-
-        {/* SECOND SECTION: FONDO V2 */}
-        <div id="official-v2" className="official-section">
-          <div className="hero-bg-wrapper">
-            <Image 
-              src="/FONDO V2.png" 
-              alt="Wave Surf Club - Portada 2" 
-              fill 
-              quality={100}
-              style={{ 
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
           </div>
         </div>
 
@@ -90,11 +67,6 @@ export default function LandingPage() {
           }
         }
 
-        html {
-          scroll-snap-type: y mandatory;
-          scroll-behavior: smooth;
-        }
-
         body { 
           margin: 0; 
           padding: 0; 
@@ -109,7 +81,7 @@ export default function LandingPage() {
           margin-top: var(--nav-height);
         }
 
-        .hero-section, .official-section {
+        .hero-section {
           position: relative;
           width: 100%;
           height: calc(100vh - var(--nav-height));
@@ -117,8 +89,6 @@ export default function LandingPage() {
           align-items: center;
           justify-content: center;
           background: #000;
-          scroll-snap-align: start;
-          scroll-snap-stop: always;
           overflow: hidden;
         }
 
