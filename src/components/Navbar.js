@@ -260,9 +260,36 @@ export default function Navbar() {
             <Link href="/acceso?tab=cliente" style={{ fontSize: '11px', fontWeight: 900, color: '#fff', background: '#000', padding: '8px 14px', borderRadius: '4px', textDecoration: 'none' }}>ACCESO CLIENTES</Link>
             <Link href="/acceso?tab=colaborador" style={{ fontSize: '10px', fontWeight: 700, color: '#666', textDecoration: 'none' }}>COLABORADOR</Link>
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div 
+            className="lang-scroll-container"
+            style={{ 
+              display: 'flex', 
+              gap: '6px', 
+              overflowX: 'auto', 
+              maxWidth: '240px',
+              padding: '4px 0',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)'
+            }}
+          >
             {LANGUAGES.map(l => (
-              <button key={l.code} onClick={() => changeLang(l.code)} style={{ background: lang === l.code ? '#000' : 'none', color: lang === l.code ? '#fff' : '#000', border: '1px solid #000', borderRadius: '4px', fontSize: '10px', fontWeight: 900, cursor: 'pointer', padding: '4px 8px' }}>
+              <button 
+                key={l.code} 
+                onClick={() => changeLang(l.code)} 
+                style={{ 
+                  background: lang === l.code ? '#000' : 'none', 
+                  color: lang === l.code ? '#fff' : '#000', 
+                  border: '1px solid #000', 
+                  borderRadius: '4px', 
+                  fontSize: '10px', 
+                  fontWeight: 900, 
+                  cursor: 'pointer', 
+                  padding: '4px 10px',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.2s'
+                }}
+              >
                 {l.name}
               </button>
             ))}
@@ -306,9 +333,26 @@ export default function Navbar() {
                  ACCESO COLABORADOR
                </Link>
              </div>
-             <div style={{ display: 'flex', gap: '10px' }}>
+             <div style={{ 
+               display: 'grid', 
+               gridTemplateColumns: 'repeat(4, 1fr)', 
+               gap: '8px',
+               marginTop: '10px'
+             }}>
                 {LANGUAGES.map(l => (
-                  <button key={l.code} onClick={() => { changeLang(l.code); setMenuOpen(false); }} style={{ flex: 1, background: lang === l.code ? '#38bdf8' : 'none', color: '#fff', border: '1px solid #fff', borderRadius: '4px', padding: '12px', fontWeight: 900 }}>
+                  <button 
+                    key={l.code} 
+                    onClick={() => { changeLang(l.code); setMenuOpen(false); }} 
+                    style={{ 
+                      background: lang === l.code ? '#38bdf8' : 'none', 
+                      color: '#fff', 
+                      border: '1px solid rgba(255,255,255,0.3)', 
+                      borderRadius: '4px', 
+                      padding: '10px 4px', 
+                      fontWeight: 900,
+                      fontSize: '12px'
+                    }}
+                  >
                     {l.name}
                   </button>
                 ))}
