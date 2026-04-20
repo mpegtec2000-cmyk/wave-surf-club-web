@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Globe, User, ChevronDown } from 'lucide-react';
@@ -14,6 +14,8 @@ export default function Navbar() {
   const { lang, changeLang, t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const scrollRef = useRef(null);
+  const [scrollVal, setScrollVal] = useState(0);
 
   const LANGUAGES = [
     { code: 'es', name: 'ES' },
@@ -260,39 +262,91 @@ export default function Navbar() {
             <Link href="/acceso?tab=cliente" style={{ fontSize: '11px', fontWeight: 900, color: '#fff', background: '#000', padding: '8px 14px', borderRadius: '4px', textDecoration: 'none' }}>ACCESO CLIENTES</Link>
             <Link href="/acceso?tab=colaborador" style={{ fontSize: '10px', fontWeight: 700, color: '#666', textDecoration: 'none' }}>COLABORADOR</Link>
           </div>
-          <div 
-            className="lang-scroll-container"
-            style={{ 
-              display: 'flex', 
-              gap: '6px', 
-              overflowX: 'auto', 
-              maxWidth: '240px',
-              padding: '4px 0',
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-              WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)'
-            }}
-          >
-            {LANGUAGES.map(l => (
-              <button 
-                key={l.code} 
-                onClick={() => changeLang(l.code)} 
-                style={{ 
-                  background: lang === l.code ? '#000' : 'none', 
-                  color: lang === l.code ? '#fff' : '#000', 
-                  border: '1px solid #000', 
-                  borderRadius: '4px', 
-                  fontSize: '10px', 
-                  fontWeight: 900, 
-                  cursor: 'pointer', 
-                  padding: '4px 10px',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.2s'
-                }}
-              >
-                {l.name}
-              </button>
-            ))}
+          <div className="lang-selector-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
+            <div 
+              className="lang-scroll-container"
+              ref={scrollRef}
+              onScroll={() => {
+                if (scrollRef.current) {
+                  const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
+                  const currentScroll = scrollRef.current.scrollLeft;
+                  setScrollVal((currentScroll / maxScroll) * 100);
+                }
+              }}
+              style={{ 
+                display: 'flex', 
+                gap: '6px', 
+                overflowX: 'auto', 
+                maxWidth: '220px',
+                padding: '4px 0',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                scrollBehavior: 'smooth'
+              }}
+            >
+              {LANGUAGES.map(l => (
+                <button 
+                  key={l.code} 
+                  onClick={() => changeLang(l.code)} 
+                  style={{ 
+                    background: lang === l.code ? '#000' : 'none', 
+                    color: lang === l.code ? '#fff' : '#000', 
+                    border: '1px solid #000', 
+                    borderRadius: '4px', 
+                    fontSize: '10px', 
+                    fontWeight: 900, 
+                    cursor: 'pointer', 
+                    padding: '4px 10px',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  {l.name}
+                </button>
+              ))}
+            </div>
+            {/* Custom Premium Slider */}
+            <input 
+              type="range" 
+              min="0" 
+              max="100" 
+              value={scrollVal || 0}
+              onChange={(e) => {
+                const val = e.target.value;
+                setScrollVal(val);
+                if (scrollRef.current) {
+                  const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
+                  scrollRef.current.scrollLeft = (val / 100) * maxScroll;
+                }
+              }}
+              style={{
+                width: '80%',
+                height: '2px',
+                appearance: 'none',
+                background: '#ddd',
+                outline: 'none',
+                cursor: 'pointer',
+                borderRadius: '2px'
+              }}
+              className="lang-slider"
+            />
+            <style jsx>{`
+              .lang-slider::-webkit-slider-thumb {
+                appearance: none;
+                width: 30px;
+                height: 6px;
+                background: #000;
+                border-radius: 3px;
+                cursor: pointer;
+                transition: background 0.2s;
+              }
+              .lang-slider::-webkit-slider-thumb:hover {
+                background: #38bdf8;
+              }
+              .lang-scroll-container::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
           </div>
         </div>
       </nav>
