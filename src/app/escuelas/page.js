@@ -36,7 +36,7 @@ export default function EscuelasPage() {
       subtitle: 'Inauguración 2026',
       slogan: 'El futuro del deporte.',
       desc: 'Nuestra sede más moderna y tecnológica de vanguardia.',
-      img: '/tomi-bock-fondo.png',
+      img: '/punta-piedra.png',
       features: ['Arquitectura 360°', 'Rampas de Skate Pro', 'Inclusión Total']
     }
   ];
