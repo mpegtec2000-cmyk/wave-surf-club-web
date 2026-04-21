@@ -273,13 +273,14 @@ export default function DashboardLayout({ children }) {
           </div>
 
           {/* Lang flags */}
-          <div className="topbar-lang hide-mobile">
-            {LANGUAGES.slice(0, 4).map(language => (
+          <div className="topbar-lang" style={{ display: 'flex', gap: '4px', margin: '0 8px' }}>
+            {LANGUAGES.slice(0, 3).map(language => (
               <button
                 key={language.code}
                 className={`lang-flag-btn ${lang === language.code ? 'active' : ''}`}
                 onClick={() => changeLang(language.code)}
                 title={language.name}
+                style={{ fontSize: '18px', padding: '4px' }}
               >
                 {language.flag}
               </button>
@@ -329,6 +330,23 @@ export default function DashboardLayout({ children }) {
                 })}
               </div>
             ))}
+          </div>
+
+          <div style={{ marginTop: 'auto', padding: '20px', borderTop: '1px solid #1e2a3a' }}>
+            {!isCollapsed && <div className="nav-group-label" style={{ marginBottom: 12 }}>IDIOMA / LINGUAGEM</div>}
+            <div style={{ display: 'flex', gap: 10, justifyContent: isCollapsed ? 'center' : 'flex-start' }}>
+              {LANGUAGES.map(language => (
+                <button
+                  key={language.code}
+                  className={`lang-flag-btn ${lang === language.code ? 'active' : ''}`}
+                  onClick={() => changeLang(language.code)}
+                  title={language.name}
+                  style={{ fontSize: isCollapsed ? '20px' : '24px', padding: '8px', background: lang === language.code ? 'rgba(56,189,248,0.1)' : 'transparent', border: '1px solid', borderColor: lang === language.code ? '#38bdf8' : 'transparent', borderRadius: '8px', cursor: 'pointer', transition: '0.2s' }}
+                >
+                  {language.flag}
+                </button>
+              ))}
+            </div>
           </div>
 
           {!isCollapsed && (
