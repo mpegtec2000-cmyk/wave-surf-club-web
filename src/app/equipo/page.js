@@ -174,11 +174,13 @@ export default function EquipoPage() {
         .hero {
           position: relative;
           width: 100vw;
-          height: 100vh;
+          height: 85vh; /* Altura ajustada para reducir el recorte en imágenes panorámicas */
+          max-height: 900px;
           overflow: hidden;
           display: flex;
           align-items: center;
           justify-content: center;
+          background: #000;
         }
         .hero-img {
           position: absolute;
@@ -186,7 +188,7 @@ export default function EquipoPage() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center top;
+          object-position: center 20%; /* Priorizar la parte superior donde está el título 'RIDERS' */
         }
 
         /* --- INFO SECTION --- */
@@ -421,13 +423,18 @@ export default function EquipoPage() {
             gap: 80px;
           }
           .hero {
-            height: 60vh;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            min-height: 400px;
           }
           .info-section {
             padding: 60px 20px;
           }
           .carousel-frame.vertical {
             height: 500px;
+          }
+          .hero-img {
+            object-fit: cover;
           }
         }
 
