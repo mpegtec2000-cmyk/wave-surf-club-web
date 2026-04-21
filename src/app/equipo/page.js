@@ -30,7 +30,7 @@ export default function EquipoPage() {
       {/* HERO — Imagen de fondo FONDO EQUIPO.jpg, sin overlay, sin texto */}
       <section className="hero">
         <Image
-          src="/FONDO EQUIPO.jpg"
+          src="/rider fondo.jpg"
           alt="Equipo Wave Surf Club"
           fill
           priority
