@@ -497,70 +497,9 @@ export default function POSPage() {
                   </button>
                 </div>
               </div>
-
-=======
-            <div style={{ padding: '20px' }}>
-              
-              {/* Contenedor Simple y Seguro */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                
-                {/* BUSCADOR DE RUT (Tamaño Reducido) */}
-                <div style={{ width: '400px', position: 'relative' }}>
-                  <Search size={20} style={{ position: 'absolute', left: 12, top: 20, color: '#94a3b8' }} />
-                  <input
-                    type="text"
-                    className="form-input"
-                    style={{ 
-                      width: '100%', height: 60, paddingLeft: '40px', fontSize: '16px', borderRadius: '8px',
-                      border: '1px solid #cbd5e1', margin: 0
-                    }}
-                    placeholder="Ingrese RUT del Cliente..."
-                    value={rut}
-                    onChange={(e) => setRut(formatRut(e.target.value))}
-                    onKeyDown={handleKeyDown}
-                  />
-                </div>
-
-                {/* BOTÓN NUEVO CLIENTE (Pegado al RUT) */}
-                <button 
-                  onClick={() => { 
-                    setNewClientRut(rut);
-                    setShowNewClient(true); 
-                    setShowQuickStock(false);
-                  }}
-                  style={{ 
-                    background: '#10b981', color: '#fff', border: 'none', 
-                    height: 60, padding: '0 20px', borderRadius: '8px',
-                    display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer',
-                    fontWeight: 'bold', fontSize: '14px'
-                  }}
-                >
-                  <UserPlus size={24} />
-                  NUEVO CLIENTE
-                </button>
-
-                {/* OTROS BOTONES (Opcionales, empujados a la derecha) */}
-                <div style={{ marginLeft: 'auto', display: 'flex', gap: '10px' }}>
-                  <button 
-                    onClick={handleGenericClient}
-                    style={{ background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', height: 60, padding: '0 15px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}
-                  >
-                    👤 FINAL
-                  </button>
-                  <button 
-                    onClick={() => { setShowQuickStock(!showQuickStock); setShowNewClient(false); }}
-                    style={{ background: '#0f172a', color: '#fff', border: 'none', height: 60, width: 60, borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '18px' }}
-                  >
-                    S
-                  </button>
-                </div>
-
-              </div>
-
             </div>
           </div>
 
->>>>>>> c47e0c1abd8a10161d501369d048a7751e57c695
               {/* NEW CLIENT REGISTRATION FORM */}
               {showNewClient && (
                 <div className="animate-slide-down" style={{ marginTop: 20, padding: 24, background: 'var(--bg-primary)', borderRadius: 'var(--radius-lg)', border: '1.5px solid var(--color-success)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
@@ -568,11 +507,8 @@ export default function POSPage() {
                   <form onSubmit={handleRegisterNewClient} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
                     <div className="form-group">
                       <label style={{ fontSize: 11 }}>Nombre Completo *</label>
-<<<<<<< HEAD
                       <input type="text" className="form-input" value={newClientName} onChange={e => setNewClientName(e.target.value)} required placeholder="Ej: Juan Perez" style={{ height: 48 }} />
-=======
-                      <input type="text" className="form-input new-client-name-input" value={newClientName} onChange={e => setNewClientName(e.target.value)} required placeholder="Ej: Juan Perez" style={{ height: 48 }} />
->>>>>>> c47e0c1abd8a10161d501369d048a7751e57c695
+
                     </div>
                     <div className="form-group">
                       <label style={{ fontSize: 11 }}>RUT *</label>

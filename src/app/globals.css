@@ -2531,46 +2531,6 @@ a:hover { color: var(--accent-secondary); }
   }
 
   .total-input-pos {
-<<<<<<< HEAD
-    font-size: 32px !important;
-  }
-
-  .branch-tabs {
-    overflow-x: auto;
-    padding-bottom: 8px;
-    display: flex !important;
-    flex-direction: row !important; /* Keep tabs horizontal */
-  }
-  
-  .branch-tab {
-    flex-shrink: 0;
-    font-size: 11px !important;
-  }
-
-  .pos-sidebar {
-    width: 100% !important;
-    position: static !important;
-    margin-top: 20px;
-    padding-bottom: 60px; /* Safe area for bottom navigation */
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  body, html {
-    overflow-x: hidden !important;
-    position: relative;
-    width: 100%;
-  }
-
-  .rut-search-grid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-  
-  .rut-search-grid > div {
-    justify-content: center !important;
-    width: 100% !important;
-=======
     font-size: 38px !important;
     height: 90px !important;
     padding-top: 10px !important;
@@ -2603,23 +2563,43 @@ a:hover { color: var(--accent-secondary); }
     padding: 16px !important;
   }
 
-  .pos-search-actions {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    width: 100% !important;
+  .branch-tabs {
+    overflow-x: auto;
+    padding-bottom: 8px;
+    display: flex !important;
+    flex-direction: row !important; /* Keep tabs horizontal */
+  }
+  
+  .branch-tab {
+    flex-shrink: 0;
+    font-size: 11px !important;
   }
 
-  .pos-search-actions .search-button-pos {
-    grid-column: span 1;
+  .pos-sidebar {
     width: 100% !important;
+    position: static !important;
+    margin-top: 20px;
+    padding-bottom: 60px; /* Safe area for bottom navigation */
+    display: flex !important;
+    flex-direction: column !important;
   }
 
-  .pos-search-actions .search-divider-v {
-    display: none !important;
+  body, html {
+    overflow-x: hidden !important;
+    position: relative;
+    width: 100%;
   }
 
   .rut-search-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
     padding: 0 !important;
->>>>>>> c47e0c1abd8a10161d501369d048a7751e57c695
+  }
+  
+  .rut-search-grid > div {
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
   }
 }
