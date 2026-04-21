@@ -73,12 +73,12 @@ export default function EquipoPage() {
                 Videos de clases, sesiones en el mar y el día a día de nuestro equipo.
               </p>
               <a
-                href="https://www.instagram.com/wavesurfclub"
+                href="https://www.instagram.com/wave_surf_club/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="insta-btn"
               >
-                @wavesurfclub
+                @wave_surf_club
               </a>
             </div>
           </div>
@@ -91,7 +91,7 @@ export default function EquipoPage() {
                 <p>Contáctanos si eres instructor o tienes experiencia en el surf.</p>
               </div>
               <a
-                href="https://wa.me/56940674889?text=Hola%2C%20me%20interesa%20unirme%20al%20equipo%20de%20Wave%20Surf%20Club."
+                href="https://wa.me/56975803044?text=Hola%2C%20me%20interesa%20unirme%20al%20equipo%20de%20Wave%20Surf%20Club."
                 target="_blank"
                 className="quote-whatsapp"
               >
@@ -140,7 +140,7 @@ export default function EquipoPage() {
               <h3 className="section-title">NUESTRO EQUIPO EN ACCIÓN</h3>
               <div className="video-frame">
                 <iframe
-                  src="https://www.instagram.com/wavesurfclub/embed"
+                  src="https://www.instagram.com/wave_surf_club/embed"
                   width="100%"
                   height="720"
                   frameBorder="0"
@@ -150,7 +150,7 @@ export default function EquipoPage() {
                 ></iframe>
               </div>
               <p className="video-caption">
-                Síguenos en <a href="https://www.instagram.com/wavesurfclub" target="_blank" className="link-accent">@wavesurfclub</a> para ver más contenido del equipo.
+                Síguenos en <a href="https://www.instagram.com/wave_surf_club/" target="_blank" className="link-accent">@wave_surf_club</a> para ver más contenido del equipo.
               </p>
             </div>
 
