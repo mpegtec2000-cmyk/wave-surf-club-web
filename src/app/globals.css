@@ -957,7 +957,7 @@ a:hover { color: var(--accent-secondary); }
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .data-section-actions {
@@ -996,10 +996,10 @@ a:hover { color: var(--accent-secondary); }
 
 /* ---- Data Tables - SAP Style ---- */
 .data-table-wrap {
-  background: #fff;
-  border: 1px solid #cbd5e1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
   overflow-x: auto;
-  border-radius: 0px;
+  border-radius: var(--radius-lg);
 }
 
 .data-table {
@@ -1010,12 +1010,12 @@ a:hover { color: var(--accent-secondary); }
 }
 
 .data-table th {
-  background: #f1f5f9;
-  color: #334155;
+  background: var(--bg-secondary);
+  color: #ffffff;
   font-weight: 700;
   text-align: left;
   padding: 8px 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-subtle);
   text-transform: uppercase;
   white-space: nowrap;
   letter-spacing: 0.02em;
@@ -1024,8 +1024,8 @@ a:hover { color: var(--accent-secondary); }
 .data-table td {
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-primary);
-  border-bottom: 1px solid #f1f5f9;
+  color: #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
   border-right: none;
   vertical-align: middle;
   transition: background 0.2s;
@@ -1033,11 +1033,11 @@ a:hover { color: var(--accent-secondary); }
 
 /* Banking Zebra & Hover */
 .data-table tbody tr:nth-child(even) {
-  background: #fafafa;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .data-table tbody tr:hover {
-  background: #f0f9ff !important;
+  background: rgba(255, 255, 255, 0.05) !important;
 }
 
 .data-table tbody tr:last-child td {
@@ -1279,11 +1279,18 @@ a:hover { color: var(--accent-secondary); }
   font-size: 40px !important;
   height: 80px !important;
   text-align: right !important;
-  font-weight: 900 !important;
+  font-weight: 950 !important;
   font-family: var(--font-mono) !important;
   border: 2px solid #0f172a !important;
   color: #0f172a !important;
+  background: #fff !important;
   padding-right: 20px !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+.total-input-pos:focus {
+  border-color: var(--accent-action) !important;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1) !important;
 }
 
 .currency-symbol {
@@ -2304,7 +2311,7 @@ a:hover { color: var(--accent-secondary); }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .form-group { display: flex; flex-direction: column; gap: 8px; }
 .form-group label { font-size: 12px; color: #64748b; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-.form-input {
+.fondos-card .form-input {
   background: #030712;
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 14px;
@@ -2312,7 +2319,7 @@ a:hover { color: var(--accent-secondary); }
   color: #fff;
   outline: none;
 }
-.form-input:focus { border-color: #0ea5e9; }
+.fondos-card .form-input:focus { border-color: #0ea5e9; }
 .btn-save {
   background: #0ea5e9; color: #fff; padding: 16px; border-radius: 12px;
   font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;
@@ -2524,6 +2531,7 @@ a:hover { color: var(--accent-secondary); }
   }
 
   .total-input-pos {
+<<<<<<< HEAD
     font-size: 32px !important;
   }
 
@@ -2562,5 +2570,56 @@ a:hover { color: var(--accent-secondary); }
   .rut-search-grid > div {
     justify-content: center !important;
     width: 100% !important;
+=======
+    font-size: 38px !important;
+    height: 90px !important;
+    padding-top: 10px !important;
+  }
+
+  .currency-symbol {
+    font-size: 28px !important;
+    left: 24px !important;
+    color: #0f172a !important;
+    opacity: 0.3;
+  }
+
+  .btn-finalize {
+    height: 80px !important;
+    font-size: 18px !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  /* Improve touch targets for mobile dropdowns */
+  .form-select {
+    height: 64px !important;
+    font-size: 16px !important;
+  }
+
+  .data-section {
+    padding: 20px !important;
+  }
+
+  .data-section-header {
+    padding: 16px !important;
+  }
+
+  .pos-search-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    width: 100% !important;
+  }
+
+  .pos-search-actions .search-button-pos {
+    grid-column: span 1;
+    width: 100% !important;
+  }
+
+  .pos-search-actions .search-divider-v {
+    display: none !important;
+  }
+
+  .rut-search-grid {
+    padding: 0 !important;
+>>>>>>> c47e0c1abd8a10161d501369d048a7751e57c695
   }
 }

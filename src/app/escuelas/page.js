@@ -36,7 +36,7 @@ export default function EscuelasPage() {
       subtitle: 'Inauguración 2026',
       slogan: 'El futuro del deporte.',
       desc: 'Nuestra sede más moderna y tecnológica de vanguardia.',
-      img: '/tomi-bock-fondo.png',
+      img: '/punta-piedra.png',
       features: ['Arquitectura 360°', 'Rampas de Skate Pro', 'Inclusión Total']
     }
   ];
@@ -88,63 +88,67 @@ export default function EscuelasPage() {
           maxWidth: '1200px',
           width: '100%'
         }}>
-          {sedes.map(sede => (
-            <Link key={sede.id} href={`/spots/${sede.id}`} style={{ textDecoration: 'none' }}>
-              <div className="school-card" style={{
-                background: 'rgba(255, 255, 255, 0.95)', // White cards as per original design
-                borderRadius: '16px',
-                padding: '30px',
-                color: '#000',
-                transition: 'transform 0.3s ease',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-                height: '100%'
-              }}>
-                <div style={{ height: '180px', position: 'relative', marginBottom: '25px', borderRadius: '12px', overflow: 'hidden' }}>
-                    <Image src={sede.img} alt={sede.title} fill style={{ objectFit: 'cover' }} />
-                    {sede.highlight && (
-                        <div style={{ 
-                            position: 'absolute', 
-                            top: '15px', 
-                            right: '15px', 
-                            background: '#38bdf8', 
-                            color: '#fff', 
-                            padding: '6px 12px', 
-                            borderRadius: '50px', 
-                            fontSize: '10px', 
-                            fontWeight: '900',
-                            letterSpacing: '1px',
-                            boxShadow: '0 4px 10px rgba(56, 189, 248, 0.4)'
-                        }}>
-                            {sede.highlight}
-                        </div>
-                    )}
-                </div>
-                <h3 style={{ fontSize: '22px', fontWeight: 950, marginBottom: '5px', letterSpacing: '-0.02em' }}>{sede.title}</h3>
-                <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 900, marginBottom: '15px', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{sede.subtitle}</div>
-                <p style={{ fontSize: '14px', color: '#4b5563', lineHeight: '1.6', marginBottom: '25px', fontWeight: '500' }}>{sede.desc}</p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '25px' }}>
-                    {sede.features.map(f => (
-                        <span key={f} style={{ fontSize: '10px', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px', fontWeight: 700 }}>{f}</span>
-                    ))}
-                </div>
-                <div style={{ 
-                    marginTop: 'auto',
-                    width: '100%',
-                    padding: '12px',
-                    textAlign: 'center',
-                    background: '#000',
-                    color: '#fff',
-                    fontSize: '11px',
-                    fontWeight: '900',
-                    borderRadius: '8px',
-                    letterSpacing: '1px',
-                    textTransform: 'uppercase'
+          {sedes.map(sede => {
+            const cardHref = sede.id === 'pichilemu' ? '/taller' : `/spots/${sede.id}`;
+            
+            return (
+              <Link key={sede.id} href={cardHref} style={{ textDecoration: 'none' }}>
+                <div className="school-card" style={{
+                  background: 'rgba(255, 255, 255, 0.95)', 
+                  borderRadius: '16px',
+                  padding: '30px',
+                  color: '#000',
+                  transition: 'transform 0.3s ease',
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+                  height: '100%'
                 }}>
-                    {sede.cta || 'VER MÁS DETALLES'}
+                  <div style={{ height: '180px', position: 'relative', marginBottom: '25px', borderRadius: '12px', overflow: 'hidden' }}>
+                      <Image src={sede.img} alt={sede.title} fill style={{ objectFit: 'cover' }} />
+                      {sede.highlight && (
+                          <div style={{ 
+                              position: 'absolute', 
+                              top: '15px', 
+                              right: '15px', 
+                              background: '#38bdf8', 
+                              color: '#fff', 
+                              padding: '6px 12px', 
+                              borderRadius: '50px', 
+                              fontSize: '10px', 
+                              fontWeight: '900',
+                              letterSpacing: '1px',
+                              boxShadow: '0 4px 10px rgba(56, 189, 248, 0.4)'
+                          }}>
+                              {sede.highlight}
+                          </div>
+                      )}
+                  </div>
+                  <h3 style={{ fontSize: '22px', fontWeight: 950, marginBottom: '5px', letterSpacing: '-0.02em' }}>{sede.title}</h3>
+                  <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 900, marginBottom: '15px', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{sede.subtitle}</div>
+                  <p style={{ fontSize: '14px', color: '#4b5563', lineHeight: '1.6', marginBottom: '25px', fontWeight: '500' }}>{sede.desc}</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '25px' }}>
+                      {sede.features.map(f => (
+                          <span key={f} style={{ fontSize: '10px', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px', fontWeight: 700 }}>{f}</span>
+                      ))}
+                  </div>
+                  <div style={{ 
+                      marginTop: 'auto',
+                      width: '100%',
+                      padding: '12px',
+                      textAlign: 'center',
+                      background: '#000',
+                      color: '#fff',
+                      fontSize: '11px',
+                      fontWeight: '900',
+                      borderRadius: '8px',
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase'
+                  }}>
+                      {sede.cta || 'VER MÁS DETALLES'}
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </section>
 

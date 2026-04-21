@@ -14,11 +14,10 @@ export default function LandingPage() {
       <Navbar />
       <main className="landing-main">
         <div id="hero" className="hero-section">
-          {/* Background Image with subtle gradient overlay */}
           <div className="hero-bg-wrapper">
             <Image 
-              src="/FONDO OFICIAL.png" 
-              alt="Wave Surf Club - Portada Oficial" 
+              src="/FONDO V2.png" 
+              alt="Wave Surf Club" 
               fill 
               priority
               quality={100}
@@ -27,11 +26,15 @@ export default function LandingPage() {
                 objectPosition: 'center'
               }}
             />
-            {/* Filter removed as requested */}
           </div>
 
-          {/* REAL TEXT TITLES - Never get cut off */}
+          {/* REAL TEXT TITLES - Visible only on mobile to avoid overlap on desktop */}
           <div className="hero-content">
+            <span className="since">SINCE 2015</span>
+            <h1 className="main-brand-title">WAVE SURF CLUB</h1>
+            <p className="hero-description">
+              Todo partió como un sueño y se hizo realidad. Dedicados a la enseñanza del Skate y Surf en las mejores playas de Chile.
+            </p>
             <div className="hero-actions">
               <a href="/riders" className="btn-pill-premium">
                 <span className="booking-dot"></span>
@@ -73,9 +76,9 @@ export default function LandingPage() {
         }
 
         .landing-main {
-          margin-top: var(--nav-height);
           width: 100%;
           position: relative;
+          margin-top: var(--nav-height);
         }
 
         .hero-section {
@@ -83,32 +86,16 @@ export default function LandingPage() {
           width: 100%;
           height: calc(100vh - var(--nav-height));
           display: flex;
-          align-items: flex-end;
-          padding-bottom: 60px;
+          align-items: center;
           justify-content: center;
           background: #000;
-        }
-
-        .tienda-section {
-          position: relative;
-          width: 100%;
-          height: 100vh;
-          background: #000;
-        }
-
-        .tienda-bg-wrapper {
-          position: absolute;
-          inset: 0;
+          overflow: hidden;
         }
 
         .hero-bg-wrapper {
           position: absolute;
           inset: 0;
           z-index: 1;
-        }
-
-        .hero-overlay {
-          display: none;
         }
 
         .hero-content {
@@ -118,6 +105,13 @@ export default function LandingPage() {
           color: #fff;
           padding: 0 20px;
           max-width: 900px;
+          margin-top: 40px;
+        }
+
+        @media (min-width: 1025px) {
+          .hero-content {
+            display: none !important;
+          }
         }
 
         .since {
@@ -131,7 +125,7 @@ export default function LandingPage() {
         }
 
         .main-brand-title {
-          font-size: clamp(40px, 10vw, 120px);
+          font-size: clamp(2.5rem, 10vw, 120px);
           font-weight: 950;
           line-height: 0.85;
           letter-spacing: -0.05em;
@@ -140,7 +134,7 @@ export default function LandingPage() {
         }
 
         .hero-description {
-          font-size: clamp(16px, 2.5vw, 24px);
+          font-size: clamp(14px, 2.5vw, 24px);
           font-weight: 400;
           color: rgba(255,255,255,0.8);
           margin-bottom: 40px;
@@ -154,25 +148,6 @@ export default function LandingPage() {
           display: flex;
           gap: 20px;
           justify-content: center;
-        }
-
-        .btn-primary-luxury {
-          background: #fff;
-          color: #000;
-          padding: 18px 36px;
-          text-decoration: none;
-          font-weight: 900;
-          font-size: 14px;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          transition: all 0.3s ease;
-          border: 2px solid #fff;
-        }
-
-        .btn-primary-luxury:hover {
-          background: #38bdf8;
-          border-color: #38bdf8;
-          color: #fff;
         }
 
         .btn-pill-premium {
@@ -198,27 +173,52 @@ export default function LandingPage() {
           color: #fff;
         }
 
-        .btn-pill-premium:hover .booking-dot {
-          background: #fff;
+        /* SCROLL HINT */
+        .scroll-hint {
+          position: absolute;
+          bottom: 30px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          z-index: 10;
+          color: rgba(255,255,255,0.5);
+          font-size: 10px;
+          font-weight: 900;
+          letter-spacing: 2px;
+        }
+
+        .mouse {
+          width: 22px;
+          height: 35px;
+          border: 2px solid rgba(255,255,255,0.3);
+          border-radius: 20px;
+          position: relative;
+        }
+
+        .wheel {
+          width: 2px;
+          height: 6px;
+          background: #38bdf8;
+          position: absolute;
+          top: 6px;
+          left: 50%;
+          transform: translateX(-50%);
+          border-radius: 2px;
+          animation: scroll-wheel 2s infinite;
+        }
+
+        @keyframes scroll-wheel {
+          0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+          100% { transform: translateX(-50%) translateY(15px); opacity: 0; }
         }
 
         @media (max-width: 768px) {
-          .hero-actions {
-            flex-direction: column;
-            gap: 15px;
-          }
-          .btn-primary-luxury, .btn-outline-luxury {
-            width: 100%;
-            padding: 15px 20px;
-            font-size: 12px;
-          }
-          .since {
-            font-size: 10px;
-            letter-spacing: 4px;
-          }
-          .main-brand-title {
-            margin-bottom: 20px;
-          }
+          .hero-content { margin-top: 40px; }
+          .hero-actions { flex-direction: column; gap: 15px; }
+          .since { font-size: 10px; letter-spacing: 4px; }
         }
 
         /* FLOATING BOOKING BANNER */
@@ -272,11 +272,6 @@ export default function LandingPage() {
           font-size: 18px;
           font-weight: 300;
           transition: all 0.2s;
-        }
-
-        .close-booking:hover {
-          background: #000;
-          color: #fff;
         }
 
         @keyframes slideInRight {

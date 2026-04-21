@@ -528,18 +528,20 @@ export default function TiendaPage() {
         }
 
         .tienda-header h1 {
-          font-size: clamp(24px, 4vw, 42px);
+          font-size: clamp(24px, 6vw, 42px);
           font-weight: 900;
           letter-spacing: -1px;
           margin: 0 0 10px 0;
+          padding: 0 10px;
         }
 
         .subtitle {
           color: #888;
-          font-size: 14px;
+          font-size: clamp(10px, 2vw, 14px);
           text-transform: uppercase;
           letter-spacing: 2px;
           margin-bottom: 40px;
+          padding: 0 20px;
         }
 
         .horarios-box {
