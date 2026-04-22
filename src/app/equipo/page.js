@@ -174,8 +174,8 @@ export default function EquipoPage() {
         .hero {
           position: relative;
           width: 100vw;
-          height: 85vh; /* Altura ajustada para reducir el recorte en imágenes panorámicas */
-          max-height: 900px;
+          height: auto;
+          aspect-ratio: 1366 / 768; /* Respetar proporciones exactas de la imagen */
           overflow: hidden;
           display: flex;
           align-items: center;
@@ -187,8 +187,8 @@ export default function EquipoPage() {
           inset: 0;
           width: 100%;
           height: 100%;
-          object-fit: cover;
-          object-position: center 20%; /* Priorizar la parte superior donde está el título 'RIDERS' */
+          object-fit: contain; /* Asegurar que se vea completa si el ratio varía mínimamente */
+          object-position: center center;
         }
 
         /* --- INFO SECTION --- */
