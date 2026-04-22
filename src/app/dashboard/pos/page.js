@@ -456,7 +456,6 @@ export default function POSPage() {
                 <Search size={22} style={{ color: 'var(--accent-action)' }} /> IDENTIFICAR CLIENTE
               </h3>
             </div>
-<<<<<<< HEAD
             <div style={{ padding: '32px' }}>
               <div className="rut-search-grid" style={{ maxWidth: 800, display: 'grid', gridTemplateColumns: '1fr auto', gap: '12px', alignItems: 'center' }}>
                 <input
