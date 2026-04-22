@@ -206,89 +206,9 @@ export default function POSPage() {
     setDebtAlert(false);
   };
 
-  const handleQuickStockSubmit = async () => {
-    if (!qsTablas && !qsTrajes) {
-      showToast('Ingrese cantidades', 'error');
-      return;
-    }
 
-    setLoading(true);
-    // Logic for quick stock exit could be a special transaction category or a log
-    const note = `SALIDA RÁPIDA (CONTINGENCIA): ${qsTablas || 0} Tablas, ${qsTrajes || 0} Trajes`;
-    
-    // We register it as an 'incident' or special 'salida' with zero cost or a generic cost if needed.
-    // For now, just a success feedback as a "log" entry in transactions.
-    const newTx = {
-      branch_id: selectedBranchId,
-      staff_id: user.id,
-      client_rut: 'CONTINGENCIA',
-      type: 'salida',
-      category: 'otros',
-      method: 'efectivo',
-      total: 0,
-      is_incident: true,
-      incident_note: note,
-      created_at: new Date().toISOString(),
-    };
 
-    const { error } = await addTransaction(newTx);
-    setLoading(false);
 
-    if (error) {
-      showToast('Error: ' + error.message, 'error');
-    } else {
-      showToast('✅ Salida de Stock Registrada', 'success');
-      setQsTablas('');
-      setQsTrajes('');
-      setShowQuickStock(false);
-      await loadOpenTx();
-    }
-  };
-
-  const handleRegisterNewClient = async (e) => {
-    e.preventDefault();
-    if (!newClientName || !newClientRut || !newClientEmail) {
-      showToast('Nombre, RUT y Email son obligatorios', 'error');
-      return;
-    }
-
-    setLoading(true);
-    const { data: client, error } = await addClient({
-      name: newClientName,
-      rut: newClientRut,
-      email: newClientEmail,
-      phone: newClientPhone,
-      role: 'cliente'
-    });
-
-    if (error) {
-      setLoading(false);
-      showToast('Error al registrar: ' + (error.message || 'RUT ya existe?'), 'error');
-      return;
-    }
-
-    // MARKETING: Queue Welcome Email
-    await queueNotification(
-      'email',
-      newClientEmail,
-      '¡Bienvenido a Wave Surf Club! 🏄‍♂️',
-      `Estimado ${newClientName}, ¡bienvenido a www.wavesurfclub.cl! Agradecemos tu visita a nuestra sede. Ya eres parte de la Wave Fam. Marketing puro bro! 😎`
-    );
-
-    setLoading(false);
-    showToast('✅ Cliente registrado y correo enviado', 'success');
-    
-    // Auto-select
-    setRut(newClientRut);
-    setClientData(client);
-    
-    // Reset and close
-    setNewClientName('');
-    setNewClientRut('');
-    setNewClientEmail('');
-    setNewClientPhone('');
-    setShowNewClient(false);
-  };
 
   const handleQuickStockSubmit = async () => {
     if (!qsTablas && !qsTrajes) {
