@@ -140,7 +140,7 @@ export default function EquipoPage() {
               <h3 className="section-title">NUESTRO EQUIPO EN ACCIÓN</h3>
               <div className="video-frame">
                 <iframe
-                  src="https://www.instagram.com/wave_surf_club/embed"
+                  src="https://www.instagram.com/p/DJksDGpPy-X/embed"
                   width="100%"
                   height="720"
                   frameBorder="0"
