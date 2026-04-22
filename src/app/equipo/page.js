@@ -5,8 +5,8 @@ import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import { Instagram } from 'lucide-react';
 
-// Coloca aquí las fotos del equipo que tengas en /public/images o similar
-const teamImages = [
+// Imágenes de respaldo si no hay fotos en CARUSEL EQUIPO
+const fallbackImages = [
   '/paulo-munoz.png',
   '/paulo-1.png',
   '/biografia.jpg',
@@ -16,11 +16,33 @@ const teamImages = [
 export default function EquipoPage() {
   const [currentIdx, setCurrentIdx] = useState(0);
 
+  const [teamImages, setTeamImages] = useState(fallbackImages);
+
+  // Cargar imágenes dinámicamente desde /public/CARUSEL EQUIPO
+  useEffect(() => {
+    fetch('/api/team-images')
+      .then(res => res.json())
+      .then(data => {
+        if (data.images && data.images.length > 0) {
+          setTeamImages(data.images);
+        }
+      })
+      .catch(() => {}); // Silently fall back to default images
+  }, []);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % teamImages.length);
     }, 3500);
     return () => clearInterval(timer);
+  }, [teamImages.length]);
+
+  // Load Instagram embed script for blockquote embeds
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.instagram.com/embed.js';
+    document.body.appendChild(script);
   }, []);
 
   return (
@@ -139,19 +161,24 @@ export default function EquipoPage() {
             <div className="video-column">
               <h3 className="section-title">NUESTRO EQUIPO EN ACCIÓN</h3>
               <div className="video-frame">
-                <iframe
-                  src="https://www.instagram.com/p/DJksDGpPy-X/embed"
-                  width="100%"
-                  height="720"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowTransparency="true"
-                  style={{ display: 'block' }}
-                ></iframe>
+                <blockquote
+                  className="instagram-media"
+                  data-instgrm-permalink="https://www.instagram.com/p/DJksDGpPy-X/"
+                  data-instgrm-version="14"
+                  style={{ margin: '0 auto' }}
+                ></blockquote>
               </div>
-              <p className="video-caption">
-                Síguenos en <a href="https://www.instagram.com/wave_surf_club/" target="_blank" className="link-accent">@wave_surf_club</a> para ver más contenido del equipo.
-              </p>
+              <div className="video-details" style={{ marginTop: '20px', textAlign: 'center' }}>
+                <p className="video-caption">
+                  <strong>Morrison Tapia</strong> en acción.
+                </p>
+                <p className="video-caption" style={{ color: '#38bdf8' }}>
+                  Link: <a href="https://www.instagram.com/p/DJksDGpPy-X/" target="_blank" className="link-accent">https://www.instagram.com/p/DJksDGpPy-X/</a>
+                </p>
+                <p className="video-caption" style={{ marginTop: '10px' }}>
+                  Síguenos en <a href="https://www.instagram.com/wave_surf_club/" target="_blank" className="link-accent">@wave_surf_club</a> para ver más contenido del equipo.
+                </p>
+              </div>
             </div>
 
           </div>
