@@ -26,7 +26,7 @@ function PagoExitosoContent() {
     // Redirect to home after 10 seconds
     const timer = setTimeout(() => {
       router.push('/');
-    }, 10000);
+    }, 30000);
 
     return () => clearTimeout(timer);
   }, [ordenId, token]);
@@ -71,34 +71,56 @@ function PagoExitosoContent() {
         
         <h1>¡PAGO EXITOSO!</h1>
         <p className="subtitle">
-          Gracias por tu compra. Nuestro equipo te contactará pronto. 
-          ¡Te esperamos en nuestra escuela <strong>WAVE SURF CLUB</strong>!
-        </p>
-        
-        <p style={{ fontSize: '12px', color: '#555', marginBottom: '20px' }}>
-          Serás redirigido al inicio en unos segundos...
+          Gracias por tu compra en <strong>WAVE SURF CLUB</strong>.<br />
+          Guarda tu número de orden — lo necesitarás si tienes alguna consulta.
         </p>
 
         {loading ? (
-          <p>Cargando detalles de la orden...</p>
+          <p style={{ color: '#888', fontSize: '14px' }}>Cargando detalles de la orden...</p>
         ) : orden ? (
-          <div className="order-details">
-            <div className="order-row">
-              <span>Orden #</span>
-              <strong>{orden.id.split('-')[0].toUpperCase()}</strong>
+          <>
+            {/* === NÚMERO DE ORDEN DESTACADO === */}
+            <div className="order-number-box">
+              <p className="order-number-label">📋 TU NÚMERO DE ORDEN</p>
+              <div className="order-number-code">
+                #{orden.id.split('-')[0].toUpperCase()}
+              </div>
+              <p className="order-number-hint">
+                Anota este código o tómale una foto.<br />
+                Preséntalo ante cualquier consulta o problema.
+              </p>
+              <button
+                className="btn-copy"
+                onClick={() => {
+                  navigator.clipboard.writeText('#' + orden.id.split('-')[0].toUpperCase());
+                  alert('¡Número de orden copiado!');
+                }}
+              >
+                📋 COPIAR NÚMERO
+              </button>
             </div>
-            <div className="order-row">
-              <span>Total pagado</span>
-              <strong>${orden.total.toLocaleString('es-CL')}</strong>
-            </div>
-            <div className="order-row">
-              <span>Nombre</span>
-              <strong>{orden.nombre_cliente}</strong>
+
+            {/* === DETALLES === */}
+            <div className="order-details">
+              <div className="order-row">
+                <span>Total pagado</span>
+                <strong>${orden.total.toLocaleString('es-CL')}</strong>
+              </div>
+              <div className="order-row">
+                <span>Cliente</span>
+                <strong>{orden.nombre_cliente}</strong>
+              </div>
+              {orden.email_cliente && (
+                <div className="order-row">
+                  <span>Email</span>
+                  <strong style={{ fontSize: '12px' }}>{orden.email_cliente}</strong>
+                </div>
+              )}
             </div>
 
             {reservas.length > 0 && (
               <div className="reservas-list">
-                <h3>Tus Reservas:</h3>
+                <h3>📅 Tus Reservas</h3>
                 {reservas.map(r => (
                   <div key={r.id} className="reserva-item">
                     <div className="r-prod">{r.productos_tienda?.nombre}</div>
@@ -113,10 +135,14 @@ function PagoExitosoContent() {
                 </p>
               </div>
             )}
-          </div>
+          </>
         ) : (
-          <p>No se encontró la orden.</p>
+          <p style={{ color: '#888' }}>No se encontró la orden. Guarda el número que aparece en tu email de confirmación.</p>
         )}
+
+        <p className="redirect-note">
+          Serás redirigido al inicio en unos segundos...
+        </p>
 
         <Link href="/" className="btn-volver">
           <ArrowLeft size={16} /> VOLVER AL INICIO
@@ -235,6 +261,68 @@ function PagoExitosoContent() {
           color: #a3e635;
           text-align: center;
           margin-top: 15px;
+        }
+        .order-number-box {
+          background: linear-gradient(135deg, #0a1a2e, #0f2640);
+          border: 2px solid #38bdf8;
+          border-radius: 16px;
+          padding: 28px 24px 20px;
+          margin-bottom: 24px;
+          text-align: center;
+          box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
+        }
+
+        .order-number-label {
+          font-size: 11px;
+          color: #38bdf8;
+          text-transform: uppercase;
+          letter-spacing: 3px;
+          font-weight: 800;
+          margin: 0 0 16px 0;
+        }
+
+        .order-number-code {
+          font-size: 36px;
+          font-weight: 900;
+          color: #fff;
+          letter-spacing: 4px;
+          font-family: 'Courier New', monospace;
+          background: rgba(0,0,0,0.4);
+          border: 1px solid #1e4060;
+          border-radius: 10px;
+          padding: 14px 20px;
+          margin-bottom: 14px;
+          word-break: break-all;
+        }
+
+        .order-number-hint {
+          font-size: 12px;
+          color: #94a3b8;
+          line-height: 1.6;
+          margin: 0 0 18px 0;
+        }
+
+        .btn-copy {
+          background: #38bdf8;
+          color: #000;
+          border: none;
+          padding: 10px 24px;
+          border-radius: 8px;
+          font-weight: 900;
+          font-size: 12px;
+          letter-spacing: 1px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .btn-copy:hover {
+          background: #fff;
+          transform: scale(1.04);
+        }
+
+        .redirect-note {
+          font-size: 11px;
+          color: #444;
+          margin: 16px 0 20px;
         }
 
         .btn-volver {
