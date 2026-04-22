@@ -471,16 +471,21 @@ export default function EquipoPage() {
           border-top: 1px solid #111;
         }
 
-        /* --- RESPONSIVE --- */
+        /* ============================================ */
+        /* RESPONSIVE — TABLET (≤ 1024px)               */
+        /* ============================================ */
         @media (max-width: 1024px) {
           .work-display-grid {
             grid-template-columns: 1fr;
-            gap: 80px;
+            gap: 60px;
           }
           .hero {
-            height: auto;
             aspect-ratio: 16 / 9;
-            min-height: 400px;
+            min-height: 220px;
+          }
+          .hero-img {
+            object-fit: cover;
+            object-position: center top;
           }
           .info-section {
             padding: 60px 20px;
@@ -488,25 +493,206 @@ export default function EquipoPage() {
           .carousel-frame.vertical {
             height: 500px;
           }
-          .hero-img {
-            object-fit: cover;
+          .header-block {
+            margin-bottom: 50px;
           }
         }
 
+        /* ============================================ */
+        /* RESPONSIVE — MOBILE (≤ 768px)                */
+        /* ============================================ */
         @media (max-width: 768px) {
+          /* Hero */
+          .hero {
+            aspect-ratio: unset;
+            height: 55vw;
+            min-height: 200px;
+            max-height: 320px;
+          }
+          .hero-img {
+            object-fit: cover;
+            object-position: center top;
+          }
+
+          /* Info section */
+          .info-section {
+            padding: 40px 16px;
+          }
+          .header-block {
+            margin-bottom: 36px;
+          }
+          .section-intro {
+            font-size: 15px;
+            line-height: 1.6;
+          }
+
+          /* Bio grid → columna única */
+          .content-grid {
+            grid-template-columns: 1fr;
+            gap: 36px;
+          }
+          .text-block {
+            font-size: 15px;
+          }
+          .social-card {
+            padding: 36px 24px;
+          }
+
+          /* Quote bar */
           .quote-content {
             flex-direction: column;
             text-align: center;
+            gap: 20px;
           }
           .quote-bar {
-            padding: 30px 20px;
+            padding: 24px 16px;
+            margin-top: 40px;
+          }
+          .quote-text h3 {
+            font-size: 16px;
           }
           .quote-whatsapp {
             width: 100%;
             justify-content: center;
+            padding: 14px 20px;
+          }
+
+          /* Galería + Video → columna única */
+          .work-display-grid {
+            grid-template-columns: 1fr;
+            gap: 48px;
+            margin-top: 48px;
+          }
+          .carousel-frame.vertical {
+            height: 72vw;
+            max-height: 420px;
+            border-radius: 16px;
+          }
+          .section-title {
+            font-size: 11px;
+            letter-spacing: 2.5px;
+          }
+
+          /* Video YouTube */
+          .video-frame.youtube-frame {
+            border-radius: 16px;
+          }
+          .video-details {
+            margin-top: 14px !important;
+          }
+          .rider-insta-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 20px;
+          }
+
+          /* Footer */
+          footer {
+            padding: 40px 16px;
+          }
+        }
+
+        /* ============================================ */
+        /* RESPONSIVE — SMALL MOBILE (≤ 430px)          */
+        /* iPhone 12 Pro Max, 14 Plus, etc.             */
+        /* ============================================ */
+        @media (max-width: 430px) {
+          /* Hero: imagen ocupa bien el ancho */
+          .hero {
+            height: 60vw;
+            min-height: 180px;
+            max-height: 260px;
+          }
+          .hero-img {
+            object-fit: cover;
+            object-position: center 30%;
+          }
+
+          /* Spacing */
+          .info-section {
+            padding: 32px 14px;
+          }
+          .header-block {
+            margin-bottom: 28px;
           }
           .section-intro {
-            font-size: 16px;
+            font-size: 14px;
+          }
+
+          /* Texto bio */
+          .text-block {
+            font-size: 14px;
+            line-height: 1.7;
+          }
+          .quote {
+            margin-top: 24px;
+            padding-left: 14px;
+          }
+          .social-card {
+            padding: 28px 16px;
+          }
+          .card-title {
+            font-size: 18px;
+          }
+          .insta-btn {
+            padding: 14px 24px;
+            font-size: 12px;
+          }
+
+          /* Quote bar */
+          .quote-bar {
+            padding: 20px 14px;
+            border-radius: 14px;
+          }
+          .quote-text h3 {
+            font-size: 14px;
+          }
+          .quote-text p {
+            font-size: 12px;
+          }
+
+          /* Carrusel */
+          .carousel-frame.vertical {
+            height: 80vw;
+            max-height: 340px;
+            border-radius: 14px;
+          }
+          .carousel-dots {
+            margin-top: 16px;
+            gap: 8px;
+          }
+
+          /* Video */
+          .video-frame.youtube-frame {
+            border-radius: 14px;
+          }
+          .video-caption {
+            font-size: 13px;
+            margin-top: 12px !important;
+          }
+          .rider-insta-btn {
+            font-size: 12px;
+            padding: 10px 16px;
+          }
+
+          /* Section title */
+          .section-title {
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+          }
+
+          /* Work grid spacing */
+          .work-display-grid {
+            margin-top: 36px;
+            gap: 40px;
+          }
+
+          /* Footer */
+          footer {
+            padding: 32px 14px;
+            font-size: 9px;
+            letter-spacing: 2px;
           }
         }
       `}</style>
