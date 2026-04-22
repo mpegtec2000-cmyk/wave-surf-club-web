@@ -277,24 +277,28 @@ export default function TiendaPage() {
 
         {/* TOOLBAR (TABS & SEARCH) */}
         <div className="tienda-toolbar">
-          <div className="container">
-            <div className="tabs-container">
-              <button 
-                className={`tab-btn ${activeTab === 'todos' ? 'active' : ''}`}
-                onClick={() => setActiveTab('todos')}
-              >
-                Todos
-              </button>
-              {categorias.map(c => (
+          <div className="toolbar-inner">
+            {/* Category scroll */}
+            <div className="tabs-scroll-wrapper">
+              <div className="tabs-container">
                 <button 
-                  key={c.id}
-                  className={`tab-btn ${activeTab === c.slug ? 'active' : ''}`}
-                  onClick={() => setActiveTab(c.slug)}
+                  className={`tab-btn ${activeTab === 'todos' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('todos')}
                 >
-                  {c.nombre}
+                  Todos
                 </button>
-              ))}
+                {categorias.map(c => (
+                  <button 
+                    key={c.id}
+                    className={`tab-btn ${activeTab === c.slug ? 'active' : ''}`}
+                    onClick={() => setActiveTab(c.slug)}
+                  >
+                    {c.nombre}
+                  </button>
+                ))}
+              </div>
             </div>
+            {/* Search */}
             <div className="search-box">
               <Search size={16} />
               <input 
@@ -594,26 +598,57 @@ export default function TiendaPage() {
         .tienda-toolbar {
           position: sticky;
           top: 95px;
-          background: rgba(0,0,0,0.8);
-          backdrop-filter: blur(10px);
+          background: rgba(0,0,0,0.92);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
           border-bottom: 1px solid #222;
           z-index: 50;
-          padding: 15px 0;
+          padding: 12px 0;
         }
 
-        .tienda-toolbar .container {
+        .toolbar-inner {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          gap: 20px;
+          gap: 16px;
+        }
+
+        /* Fade-edge scroll wrapper */
+        .tabs-scroll-wrapper {
+          flex: 1;
+          position: relative;
+          overflow: hidden;
+          min-width: 0;
+        }
+        .tabs-scroll-wrapper::before,
+        .tabs-scroll-wrapper::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 32px;
+          pointer-events: none;
+          z-index: 2;
+        }
+        .tabs-scroll-wrapper::before {
+          left: 0;
+          background: linear-gradient(to right, rgba(0,0,0,0.9), transparent);
+        }
+        .tabs-scroll-wrapper::after {
+          right: 0;
+          background: linear-gradient(to left, rgba(0,0,0,0.9), transparent);
         }
 
         .tabs-container {
           display: flex;
-          gap: 10px;
+          gap: 8px;
           overflow-x: auto;
+          scroll-behavior: smooth;
+          -webkit-overflow-scrolling: touch;
           scrollbar-width: none;
-          padding-bottom: 5px;
+          padding: 4px 6px;
         }
         .tabs-container::-webkit-scrollbar { display: none; }
 
@@ -1101,18 +1136,74 @@ export default function TiendaPage() {
           color: #555;
         }
 
+        /* ============================================ */
+        /* RESPONSIVE — TABLET (≤ 1024px)               */
+        /* ============================================ */
         @media (max-width: 1024px) {
           .product-grid { grid-template-columns: repeat(2, 1fr); }
-          .tienda-toolbar .container { flex-direction: column; align-items: stretch; }
-          .search-box { width: 100%; }
+          .toolbar-inner { flex-wrap: wrap; gap: 10px; }
+          .tabs-scroll-wrapper { order: 1; width: 100%; }
+          .search-box { order: 2; width: 100%; }
         }
 
-        @media (max-width: 640px) {
-          .product-grid { grid-template-columns: 1fr; }
-          .horarios-grid { grid-template-columns: 1fr; }
+        /* ============================================ */
+        /* RESPONSIVE — MOBILE (≤ 768px)                */
+        /* ============================================ */
+        @media (max-width: 768px) {
+          .tienda-main { margin-top: 70px; }
+          .tienda-toolbar { top: 70px; padding: 10px 0; }
+          .toolbar-inner {
+            padding: 0 12px;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+          }
+          .tabs-scroll-wrapper { width: 100%; }
+          .tabs-container { gap: 8px; padding: 2px 4px; }
+          .tab-btn {
+            padding: 8px 14px;
+            font-size: 11px;
+          }
+          .search-box {
+            width: 100%;
+            padding: 0 12px;
+          }
+          .search-box input { font-size: 13px; padding: 9px; }
+          .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+          .tienda-header { padding: 40px 16px; }
+          .horarios-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        /* ============================================ */
+        /* RESPONSIVE — SMALL MOBILE (≤ 430px)          */
+        /* iPhone 12 Pro Max y similares                */
+        /* ============================================ */
+        @media (max-width: 430px) {
           .tienda-main { margin-top: 70px; }
           .tienda-toolbar { top: 70px; }
-          .time-slots { grid-template-columns: repeat(3, 1fr); }
+          .toolbar-inner { padding: 0 10px; gap: 8px; }
+          .tab-btn {
+            padding: 7px 12px;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+          }
+          .search-box { border-radius: 12px; }
+          .product-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+          }
+          .product-info { padding: 14px; }
+          .product-name { font-size: 13px; }
+          .product-desc { font-size: 11px; }
+          .price-final { font-size: 16px; }
+          .btn-add { font-size: 11px; padding: 10px; }
+          .horarios-grid { grid-template-columns: repeat(3, 1fr); }
+          .h-item { padding: 10px 6px; }
+          .h-item strong { font-size: 13px; }
+          .tienda-header { padding: 28px 12px; }
+          .tienda-header h1 { font-size: clamp(20px, 5vw, 32px); }
+          .time-slots { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+          .product-grid-container { margin-top: 20px; }
         }
       `}</style>
     </>
