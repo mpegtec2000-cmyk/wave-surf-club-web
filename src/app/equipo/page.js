@@ -167,7 +167,7 @@ export default function EquipoPage() {
               </div>
               <div className="video-details" style={{ marginTop: '20px', textAlign: 'center' }}>
                 <p className="video-caption">
-                  🏄‍♂️ <strong style={{ color: '#fff', fontSize: '16px' }}>Morrison Tapia</strong> — Instructor Wave Surf Club
+                  <strong style={{ color: '#fff', fontSize: '16px' }}>Rider-Morrison Tapia</strong>
                 </p>
                 <a
                   href="https://www.instagram.com/morrisakio/"
