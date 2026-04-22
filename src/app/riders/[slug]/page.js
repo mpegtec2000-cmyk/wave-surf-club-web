@@ -252,6 +252,24 @@ export default function RiderMagazine() {
           padding-bottom: 10px;
         }
 
+        .video-wrapper {
+          position: relative;
+          width: 100%;
+          padding-top: 56.25%; /* 16:9 Aspect Ratio */
+          background: #000;
+          border-radius: 8px;
+          overflow: hidden;
+          margin-top: 20px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .video-wrapper iframe {
+          position: absolute;
+          top: 0; left: 0; bottom: 0; right: 0;
+          width: 100%;
+          height: 100%;
+          border: none;
+        }
+
         @media (max-width: 900px) {
           .mag-nav {
             padding: 0 20px;
@@ -393,6 +411,22 @@ export default function RiderMagazine() {
               className="editorial-p" 
               dangerouslySetInnerHTML={{ __html: rider.bio }} 
             />
+
+            {/* YOUTUBE VIDEO */}
+            {rider.youtubeUrl && (
+              <div style={{ marginTop: '50px' }}>
+                <span className="sessions-label">LATEST FILM</span>
+                <div className="video-wrapper">
+                  <iframe 
+                    src={rider.youtubeUrl}
+                    title="YouTube video player" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            )}
+
             {/* INSTAGRAM VIDEOS */}
             {(rider.instagramUrls || (rider.instagramUrl ? [rider.instagramUrl] : [])).length > 0 && (
               <div className="instagram-container">

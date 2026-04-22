@@ -230,6 +230,24 @@ export const RIDERS_DATA = {
       'https://www.instagram.com/p/C4vtVIDRrtu/'
     ]
   },
+  'morrison-tapia': {
+    name: 'Morrison Tapia',
+    role: 'CORE RIDER',
+    title: 'MORRISON TAPIA: EL LADO MÁS CRUDO DEL SURF',
+    cover: '/riders/Morrison-Tapia/portada.jpg',
+    bio: `
+      <p>Morrison Tapia es el lado más crudo y puro del surf chileno. Lejos del ruido de las competencias tradicionales, este Rider forjó su reputación cazando marejadas mutantes en el extremo sur de Chile. Con una sangre fría envidiable y un estilo impecable, Morrison encarna el verdadero core del deporte: tubos pesados, agua bajo cero y lealtad absoluta a sus raíces y a los locales de su playa.</p>
+      <p><strong>Hitos y Carrera</strong></p>
+      <p><strong>Free Surf al Límite:</strong> Especialista indiscutido en olas de consecuencia. Su hábitat natural son las izquierdas tubulares, pesadas y sobre fondos de roca en las condiciones más hostiles del país.</p>
+      <p><strong>Videografía Core:</strong> Creador de producciones audiovisuales viscerales y sin filtros como "Sangre Erizos", "F*ck N' Love" y "Sin Presión". Un registro crudo de su talento, dedicado a la memoria de su madre y a la hermandad del lineup.</p>
+      <p><strong>Power Surfing & Estilo:</strong> Destaca por una fluidez agresiva pero natural. Su filosofía de surf se resume en una sola línea: cero presión, cero posturas, viajes crudos de invierno y devoción total por exprimir las marejadas extremas.</p>
+    `,
+    stats: { board: 'Wave Heavy 6\'4"', stance: 'Goofy', local: 'Chile Sur' },
+    gallery: [
+      '/riders/Morrison-Tapia/portada.jpg'
+    ],
+    youtubeUrl: 'https://www.youtube.com/embed/bmMiC1XvH88'
+  },
   default: {
     name: 'Wave Rider',
     role: 'TEAM RIDER',
