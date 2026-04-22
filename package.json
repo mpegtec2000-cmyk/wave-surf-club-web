@@ -16,6 +16,7 @@
     "next": "16.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^6.12.2",
     "sweetalert2": "^11.14.0",
     "sweetalert2-react-content": "^5.0.7"
   },

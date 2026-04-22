@@ -377,44 +377,54 @@ export default function POSPage() {
               </h3>
             </div>
             <div style={{ padding: '32px' }}>
-              <div className="rut-search-grid" style={{ maxWidth: 800, display: 'grid', gridTemplateColumns: '1fr auto', gap: '12px', alignItems: 'center' }}>
+              {/* Fila integrada: Nuevo Cliente + RUT + Buscar + S */}
+              <div style={{ width: '100%', display: 'flex', gap: '0', alignItems: 'stretch', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '2px solid var(--border-subtle)', background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.08)' }}>
+                
+                {/* Botón Agregar Nuevo Cliente — AHORA A LA IZQUIERDA */}
+                <button
+                  style={{ height: 64, padding: '0 24px', background: showNewClient ? 'var(--color-success)' : '#f0fdf4', border: 'none', color: showNewClient ? '#fff' : 'var(--color-success)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexShrink: 0, fontWeight: 900, fontSize: 13, borderRadius: 0, transition: 'all 0.2s', letterSpacing: '0.05em' }}
+                  onClick={() => { setShowNewClient(!showNewClient); setShowQuickStock(false); }}
+                  title="Registrar nuevo cliente (+)"
+                >
+                  <UserPlus size={22} />
+                  <span style={{ whiteSpace: 'nowrap' }}>NUEVO CLIENTE</span>
+                </button>
+
+                {/* Separador */}
+                <div style={{ width: '2px', background: 'var(--border-subtle)', alignSelf: 'stretch' }} />
+
+                {/* Input de RUT */}
                 <input
                   type="text"
-                  className="form-input search-input-pos"
-                  style={{ width: '100%', margin: 0, borderRadius: 'var(--radius-md)', height: 60 }}
+                  className="search-input-pos"
+                  style={{ flex: 1, padding: '0 24px', margin: 0, border: 'none', outline: 'none', height: 64, fontSize: 18, fontWeight: 600, background: 'transparent', color: 'var(--text-primary)' }}
                   placeholder="Ingrese RUT del Cliente..."
                   value={rut}
                   onChange={(e) => setRut(formatRut(e.target.value))}
                   onKeyDown={handleKeyDown}
                 />
-                <div style={{ display: 'flex', gap: '12px', flexShrink: 0 }}>
-                  <button 
-                    className="rut-search-btn search-button-pos" 
-                    style={{ borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 60, height: 60 }}
-                    onClick={handleSearchRUT}
-                  >
-                    <Search size={24} />
-                  </button>
-                  
-                  <div style={{ width: '2px', height: '40px', background: 'var(--border-subtle)', margin: '0 4px' }} />
 
-                  <button 
-                    className="rut-search-btn" 
-                    style={{ background: '#3b82f6', height: 60, width: 60, borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '20px' }}
-                    onClick={() => { setShowQuickStock(!showQuickStock); setShowNewClient(false); }}
-                    title="Contingencia Stock (S)"
-                  >
-                    S
-                  </button>
-                  <button 
-                    className="rut-search-btn" 
-                    style={{ background: 'var(--color-success)', height: 60, width: 60, borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    onClick={() => { setShowNewClient(!showNewClient); setShowQuickStock(false); }}
-                    title="Nuevo Cliente (+)"
-                  >
-                    <UserPlus size={24} />
-                  </button>
-                </div>
+                {/* Botón Buscar */}
+                <button
+                  className="search-button-pos"
+                  style={{ height: 64, width: 64, border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, borderRadius: 0, background: 'var(--accent-primary)' }}
+                  onClick={handleSearchRUT}
+                  title="Buscar cliente por RUT"
+                >
+                  <Search size={24} />
+                </button>
+
+                {/* Separador */}
+                <div style={{ width: '2px', background: 'var(--border-subtle)', alignSelf: 'stretch' }} />
+
+                {/* Botón Contingencia Stock (S) */}
+                <button
+                  style={{ height: 64, width: 60, background: showQuickStock ? '#3b82f6' : '#eff6ff', border: 'none', color: showQuickStock ? '#fff' : '#3b82f6', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 20, flexShrink: 0, borderRadius: 0, transition: 'all 0.2s' }}
+                  onClick={() => { setShowQuickStock(!showQuickStock); setShowNewClient(false); }}
+                  title="Contingencia Stock (S)"
+                >
+                  S
+                </button>
               </div>
             </div>
           </div>
