@@ -152,7 +152,7 @@ export default function EquipoPage() {
 
             {/* Video YouTube Morrison Tapia */}
             <div className="video-column">
-              <h3 className="section-title">NUESTRO EQUIPO EN ACCIÓN</h3>
+              <h3 className="section-title">VIAJANDO CON TODO EL FLOW AL ESTILO DE MORRISAKIO</h3>
               <div className="video-frame youtube-frame">
                 <iframe
                   src="https://www.youtube.com/embed/bmMiC1XvH88?rel=0&modestbranding=1&autoplay=0"
