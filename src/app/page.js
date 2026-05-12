@@ -113,25 +113,7 @@ export default function LandingPage() {
         </section>
 
 
-        {/* DISCOUNT PROMO SECTION */}
-        <section className="promo-bar-section">
-          <div className="container-premium">
-            <div className="promo-bar">
-              <div className="promo-content">
-                <div className="promo-text">
-                  <span className="promo-icon">🎁</span>
-                  <div className="text-wrapper">
-                    <h3>DESCUENTOS ESPECIALES</h3>
-                    <p>Extranjeros y Estudiantes presentan sus documentos para acceder a tarifas preferenciales en todas nuestras clases.</p>
-                  </div>
-                </div>
-                <a href="/escuelas" className="promo-btn">
-                  VER TARIFAS
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
+
 
         {/* PRODUCT GRID SECTION */}
         {productos.length > 0 && (
@@ -182,6 +164,16 @@ export default function LandingPage() {
             </a>
           </div>
         )}
+
+        {/* FLOATING DISCOUNT BADGE (PILL STYLE) */}
+        <div className="floating-discount-pill">
+          <div className="pill-content">
+            <span className="dot-blue"></span>
+            <div className="pill-text">
+              <strong>DESCUENTOS ESPECIALES:</strong> Extranjeros y Estudiantes presentan sus documentos para tarifas preferenciales.
+            </div>
+          </div>
+        </div>
 
 
 
@@ -479,77 +471,63 @@ export default function LandingPage() {
         .carousel-btn.prev { left: 20px; }
         .carousel-btn.next { right: 20px; }
 
-        /* PROMO BAR SECTION */
-        .promo-bar-section {
-          padding: 40px 20px;
-          background: #fdfcfb;
+        /* FLOATING DISCOUNT PILL */
+        .floating-discount-pill {
+          position: fixed;
+          bottom: 30px;
+          left: 30px;
+          z-index: 1000;
+          max-width: 400px;
         }
 
-        .promo-bar {
-          background: linear-gradient(90deg, #0f172a, #1e293b);
-          border-radius: 24px;
-          padding: 40px 60px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-          border: 1px solid rgba(14, 165, 233, 0.2);
-        }
-
-        .promo-content {
+        .pill-content {
+          background: #fff;
+          padding: 12px 25px;
+          border-radius: 50px;
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          gap: 40px;
+          gap: 12px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+          border: 1px solid rgba(0,0,0,0.05);
+          animation: float-pill 4s ease-in-out infinite;
         }
 
-        .promo-text {
-          display: flex;
-          align-items: center;
-          gap: 25px;
+        @keyframes float-pill {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
         }
 
-        .promo-icon {
-          font-size: 40px;
-          filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
+        .dot-blue {
+          width: 10px;
+          height: 10px;
+          background: #38bdf8;
+          border-radius: 50%;
+          flex-shrink: 0;
+          box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
         }
 
-        .text-wrapper h3 {
-          color: #fff;
-          font-size: 24px;
-          font-weight: 900;
-          margin: 0 0 5px 0;
-          letter-spacing: 1px;
-        }
-
-        .text-wrapper p {
-          color: #94a3b8;
-          font-size: 16px;
-          margin: 0;
-          font-weight: 400;
-        }
-
-        .promo-btn {
-          background: #0ea5e9;
-          color: #fff;
-          padding: 18px 35px;
-          border-radius: 14px;
-          font-weight: 900;
-          text-decoration: none;
+        .pill-text {
+          color: #000;
+          font-size: 11px;
+          font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 1.5px;
-          transition: all 0.3s;
-          white-space: nowrap;
-          border: 2px solid transparent;
+          letter-spacing: 0.5px;
+          line-height: 1.4;
         }
 
-        .promo-btn:hover {
-          background: transparent;
-          border-color: #0ea5e9;
-          transform: scale(1.05);
+        .pill-text strong {
+          font-weight: 900;
+          margin-right: 5px;
         }
 
-        @media (max-width: 900px) {
-          .promo-content { flex-direction: column; text-align: center; gap: 30px; }
-          .promo-text { flex-direction: column; gap: 15px; }
-          .promo-bar { padding: 40px 20px; }
+        @media (max-width: 768px) {
+          .floating-discount-pill {
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            max-width: none;
+          }
+          .pill-text { font-size: 9px; }
         }
 
         .carousel-dots {
