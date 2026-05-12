@@ -79,7 +79,7 @@ export default function TiendaPage() {
     try {
       const [{ data: cats }, { data: prods }] = await Promise.all([
         supabase.from('categorias_tienda').select('id, nombre, slug, orden').eq('activa', true).order('orden'),
-        supabase.from('productos_tienda').select('id, nombre, descripcion, precio, imagen_url, stock, slug, activo, categorias_tienda(slug, nombre)').eq('activo', true)
+        supabase.from('productos_tienda').select('id, nombre, descripcion, precio, precio_final, imagen_url, stock, activo, categorias_tienda(slug, nombre)').eq('activo', true)
       ]);
       setCategorias(cats || []);
       setProductos(prods || []);
