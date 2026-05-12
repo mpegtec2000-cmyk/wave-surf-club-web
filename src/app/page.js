@@ -79,17 +79,18 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* CAROUSEL SECTION */}
+        {/* IMAGE CAROUSEL SECTION */}
         <section className="carousel-section">
           <div className="carousel-container">
             <div className="carousel-track" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-              {CAROUSEL_IMAGES.map((img, idx) => (
-                <div key={idx} className="carousel-slide">
+              {CAROUSEL_IMAGES.map((img, index) => (
+                <div key={index} className="carousel-slide">
                   <Image 
                     src={img} 
-                    alt={`Slide ${idx + 1}`} 
+                    alt={`Slide ${index + 1}`} 
                     fill 
                     style={{ objectFit: 'cover' }}
+                    priority={index === 0}
                   />
                   <div className="slide-overlay"></div>
                 </div>
@@ -100,18 +101,24 @@ export default function LandingPage() {
             <button className="carousel-btn next" onClick={nextSlide}><ChevronRight size={30} /></button>
             
             <div className="carousel-dots">
-              {CAROUSEL_IMAGES.map((_, idx) => (
+              {CAROUSEL_IMAGES.map((_, index) => (
                 <button 
-                  key={idx} 
-                  className={`dot ${currentSlide === idx ? 'active' : ''}`}
-                  onClick={() => setCurrentSlide(idx)}
+                  key={index} 
+                  className={`dot ${currentSlide === index ? 'active' : ''}`}
+                  onClick={() => setCurrentSlide(index)}
                 />
               ))}
             </div>
           </div>
         </section>
 
-
+        {/* DISCOUNT BANNER */}
+        <div className="discount-banner">
+          <div className="banner-content">
+            <span className="banner-icon">🎁</span>
+            <p><strong>DESCUENTOS ESPECIALES:</strong> Extranjeros y Estudiantes presentan sus documentos para tarifas preferenciales.</p>
+          </div>
+        </div>
 
         {/* PRODUCT GRID SECTION */}
         {productos.length > 0 && (
@@ -220,8 +227,6 @@ export default function LandingPage() {
           z-index: 2;
         }
 
-
-
         .hero-content {
           position: relative;
           z-index: 5;
@@ -237,8 +242,6 @@ export default function LandingPage() {
           from { opacity: 0; transform: translateY(30px); }
           to { opacity: 1; transform: translateY(0); }
         }
-
-
 
         .since {
           display: block;
@@ -304,48 +307,6 @@ export default function LandingPage() {
           transform: translateY(-5px);
           background: #38bdf8;
           color: #fff;
-        }
-
-        /* SCROLL HINT */
-        .scroll-hint {
-          position: absolute;
-          bottom: 30px;
-          left: 50%;
-          transform: translateX(-50%);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 10px;
-          z-index: 10;
-          color: rgba(255,255,255,0.5);
-          font-size: 10px;
-          font-weight: 900;
-          letter-spacing: 2px;
-        }
-
-        .mouse {
-          width: 22px;
-          height: 35px;
-          border: 2px solid rgba(255,255,255,0.3);
-          border-radius: 20px;
-          position: relative;
-        }
-
-        .wheel {
-          width: 2px;
-          height: 6px;
-          background: #38bdf8;
-          position: absolute;
-          top: 6px;
-          left: 50%;
-          transform: translateX(-50%);
-          border-radius: 2px;
-          animation: scroll-wheel 2s infinite;
-        }
-
-        @keyframes scroll-wheel {
-          0% { transform: translateX(-50%) translateY(0); opacity: 1; }
-          100% { transform: translateX(-50%) translateY(15px); opacity: 0; }
         }
 
         @media (max-width: 768px) {
@@ -505,11 +466,11 @@ export default function LandingPage() {
 
         .carousel-dots {
           position: absolute;
-          bottom: 20px;
+          bottom: 30px;
           left: 50%;
           transform: translateX(-50%);
           display: flex;
-          gap: 10px;
+          gap: 12px;
           z-index: 10;
         }
 
