@@ -530,6 +530,28 @@ export default function LandingPage() {
 
 
 
+        /* SECTION HEADERS */
+        .section-header {
+          margin-bottom: 60px;
+          text-align: center;
+        }
+
+        .section-subtitle {
+          font-size: 14px;
+          font-weight: 900;
+          letter-spacing: 6px;
+          color: #0ea5e9;
+          text-transform: uppercase;
+        }
+
+        .section-title {
+          font-size: clamp(2rem, 5vw, 50px);
+          font-weight: 950;
+          color: #0f172a;
+          margin-top: 10px;
+          text-transform: uppercase;
+        }
+
         .glass-card-premium {
           background: #fff;
           border: 1px solid #e2e8f0;
