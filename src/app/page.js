@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import { useTranslation } from '@/lib/i18n-context';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 const CAROUSEL_IMAGES = [
   '/CARUSEL/1.jpg',
@@ -17,16 +18,31 @@ export default function LandingPage() {
   const { t } = useTranslation();
   const [showBooking, setShowBooking] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [productos, setProductos] = useState([]);
+  const [productSlide, setProductSlide] = useState(0);
 
   useEffect(() => {
+    fetchProductos();
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
     }, 3000);
     return () => clearInterval(timer);
   }, []);
 
+  const fetchProductos = async () => {
+    const { data } = await supabase
+      .from('productos_tienda')
+      .select('*, categorias_tienda(nombre)')
+      .eq('activo', true)
+      .limit(8);
+    if (data) setProductos(data);
+  };
+
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length);
+
+  const nextProd = () => setProductSlide((prev) => (prev + 1) % Math.max(1, Math.ceil(productos.length / 4)));
+  const prevProd = () => setProductSlide((prev) => (prev - 1 + Math.ceil(productos.length / 4)) % Math.ceil(productos.length / 4));
 
   return (
     <>
@@ -95,31 +111,71 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* PRODUCTS / FEATURED SECTION */}
+        {/* SERVICES SECTION */}
         <section className="featured-section">
           <div className="section-header">
-            <span className="section-subtitle">NUESTRAS</span>
-            <h2 className="section-title">ESCUELAS & SERVICIOS</h2>
+            <span className="section-subtitle">EXPERIENCIA WAVE</span>
+            <h2 className="section-title">NUESTROS SERVICIOS</h2>
           </div>
           <div className="content-grid-placeholder">
-            {/* Aquí se pueden mapear productos o servicios */}
             <div className="glass-card-premium">
-              <h3>ESCUELA DE SURF</h3>
-              <p>Clases personalizadas para todos los niveles.</p>
-              <a href="/escuelas" className="btn-link">Saber más</a>
+              <div className="card-icon">🏄‍♂️</div>
+              <h3>Escuela de Surf</h3>
+              <p>Desde principiantes hasta nivel avanzado con instructores certificados.</p>
+              <a href="/escuelas" className="btn-link">Ver Horarios</a>
             </div>
             <div className="glass-card-premium">
-              <h3>SKATE PARK</h3>
-              <p>Entrenamiento técnico y rampas profesionales.</p>
-              <a href="/servicios" className="btn-link">Saber más</a>
+              <div className="card-icon">🛹</div>
+              <h3>Skate Park</h3>
+              <p>Clases de skate y rampas profesionales para perfeccionar tu estilo.</p>
+              <a href="/servicios" className="btn-link">Ver Clases</a>
             </div>
             <div className="glass-card-premium">
-              <h3>TALLER DE TABLAS</h3>
-              <p>Reparación y mantenimiento experto.</p>
-              <a href="/taller" className="btn-link">Saber más</a>
+              <div className="card-icon">🔧</div>
+              <h3>Taller Experto</h3>
+              <p>Reparación de tablas y mantenimiento de equipos con manos expertas.</p>
+              <a href="/taller" className="btn-link">Solicitar Arreglo</a>
             </div>
           </div>
         </section>
+
+        {/* PRODUCT CAROUSEL SECTION */}
+        {productos.length > 0 && (
+          <section className="product-carousel-section">
+            <div className="section-header">
+              <span className="section-subtitle">WAVE SHOP</span>
+              <h2 className="section-title">PRODUCTOS DESTACADOS</h2>
+            </div>
+            
+            <div className="product-carousel-container">
+              <div className="product-track" style={{ transform: `translateX(-${productSlide * 100}%)` }}>
+                {productos.map((prod) => (
+                  <div key={prod.id} className="product-slide-card">
+                    <div className="prod-img-box">
+                      {prod.imagen_url ? (
+                        <img src={prod.imagen_url} alt={prod.nombre} />
+                      ) : (
+                        <div className="prod-placeholder">{prod.categorias_tienda?.nombre}</div>
+                      )}
+                    </div>
+                    <div className="prod-info-box">
+                      <span className="prod-tag">{prod.categorias_tienda?.nombre}</span>
+                      <h4>{prod.nombre}</h4>
+                      <div className="prod-price">${(prod.precio_final || 0).toLocaleString('es-CL')}</div>
+                      <a href="/tienda" className="btn-shop">
+                        <ShoppingCart size={14} />
+                        Ver en Tienda
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <button className="carousel-btn prev mini" onClick={prevProd}><ChevronLeft size={20} /></button>
+              <button className="carousel-btn next mini" onClick={nextProd}><ChevronRight size={20} /></button>
+            </div>
+          </section>
+        )}
 
         {/* FLOATING BOOKING CTA */}
         {showBooking && (
@@ -541,6 +597,13 @@ export default function LandingPage() {
           text-align: left;
           transition: all 0.4s ease;
           box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+          display: flex;
+          flex-direction: column;
+        }
+
+        .card-icon {
+          font-size: 40px;
+          margin-bottom: 20px;
         }
 
         .glass-card-premium:hover {
@@ -555,12 +618,132 @@ export default function LandingPage() {
           font-weight: 900;
           color: #0f172a;
           margin-bottom: 15px;
+          text-transform: uppercase;
         }
 
         .glass-card-premium p {
           color: #475569;
           margin-bottom: 25px;
           line-height: 1.6;
+          flex: 1;
+        }
+
+        /* PRODUCT CAROUSEL */
+        .product-carousel-section {
+          padding: 100px 20px;
+          background: #f8fafc;
+          overflow: hidden;
+        }
+
+        .product-carousel-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          position: relative;
+        }
+
+        .product-track {
+          display: flex;
+          gap: 20px;
+          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .product-slide-card {
+          min-width: calc(25% - 15px);
+          background: #fff;
+          border-radius: 20px;
+          border: 1px solid #e2e8f0;
+          overflow: hidden;
+          transition: all 0.3s;
+        }
+
+        .product-slide-card:hover {
+          border-color: #0ea5e9;
+          box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+        }
+
+        .prod-img-box {
+          height: 250px;
+          background: #f1f5f9;
+          position: relative;
+        }
+
+        .prod-img-box img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .prod-placeholder {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 900;
+          color: #cbd5e1;
+          text-transform: uppercase;
+          font-size: 14px;
+        }
+
+        .prod-info-box {
+          padding: 20px;
+        }
+
+        .prod-tag {
+          font-size: 10px;
+          font-weight: 900;
+          color: #0ea5e9;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .prod-info-box h4 {
+          font-size: 16px;
+          font-weight: 800;
+          margin: 5px 0 10px 0;
+          color: #0f172a;
+        }
+
+        .prod-price {
+          font-size: 18px;
+          font-weight: 900;
+          color: #0f172a;
+          margin-bottom: 15px;
+        }
+
+        .btn-shop {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          background: #0f172a;
+          color: #fff;
+          padding: 10px;
+          border-radius: 10px;
+          text-decoration: none;
+          font-weight: 800;
+          font-size: 12px;
+          transition: background 0.2s;
+        }
+
+        .btn-shop:hover {
+          background: #0ea5e9;
+        }
+
+        .carousel-btn.mini {
+          width: 40px;
+          height: 40px;
+          background: #fff;
+          color: #0f172a;
+          border: 1px solid #e2e8f0;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 1024px) {
+          .product-slide-card { min-width: calc(50% - 10px); }
+        }
+
+        @media (max-width: 600px) {
+          .product-slide-card { min-width: 100%; }
         }
 
         .btn-link {
