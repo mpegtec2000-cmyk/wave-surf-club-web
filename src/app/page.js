@@ -32,30 +32,17 @@ export default function LandingPage() {
     return () => clearInterval(heroTimer);
   }, []);
 
-  // Timer for product carousel
-  useEffect(() => {
-    if (productos.length > 0) {
-      const prodTimer = setInterval(() => {
-        setProductSlide((prev) => (prev + 1) % Math.max(1, Math.ceil(productos.length / 3)));
-      }, 4000);
-      return () => clearInterval(prodTimer);
-    }
-  }, [productos]);
-
   const fetchProductos = async () => {
     const { data } = await supabase
       .from('productos_tienda')
       .select('*, categorias_tienda(nombre)')
       .eq('activo', true)
-      .limit(12);
+      .limit(6);
     if (data) setProductos(data);
   };
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length);
-
-  const nextProd = () => setProductSlide((prev) => (prev + 1) % Math.max(1, Math.ceil(productos.length / 3)));
-  const prevProd = () => setProductSlide((prev) => (prev - 1 + Math.ceil(productos.length / 3)) % Math.ceil(productos.length / 3));
 
   return (
     <>
@@ -126,41 +113,40 @@ export default function LandingPage() {
 
 
 
-        {/* PRODUCT CAROUSEL SECTION */}
+        {/* PRODUCT GRID SECTION */}
         {productos.length > 0 && (
-          <section className="product-carousel-section">
+          <section className="product-grid-section">
             <div className="container-premium">
               <div className="section-header">
                 <span className="section-subtitle">WAVE SHOP</span>
                 <h2 className="section-title">PRODUCTOS DESTACADOS</h2>
               </div>
               
-              <div className="product-carousel-container">
-                <div className="product-track" style={{ transform: `translateX(-${productSlide * 100}%)` }}>
-                  {productos.map((prod) => (
-                    <div key={prod.id} className="product-slide-card">
-                      <div className="prod-img-box">
-                        {prod.imagen_url ? (
-                          <img src={prod.imagen_url} alt={prod.nombre} />
-                        ) : (
-                          <div className="prod-placeholder">{prod.categorias_tienda?.nombre}</div>
-                        )}
-                      </div>
-                      <div className="prod-info-box">
-                        <span className="prod-tag">{prod.categorias_tienda?.nombre}</span>
-                        <h4>{prod.nombre}</h4>
-                        <div className="prod-price">${(prod.precio_final || 0).toLocaleString('es-CL')}</div>
-                        <a href="/tienda" className="btn-shop">
-                          <ShoppingCart size={14} />
-                          Ver en Tienda
-                        </a>
-                      </div>
+              <div className="product-showcase-grid">
+                {productos.map((prod) => (
+                  <div key={prod.id} className="product-grid-card">
+                    <div className="prod-img-box">
+                      {prod.imagen_url ? (
+                        <img src={prod.imagen_url} alt={prod.nombre} />
+                      ) : (
+                        <div className="prod-placeholder">{prod.categorias_tienda?.nombre}</div>
+                      )}
                     </div>
-                  ))}
-                </div>
-                
-                <button className="carousel-btn prev mini" onClick={prevProd}><ChevronLeft size={20} /></button>
-                <button className="carousel-btn next mini" onClick={nextProd}><ChevronRight size={20} /></button>
+                    <div className="prod-info-box">
+                      <span className="prod-tag">{prod.categorias_tienda?.nombre}</span>
+                      <h4>{prod.nombre}</h4>
+                      <div className="prod-price">${(prod.precio_final || 0).toLocaleString('es-CL')}</div>
+                      <a href="/tienda" className="btn-shop">
+                        <ShoppingCart size={14} />
+                        Ver en Tienda
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="grid-footer">
+                <a href="/tienda" className="btn-view-all">Ver toda la tienda</a>
               </div>
             </div>
           </section>
@@ -606,33 +592,20 @@ export default function LandingPage() {
           flex: 1;
         }
 
-        .container-premium {
-          max-width: 1200px;
-          margin: 0 auto;
-          position: relative;
+        /* PRODUCT GRID DISPLAY */
+        .product-grid-section {
+          padding: 100px 20px;
+          background: #f8fafc;
         }
 
-        .product-carousel-container {
-          position: relative;
-          width: 100%;
-          overflow: visible; /* Let cards be seen slightly if they overflow */
-          padding: 20px 0;
+        .product-showcase-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 30px;
+          margin-bottom: 50px;
         }
 
-        .product-track-wrapper {
-           overflow: hidden;
-           border-radius: 24px;
-        }
-
-        .product-track {
-          display: flex;
-          gap: 24px;
-          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .product-slide-card {
-          min-width: calc((100% - 48px) / 3);
-          max-width: calc((100% - 48px) / 3);
+        .product-grid-card {
           background: #fff;
           border-radius: 24px;
           border: 1px solid #e2e8f0;
@@ -641,6 +614,34 @@ export default function LandingPage() {
           display: flex;
           flex-direction: column;
           box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .product-grid-card:hover {
+          transform: translateY(-10px);
+          border-color: #0ea5e9;
+          box-shadow: 0 20px 40px rgba(14, 165, 233, 0.1);
+        }
+
+        .grid-footer {
+          text-align: center;
+        }
+
+        .btn-view-all {
+          display: inline-block;
+          padding: 16px 40px;
+          background: #0f172a;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 14px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          transition: all 0.3s;
+        }
+
+        .btn-view-all:hover {
+          background: #0ea5e9;
+          transform: scale(1.05);
         }
 
         .product-slide-card:hover {
