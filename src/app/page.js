@@ -111,33 +111,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* SERVICES SECTION */}
-        <section className="featured-section">
-          <div className="section-header">
-            <span className="section-subtitle">EXPERIENCIA WAVE</span>
-            <h2 className="section-title">NUESTROS SERVICIOS</h2>
-          </div>
-          <div className="content-grid-placeholder">
-            <div className="glass-card-premium">
-              <div className="card-icon">🏄‍♂️</div>
-              <h3>Escuela de Surf</h3>
-              <p>Desde principiantes hasta nivel avanzado con instructores certificados.</p>
-              <a href="/escuelas" className="btn-link">Ver Horarios</a>
-            </div>
-            <div className="glass-card-premium">
-              <div className="card-icon">🛹</div>
-              <h3>Skate Park</h3>
-              <p>Clases de skate y rampas profesionales para perfeccionar tu estilo.</p>
-              <a href="/servicios" className="btn-link">Ver Clases</a>
-            </div>
-            <div className="glass-card-premium">
-              <div className="card-icon">🔧</div>
-              <h3>Taller Experto</h3>
-              <p>Reparación de tablas y mantenimiento de equipos con manos expertas.</p>
-              <a href="/taller" className="btn-link">Solicitar Arreglo</a>
-            </div>
-          </div>
-        </section>
+
 
         {/* PRODUCT CAROUSEL SECTION */}
         {productos.length > 0 && (
@@ -554,40 +528,7 @@ export default function LandingPage() {
           background: #38bdf8;
         }
 
-        /* FEATURED SECTION */
-        .featured-section {
-          padding: 100px 20px;
-          background: #ffffff;
-          text-align: center;
-        }
 
-        .section-header {
-          margin-bottom: 60px;
-        }
-
-        .section-subtitle {
-          font-size: 14px;
-          font-weight: 900;
-          letter-spacing: 6px;
-          color: #0ea5e9;
-          text-transform: uppercase;
-        }
-
-        .section-title {
-          font-size: clamp(2rem, 5vw, 60px);
-          font-weight: 950;
-          color: #0f172a;
-          margin-top: 10px;
-          text-transform: uppercase;
-        }
-
-        .content-grid-placeholder {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 30px;
-          max-width: 1200px;
-          margin: 0 auto;
-        }
 
         .glass-card-premium {
           background: #fff;
