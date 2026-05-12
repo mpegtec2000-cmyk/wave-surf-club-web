@@ -277,18 +277,28 @@ export default function TiendaPage() {
       <Navbar />
       <main className="tienda-main">
         {/* HEADER SECTION */}
-        <div className="tienda-header">
+        <div className="tienda-header-premium">
+          <div className="header-overlay"></div>
           <div className="tienda-header-content">
-            <h1>TIENDA WAVE SURF CLUB</h1>
-            <p className="subtitle">Clases · Arriendos · Bodega · Accesorios</p>
+            <span className="pre-title">WAVE SURF CLUB</span>
+            <h1>CATÁLOGO OFICIAL</h1>
+            <p className="subtitle">Explora nuestra colección de ropa, agenda tus clases y asegura tu cupo en la bodega.</p>
             
-            <div className="horarios-box">
+            <div className="horarios-box-modern">
               <div className="horarios-grid">
-                <div className="h-item"><span>Abrimos</span><strong>08:00</strong></div>
-                <div className="h-item"><span>Clases colectivas</span><strong>10:00 / 12:00</strong></div>
-                <div className="h-item"><span>Cerramos</span><strong>22:00</strong></div>
+                <div className="h-item">
+                  <Clock size={16} />
+                  <div className="h-info"><span>OPEN</span><strong>08:00 AM</strong></div>
+                </div>
+                <div className="h-item">
+                  <Calendar size={16} />
+                  <div className="h-info"><span>CLASES</span><strong>10:00 - 12:00</strong></div>
+                </div>
+                <div className="h-item">
+                  <User size={16} />
+                  <div className="h-info"><span>CLOSE</span><strong>22:00 PM</strong></div>
+                </div>
               </div>
-              <div className="h-footer">Reservas disponibles de 08:00 a 20:00 hrs</div>
             </div>
           </div>
         </div>
@@ -542,75 +552,88 @@ export default function TiendaPage() {
           padding: 0 20px;
         }
 
-        .tienda-header {
-          background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
-          padding: 60px 20px;
+        .tienda-header-premium {
+          position: relative;
+          background: #000;
+          padding: 120px 20px 80px;
           text-align: center;
-          border-bottom: 1px solid #111;
-        }
-
-        .tienda-header h1 {
-          font-size: clamp(24px, 6vw, 42px);
-          font-weight: 900;
-          letter-spacing: -1px;
-          margin: 0 0 10px 0;
-          padding: 0 10px;
-        }
-
-        .subtitle {
-          color: #888;
-          font-size: clamp(10px, 2vw, 14px);
-          text-transform: uppercase;
-          letter-spacing: 2px;
-          margin-bottom: 40px;
-          padding: 0 20px;
-        }
-
-        .horarios-box {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid #222;
-          border-radius: 12px;
-          max-width: 600px;
-          margin: 0 auto;
           overflow: hidden;
         }
 
-        .horarios-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1px;
-          background: #222;
+        .header-overlay {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
+          opacity: 0.5;
         }
 
-        .h-item {
-          background: #0d0d0d;
-          padding: 15px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 5px;
+        .tienda-header-content {
+          position: relative;
+          z-index: 2;
+          max-width: 800px;
+          margin: 0 auto;
         }
 
-        .h-item span {
-          font-size: 10px;
-          color: #666;
-          text-transform: uppercase;
-          letter-spacing: 1px;
+        .pre-title {
+          display: block;
+          font-size: 12px;
+          letter-spacing: 6px;
+          color: #38bdf8;
+          font-weight: 900;
+          margin-bottom: 15px;
         }
 
-        .h-item strong {
-          font-size: 16px;
+        .tienda-header-content h1 {
+          font-size: 64px;
+          font-weight: 950;
+          letter-spacing: -2px;
+          margin-bottom: 20px;
           color: #fff;
         }
 
-        .h-footer {
-          background: #38bdf8;
-          color: #000;
-          padding: 8px;
-          font-size: 11px;
+        .tienda-header-content .subtitle {
+          font-size: 18px;
+          color: #94a3b8;
+          line-height: 1.6;
+          margin-bottom: 40px;
+        }
+
+        .horarios-box-modern {
+          background: rgba(255,255,255,0.03);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.05);
+          border-radius: 20px;
+          padding: 20px 40px;
+          display: inline-block;
+        }
+
+        .horarios-grid {
+          display: flex;
+          gap: 40px;
+        }
+
+        .h-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          color: #fff;
+        }
+
+        .h-info {
+          text-align: left;
+        }
+
+        .h-info span {
+          display: block;
+          font-size: 9px;
+          color: #64748b;
           font-weight: 800;
-          text-transform: uppercase;
           letter-spacing: 1px;
+        }
+
+        .h-info strong {
+          font-size: 16px;
+          font-weight: 900;
         }
 
         .tienda-toolbar {
@@ -661,10 +684,9 @@ export default function TiendaPage() {
 
         .tabs-container {
           display: flex;
-          gap: 8px;
-          overflow-x: auto;
           gap: 12px;
           padding: 5px;
+          justify-content: center;
         }
 
         .tab-btn {
@@ -738,16 +760,17 @@ export default function TiendaPage() {
         .product-card {
           background: #0a0a0a;
           border: 1px solid #1a1a1a;
-          border-radius: 12px;
+          border-radius: 20px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          transition: all 0.3s;
+          transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .product-card:hover {
-          border-color: #333;
-          transform: translateY(-4px);
+          border-color: #38bdf8;
+          transform: translateY(-10px);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(56, 189, 248, 0.1);
         }
 
         .product-image {
@@ -760,6 +783,11 @@ export default function TiendaPage() {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .product-card:hover .product-image img {
+          transform: scale(1.1);
         }
 
         .image-placeholder {
