@@ -112,13 +112,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* DISCOUNT BANNER */}
-        <div className="discount-banner">
-          <div className="banner-content">
-            <span className="banner-icon">🎁</span>
-            <p><strong>DESCUENTOS ESPECIALES:</strong> Extranjeros y Estudiantes presentan sus documentos para tarifas preferenciales.</p>
-          </div>
-        </div>
+
 
         {/* PRODUCT GRID SECTION */}
         {productos.length > 0 && (
@@ -161,14 +155,25 @@ export default function LandingPage() {
 
         {/* FLOATING BOOKING CTA */}
         {showBooking && (
-          <div className="floating-booking-banner">
-            <a href="/tienda" className="booking-link agenda-attention">
-              <span className="booking-dot"></span>
+          <div className="floating-booking">
+            <button className="close-booking" onClick={() => setShowBooking(false)}><X size={14} /></button>
+            <a href="/escuelas" className="booking-content">
+              <span className="dot-live"></span>
               AGENDA TU CLASE
             </a>
-            <button onClick={() => setShowBooking(false)} className="close-booking">×</button>
           </div>
         )}
+
+        {/* FLOATING DISCOUNT BADGE */}
+        <div className="floating-discount">
+          <div className="discount-badge">
+            <span className="gift-icon">🎁</span>
+            <div className="discount-text">
+              <strong>DESCUENTOS</strong>
+              <span>Extranjeros & Estudiantes</span>
+            </div>
+          </div>
+        </div>
 
       </main>
 
