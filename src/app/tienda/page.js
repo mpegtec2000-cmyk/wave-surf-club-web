@@ -249,7 +249,25 @@ export default function TiendaPage() {
   // Filter products
   const filteredProducts = productos.filter(p => {
     if (!p) return false;
-    if (activeTab !== 'todos' && p.categorias_tienda?.slug !== activeTab) return false;
+    
+    // Group logic
+    if (activeTab !== 'todos') {
+      const slug = p.categorias_tienda?.slug;
+      if (activeTab === 'ropa') {
+        const ropaSubcats = ['poleras', 'polerones', 'pantalones', 'shorts', 'gorros', 'trajes'];
+        if (!ropaSubcats.includes(slug)) return false;
+      } else if (activeTab === 'arriendo') {
+        if (slug !== 'arriendos') return false;
+      } else if (activeTab === 'clases') {
+        if (slug !== 'clases') return false;
+      } else if (activeTab === 'bodega') {
+        if (slug !== 'bodega') return false;
+      } else {
+        // Fallback for other categories if they exist
+        if (slug !== activeTab) return false;
+      }
+    }
+
     if (searchTerm && !(p.nombre || '').toLowerCase().includes(searchTerm.toLowerCase())) return false;
     return true;
   });
@@ -281,19 +299,19 @@ export default function TiendaPage() {
             {/* Category scroll */}
             <div className="tabs-scroll-wrapper">
               <div className="tabs-container">
-                <button 
-                  className={`tab-btn ${activeTab === 'todos' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('todos')}
-                >
-                  Todos
-                </button>
-                {categorias.map(c => (
+                {[
+                  { id: 'todos', label: 'TODOS' },
+                  { id: 'ropa', label: 'ROPA' },
+                  { id: 'clases', label: 'CLASES' },
+                  { id: 'arriendo', label: 'ARRIENDO' },
+                  { id: 'bodega', label: 'BODEGA' }
+                ].map(tab => (
                   <button 
-                    key={c.id}
-                    className={`tab-btn ${activeTab === c.slug ? 'active' : ''}`}
-                    onClick={() => setActiveTab(c.slug)}
+                    key={tab.id}
+                    className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+                    onClick={() => setActiveTab(tab.id)}
                   >
-                    {c.nombre}
+                    {tab.label}
                   </button>
                 ))}
               </div>
@@ -645,35 +663,35 @@ export default function TiendaPage() {
           display: flex;
           gap: 8px;
           overflow-x: auto;
-          scroll-behavior: smooth;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          padding: 4px 6px;
+          gap: 12px;
+          padding: 5px;
         }
-        .tabs-container::-webkit-scrollbar { display: none; }
 
         .tab-btn {
           background: #111;
-          color: #888;
-          border: 1px solid #222;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 700;
+          color: #94a3b8;
+          border: none;
+          padding: 10px 24px;
+          border-radius: 50px;
+          font-size: 11px;
+          font-weight: 800;
           text-transform: uppercase;
+          letter-spacing: 1px;
           cursor: pointer;
+          transition: all 0.3s;
           white-space: nowrap;
-          transition: all 0.2s;
+          border: 1px solid rgba(255,255,255,0.05);
         }
 
         .tab-btn:hover {
           color: #fff;
-          border-color: #444;
+          background: #1e293b;
         }
 
         .tab-btn.active {
           background: #38bdf8;
-          color: #000;
+          color: #fff;
+          box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
           border-color: #38bdf8;
         }
 
