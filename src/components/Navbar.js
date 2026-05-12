@@ -243,9 +243,31 @@ export default function Navbar() {
           visibility: menuOpen ? 'hidden' : 'visible'
         }}
       >
-        <div className="logo-box-luxury" style={{ backgroundColor: '#000', width: '95px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
+        <div 
+          className="logo-box-luxury" 
+          style={{ 
+            backgroundColor: scrolled ? 'transparent' : '#000', 
+            width: '95px', 
+            height: '100%', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            marginRight: '20px',
+            transition: 'background-color 0.3s ease'
+          }}
+        >
           <Link href="/" className="logo-pulsing" style={{ position: 'relative', width: '60%', height: '60%' }}>
-            <Image src="/logo-wave.png" alt="Wave" fill style={{ objectFit: 'contain' }} priority />
+            <Image 
+              src="/logo-wave.png" 
+              alt="Wave" 
+              fill 
+              style={{ 
+                objectFit: 'contain',
+                filter: scrolled ? 'invert(1)' : 'none',
+                transition: 'filter 0.3s ease'
+              }} 
+              priority 
+            />
           </Link>
         </div>
 
