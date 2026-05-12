@@ -37,7 +37,7 @@ export default function LandingPage() {
       .from('productos_tienda')
       .select('*, categorias_tienda(nombre)')
       .eq('activo', true)
-      .limit(6);
+      .limit(8);
     if (data) setProductos(data);
   };
 
@@ -600,20 +600,20 @@ export default function LandingPage() {
 
         .product-showcase-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 30px;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
           margin-bottom: 50px;
         }
 
         .product-grid-card {
           background: #fff;
-          border-radius: 24px;
+          border-radius: 20px;
           border: 1px solid #e2e8f0;
           overflow: hidden;
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
           display: flex;
           flex-direction: column;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
 
         .product-grid-card:hover {
@@ -650,7 +650,7 @@ export default function LandingPage() {
         }
 
         .prod-img-box {
-          height: 250px;
+          height: 180px;
           background: #f1f5f9;
           position: relative;
         }
