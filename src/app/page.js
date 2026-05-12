@@ -449,10 +449,10 @@ export default function LandingPage() {
           position: relative;
           max-width: 1200px;
           margin: 0 auto;
-          height: 500px;
-          border-radius: 24px;
+          height: 600px;
+          border-radius: 30px;
           overflow: hidden;
-          box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+          box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
           border: 1px solid rgba(0,0,0,0.05);
         }
 
@@ -606,17 +606,19 @@ export default function LandingPage() {
 
         .product-track {
           display: flex;
-          gap: 20px;
-          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+          gap: 24px;
+          transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .product-slide-card {
-          min-width: calc(25% - 15px);
+          min-width: calc((100% - 72px) / 4);
           background: #fff;
-          border-radius: 20px;
+          border-radius: 24px;
           border: 1px solid #e2e8f0;
           overflow: hidden;
-          transition: all 0.3s;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          display: flex;
+          flex-direction: column;
         }
 
         .product-slide-card:hover {
@@ -702,11 +704,14 @@ export default function LandingPage() {
         }
 
         @media (max-width: 1024px) {
-          .product-slide-card { min-width: calc(50% - 10px); }
+          .product-slide-card { min-width: calc((100% - 24px) / 2); }
+          .carousel-container { height: 400px; }
         }
 
         @media (max-width: 600px) {
           .product-slide-card { min-width: 100%; }
+          .carousel-container { height: 300px; }
+          .carousel-btn.mini { display: none; }
         }
 
         .btn-link {
