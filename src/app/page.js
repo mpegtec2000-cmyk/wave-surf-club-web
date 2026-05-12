@@ -170,7 +170,7 @@ export default function LandingPage() {
           <div className="pill-content">
             <span className="dot-blue"></span>
             <div className="pill-text">
-              <strong>DESCUENTOS ESPECIALES:</strong> Extranjeros y Estudiantes presentan sus documentos para tarifas preferenciales.
+              <strong>DESCUENTO ESPECIAL:</strong> 20% OFF para Estudiantes y Extranjeros. Regístrate y recibe tu código exclusivo para reservar.
             </div>
           </div>
         </div>
@@ -477,7 +477,7 @@ export default function LandingPage() {
           bottom: 30px;
           left: 30px;
           z-index: 1000;
-          max-width: 400px;
+          max-width: 450px;
         }
 
         .pill-content {
