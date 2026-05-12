@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import { useTranslation } from '@/lib/i18n-context';
-import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingCart, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 const CAROUSEL_IMAGES = [
