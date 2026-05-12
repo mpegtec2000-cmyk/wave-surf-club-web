@@ -665,26 +665,7 @@ export default function TiendaPage() {
         .tabs-scroll-wrapper {
           flex: 1;
           position: relative;
-          overflow: hidden;
           min-width: 0;
-        }
-        .tabs-scroll-wrapper::before,
-        .tabs-scroll-wrapper::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          width: 32px;
-          pointer-events: none;
-          z-index: 2;
-        }
-        .tabs-scroll-wrapper::before {
-          left: 0;
-          background: linear-gradient(to right, rgba(0,0,0,0.9), transparent);
-        }
-        .tabs-scroll-wrapper::after {
-          right: 0;
-          background: linear-gradient(to left, rgba(0,0,0,0.9), transparent);
         }
 
         .tabs-container {
