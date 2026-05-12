@@ -80,6 +80,65 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* SOBRE NOSOTROS SECTION */}
+        <section className="about-us-section">
+          <div className="container-premium">
+            <div className="about-grid">
+              <div className="about-text-box">
+                <span className="section-subtitle">NUESTRA HISTORIA</span>
+                <h2 className="section-title">SOMOS WAVE SURF CLUB</h2>
+                <p className="about-description">
+                  Desde 2015, nos dedicamos a fomentar la cultura del surf y el skate en el corazón de Concón. 
+                  Lo que comenzó como un sueño entre amigos se ha transformado en el club de surf más grande de la zona, 
+                  donde la pasión por las olas se vive los 365 días del año.
+                </p>
+                
+                <div className="sucursales-grid">
+                  <div className="sucursal-card">
+                    <div className="sucursal-icon">🏖️</div>
+                    <h4>CONCÓN</h4>
+                    <p>Nuestra casa matriz, ubicada en la mejor zona para aprender.</p>
+                  </div>
+                  <div className="sucursal-card">
+                    <div className="sucursal-icon">🏄‍♂️</div>
+                    <h4>REÑACA</h4>
+                    <p>Sede especializada en perfeccionamiento y alta competencia.</p>
+                  </div>
+                </div>
+
+                <div className="about-actions">
+                  <a href="/escuelas" className="btn-outline-premium">Nuestras Escuelas</a>
+                </div>
+              </div>
+
+              <div className="about-visual-box">
+                <div className="promo-video-container">
+                  {/* Placeholder video - reemplazar con el real */}
+                  <div className="video-placeholder">
+                    <video 
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline 
+                      className="promo-video"
+                    >
+                      <source src="/videos/promo.mp4" type="video/mp4" />
+                    </video>
+                    <div className="video-overlay-play">
+                      <div className="pulse-button"></div>
+                    </div>
+                  </div>
+                </div>
+                <div className="stats-mini-grid">
+                  <div className="stat-item"><strong>+9</strong><span>AÑOS</span></div>
+                  <div className="stat-item"><strong>+5K</strong><span>ALUMNOS</span></div>
+                  <div className="stat-item"><strong>100%</strong><span>PASIÓN</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* IMAGE CAROUSEL SECTION */}
         <section className="carousel-section">
           <div className="carousel-container">
