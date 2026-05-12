@@ -541,6 +541,9 @@ export default function TiendaPage() {
           min-height: 100vh;
           background: #000;
           color: #fff;
+          background: #fff;
+          color: #0f172a;
+          min-height: 100vh;
           font-family: var(--font-sans);
           padding-bottom: 100px;
           margin-top: 95px; /* Navbar space */
@@ -554,16 +557,17 @@ export default function TiendaPage() {
 
         .tienda-header-premium {
           position: relative;
-          background: #000;
+          background: #fff;
           padding: 120px 20px 80px;
           text-align: center;
           overflow: hidden;
+          border-bottom: 1px solid #eee;
         }
 
         .header-overlay {
           position: absolute;
           inset: 0;
-          background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
+          background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.05) 0%, transparent 70%);
           opacity: 0.5;
         }
 
@@ -578,7 +582,7 @@ export default function TiendaPage() {
           display: block;
           font-size: 12px;
           letter-spacing: 6px;
-          color: #38bdf8;
+          color: #0ea5e9;
           font-weight: 900;
           margin-bottom: 15px;
         }
@@ -588,23 +592,23 @@ export default function TiendaPage() {
           font-weight: 950;
           letter-spacing: -2px;
           margin-bottom: 20px;
-          color: #fff;
+          color: #0f172a;
         }
 
         .tienda-header-content .subtitle {
           font-size: 18px;
-          color: #94a3b8;
+          color: #64748b;
           line-height: 1.6;
           margin-bottom: 40px;
         }
 
         .horarios-box-modern {
-          background: rgba(255,255,255,0.03);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255,255,255,0.05);
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
           border-radius: 20px;
           padding: 20px 40px;
           display: inline-block;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .horarios-grid {
@@ -616,7 +620,7 @@ export default function TiendaPage() {
           display: flex;
           align-items: center;
           gap: 12px;
-          color: #fff;
+          color: #0f172a;
         }
 
         .h-info {
@@ -626,7 +630,7 @@ export default function TiendaPage() {
         .h-info span {
           display: block;
           font-size: 9px;
-          color: #64748b;
+          color: #94a3b8;
           font-weight: 800;
           letter-spacing: 1px;
         }
@@ -634,15 +638,16 @@ export default function TiendaPage() {
         .h-info strong {
           font-size: 16px;
           font-weight: 900;
+          color: #0f172a;
         }
 
         .tienda-toolbar {
           position: sticky;
           top: 95px;
-          background: rgba(0,0,0,0.92);
+          background: rgba(255,255,255,0.95);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
-          border-bottom: 1px solid #222;
+          border-bottom: 1px solid #eee;
           z-index: 50;
           padding: 12px 0;
         }
@@ -690,8 +695,8 @@ export default function TiendaPage() {
         }
 
         .tab-btn {
-          background: #111;
-          color: #94a3b8;
+          background: #f8fafc;
+          color: #64748b;
           border: none;
           padding: 10px 24px;
           border-radius: 50px;
@@ -702,26 +707,27 @@ export default function TiendaPage() {
           cursor: pointer;
           transition: all 0.3s;
           white-space: nowrap;
-          border: 1px solid rgba(255,255,255,0.05);
+          border: 1px solid #e2e8f0;
         }
 
         .tab-btn:hover {
-          color: #fff;
-          background: #1e293b;
+          color: #0f172a;
+          background: #f1f5f9;
+          border-color: #cbd5e1;
         }
 
         .tab-btn.active {
-          background: #38bdf8;
+          background: #0ea5e9;
           color: #fff;
-          box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
-          border-color: #38bdf8;
+          box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+          border-color: #0ea5e9;
         }
 
         .search-box {
           display: flex;
           align-items: center;
-          background: #111;
-          border: 1px solid #222;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
           border-radius: 20px;
           padding: 0 15px;
           width: 250px;
@@ -731,7 +737,7 @@ export default function TiendaPage() {
         .search-box input {
           background: transparent;
           border: none;
-          color: #fff;
+          color: #0f172a;
           padding: 10px;
           width: 100%;
           outline: none;
@@ -758,19 +764,20 @@ export default function TiendaPage() {
         }
 
         .product-card {
-          background: #0a0a0a;
-          border: 1px solid #1a1a1a;
+          background: #fff;
+          border: 1px solid #e2e8f0;
           border-radius: 20px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
           transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .product-card:hover {
-          border-color: #38bdf8;
+          border-color: #0ea5e9;
           transform: translateY(-10px);
-          box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(56, 189, 248, 0.1);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 0 20px rgba(14, 165, 233, 0.05);
         }
 
         .product-image {
@@ -824,11 +831,12 @@ export default function TiendaPage() {
           font-weight: 800;
           margin: 0 0 8px 0;
           line-height: 1.2;
+          color: #0f172a;
         }
 
         .product-desc {
           font-size: 12px;
-          color: #888;
+          color: #64748b;
           line-height: 1.4;
           margin: 0 0 20px 0;
           display: -webkit-box;
@@ -845,7 +853,7 @@ export default function TiendaPage() {
         .price-final {
           font-size: 20px;
           font-weight: 900;
-          color: #fff;
+          color: #0f172a;
         }
 
         .price-comision {
@@ -857,10 +865,10 @@ export default function TiendaPage() {
         .btn-add {
           width: 100%;
           padding: 12px;
-          background: #fff;
-          color: #000;
+          background: #0f172a;
+          color: #fff;
           border: none;
-          border-radius: 6px;
+          border-radius: 12px;
           font-weight: 800;
           font-size: 12px;
           letter-spacing: 1px;
@@ -869,8 +877,8 @@ export default function TiendaPage() {
         }
 
         .btn-add:hover:not(:disabled) {
-          background: #38bdf8;
-          color: #fff;
+          background: #0ea5e9;
+          transform: scale(1.02);
         }
 
         .btn-add:disabled {
