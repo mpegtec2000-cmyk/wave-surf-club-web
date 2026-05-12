@@ -58,7 +58,7 @@ export default function EscuelasPage() {
         zIndex: 1
       }}>
         <Image 
-          src="/FONDO CONCON.jpg" 
+          src="/FONDO_PREMIUM_V1.png" 
           alt="Escuelas Wave Surf Club" 
           fill 
           priority

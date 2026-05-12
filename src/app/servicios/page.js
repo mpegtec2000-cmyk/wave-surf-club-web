@@ -197,7 +197,7 @@ export default function ServiciosPage() {
       {/* SECCIÓN 1: CLASES DE SURF */}
       <section className="service-section">
         <div className="bg-wrapper">
-          <Image src="/wave-light.jpeg" alt="Clases Surf" fill style={{ objectFit: 'cover' }} />
+          <Image src="/FONDO_PREMIUM_V1.png" alt="Clases Surf" fill style={{ objectFit: 'cover' }} />
         </div>
         <div className="overlay" />
         <div className="content">
@@ -239,7 +239,7 @@ export default function ServiciosPage() {
       {/* SECCIÓN 3: ARRIENDO Y EQUIPAMIENTO */}
       <section className="service-section">
         <div className="bg-wrapper">
-          <Image src="/hero-rider.jpeg" alt="Equipamiento" fill style={{ objectFit: 'cover' }} />
+          <Image src="/FONDO_PREMIUM_V2.png" alt="Equipamiento" fill style={{ objectFit: 'cover' }} />
         </div>
         <div className="overlay" />
         <div className="content">

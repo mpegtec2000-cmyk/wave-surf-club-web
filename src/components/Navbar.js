@@ -46,7 +46,6 @@ export default function Navbar() {
 
   const menuItems = [
     { id: 'inicio', key: 'menu_inicio', href: '/', type: 'route' },
-    { id: 'biografia', key: 'menu_bio', href: '/biografia', type: 'route' },
     { id: 'escuelas', key: 'menu_escuelas', href: '/escuelas', type: 'route' },
     { id: 'equipo', key: 'menu_equipo', href: '/equipo', type: 'route' },
     { id: 'taller', key: 'menu_taller', href: '/taller', type: 'route' },

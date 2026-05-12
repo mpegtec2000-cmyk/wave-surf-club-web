@@ -1,36 +1,55 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import { useTranslation } from '@/lib/i18n-context';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+const CAROUSEL_IMAGES = [
+  '/CARUSEL/1.jpg',
+  '/CARUSEL/2.jpg',
+  '/CARUSEL/3.jpg',
+  '/CARUSEL/4.png'
+];
 
 export default function LandingPage() {
   const { t } = useTranslation();
   const [showBooking, setShowBooking] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length);
 
   return (
     <>
       <Navbar />
       <main className="landing-main">
         <div id="hero" className="hero-section">
-          <div className="hero-bg-wrapper">
-            <Image 
-              src="/FONDO V2.png" 
-              alt="Wave Surf Club" 
-              fill 
-              priority
-              quality={100}
-              style={{ 
-                objectFit: 'cover',
-                objectPosition: 'center'
-              }}
-            />
+
+          <div className="hero-video-wrapper">
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              className="hero-video"
+            >
+              <source src="/videos/hero-video.mov" type="video/quicktime" />
+              Your browser does not support the video tag.
+            </video>
+            <div className="hero-video-overlay"></div>
           </div>
 
-          {/* REAL TEXT TITLES - Visible only on mobile to avoid overlap on desktop */}
           <div className="hero-content">
-            <span className="since">SINCE 2015</span>
+            <span className="since">SINCE-2015</span>
             <h1 className="main-brand-title">WAVE SURF CLUB</h1>
             <p className="hero-description">
               Todo partió como un sueño y se hizo realidad. Dedicados a la enseñanza del Skate y Surf en las mejores playas de Chile.
@@ -43,6 +62,64 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+
+        {/* CAROUSEL SECTION */}
+        <section className="carousel-section">
+          <div className="carousel-container">
+            <div className="carousel-track" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+              {CAROUSEL_IMAGES.map((img, idx) => (
+                <div key={idx} className="carousel-slide">
+                  <Image 
+                    src={img} 
+                    alt={`Slide ${idx + 1}`} 
+                    fill 
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div className="slide-overlay"></div>
+                </div>
+              ))}
+            </div>
+            
+            <button className="carousel-btn prev" onClick={prevSlide}><ChevronLeft size={30} /></button>
+            <button className="carousel-btn next" onClick={nextSlide}><ChevronRight size={30} /></button>
+            
+            <div className="carousel-dots">
+              {CAROUSEL_IMAGES.map((_, idx) => (
+                <button 
+                  key={idx} 
+                  className={`dot ${currentSlide === idx ? 'active' : ''}`}
+                  onClick={() => setCurrentSlide(idx)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* PRODUCTS / FEATURED SECTION */}
+        <section className="featured-section">
+          <div className="section-header">
+            <span className="section-subtitle">NUESTRAS</span>
+            <h2 className="section-title">ESCUELAS & SERVICIOS</h2>
+          </div>
+          <div className="content-grid-placeholder">
+            {/* Aquí se pueden mapear productos o servicios */}
+            <div className="glass-card-premium">
+              <h3>ESCUELA DE SURF</h3>
+              <p>Clases personalizadas para todos los niveles.</p>
+              <a href="/escuelas" className="btn-link">Saber más</a>
+            </div>
+            <div className="glass-card-premium">
+              <h3>SKATE PARK</h3>
+              <p>Entrenamiento técnico y rampas profesionales.</p>
+              <a href="/servicios" className="btn-link">Saber más</a>
+            </div>
+            <div className="glass-card-premium">
+              <h3>TALLER DE TABLAS</h3>
+              <p>Reparación y mantenimiento experto.</p>
+              <a href="/taller" className="btn-link">Saber más</a>
+            </div>
+          </div>
+        </section>
 
         {/* FLOATING BOOKING CTA */}
         {showBooking && (
@@ -92,11 +169,26 @@ export default function LandingPage() {
           overflow: hidden;
         }
 
-        .hero-bg-wrapper {
+        .hero-video-wrapper {
           position: absolute;
           inset: 0;
           z-index: 1;
         }
+
+        .hero-video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .hero-video-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
+          z-index: 2;
+        }
+
+
 
         .hero-content {
           position: relative;
@@ -104,44 +196,52 @@ export default function LandingPage() {
           text-align: center;
           color: #fff;
           padding: 0 20px;
-          max-width: 900px;
+          max-width: 1000px;
           margin-top: 40px;
+          animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        @media (min-width: 1025px) {
-          .hero-content {
-            display: none !important;
-          }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
         }
+
+
 
         .since {
           display: block;
           font-size: 14px;
-          letter-spacing: 8px;
+          letter-spacing: 12px;
           color: #38bdf8;
-          margin-bottom: 15px;
-          font-weight: 800;
+          margin-bottom: 20px;
+          font-weight: 900;
           text-transform: uppercase;
+          opacity: 0.9;
         }
 
         .main-brand-title {
-          font-size: clamp(2.5rem, 10vw, 120px);
+          font-size: clamp(3rem, 12vw, 150px);
           font-weight: 950;
           line-height: 0.85;
-          letter-spacing: -0.05em;
+          letter-spacing: -0.06em;
           margin: 0 0 30px 0;
           text-transform: uppercase;
+          background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
         }
 
         .hero-description {
-          font-size: clamp(14px, 2.5vw, 24px);
+          font-size: clamp(14px, 2.5vw, 20px);
           font-weight: 400;
-          color: rgba(255,255,255,0.8);
-          margin-bottom: 40px;
-          line-height: 1.4;
-          max-width: 600px;
+          color: rgba(255,255,255,0.7);
+          margin-bottom: 50px;
+          line-height: 1.6;
+          max-width: 700px;
           margin-left: auto;
           margin-right: auto;
+          letter-spacing: 0.5px;
         }
 
         .hero-actions {
@@ -306,6 +406,172 @@ export default function LandingPage() {
             letter-spacing: 1px;
             margin-right: 10px;
           }
+        }
+        /* CAROUSEL STYLES */
+        .carousel-section {
+          padding: 80px 20px;
+          background: #0a0a0a;
+        }
+
+        .carousel-container {
+          position: relative;
+          max-width: 1200px;
+          margin: 0 auto;
+          height: 500px;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+          border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .carousel-track {
+          display: flex;
+          height: 100%;
+          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .carousel-slide {
+          min-width: 100%;
+          height: 100%;
+          position: relative;
+        }
+
+        .slide-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(0deg, rgba(0,0,0,0.4) 0%, transparent 50%);
+        }
+
+        .carousel-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(255,255,255,0.1);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.2);
+          color: #fff;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          z-index: 10;
+          transition: all 0.3s ease;
+        }
+
+        .carousel-btn:hover {
+          background: #38bdf8;
+          border-color: #38bdf8;
+          transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-btn.prev { left: 20px; }
+        .carousel-btn.next { right: 20px; }
+
+        .carousel-dots {
+          position: absolute;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          gap: 10px;
+          z-index: 10;
+        }
+
+        .dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.3);
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s;
+        }
+
+        .dot.active {
+          width: 24px;
+          border-radius: 4px;
+          background: #38bdf8;
+        }
+
+        /* FEATURED SECTION */
+        .featured-section {
+          padding: 100px 20px;
+          background: #050505;
+          text-align: center;
+        }
+
+        .section-header {
+          margin-bottom: 60px;
+        }
+
+        .section-subtitle {
+          font-size: 14px;
+          font-weight: 900;
+          letter-spacing: 6px;
+          color: #38bdf8;
+          text-transform: uppercase;
+        }
+
+        .section-title {
+          font-size: clamp(2rem, 5vw, 60px);
+          font-weight: 950;
+          color: #fff;
+          margin-top: 10px;
+          text-transform: uppercase;
+        }
+
+        .content-grid-placeholder {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 30px;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .glass-card-premium {
+          background: rgba(255,255,255,0.03);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.1);
+          padding: 40px;
+          border-radius: 24px;
+          text-align: left;
+          transition: all 0.4s ease;
+        }
+
+        .glass-card-premium:hover {
+          background: rgba(255,255,255,0.05);
+          transform: translateY(-10px);
+          border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .glass-card-premium h3 {
+          font-size: 24px;
+          font-weight: 900;
+          color: #fff;
+          margin-bottom: 15px;
+        }
+
+        .glass-card-premium p {
+          color: rgba(255,255,255,0.6);
+          margin-bottom: 25px;
+          line-height: 1.6;
+        }
+
+        .btn-link {
+          color: #38bdf8;
+          font-weight: 900;
+          text-transform: uppercase;
+          font-size: 12px;
+          letter-spacing: 1px;
+          text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+          .carousel-container { height: 300px; }
+          .carousel-btn { display: none; }
         }
       `}</style>
     </>

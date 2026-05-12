@@ -140,7 +140,7 @@ a:hover { color: var(--accent-secondary); }
 .login-bg {
   position: absolute;
   inset: 0;
-  background-image: url('/wave-light.jpeg');
+  background-image: url('/FONDO_PREMIUM_V2.png');
   background-size: cover;
   background-position: center 30%;
   background-repeat: no-repeat;
