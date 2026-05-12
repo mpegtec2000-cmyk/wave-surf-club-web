@@ -83,56 +83,56 @@ export default function LandingPage() {
         {/* SOBRE NOSOTROS SECTION */}
         <section className="about-us-section">
           <div className="container-premium">
-            <div className="about-grid">
-              <div className="about-text-box">
-                <span className="section-subtitle">NUESTRA HISTORIA</span>
-                <h2 className="section-title">SOMOS WAVE SURF CLUB</h2>
-                <p className="about-description">
-                  Desde 2015, nos dedicamos a fomentar la cultura del surf y el skate en el corazón de Concón. 
-                  Lo que comenzó como un sueño entre amigos se ha transformado en el club de surf más grande de la zona, 
-                  donde la pasión por las olas se vive los 365 días del año.
+            <div className="about-header-centered">
+              <span className="section-subtitle">NUESTRA HISTORIA</span>
+              <h2 className="section-title">SOMOS WAVE SURF CLUB</h2>
+            </div>
+            
+            <div className="about-grid-professional">
+              <div className="about-text-content">
+                <p className="about-description-large">
+                  Fundado en 2015, Wave Surf Club nació de la visión de crear un espacio donde la técnica y la pasión por el mar se encuentran. 
+                  Ubicados en la costa central de Chile, nos hemos consolidado como referentes en la enseñanza del surf y el skate, 
+                  enfocándonos en la excelencia deportiva y el respeto por el océano.
                 </p>
                 
-                <div className="sucursales-grid">
-                  <div className="sucursal-card">
-                    <div className="sucursal-icon">🏖️</div>
-                    <h4>CONCÓN</h4>
-                    <p>Nuestra casa matriz, ubicada en la mejor zona para aprender.</p>
+                <div className="sucursales-list-pro">
+                  <div className="sucursal-item">
+                    <div className="s-line"></div>
+                    <div className="s-content">
+                      <h4>SEDE CONCÓN</h4>
+                      <p>Centro de formación integral y base operativa de nuestras principales escuelas.</p>
+                    </div>
                   </div>
-                  <div className="sucursal-card">
-                    <div className="sucursal-icon">🏄‍♂️</div>
-                    <h4>REÑACA</h4>
-                    <p>Sede especializada en perfeccionamiento y alta competencia.</p>
-                  </div>
-                </div>
-
-                <div className="about-actions">
-                  <a href="/escuelas" className="btn-outline-premium">Nuestras Escuelas</a>
-                </div>
-              </div>
-
-              <div className="about-visual-box">
-                <div className="promo-video-container">
-                  {/* Placeholder video - reemplazar con el real */}
-                  <div className="video-placeholder">
-                    <video 
-                      autoPlay 
-                      loop 
-                      muted 
-                      playsInline 
-                      className="promo-video"
-                    >
-                      <source src="/videos/promo.mp4" type="video/mp4" />
-                    </video>
-                    <div className="video-overlay-play">
-                      <div className="pulse-button"></div>
+                  <div className="sucursal-item">
+                    <div className="s-line"></div>
+                    <div className="s-content">
+                      <h4>SEDE REÑACA</h4>
+                      <p>Especialización técnica y entrenamientos de alta intensidad para niveles avanzados.</p>
                     </div>
                   </div>
                 </div>
-                <div className="stats-mini-grid">
-                  <div className="stat-item"><strong>+9</strong><span>AÑOS</span></div>
-                  <div className="stat-item"><strong>+5K</strong><span>ALUMNOS</span></div>
-                  <div className="stat-item"><strong>100%</strong><span>PASIÓN</span></div>
+
+                <div className="about-actions-centered">
+                  <a href="/escuelas" className="btn-luxury">Explorar Escuelas</a>
+                </div>
+              </div>
+
+              <div className="about-visual-pro">
+                <div className="gif-premium-container">
+                  {/* Contenedor optimizado para GIF de alta calidad */}
+                  <img 
+                    src="/GIFS/promo-surf.gif" 
+                    alt="Wave Surf Experience" 
+                    className="promo-gif"
+                    onError={(e) => { e.target.src = '/CARUSEL/1.jpg'; }}
+                  />
+                  <div className="gif-border-frame"></div>
+                </div>
+                
+                <div className="stats-pill-floating">
+                  <div className="stat-unit"><strong>09</strong><span>AÑOS</span></div>
+                  <div className="stat-unit"><strong>+5K</strong><span>ALUMNOS</span></div>
                 </div>
               </div>
             </div>
@@ -454,6 +454,168 @@ export default function LandingPage() {
         .agenda-attention {
           color: #38bdf8 !important;
           animation: attention-pulse 2s ease-in-out infinite;
+        }
+
+        /* SOBRE NOSOTROS SECTION PROFESSIONAL */
+        .about-us-section {
+          padding: 120px 0;
+          background: #fff;
+          border-bottom: 1px solid #f1f5f9;
+        }
+
+        .about-header-centered {
+          text-align: center;
+          max-width: 800px;
+          margin: 0 auto 80px;
+        }
+
+        .about-header-centered .section-title {
+          font-family: var(--font-playfair), serif;
+          font-size: clamp(2.5rem, 6vw, 60px);
+          font-weight: 900;
+          letter-spacing: -1px;
+          font-style: italic;
+        }
+
+        .about-grid-professional {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 100px;
+          align-items: center;
+        }
+
+        .about-text-content {
+          max-width: 550px;
+        }
+
+        .about-description-large {
+          font-size: 20px;
+          color: #475569;
+          line-height: 1.8;
+          margin-bottom: 50px;
+          font-weight: 300;
+        }
+
+        .sucursales-list-pro {
+          margin-bottom: 50px;
+        }
+
+        .sucursal-item {
+          display: flex;
+          gap: 25px;
+          margin-bottom: 35px;
+        }
+
+        .s-line {
+          width: 2px;
+          background: #38bdf8;
+          height: 50px;
+          flex-shrink: 0;
+        }
+
+        .s-content h4 {
+          font-size: 14px;
+          font-weight: 900;
+          letter-spacing: 2px;
+          margin: 0 0 8px;
+          color: #0f172a;
+        }
+
+        .s-content p {
+          font-size: 14px;
+          color: #64748b;
+          margin: 0;
+          line-height: 1.6;
+        }
+
+        .btn-luxury {
+          display: inline-block;
+          padding: 18px 45px;
+          background: #0f172a;
+          color: #fff;
+          text-decoration: none;
+          font-weight: 900;
+          font-size: 12px;
+          border-radius: 4px;
+          text-transform: uppercase;
+          letter-spacing: 3px;
+          transition: all 0.3s;
+        }
+
+        .btn-luxury:hover {
+          background: #38bdf8;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
+        }
+
+        .about-visual-pro {
+          position: relative;
+        }
+
+        .gif-premium-container {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 4/5;
+          border-radius: 4px;
+          overflow: hidden;
+          box-shadow: 20px 20px 0px #f8fafc;
+        }
+
+        .promo-gif {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .gif-border-frame {
+          position: absolute;
+          inset: 20px;
+          border: 1px solid rgba(255,255,255,0.2);
+          pointer-events: none;
+        }
+
+        .stats-pill-floating {
+          position: absolute;
+          bottom: -40px;
+          right: -40px;
+          background: #fff;
+          padding: 30px;
+          display: flex;
+          gap: 40px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+          border: 1px solid #f1f5f9;
+        }
+
+        .stat-unit {
+          text-align: center;
+        }
+
+        .stat-unit strong {
+          display: block;
+          font-size: 32px;
+          font-weight: 900;
+          color: #0f172a;
+          line-height: 1;
+        }
+        .stat-unit span {
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 2px;
+          color: #64748b;
+          text-transform: uppercase;
+        }
+
+        @media (max-width: 1024px) {
+          .about-grid-professional { grid-template-columns: 1fr; gap: 80px; }
+          .stats-pill-floating { position: static; margin-top: 40px; justify-content: center; }
+          .gif-premium-container { box-shadow: none; }
+          .about-header-centered { margin-bottom: 40px; }
+        }
+
+        .container-premium {
+          max-width: 1300px;
+          margin: 0 auto;
+          padding: 0 30px;
         }
 
         @media (max-width: 1024px) {
