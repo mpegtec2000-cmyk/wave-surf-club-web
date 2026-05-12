@@ -148,8 +148,9 @@ export default function LandingPage() {
           margin: 0; 
           padding: 0; 
           overflow-x: hidden;
-          background: #000;
+          background: #fdfcfb;
           font-family: var(--font-archivo), sans-serif;
+          color: #0f172a;
         }
 
         .landing-main {
@@ -235,13 +236,14 @@ export default function LandingPage() {
         .hero-description {
           font-size: clamp(14px, 2.5vw, 20px);
           font-weight: 400;
-          color: rgba(255,255,255,0.7);
+          color: rgba(255,255,255,0.9);
           margin-bottom: 50px;
           line-height: 1.6;
           max-width: 700px;
           margin-left: auto;
           margin-right: auto;
           letter-spacing: 0.5px;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .hero-actions {
@@ -410,7 +412,7 @@ export default function LandingPage() {
         /* CAROUSEL STYLES */
         .carousel-section {
           padding: 80px 20px;
-          background: #0a0a0a;
+          background: #f8fafc;
         }
 
         .carousel-container {
@@ -420,8 +422,8 @@ export default function LandingPage() {
           height: 500px;
           border-radius: 24px;
           overflow: hidden;
-          box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-          border: 1px solid rgba(255,255,255,0.1);
+          box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+          border: 1px solid rgba(0,0,0,0.05);
         }
 
         .carousel-track {
@@ -499,7 +501,7 @@ export default function LandingPage() {
         /* FEATURED SECTION */
         .featured-section {
           padding: 100px 20px;
-          background: #050505;
+          background: #ffffff;
           text-align: center;
         }
 
@@ -511,14 +513,14 @@ export default function LandingPage() {
           font-size: 14px;
           font-weight: 900;
           letter-spacing: 6px;
-          color: #38bdf8;
+          color: #0ea5e9;
           text-transform: uppercase;
         }
 
         .section-title {
           font-size: clamp(2rem, 5vw, 60px);
           font-weight: 950;
-          color: #fff;
+          color: #0f172a;
           margin-top: 10px;
           text-transform: uppercase;
         }
@@ -532,30 +534,31 @@ export default function LandingPage() {
         }
 
         .glass-card-premium {
-          background: rgba(255,255,255,0.03);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: #fff;
+          border: 1px solid #e2e8f0;
           padding: 40px;
           border-radius: 24px;
           text-align: left;
           transition: all 0.4s ease;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.03);
         }
 
         .glass-card-premium:hover {
-          background: rgba(255,255,255,0.05);
+          background: #fff;
           transform: translateY(-10px);
-          border-color: rgba(56, 189, 248, 0.4);
+          border-color: #0ea5e9;
+          box-shadow: 0 20px 40px rgba(14, 165, 233, 0.1);
         }
 
         .glass-card-premium h3 {
           font-size: 24px;
           font-weight: 900;
-          color: #fff;
+          color: #0f172a;
           margin-bottom: 15px;
         }
 
         .glass-card-premium p {
-          color: rgba(255,255,255,0.6);
+          color: #475569;
           margin-bottom: 25px;
           line-height: 1.6;
         }
