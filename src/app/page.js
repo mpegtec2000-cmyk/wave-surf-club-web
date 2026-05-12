@@ -23,26 +23,39 @@ export default function LandingPage() {
 
   useEffect(() => {
     fetchProductos();
-    const timer = setInterval(() => {
+    
+    // Timer for image carousel
+    const heroTimer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
     }, 3000);
-    return () => clearInterval(timer);
+
+    return () => clearInterval(heroTimer);
   }, []);
+
+  // Timer for product carousel
+  useEffect(() => {
+    if (productos.length > 0) {
+      const prodTimer = setInterval(() => {
+        setProductSlide((prev) => (prev + 1) % Math.max(1, Math.ceil(productos.length / 3)));
+      }, 4000);
+      return () => clearInterval(prodTimer);
+    }
+  }, [productos]);
 
   const fetchProductos = async () => {
     const { data } = await supabase
       .from('productos_tienda')
       .select('*, categorias_tienda(nombre)')
       .eq('activo', true)
-      .limit(8);
+      .limit(12);
     if (data) setProductos(data);
   };
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length);
 
-  const nextProd = () => setProductSlide((prev) => (prev + 1) % Math.max(1, Math.ceil(productos.length / 4)));
-  const prevProd = () => setProductSlide((prev) => (prev - 1 + Math.ceil(productos.length / 4)) % Math.ceil(productos.length / 4));
+  const nextProd = () => setProductSlide((prev) => (prev + 1) % Math.max(1, Math.ceil(productos.length / 3)));
+  const prevProd = () => setProductSlide((prev) => (prev - 1 + Math.ceil(productos.length / 3)) % Math.ceil(productos.length / 3));
 
   return (
     <>
@@ -618,8 +631,8 @@ export default function LandingPage() {
         }
 
         .product-slide-card {
-          min-width: calc((100% - 72px) / 4);
-          max-width: calc((100% - 72px) / 4);
+          min-width: calc((100% - 48px) / 3);
+          max-width: calc((100% - 48px) / 3);
           background: #fff;
           border-radius: 24px;
           border: 1px solid #e2e8f0;
