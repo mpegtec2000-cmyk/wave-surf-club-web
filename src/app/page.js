@@ -116,37 +116,39 @@ export default function LandingPage() {
         {/* PRODUCT CAROUSEL SECTION */}
         {productos.length > 0 && (
           <section className="product-carousel-section">
-            <div className="section-header">
-              <span className="section-subtitle">WAVE SHOP</span>
-              <h2 className="section-title">PRODUCTOS DESTACADOS</h2>
-            </div>
-            
-            <div className="product-carousel-container">
-              <div className="product-track" style={{ transform: `translateX(-${productSlide * 100}%)` }}>
-                {productos.map((prod) => (
-                  <div key={prod.id} className="product-slide-card">
-                    <div className="prod-img-box">
-                      {prod.imagen_url ? (
-                        <img src={prod.imagen_url} alt={prod.nombre} />
-                      ) : (
-                        <div className="prod-placeholder">{prod.categorias_tienda?.nombre}</div>
-                      )}
-                    </div>
-                    <div className="prod-info-box">
-                      <span className="prod-tag">{prod.categorias_tienda?.nombre}</span>
-                      <h4>{prod.nombre}</h4>
-                      <div className="prod-price">${(prod.precio_final || 0).toLocaleString('es-CL')}</div>
-                      <a href="/tienda" className="btn-shop">
-                        <ShoppingCart size={14} />
-                        Ver en Tienda
-                      </a>
-                    </div>
-                  </div>
-                ))}
+            <div className="container-premium">
+              <div className="section-header">
+                <span className="section-subtitle">WAVE SHOP</span>
+                <h2 className="section-title">PRODUCTOS DESTACADOS</h2>
               </div>
               
-              <button className="carousel-btn prev mini" onClick={prevProd}><ChevronLeft size={20} /></button>
-              <button className="carousel-btn next mini" onClick={nextProd}><ChevronRight size={20} /></button>
+              <div className="product-carousel-container">
+                <div className="product-track" style={{ transform: `translateX(-${productSlide * 100}%)` }}>
+                  {productos.map((prod) => (
+                    <div key={prod.id} className="product-slide-card">
+                      <div className="prod-img-box">
+                        {prod.imagen_url ? (
+                          <img src={prod.imagen_url} alt={prod.nombre} />
+                        ) : (
+                          <div className="prod-placeholder">{prod.categorias_tienda?.nombre}</div>
+                        )}
+                      </div>
+                      <div className="prod-info-box">
+                        <span className="prod-tag">{prod.categorias_tienda?.nombre}</span>
+                        <h4>{prod.nombre}</h4>
+                        <div className="prod-price">${(prod.precio_final || 0).toLocaleString('es-CL')}</div>
+                        <a href="/tienda" className="btn-shop">
+                          <ShoppingCart size={14} />
+                          Ver en Tienda
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <button className="carousel-btn prev mini" onClick={prevProd}><ChevronLeft size={20} /></button>
+                <button className="carousel-btn next mini" onClick={nextProd}><ChevronRight size={20} /></button>
+              </div>
             </div>
           </section>
         )}
@@ -591,27 +593,33 @@ export default function LandingPage() {
           flex: 1;
         }
 
-        /* PRODUCT CAROUSEL */
-        .product-carousel-section {
-          padding: 100px 20px;
-          background: #f8fafc;
-          overflow: hidden;
-        }
-
-        .product-carousel-container {
+        .container-premium {
           max-width: 1200px;
           margin: 0 auto;
           position: relative;
         }
 
+        .product-carousel-container {
+          position: relative;
+          width: 100%;
+          overflow: visible; /* Let cards be seen slightly if they overflow */
+          padding: 20px 0;
+        }
+
+        .product-track-wrapper {
+           overflow: hidden;
+           border-radius: 24px;
+        }
+
         .product-track {
           display: flex;
           gap: 24px;
-          transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .product-slide-card {
           min-width: calc((100% - 72px) / 4);
+          max-width: calc((100% - 72px) / 4);
           background: #fff;
           border-radius: 24px;
           border: 1px solid #e2e8f0;
@@ -619,6 +627,7 @@ export default function LandingPage() {
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
           display: flex;
           flex-direction: column;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
         .product-slide-card:hover {
@@ -695,12 +704,21 @@ export default function LandingPage() {
         }
 
         .carousel-btn.mini {
-          width: 40px;
-          height: 40px;
+          width: 44px;
+          height: 44px;
           background: #fff;
           color: #0f172a;
           border: 1px solid #e2e8f0;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+          top: 40%;
+        }
+
+        .carousel-btn.mini.prev { left: -22px; }
+        .carousel-btn.mini.next { right: -22px; }
+
+        @media (max-width: 1280px) {
+          .carousel-btn.mini.prev { left: 10px; }
+          .carousel-btn.mini.next { right: 10px; }
         }
 
         @media (max-width: 1024px) {
