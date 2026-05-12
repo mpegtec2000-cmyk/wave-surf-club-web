@@ -107,8 +107,15 @@ export default function LandingPage() {
                   <div className="sucursal-item">
                     <div className="s-line"></div>
                     <div className="s-content">
-                      <h4>SEDE REÑACA</h4>
-                      <p>Especialización técnica y entrenamientos de alta intensidad para niveles avanzados.</p>
+                      <h4>SEDE PICHILEMU</h4>
+                      <p>Capital mundial del surf, nuestra sede para sesiones de alto rendimiento y conexión profunda con el mar.</p>
+                    </div>
+                  </div>
+                  <div className="sucursal-item">
+                    <div className="s-line"></div>
+                    <div className="s-content">
+                      <h4>SEDE PUNTA DE PIEDRA</h4>
+                      <p>Un spot estratégico para clases personalizadas y una experiencia técnica de nivel superior.</p>
                     </div>
                   </div>
                 </div>
