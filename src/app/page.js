@@ -113,6 +113,25 @@ export default function LandingPage() {
         </section>
 
 
+        {/* DISCOUNT PROMO SECTION */}
+        <section className="promo-bar-section">
+          <div className="container-premium">
+            <div className="promo-bar">
+              <div className="promo-content">
+                <div className="promo-text">
+                  <span className="promo-icon">🎁</span>
+                  <div className="text-wrapper">
+                    <h3>DESCUENTOS ESPECIALES</h3>
+                    <p>Extranjeros y Estudiantes presentan sus documentos para acceder a tarifas preferenciales en todas nuestras clases.</p>
+                  </div>
+                </div>
+                <a href="/escuelas" className="promo-btn">
+                  VER TARIFAS
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* PRODUCT GRID SECTION */}
         {productos.length > 0 && (
@@ -164,16 +183,7 @@ export default function LandingPage() {
           </div>
         )}
 
-        {/* FLOATING DISCOUNT BADGE */}
-        <div className="floating-discount">
-          <div className="discount-badge">
-            <span className="gift-icon">🎁</span>
-            <div className="discount-text">
-              <strong>DESCUENTOS</strong>
-              <span>Extranjeros & Estudiantes</span>
-            </div>
-          </div>
-        </div>
+
 
       </main>
 
@@ -468,6 +478,79 @@ export default function LandingPage() {
 
         .carousel-btn.prev { left: 20px; }
         .carousel-btn.next { right: 20px; }
+
+        /* PROMO BAR SECTION */
+        .promo-bar-section {
+          padding: 40px 20px;
+          background: #fdfcfb;
+        }
+
+        .promo-bar {
+          background: linear-gradient(90deg, #0f172a, #1e293b);
+          border-radius: 24px;
+          padding: 40px 60px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+          border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .promo-content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 40px;
+        }
+
+        .promo-text {
+          display: flex;
+          align-items: center;
+          gap: 25px;
+        }
+
+        .promo-icon {
+          font-size: 40px;
+          filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
+        }
+
+        .text-wrapper h3 {
+          color: #fff;
+          font-size: 24px;
+          font-weight: 900;
+          margin: 0 0 5px 0;
+          letter-spacing: 1px;
+        }
+
+        .text-wrapper p {
+          color: #94a3b8;
+          font-size: 16px;
+          margin: 0;
+          font-weight: 400;
+        }
+
+        .promo-btn {
+          background: #0ea5e9;
+          color: #fff;
+          padding: 18px 35px;
+          border-radius: 14px;
+          font-weight: 900;
+          text-decoration: none;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          transition: all 0.3s;
+          white-space: nowrap;
+          border: 2px solid transparent;
+        }
+
+        .promo-btn:hover {
+          background: transparent;
+          border-color: #0ea5e9;
+          transform: scale(1.05);
+        }
+
+        @media (max-width: 900px) {
+          .promo-content { flex-direction: column; text-align: center; gap: 30px; }
+          .promo-text { flex-direction: column; gap: 15px; }
+          .promo-bar { padding: 40px 20px; }
+        }
 
         .carousel-dots {
           position: absolute;
