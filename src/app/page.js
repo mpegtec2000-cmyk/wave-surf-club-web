@@ -35,7 +35,7 @@ export default function LandingPage() {
   const fetchProductos = async () => {
     const { data } = await supabase
       .from('productos_tienda')
-      .select('*, categorias_tienda(nombre)')
+      .select('id, nombre, precio, imagen_url, slug, categorias_tienda(nombre)')
       .eq('activo', true)
       .limit(8);
     if (data) setProductos(data);

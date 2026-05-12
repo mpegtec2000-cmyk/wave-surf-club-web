@@ -43,23 +43,10 @@ export default function TiendaPage() {
     const hour = i + 8;
     return `${hour < 10 ? '0' : ''}${hour}:00`;
   });
-
   useEffect(() => {
     setMounted(true);
     fetchData();
     checkUser();
-
-    // Global error listener for debugging
-    const handleError = (e) => {
-      console.error("CRASH DETECTADO:", e);
-      // alert("Error en página: " + (e.message || "Error desconocido"));
-    };
-    window.addEventListener('error', handleError);
-    window.addEventListener('unhandledrejection', handleError);
-    return () => {
-      window.removeEventListener('error', handleError);
-      window.removeEventListener('unhandledrejection', handleError);
-    };
   }, []);
 
   const checkUser = async () => {
@@ -68,7 +55,7 @@ export default function TiendaPage() {
       if (user) {
         const { data: clienteData } = await supabase
           .from('clientes')
-          .select('*')
+          .select('id, nombre, apellido, rut, email, telefono')
           .eq('auth_user_id', user.id)
           .maybeSingle();
         
@@ -91,8 +78,8 @@ export default function TiendaPage() {
     setLoading(true);
     try {
       const [{ data: cats }, { data: prods }] = await Promise.all([
-        supabase.from('categorias_tienda').select('*').eq('activa', true).order('orden'),
-        supabase.from('productos_tienda').select('*, categorias_tienda(slug, nombre)').eq('activo', true)
+        supabase.from('categorias_tienda').select('id, nombre, slug, orden').eq('activa', true).order('orden'),
+        supabase.from('productos_tienda').select('id, nombre, descripcion, precio, imagen_url, stock, slug, activo, categorias_tienda(slug, nombre)').eq('activo', true)
       ]);
       setCategorias(cats || []);
       setProductos(prods || []);
