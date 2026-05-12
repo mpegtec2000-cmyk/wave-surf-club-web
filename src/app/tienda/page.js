@@ -292,7 +292,7 @@ export default function TiendaPage() {
                 </div>
                 <div className="h-item">
                   <Calendar size={16} />
-                  <div className="h-info"><span>CLASES</span><strong>10:00 - 12:00</strong></div>
+                  <div className="h-info"><span>CLASES</span><strong>08:00 - 20:00</strong></div>
                 </div>
                 <div className="h-item">
                   <User size={16} />
