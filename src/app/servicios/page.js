@@ -197,7 +197,21 @@ export default function ServiciosPage() {
       {/* SECCIÓN 1: CLASES DE SURF */}
       <section className="service-section">
         <div className="bg-wrapper">
-          <Image src="/FONDO_PREMIUM_V1.png" alt="Clases Surf" fill style={{ objectFit: 'cover' }} />
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            style={{ 
+              position: 'absolute', 
+              inset: 0, 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover' 
+            }}
+          >
+            <source src="/videos/tomiC0243.mp4" type="video/mp4" />
+          </video>
         </div>
         <div className="overlay" />
         <div className="content">

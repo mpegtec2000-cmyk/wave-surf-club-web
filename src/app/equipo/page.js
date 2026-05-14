@@ -44,13 +44,19 @@ export default function EquipoPage() {
 
       {/* HERO — Imagen de fondo FONDO EQUIPO.jpg, sin overlay, sin texto */}
       <section className="hero">
-        <Image
-          src="/FONDO_PREMIUM_V1.png"
-          alt="Equipo Wave Surf Club"
-          fill
-          priority
-          className="hero-img"
-        />
+        <div className="hero-video-wrapper">
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="hero-video"
+          >
+            <source src="/videos/tomiC0243.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="hero-video-overlay"></div>
+        </div>
       </section>
 
       {/* CONTENIDO */}
@@ -203,21 +209,31 @@ export default function EquipoPage() {
         .hero {
           position: relative;
           width: 100vw;
-          height: auto;
-          aspect-ratio: 1366 / 768; /* Respetar proporciones exactas de la imagen */
+          height: calc(100vh - var(--nav-height));
           overflow: hidden;
           display: flex;
           align-items: center;
           justify-content: center;
           background: #000;
         }
-        .hero-img {
+
+        .hero-video-wrapper {
           position: absolute;
           inset: 0;
+          z-index: 1;
+        }
+
+        .hero-video {
           width: 100%;
           height: 100%;
-          object-fit: contain; /* Asegurar que se vea completa si el ratio varía mínimamente */
-          object-position: center center;
+          object-fit: cover;
+        }
+
+        .hero-video-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);
+          z-index: 2;
         }
 
         /* --- INFO SECTION --- */

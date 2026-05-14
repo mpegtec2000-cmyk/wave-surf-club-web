@@ -29,7 +29,18 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
-      <div className="login-bg" />
+      <div className="login-bg-video-wrapper">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="login-video"
+        >
+          <source src="/videos/tomiC0243.mp4" type="video/mp4" />
+        </video>
+        <div className="login-video-overlay"></div>
+      </div>
 
       <div className="login-card">
         <div className="login-logo">

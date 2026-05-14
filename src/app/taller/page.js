@@ -31,13 +31,19 @@ export default function TallerPage() {
       
       {/* HERO SECTION - Full Height, No Title, No Overlay */}
       <section className="hero">
-        <Image 
-          src="/FONDO TALLERR.jpg" 
-          alt="Taller Wave Surf Club Workshop"
-          fill
-          priority
-          className="hero-img"
-        />
+        <div className="hero-video-wrapper">
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="hero-video"
+          >
+            <source src="/videos/tomiC0243.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="hero-video-overlay"></div>
+        </div>
       </section>
 
       {/* RESTORED CONTENT SECTION */}
@@ -173,14 +179,26 @@ export default function TallerPage() {
           display: flex;
           align-items: center;
           justify-content: center;
+          background: #000;
         }
-        .hero-img {
+
+        .hero-video-wrapper {
           position: absolute;
           inset: 0;
+          z-index: 1;
+        }
+
+        .hero-video {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center;
+        }
+
+        .hero-video-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);
+          z-index: 2;
         }
 
         /* --- INFO SECTION --- */
