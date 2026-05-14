@@ -37,7 +37,7 @@ export default function LoginPage() {
           playsInline 
           className="login-video"
         >
-          <source src="/videos/tomiC0243.mp4" type="video/mp4" />
+          <source src="https://oghqbrtfcmrmucqgehkc.supabase.co/storage/v1/object/public/videos/download.mp4" type="video/mp4" />
         </video>
         <div className="login-video-overlay"></div>
       </div>

@@ -210,7 +210,7 @@ export default function ServiciosPage() {
               objectFit: 'cover' 
             }}
           >
-            <source src="/videos/tomiC0243.mp4" type="video/mp4" />
+            <source src="https://oghqbrtfcmrmucqgehkc.supabase.co/storage/v1/object/public/videos/download.mp4" type="video/mp4" />
           </video>
         </div>
         <div className="overlay" />
