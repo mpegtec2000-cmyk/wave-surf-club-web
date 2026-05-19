@@ -20,15 +20,9 @@ export default function LandingPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [productos, setProductos] = useState([]);
   const [productSlide, setProductSlide] = useState(0);
-  const videoRef = useRef(null);
 
   useEffect(() => {
     fetchProductos();
-    
-    // Force video to play on load (helps bypass some browser restrictions)
-    if (videoRef.current) {
-      videoRef.current.play().catch(e => console.log("Autoplay prevented:", e));
-    }
     
     // Timer for image carousel
     const heroTimer = setInterval(() => {
@@ -57,19 +51,23 @@ export default function LandingPage() {
       <main className="landing-main">
         <div id="hero" className="hero-section">
 
-          <div className="hero-video-wrapper">
-            <video 
-              ref={videoRef}
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              className="hero-video"
-            >
-              <source src="/videos/fondo-wave.mp4?v=2" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
+          <div 
+            className="hero-video-wrapper"
+            dangerouslySetInnerHTML={{
+              __html: `
+                <video 
+                  autoplay 
+                  loop 
+                  muted 
+                  playsinline 
+                  preload="auto"
+                  class="hero-video"
+                >
+                  <source src="/videos/fondo-wave.mp4?v=2" type="video/mp4" />
+                </video>
+              `
+            }}
+          />
 
           <div className="hero-content">
             <p className="hero-description">
