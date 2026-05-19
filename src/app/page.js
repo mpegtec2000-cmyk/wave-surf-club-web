@@ -56,11 +56,12 @@ export default function LandingPage() {
             dangerouslySetInnerHTML={{
               __html: `
                 <video 
-                  autoplay 
-                  loop 
-                  muted 
-                  playsinline 
+                  autoplay="autoplay" 
+                  loop="loop" 
+                  muted="muted" 
+                  playsinline="playsinline" 
                   preload="auto"
+                  poster="/PORTADA.jpg"
                   class="hero-video"
                 >
                   <source src="/videos/fondo-wave.mp4?v=2" type="video/mp4" />
