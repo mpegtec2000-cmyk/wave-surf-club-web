@@ -66,8 +66,6 @@ export default function LandingPage() {
           </div>
 
           <div className="hero-content">
-            <span className="since">SINCE-2015</span>
-            <h1 className="main-brand-title">WAVE SURF CLUB</h1>
             <p className="hero-description">
               Todo partió como un sueño y se hizo realidad. Dedicados a la enseñanza del Skate y Surf en las mejores playas de Chile.
             </p>
