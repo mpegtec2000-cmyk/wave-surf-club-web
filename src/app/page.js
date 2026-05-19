@@ -64,7 +64,7 @@ export default function LandingPage() {
                   poster="/PORTADA.jpg"
                   class="hero-video"
                 >
-                  <source src="/videos/fondo-wave.mp4?v=2" type="video/mp4" />
+                  <source src="/videos/fondo-wave.mp4?v=3" type="video/mp4" />
                 </video>
               `
             }}
