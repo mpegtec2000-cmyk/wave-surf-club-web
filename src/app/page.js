@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import { useTranslation } from '@/lib/i18n-context';
@@ -20,9 +20,15 @@ export default function LandingPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [productos, setProductos] = useState([]);
   const [productSlide, setProductSlide] = useState(0);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     fetchProductos();
+    
+    // Force video to play on load (helps bypass some browser restrictions)
+    if (videoRef.current) {
+      videoRef.current.play().catch(e => console.log("Autoplay prevented:", e));
+    }
     
     // Timer for image carousel
     const heroTimer = setInterval(() => {
@@ -53,6 +59,7 @@ export default function LandingPage() {
 
           <div className="hero-video-wrapper">
             <video 
+              ref={videoRef}
               autoPlay 
               loop 
               muted 
