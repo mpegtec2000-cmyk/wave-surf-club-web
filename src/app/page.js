@@ -62,7 +62,6 @@ export default function LandingPage() {
               <source src="/videos/fondo-wave.mp4?v=2" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-            <div className="hero-video-overlay"></div>
           </div>
 
           <div className="hero-content">
