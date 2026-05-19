@@ -61,7 +61,6 @@ export default function LandingPage() {
                   muted="muted" 
                   playsinline="playsinline" 
                   preload="auto"
-                  poster="/PORTADA.jpg"
                   class="hero-video"
                 >
                   <source src="/videos/fondo-wave.mp4?v=3" type="video/mp4" />
