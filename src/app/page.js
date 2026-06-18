@@ -63,7 +63,7 @@ export default function LandingPage() {
                   preload="auto"
                   class="hero-video"
                 >
-                  <source src="/fondo-pag.mp4" type="video/mp4" />
+                  <source src="/fondo-inicio.mp4" type="video/mp4" />
                 </video>
               `
             }}
