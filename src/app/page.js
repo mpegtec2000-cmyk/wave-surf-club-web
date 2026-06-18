@@ -57,13 +57,13 @@ export default function LandingPage() {
               __html: `
                 <video 
                   autoplay="autoplay" 
-                  loop="loop" 
+                  loop 
                   muted="muted" 
                   playsinline="playsinline" 
                   preload="auto"
                   class="hero-video"
                 >
-                  <source src="/videos/fondo-wave.mp4?v=3" type="video/mp4" />
+                  <source src="/fondo%20pag.mp4" type="video/mp4" />
                 </video>
               `
             }}
@@ -131,7 +131,7 @@ export default function LandingPage() {
                 <div className="gif-premium-container">
                   {/* Contenedor optimizado para GIF de alta calidad */}
                   <img 
-                    src="/GIFS/promo-surf.gif" 
+                    src="/fondo-escuela.png" 
                     alt="Wave Surf Experience" 
                     className="promo-gif"
                     onError={(e) => { e.target.src = '/CARUSEL/1.jpg'; }}
