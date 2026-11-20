@@ -1,0 +1,98 @@
+.rc-link {
+          text-decoration: none;
+          display: block;
+          color: inherit;
+        }
+
+        .rc-card {
+          background: #ffffff;
+          border: 1px solid #e5e5e5;
+          border-radius: 18px;
+          overflow: hidden;
+          transition: transform 0.26s ease, border-color 0.26s ease, box-shadow 0.26s ease;
+        }
+
+        .rc-card:hover {
+          transform: translateY(-6px);
+          border-color: #000000;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .rc-media {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 4 / 5;
+          background: #f5f5f5;
+          overflow: hidden;
+        }
+
+        .rc-img {
+          transition: transform 0.5s ease;
+        }
+
+        .rc-card:hover .rc-img {
+          transform: scale(1.05);
+        }
+
+        .rc-badge {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          background: #000000;
+          color: #ffffff;
+          font-family: var(--font-mono), monospace;
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          padding: 4px 10px;
+          border-radius: 9999px;
+          z-index: 2;
+        }
+
+        .rc-body {
+          padding: 18px 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          border-top: 1px solid #f0f0f0;
+        }
+
+        .rc-status {
+          display: block;
+          font-family: var(--font-mono), monospace;
+          font-size: 9.5px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          color: #737373;
+          margin-bottom: 4px;
+        }
+
+        .rc-name {
+          font-family: var(--font-display), sans-serif;
+          font-size: 16px;
+          font-weight: 800;
+          color: #000000;
+          text-transform: uppercase;
+          margin: 0;
+          line-height: 1.15;
+        }
+
+        .rc-arrow {
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          border: 1px solid #e5e5e5;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #000000;
+          flex-shrink: 0;
+          transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        .rc-card:hover .rc-arrow {
+          background: #000000;
+          color: #ffffff;
+          border-color: #000000;
+        }

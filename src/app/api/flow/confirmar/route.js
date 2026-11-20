@@ -13,14 +13,36 @@ export async function POST(request) {
   const body = await request.formData();
   const token = body.get('token');
 
-  const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://oghqbrtfcmrmucqgehkc.supabase.co';
-  const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9naHFicnRmY21ybXVjcWdlaGtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzA2OTksImV4cCI6MjA5MTAwNjY5OX0.30PI9RTwqtxpKDSQdFhB9pExEV-gTnKDztm0mn8B1_A';
+  const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!SB_URL || !SB_KEY) {
+    return NextResponse.json({ error: 'Configuración de Supabase faltante en el servidor.' }, { status: 500 });
+  }
 
   const supabase = createClient(SB_URL, SB_KEY);
 
-  const FLOW_API_URL = process.env.FLOW_API_URL || 'https://www.flow.cl/api';
-  const FLOW_API_KEY = process.env.FLOW_API_KEY || '546AEF54-FFF9-4305-BC63-6E266EL45C7B';
-  const FLOW_SECRET_KEY = process.env.FLOW_SECRET_KEY || 'd3930102502eb35ae78e943b6b92ff9b95576717';
+  let FLOW_API_URL = process.env.FLOW_API_URL || 'https://www.flow.cl/api';
+  let FLOW_API_KEY = process.env.FLOW_API_KEY || '';
+  let FLOW_SECRET_KEY = process.env.FLOW_SECRET_KEY || '';
+
+  if (!FLOW_API_KEY || !FLOW_SECRET_KEY) {
+    const { data: cfg } = await supabase
+      .from('site_settings')
+      .select('key, value')
+      .in('key', ['flow_api_key', 'flow_secret_key', 'flow_url']);
+    if (cfg) {
+      cfg.forEach((item) => {
+        if (item.key === 'flow_api_key' && !FLOW_API_KEY) FLOW_API_KEY = item.value;
+        if (item.key === 'flow_secret_key' && !FLOW_SECRET_KEY) FLOW_SECRET_KEY = item.value;
+        if (item.key === 'flow_url' && item.value) FLOW_API_URL = item.value;
+      });
+    }
+  }
+
+  if (!FLOW_API_KEY || !FLOW_SECRET_KEY) {
+    return NextResponse.json({ error: 'Configuración de Flow faltante en el servidor.' }, { status: 500 });
+  }
 
   try {
     // Consultar estado del pago en Flow
@@ -123,10 +145,10 @@ export async function POST(request) {
           </table>
 
           ${reservasDetalle && reservasDetalle.length > 0 ? `
-            <div style="margin-top: 30px; border-top: 2px solid #38bdf8; padding-top: 20px;">
-              <h3 style="margin-bottom: 15px;">📅 Tus Reservas (Sede Concón)</h3>
+            <div style="margin-top: 30px; border-top: 2px solid #171717; padding-top: 20px;">
+              <h3 style="margin-bottom: 15px;">Tus Reservas (Sede Concón)</h3>
               ${reservasDetalle.map(r => `
-                <div style="background: #eff6ff; border-left: 4px solid #38bdf8; padding: 12px; margin-bottom: 10px;">
+                <div style="background: #f4f4f5; border-left: 4px solid #171717; padding: 12px; margin-bottom: 10px;">
                   <strong style="display: block; margin-bottom: 4px;">${r.productos_tienda?.nombre || 'Servicio'}</strong>
                   <span style="font-size: 14px; color: #4b5563;">
                     Fecha: ${r.fecha.split('-').reverse().join('-')}<br>

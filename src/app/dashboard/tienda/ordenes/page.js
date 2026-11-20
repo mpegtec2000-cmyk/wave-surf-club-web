@@ -2,7 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Search, Eye, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { 
+  Search, Eye, CheckCircle, XCircle, Clock, Calendar, 
+  ShoppingBag, Check, X, DollarSign, User, Phone, Mail, FileText
+} from 'lucide-react';
+
+const fmt = (n) => '$ ' + (n || 0).toLocaleString('es-CL');
 
 export default function TiendaOrdenesPage() {
   const [ordenes, setOrdenes] = useState([]);
@@ -40,218 +45,334 @@ export default function TiendaOrdenesPage() {
         .update({ estado: 'revisado' })
         .eq('id', id);
       fetchOrdenes();
+      if (viewingOrden && viewingOrden.id === id) {
+        setViewingOrden(prev => ({ ...prev, estado: 'revisado' }));
+      }
     } catch (e) {
       console.error(e);
     }
   };
 
-  const getStatusBadge = (estado) => {
-    switch(estado) {
-      case 'pagado': return <span className="badge bg-green"><CheckCircle size={12}/> Pagado</span>;
-      case 'revisado': return <span className="badge bg-blue"><CheckCircle size={12}/> Revisado</span>;
-      case 'fallido': return <span className="badge bg-red"><XCircle size={12}/> Fallido</span>;
-      default: return <span className="badge bg-yellow"><Clock size={12}/> Pendiente</span>;
-    }
-  };
-
   const filteredOrdenes = ordenes.filter(o => {
-    const matchesSearch = o.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      (o.nombre_cliente && o.nombre_cliente.toLowerCase().includes(searchTerm.toLowerCase()));
+    const q = searchTerm.toLowerCase();
+    const matchesSearch = (o.id || '').toLowerCase().includes(q) || 
+      (o.nombre_cliente && o.nombre_cliente.toLowerCase().includes(q)) ||
+      (o.rut_cliente && o.rut_cliente.toLowerCase().includes(q)) ||
+      (o.email_cliente && o.email_cliente.toLowerCase().includes(q));
     
     const matchesStatus = statusFilter === 'todos' || o.estado === statusFilter;
     
     return matchesSearch && matchesStatus;
   });
 
+  // KPIs
+  const totalRecaudado = ordenes.filter(o => o.estado === 'pagado' || o.estado === 'revisado').reduce((s, o) => s + (o.total || 0), 0);
+  const totalPagadas = ordenes.filter(o => o.estado === 'pagado').length;
+  const totalRevisadas = ordenes.filter(o => o.estado === 'revisado').length;
+  const totalPendientes = ordenes.filter(o => o.estado !== 'pagado' && o.estado !== 'revisado').length;
+
   return (
-    <div className="tienda-admin">
-      <div className="header-actions">
-        <h1>Órdenes de Tienda Online</h1>
-      </div>
-
-      <div className="toolbar">
-        <div className="search-box">
-          <Search size={16} />
-          <input 
-            type="text" 
-            placeholder="Buscar por ID o cliente..." 
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
+    <div className="space-y-6">
+      
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            E-Commerce &amp; Pasarela Flow
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Órdenes de Tienda Online
+          </h1>
         </div>
 
-        <div className="status-tabs">
-          <button className={statusFilter === 'todos' ? 'active' : ''} onClick={() => setStatusFilter('todos')}>TODOS</button>
-          <button className={statusFilter === 'pendiente' ? 'active' : ''} onClick={() => setStatusFilter('pendiente')}>PENDIENTES</button>
-          <button className={statusFilter === 'pagado' ? 'active' : ''} onClick={() => setStatusFilter('pagado')}>PAGADOS</button>
-          <button className={statusFilter === 'revisado' ? 'active' : ''} onClick={() => setStatusFilter('revisado')}>REVISADOS</button>
+        <button
+          onClick={fetchOrdenes}
+          className="h-9 px-4 rounded-xl border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700 transition-colors self-start sm:self-auto"
+        >
+          Actualizar Registros
+        </button>
+      </div>
+
+      {/* ── Bento Metrics KPI Grid ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Total Recaudado
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-600">
+              <DollarSign size={15} />
+            </div>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight font-mono">
+            {fmt(totalRecaudado)}
+          </div>
+          <div className="text-[10px] font-mono text-neutral-400 mt-1 font-bold">Órdenes confirmadas</div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Pagadas (Nuevas)
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-800">
+              <ShoppingBag size={15} />
+            </div>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-neutral-800 tracking-tight font-mono">
+            {totalPagadas}
+          </div>
+          <div className="text-[10px] font-mono text-neutral-700 mt-1 font-bold">Por verificar en caja</div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Revisadas
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-neutral-100 border border-neutral-200/60 flex items-center justify-center text-neutral-700">
+              <CheckCircle size={15} />
+            </div>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-neutral-900 tracking-tight font-mono">
+            {totalRevisadas}
+          </div>
+          <div className="text-[10px] font-mono text-neutral-400 mt-1 font-bold">Verificadas y procesadas</div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Pendientes / Otras
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/60 flex items-center justify-center text-amber-600">
+              <Clock size={15} />
+            </div>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-amber-600 tracking-tight font-mono">
+            {totalPendientes}
+          </div>
+          <div className="text-[10px] font-mono text-amber-700 mt-1 font-bold">Sin comprobante definitivo</div>
         </div>
       </div>
 
-      <div className="table-container">
-        {loading ? (
-          <div className="loading">Cargando órdenes...</div>
-        ) : (
-          <table className="erp-table">
-            <thead>
+      {/* ── Table Card ── */}
+      <div className="rounded-2xl bg-white border border-neutral-200/80 shadow-2xs overflow-hidden">
+        
+        {/* Toolbar */}
+        <div className="p-4 sm:p-5 border-b border-neutral-200/70 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white">
+          <div className="relative flex-1 max-w-md">
+            <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+            <input
+              type="text"
+              placeholder="Buscar por orden, cliente, RUT o email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-9 pl-9 pr-4 rounded-xl border border-neutral-200 bg-neutral-50/60 text-xs text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-neutral-900 outline-none transition-all"
+            />
+          </div>
+
+          <div className="inline-flex p-1 rounded-xl bg-neutral-100 border border-neutral-200/60 gap-0.5">
+            {[
+              { id: 'todos', label: 'Todas' },
+              { id: 'pagado', label: 'Pagadas' },
+              { id: 'revisado', label: 'Revisadas' },
+              { id: 'pendiente', label: 'Pendientes' },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setStatusFilter(tab.id)}
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                  statusFilter === tab.id ? 'bg-white text-neutral-900 shadow-2xs' : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Table Content */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-neutral-50/80 border-b border-neutral-200/70 text-neutral-500 uppercase font-mono text-[11px] font-bold tracking-wider">
               <tr>
-                <th>ID Orden</th>
-                <th>Fecha</th>
-                <th>Reserva (Día/Hora)</th>
-                <th>Cliente</th>
-                <th>Monto Total</th>
-                <th>Estado</th>
-                <th>Acciones</th>
+                <th className="py-3 px-4">Orden ID</th>
+                <th className="py-3 px-4">Cliente / Contacto</th>
+                <th className="py-3 px-4">Fecha y Hora</th>
+                <th className="py-3 px-4">Total</th>
+                <th className="py-3 px-4">Estado</th>
+                <th className="py-3 px-4 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              {filteredOrdenes.map(o => {
-                // Find first item with reservation
-                const firstReserva = o.productos?.find(p => p.reserva)?.reserva;
-                
-                return (
-                  <tr key={o.id}>
-                    <td><strong>{o.id.split('-')[0].toUpperCase()}</strong></td>
-                    <td>{new Date(o.created_at).toLocaleString('es-CL')}</td>
-                    <td>
-                      {firstReserva ? (
-                        <div className="reserva-tag">
-                          <span className="reserva-date">📅 {firstReserva.fecha.split('-').reverse().join('-')}</span>
-                          <span className="reserva-time">⏰ {firstReserva.hora_inicio}</span>
-                        </div>
+            <tbody className="divide-y divide-neutral-100 text-neutral-800">
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-neutral-400 font-mono">
+                    Cargando órdenes de la base de datos...
+                  </td>
+                </tr>
+              ) : filteredOrdenes.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-neutral-400">
+                    <ShoppingBag size={32} className="mx-auto mb-2 text-neutral-300" />
+                    <div className="font-bold text-sm text-neutral-600">No se encontraron órdenes</div>
+                    <div className="text-xs text-neutral-400 mt-0.5">No hay ventas que coincidan con los criterios de búsqueda</div>
+                  </td>
+                </tr>
+              ) : (
+                filteredOrdenes.map(o => (
+                  <tr key={o.id} className="hover:bg-neutral-50/60 transition-colors">
+                    <td className="py-3.5 px-4 font-mono font-bold text-neutral-900">
+                      #{o.id.slice(0, 8)}...
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <div className="font-bold text-neutral-900">{o.nombre_cliente || 'Cliente Web'}</div>
+                      <div className="text-[11px] font-mono text-neutral-400">{o.email_cliente || o.rut_cliente || '—'}</div>
+                    </td>
+                    <td className="py-3.5 px-4 font-mono text-neutral-600">
+                      {new Date(o.created_at).toLocaleString('es-CL', { dateStyle: 'short', timeStyle: 'short' })}
+                    </td>
+                    <td className="py-3.5 px-4 font-mono font-black text-neutral-900 text-sm">
+                      {fmt(o.total)}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      {o.estado === 'pagado' ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                          Pagado
+                        </span>
+                      ) : o.estado === 'revisado' ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold bg-neutral-100 text-neutral-700 border border-neutral-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-neutral-1000"></span>
+                          Revisado
+                        </span>
                       ) : (
-                        <span className="text-gray">—</span>
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                          {o.estado || 'Pendiente'}
+                        </span>
                       )}
                     </td>
-                    <td>
-                      <div className="flex flex-col">
-                        <span>{o.nombre_cliente}</span>
-                        <span className="text-sm text-gray">{o.email_cliente}</span>
+                    <td className="py-3.5 px-4 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => setViewingOrden(o)}
+                          className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition-colors"
+                          title="Ver detalle"
+                        >
+                          <Eye size={14} />
+                        </button>
+                        {o.estado === 'pagado' && (
+                          <button
+                            onClick={() => markAsReviewed(o.id)}
+                            className="p-1.5 rounded-lg text-neutral-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
+                            title="Marcar como revisado"
+                          >
+                            <Check size={14} />
+                          </button>
+                        )}
                       </div>
                     </td>
-                    <td className="font-bold">${o.total.toLocaleString('es-CL')}</td>
-                    <td>{getStatusBadge(o.estado)}</td>
-                    <td className="actions-cell">
-                      <button onClick={() => setViewingOrden(o)} className="action-btn view" title="Ver detalles"><Eye size={16} /></button>
-                      {o.estado !== 'revisado' && (
-                        <button onClick={() => markAsReviewed(o.id)} className="action-btn check" title="Marcar como revisado"><CheckCircle size={16} /></button>
-                      )}
-                    </td>
                   </tr>
-                );
-              })}
+                ))
+              )}
             </tbody>
           </table>
-        )}
+        </div>
+
+        <div className="p-4 border-t border-neutral-200/70 bg-neutral-50/50 flex items-center justify-between text-xs font-mono text-neutral-500">
+          <div>
+            Mostrando <strong>{filteredOrdenes.length}</strong> de <strong>{ordenes.length}</strong> órdenes totales
+          </div>
+        </div>
+
       </div>
 
-      {/* MODAL VIEW */}
+      {/* ── Modal Detalle Orden ── */}
       {viewingOrden && (
-        <div className="modal-overlay" onClick={() => setViewingOrden(null)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Detalles de la Orden {viewingOrden.id.split('-')[0].toUpperCase()}</h2>
-            </div>
-            
-            <div className="modal-body">
-              <div className="info-grid">
-                <div className="info-card">
-                  <h3>Cliente</h3>
-                  <p><strong>Nombre:</strong> {viewingOrden.nombre_cliente}</p>
-                  <p><strong>RUT:</strong> {viewingOrden.rut_cliente}</p>
-                  <p><strong>Email:</strong> {viewingOrden.email_cliente}</p>
-                  <p><strong>Teléfono:</strong> {viewingOrden.telefono_cliente}</p>
-                </div>
-                <div className="info-card">
-                  <h3>Pago (Flow)</h3>
-                  <p><strong>Estado:</strong> {getStatusBadge(viewingOrden.estado)}</p>
-                  <p><strong>Subtotal:</strong> ${viewingOrden.subtotal.toLocaleString('es-CL')}</p>
-                  <p><strong>Comisión:</strong> ${viewingOrden.comision_flow.toLocaleString('es-CL')}</p>
-                  <p><strong>Total Pagado:</strong> <span className="text-blue font-bold">${viewingOrden.total.toLocaleString('es-CL')}</span></p>
-                  <p><strong>Flow Order ID:</strong> {viewingOrden.flow_order_id || 'N/A'}</p>
-                </div>
+        <div className="fixed inset-0 z-50 bg-neutral-950/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-xl bg-white rounded-2xl border border-neutral-200 shadow-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+              <div>
+                <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">Detalle de Venta</div>
+                <h3 className="text-base font-black text-neutral-900 mt-0.5">
+                  Orden #{viewingOrden.id}
+                </h3>
               </div>
-
-              <h3>Productos ({viewingOrden.productos?.length || 0})</h3>
-              <div className="productos-list">
-                {viewingOrden.productos?.map((p, i) => (
-                  <div key={i} className="prod-item">
-                    <div className="prod-name">{p.nombre}</div>
-                    <div className="prod-price">${p.precio_final.toLocaleString('es-CL')}</div>
-                  </div>
-                ))}
-              </div>
+              <button
+                onClick={() => setViewingOrden(null)}
+                className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100"
+              >
+                <X size={16} />
+              </button>
             </div>
 
-            <div className="modal-actions">
-              <button className="btn-close" onClick={() => setViewingOrden(null)}>Cerrar</button>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200/70 space-y-2">
+                <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+                  Datos del Cliente
+                </div>
+                <div className="text-xs font-bold text-neutral-900">{viewingOrden.nombre_cliente}</div>
+                <div className="text-xs font-mono text-neutral-600">RUT: {viewingOrden.rut_cliente || 'Sin RUT'}</div>
+                <div className="text-xs font-mono text-neutral-600">Email: {viewingOrden.email_cliente || 'Sin Email'}</div>
+                <div className="text-xs font-mono text-neutral-600">Tel: {viewingOrden.telefono_cliente || 'Sin Teléfono'}</div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200/70 space-y-2">
+                <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+                  Estado &amp; Cobro
+                </div>
+                <div className="text-xl font-black text-neutral-900 font-mono">{fmt(viewingOrden.total)}</div>
+                <div className="text-xs text-neutral-500">
+                  Estado: <strong className="uppercase text-neutral-800">{viewingOrden.estado}</strong>
+                </div>
+                <div className="text-xs font-mono text-neutral-500">
+                  Fecha: {new Date(viewingOrden.created_at).toLocaleString('es-CL')}
+                </div>
+              </div>
+            </div>
+
+            {viewingOrden.items && viewingOrden.items.length > 0 && (
+              <div>
+                <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-2">
+                  Ítems Incluidos
+                </div>
+                <div className="rounded-xl border border-neutral-200 divide-y divide-neutral-100 overflow-hidden">
+                  {viewingOrden.items.map((it, idx) => (
+                    <div key={idx} className="p-3 flex items-center justify-between text-xs">
+                      <div>
+                        <div className="font-bold text-neutral-900">{it.nombre}</div>
+                        <div className="text-[11px] text-neutral-500">Cantidad: {it.cantidad}</div>
+                      </div>
+                      <div className="font-mono font-bold text-neutral-900">{fmt(it.precio * it.cantidad)}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between pt-3 border-t border-neutral-100">
+              {viewingOrden.estado === 'pagado' ? (
+                <button
+                  onClick={() => markAsReviewed(viewingOrden.id)}
+                  className="h-10 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-1.5"
+                >
+                  <Check size={14} /> Marcar como Revisado
+                </button>
+              ) : <div />}
+
+              <button
+                onClick={() => setViewingOrden(null)}
+                className="h-10 px-4 rounded-xl border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700"
+              >
+                Cerrar
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      <style jsx>{`
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header-actions h1 { font-size: 20px; margin: 0; }
-        .toolbar { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-        .search-box { display: flex; align-items: center; gap: 10px; background: #1a2236; padding: 10px 15px; border-radius: 8px; max-width: 300px; flex: 1; }
-        .search-box input { background: transparent; border: none; color: #fff; outline: none; width: 100%; }
-        
-        .status-tabs { display: flex; background: #0f1623; padding: 4px; border-radius: 8px; border: 1px solid #2a3441; }
-        .status-tabs button { background: transparent; border: none; color: #64748b; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-        .status-tabs button:hover { color: #fff; }
-        .status-tabs button.active { background: #38bdf8; color: #000; }
-        .status-tabs button.active:hover { color: #000; }
-
-        .table-container { background: #1a2236; border-radius: 12px; overflow: hidden; }
-        .reserva-tag { display: flex; flex-direction: column; gap: 2px; background: rgba(56,189,248,0.1); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(56,189,248,0.2); width: fit-content; }
-        .reserva-date { font-size: 11px; font-weight: 800; color: #38bdf8; }
-        .reserva-time { font-size: 11px; font-weight: 800; color: #fff; }
-        .erp-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .erp-table th { background: #0f1623; padding: 15px; font-size: 12px; text-transform: uppercase; color: #888; }
-        .erp-table td { padding: 15px; border-bottom: 1px solid #2a3441; font-size: 14px; vertical-align: middle; }
-        
-        .text-sm { font-size: 12px; }
-        .text-gray { color: #888; }
-        .text-blue { color: #38bdf8; }
-        .font-bold { font-weight: bold; }
-        .flex { display: flex; }
-        .flex-col { flex-direction: column; }
-
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px; }
-        .bg-green { background: rgba(16,185,129,0.2); color: #10b981; }
-        .bg-blue { background: rgba(56,189,248,0.2); color: #38bdf8; }
-        .bg-red { background: rgba(239,68,68,0.2); color: #ef4444; }
-        .bg-yellow { background: rgba(245,158,11,0.2); color: #f59e0b; }
-
-        .actions-cell { display: flex; gap: 8px; }
-        .action-btn { background: #0f1623; border: 1px solid #2a3441; cursor: pointer; padding: 6px; border-radius: 6px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-        .action-btn.view { color: #38bdf8; }
-        .action-btn.view:hover { background: #38bdf8; color: #000; border-color: #38bdf8; }
-        .action-btn.check { color: #10b981; }
-        .action-btn.check:hover { background: #10b981; color: #fff; border-color: #10b981; }
-
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        .modal-content { background: #1a2236; width: 90%; max-width: 600px; border-radius: 12px; padding: 30px; max-height: 90vh; overflow-y: auto; }
-        
-        .modal-header { border-bottom: 1px solid #2a3441; padding-bottom: 15px; margin-bottom: 15px; }
-        .modal-header h2 { margin: 0; font-size: 18px; }
-
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .info-card { background: #0f1623; padding: 15px; border-radius: 8px; border: 1px solid #2a3441; }
-        .info-card h3 { margin: 0 0 10px 0; font-size: 13px; color: #888; text-transform: uppercase; }
-        .info-card p { margin: 0 0 5px 0; font-size: 13px; }
-
-        .productos-list { background: #0f1623; border: 1px solid #2a3441; border-radius: 8px; overflow: hidden; }
-        .prod-item { display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #2a3441; }
-        .prod-item:last-child { border-bottom: none; }
-        .prod-name { font-size: 14px; font-weight: 600; }
-        .prod-price { font-size: 14px; font-weight: 800; color: #38bdf8; }
-
-        .modal-actions { display: flex; justify-content: flex-end; margin-top: 20px; }
-        .btn-close { background: #334155; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-close:hover { background: #475569; }
-      `}</style>
     </div>
   );
 }

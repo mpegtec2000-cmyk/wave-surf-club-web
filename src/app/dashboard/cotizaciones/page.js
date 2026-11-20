@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { getEventQuotes, updateQuoteStatus, deleteEventQuote, getBranches } from '@/lib/data';
-import { ClipboardList, User, MapPin, Search, Calendar, Users, Mail, Phone, CheckCircle2, Clock, Trash2 } from 'lucide-react';
+import { 
+  ClipboardList, User, MapPin, Search, Calendar, Users, 
+  Mail, Phone, CheckCircle2, Clock, Trash2, Building2, Sparkles, Filter
+} from 'lucide-react';
 import Swal from 'sweetalert2';
 
 export default function CotizacionesPage() {
@@ -68,7 +71,6 @@ export default function CotizacionesPage() {
     const currentStatus = (quote.status || 'pending').toLowerCase();
     const nextStatus = currentStatus === 'pending' ? 'lista' : 'pending';
     
-    // Si pasamos a LISTA, mostramos alerta diferente
     const result = await Swal.fire({
       title: '¿Confirmar como FINALIZADA?',
       text: `La cotización pasará a estado LISTA (Verde)`,
@@ -76,7 +78,7 @@ export default function CotizacionesPage() {
       showCancelButton: true,
       confirmButtonText: 'Sí, finalizar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#22c55e'
+      confirmButtonColor: '#171717'
     });
 
     if (result.isConfirmed) {
@@ -87,9 +89,9 @@ export default function CotizacionesPage() {
         setQuotes(quotes.map(q => q.id === quote.id ? { ...q, status: nextStatus } : q));
         Swal.fire({
           title: '¡Tarea Finalizada!',
-          text: 'Ya puedes borrarla si lo deseas.',
+          text: 'La cotización quedó marcada como lista.',
           icon: 'success',
-          timer: 2000,
+          timer: 1800,
           showConfirmButton: false
         });
       }
@@ -98,11 +100,11 @@ export default function CotizacionesPage() {
 
   const handleDelete = async (quote) => {
     const result = await Swal.fire({
-      title: '¿Eliminar Cotización?',
-      text: "Esta acción no se puede deshacer y el registro desaparecerá de la base de datos.",
+      title: '¿Eliminar cotización?',
+      text: `Se borrará la solicitud de "${quote.content?.datos?.nombre || 'Cliente'}"`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar permanentemente',
+      confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#ef4444'
     });
@@ -110,21 +112,18 @@ export default function CotizacionesPage() {
     if (result.isConfirmed) {
       const { error } = await deleteEventQuote(quote.id);
       if (error) {
-        Swal.fire('Error', 'No se pudo eliminar el registro.', 'error');
+        Swal.fire('Error', 'No se pudo eliminar la cotización.', 'error');
       } else {
         setQuotes(quotes.filter(q => q.id !== quote.id));
-        Swal.fire('Eliminado', 'La cotización ha sido borrada.', 'success');
+        Swal.fire({
+          title: 'Eliminada',
+          text: 'Registro eliminado con éxito.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
       }
     }
-  };
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return 'N/A';
-    return new Date(dateStr).toLocaleDateString('es-CL', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
   };
 
   // KPI calculations
@@ -133,63 +132,100 @@ export default function CotizacionesPage() {
   const totalEmpresa = quotes.filter(q => q.content?.datos?.tipo_evento === 'PASEO DE EMPRESA').length;
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto' }}>
-      
-      {/* ── Header ── */}
-      <header style={{ marginBottom: '40px', borderBottom: '2px solid var(--border-subtle)', paddingBottom: '24px', display: 'flex', gap: '20px', alignItems: 'center' }}>
-        <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'linear-gradient(135deg, #38bdf8, #0284c7)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 15px -3px rgba(56, 189, 248, 0.3)' }}>
-          <ClipboardList size={32} color="#fff" />
-        </div>
+    <div className="space-y-6">
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 style={{ fontSize: '36px', fontWeight: 950, color: 'var(--accent-primary)', margin: 0, letterSpacing: '-0.5px' }}>
-            GESTIÓN DE COTIZACIONES
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            Comercial &amp; Eventos Corporativos
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Gestión de Cotizaciones y Solicitudes
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '15px', marginTop: '6px', fontWeight: 500 }}>
-            Administra las solicitudes de eventos, paseos de curso y empresas.
-          </p>
-        </div>
-      </header>
-
-      {/* ── KPIs ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24, marginBottom: 32 }}>
-        <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', padding: 24, border: '1.5px solid var(--border-subtle)', borderLeft: '6px solid var(--color-warning)' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase' }}>Pendientes de Revisión</div>
-          <div style={{ fontSize: 36, fontWeight: 900, color: 'var(--color-warning)', marginTop: 8 }}>{totalPendientes}</div>
-        </div>
-        <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', padding: 24, border: '1.5px solid var(--border-subtle)', borderLeft: '6px solid var(--color-success)' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase' }}>Cotizaciones Listas</div>
-          <div style={{ fontSize: 36, fontWeight: 900, color: 'var(--color-success)', marginTop: 8 }}>{totalListas}</div>
-        </div>
-        <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', padding: 24, border: '1.5px solid var(--border-subtle)', borderLeft: '6px solid #8b5cf6' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase' }}>Paseos de Empresa</div>
-          <div style={{ fontSize: 36, fontWeight: 900, color: '#8b5cf6', marginTop: 8 }}>{totalEmpresa}</div>
-        </div>
-        <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', padding: 24, border: '1.5px solid var(--border-subtle)', borderLeft: '6px solid #38bdf8' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase' }}>Total Solicitudes</div>
-          <div style={{ fontSize: 36, fontWeight: 900, color: '#38bdf8', marginTop: 8 }}>{quotes.length}</div>
         </div>
       </div>
 
-      {/* ── Filters ── */}
-      <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap' }}>
-        <div style={{ position: 'relative', flex: 1, minWidth: 300 }}>
-          <Search size={20} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-          <input
-            type="text"
-            className="form-input"
-            style={{ paddingLeft: 48, height: 50, fontSize: 15 }}
-            placeholder="Buscar por RUT, Nombre o Email..."
+      {/* ── KPIs Bento Grid ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Pendientes de Revisión
+            </div>
+            <div className="text-2xl font-black text-amber-600 tracking-tight mt-1">
+              {totalPendientes}
+            </div>
+            <div className="text-[10px] font-mono text-neutral-400 mt-0.5 font-bold">Por responder al cliente</div>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-600 flex items-center justify-center shrink-0">
+            <Clock size={18} />
+          </div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Cotizaciones Listas
+            </div>
+            <div className="text-2xl font-black text-emerald-600 tracking-tight mt-1">
+              {totalListas}
+            </div>
+            <div className="text-[10px] font-mono text-neutral-400 mt-0.5 font-bold">Respondidas / Cerradas</div>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/60 text-emerald-600 flex items-center justify-center shrink-0">
+            <CheckCircle2 size={18} />
+          </div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Paseos de Empresa
+            </div>
+            <div className="text-2xl font-black text-neutral-900 tracking-tight mt-1">
+              {totalEmpresa}
+            </div>
+            <div className="text-[10px] font-mono text-neutral-400 mt-0.5 font-bold">Eventos corporativos</div>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-neutral-100 border border-neutral-200/60 text-neutral-700 flex items-center justify-center shrink-0">
+            <Users size={18} />
+          </div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Total Solicitudes
+            </div>
+            <div className="text-2xl font-black text-neutral-900 tracking-tight mt-1">
+              {quotes.length}
+            </div>
+            <div className="text-[10px] font-mono text-neutral-400 mt-0.5 font-bold">Historial acumulado</div>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-neutral-100 border border-neutral-200/60 text-neutral-700 flex items-center justify-center shrink-0">
+            <ClipboardList size={18} />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Toolbar & Filters ── */}
+      <div className="bg-white p-3.5 rounded-2xl border border-neutral-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[240px] max-w-sm">
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+          <input 
+            type="text" 
+            placeholder="Buscar por RUT, Nombre o Email..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full h-9 pl-9 pr-3 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs text-neutral-800 placeholder-neutral-400 focus:bg-white focus:border-neutral-900 outline-none transition-all"
           />
         </div>
-        
-        <div style={{ display: 'flex', gap: 8 }}>
+
+        <div className="flex items-center gap-2">
           <select 
-            className="form-input" 
-            style={{ width: 200, height: 50, fontWeight: 600 }}
             value={filterBranch}
             onChange={(e) => setFilterBranch(e.target.value)}
+            className="h-8 px-3 rounded-lg border border-neutral-200 bg-neutral-50 text-xs font-semibold text-neutral-700 outline-none"
           >
             <option value="todas">Todas las Sedes</option>
             <option value="Concón">Concón</option>
@@ -197,162 +233,124 @@ export default function CotizacionesPage() {
             <option value="Pichilemu">Pichilemu</option>
           </select>
 
-          <div style={{ display: 'flex', background: 'var(--bg-secondary)', padding: '4px', borderRadius: '12px', border: '1.5px solid var(--border-subtle)' }}>
+          <div className="flex items-center gap-1">
             <button 
-              className={`btn-filter ${filterStatus === 'todos' ? 'active' : ''}`} 
               onClick={() => setFilterStatus('todos')}
-              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: filterStatus === 'todos' ? '#38bdf8' : 'transparent', color: filterStatus === 'todos' ? '#fff' : 'var(--text-muted)', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+              className={`h-8 px-3 rounded-lg text-xs font-bold transition-all ${
+                filterStatus === 'todos'
+                  ? 'bg-neutral-900 text-white shadow-xs'
+                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+              }`}
             >
-              TODOS
+              Todos ({quotes.length})
             </button>
             <button 
-              className={`btn-filter ${filterStatus === 'pending' ? 'active' : ''}`} 
               onClick={() => setFilterStatus('pending')}
-              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: filterStatus === 'pending' ? 'var(--color-warning)' : 'transparent', color: filterStatus === 'pending' ? '#fff' : 'var(--text-muted)', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+              className={`h-8 px-3 rounded-lg text-xs font-bold transition-all ${
+                filterStatus === 'pending'
+                  ? 'bg-neutral-900 text-white shadow-xs'
+                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+              }`}
             >
-              PENDIENTE
+              Pendiente ({totalPendientes})
             </button>
             <button 
-              className={`btn-filter ${filterStatus === 'lista' ? 'active' : ''}`} 
               onClick={() => setFilterStatus('lista')}
-              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: filterStatus === 'lista' ? 'var(--color-success)' : 'transparent', color: filterStatus === 'lista' ? '#fff' : 'var(--text-muted)', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+              className={`h-8 px-3 rounded-lg text-xs font-bold transition-all ${
+                filterStatus === 'lista'
+                  ? 'bg-neutral-900 text-white shadow-xs'
+                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+              }`}
             >
-              LISTA
+              Lista ({totalListas})
             </button>
           </div>
         </div>
       </div>
 
       {/* ── Table ── */}
-      <div className="data-table-wrap">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th style={{ width: '40px' }}></th>
-              <th>Cliente / Contacto</th>
-              <th>Sede / Evento</th>
-              <th style={{ textAlign: 'center' }}>Participantes</th>
-              <th style={{ textAlign: 'center' }}>Fecha Evento</th>
-              <th style={{ textAlign: 'center' }}>Fecha Solicitud</th>
-              <th style={{ textAlign: 'center' }}>Estado</th>
-              <th style={{ textAlign: 'right' }}>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan="7" style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>Cargando cotizaciones...</td></tr>
-            ) : filteredQuotes.length === 0 ? (
-              <tr><td colSpan="7" style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>No se encontraron solicitudes.</td></tr>
-            ) : (
-              filteredQuotes.map(q => {
-                const d = q.content?.datos || {};
-                const currentStatus = (q.status || 'pending').toLowerCase();
-                
-                return (
-                  <tr key={q.id}>
-                    <td style={{ textAlign: 'center' }}>
-                      {currentStatus === 'lista' ? (
-                        <button 
-                          onClick={() => handleDelete(q)}
-                          style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '8px' }}
-                          title="Eliminar Registro"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      ) : (
-                        <div style={{ width: '34px' }} />
-                      )}
-                    </td>
-                    <td>
-                      <div style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: 14 }}>{d.nombre}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <User size={12} /> {d.rut}
-                      </div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <Mail size={12} /> {d.email || 'N/A'}
-                      </div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <Phone size={12} /> {d.telefono}
-                      </div>
-                    </td>
-                    <td>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f1f5f9', color: '#475569', padding: '4px 10px', borderRadius: 8, fontSize: 11, fontWeight: 800 }}>
-                        <MapPin size={12} /> {d.sede?.toUpperCase()}
-                      </div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', marginTop: 8 }}>
-                        {d.tipo_evento}
-                      </div>
-                      <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4, maxWidth: '250px', lineBreak: 'anywhere' }}>
-                        "{d.mensaje_cliente}"
-                      </div>
-                    </td>
-                    <td style={{ textAlign: 'center' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                        <div style={{ fontSize: 14, fontWeight: 900, color: '#1e293b' }}>
-                          {d.adultos + d.niños} <span style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8' }}>TOTAL</span>
-                        </div>
-                        <div style={{ fontSize: 10, color: '#64748b', fontWeight: 700 }}>
-                          {d.adultos} ADU / {d.niños} NIÑ
-                        </div>
-                      </div>
-                    </td>
-                    <td style={{ textAlign: 'center', fontWeight: 800, color: 'var(--text-primary)' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                        <Calendar size={16} color="#38bdf8" />
-                        {formatDate(d.fecha_deseada)}
-                      </div>
-                    </td>
-                    <td style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)' }}>
-                      {formatDate(q.created_at)}
-                    </td>
-                    <td style={{ textAlign: 'center' }}>
-                      {currentStatus === 'lista' ? (
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(34, 197, 94, 0.1)', color: '#16a34a', padding: '6px 12px', borderRadius: '100px', fontSize: '11px', fontWeight: 900 }}>
-                          <CheckCircle2 size={14} /> LISTA
-                        </div>
-                      ) : (
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(245, 158, 11, 0.1)', color: '#d97706', padding: '6px 12px', borderRadius: '100px', fontSize: '11px', fontWeight: 900 }}>
-                          <Clock size={14} /> PENDIENTE
-                        </div>
-                      )}
-                    </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <button 
-                        onClick={() => handleToggleStatus(q)}
-                        style={{ 
-                          padding: '8px 16px', 
-                          borderRadius: '8px', 
-                          border: 'none', 
-                          background: currentStatus === 'lista' ? '#f1f5f9' : '#38bdf8',
-                          color: currentStatus === 'lista' ? '#475569' : '#fff',
-                          fontSize: '11px', 
-                          fontWeight: 950, 
-                          cursor: 'pointer',
-                          boxShadow: currentStatus === 'lista' ? 'none' : '0 4px 6px -1px rgba(56, 189, 248, 0.2)'
-                        }}
-                      >
-                        {currentStatus === 'lista' ? 'PENDIENTE' : 'MARCAR LISTA'}
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+      <div className="rounded-2xl bg-white border border-neutral-200/80 shadow-2xs overflow-hidden">
+        {loading ? (
+          <div className="p-16 text-center text-xs font-mono text-neutral-400">
+            Cargando solicitudes de eventos desde Supabase...
+          </div>
+        ) : filteredQuotes.length === 0 ? (
+          <div className="p-16 text-center flex flex-col items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-neutral-100 border border-neutral-200/80 flex items-center justify-center text-neutral-400 mb-3">
+              <ClipboardList size={22} />
+            </div>
+            <div className="text-sm font-bold text-neutral-800">No hay solicitudes de cotización</div>
+            <p className="text-xs text-neutral-400 mt-1">Las solicitudes enviadas desde la web pública aparecerán aquí automáticamente.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-neutral-50/80 border-b border-neutral-200/70 text-neutral-500 uppercase font-mono text-[11px] font-bold tracking-wider">
+                <tr>
+                  <th className="py-3 px-4">Cliente / Contacto</th>
+                  <th className="py-3 px-4">Sede / Evento</th>
+                  <th className="py-3 px-4">Participantes</th>
+                  <th className="py-3 px-4">Fecha Evento</th>
+                  <th className="py-3 px-4">Fecha Solicitud</th>
+                  <th className="py-3 px-4">Estado</th>
+                  <th className="py-3 px-4 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-100 text-neutral-800">
+                {filteredQuotes.map(quote => {
+                  const d = quote.content?.datos || {};
+                  const isLista = quote.status?.toLowerCase() === 'lista';
 
-      <style jsx>{`
-        .btn-filter {
-          transition: all 0.2s ease;
-        }
-        .btn-filter:hover {
-          opacity: 0.8;
-        }
-        .data-table tr:hover {
-          background: rgba(56, 189, 248, 0.02);
-        }
-      `}</style>
+                  return (
+                    <tr key={quote.id} className="hover:bg-neutral-50/60 transition-colors">
+                      <td className="py-3.5 px-4">
+                        <div className="font-bold text-neutral-900">{d.nombre || 'Sin nombre'}</div>
+                        <div className="text-[11px] font-mono text-neutral-500 mt-0.5">{d.email || '—'}</div>
+                        <div className="text-[10px] font-mono text-neutral-400">{d.telefono || d.rut || ''}</div>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <div className="font-semibold text-neutral-800">{d.sede || 'No especificada'}</div>
+                        <div className="text-[10px] font-mono text-neutral-400 uppercase">{d.tipo_evento || 'Paseo de Curso'}</div>
+                      </td>
+                      <td className="py-3.5 px-4 font-mono font-bold text-neutral-700">
+                        {d.personas || '1'} personas
+                      </td>
+                      <td className="py-3.5 px-4 font-mono text-neutral-700">
+                        {d.fecha_estimada || 'A coordinar'}
+                      </td>
+                      <td className="py-3.5 px-4 font-mono text-neutral-400 text-[11px]">
+                        {new Date(quote.created_at).toLocaleDateString('es-CL')}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <button
+                          onClick={() => handleToggleStatus(quote)}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold cursor-pointer transition-transform hover:scale-105 ${
+                            isLista
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : 'bg-amber-50 text-amber-700 border border-amber-200'
+                          }`}
+                        >
+                          <span className={`w-1.5 h-1.5 rounded-full ${isLista ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                          {isLista ? 'Lista' : 'Pendiente'}
+                        </button>
+                      </td>
+                      <td className="py-3.5 px-4 text-right">
+                        <button
+                          onClick={() => handleDelete(quote)}
+                          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-rose-50 text-neutral-400 hover:text-rose-600 transition-colors ml-auto"
+                          title="Eliminar"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

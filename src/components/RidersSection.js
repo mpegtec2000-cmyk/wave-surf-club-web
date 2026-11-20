@@ -21,38 +21,32 @@ const ridersData = [
 export default function RidersSection() {
   return (
     <div className="relative w-full min-h-screen flex flex-col items-center justify-start bg-black">
-      
-      {/* Contenedor de la Imagen y los Links */}
       <div className="relative w-full max-w-[1200px] aspect-[4/3] sm:aspect-video">
-        
-        {/* Imagen de Fondo desde tu carpeta public */}
-        <Image 
-          src="/FONDO-RIDERS.png" 
-          alt="Fondo Riders Wave Surf Club" 
+        <Image
+          src="/rider fondo.jpg"
+          alt="Fondo Riders Wave Surf Club"
           fill
           priority
           sizes="(max-width: 1200px) 100vw, 1200px"
           className="object-contain"
         />
 
-        {/* Capa de Cuadros Interactivos (Grid invisible encima) */}
-        <div className="absolute top-[20%] left-[10%] w-[80%] h-[60%] grid grid-cols-2 md:grid-cols-6 gap-2">
+        <div className="absolute top-[20%] left-[10%] w-[80%] h-[60%] grid grid-cols-2 md:grid-cols-6 gap-2 p-[2%_5%]">
           {ridersData.map((rider) => {
             const isVacio = rider.name === "VACÍO";
             const formattedName = rider.name.split('').join(' ');
             const prefix = "R I D E R";
-            
+
             return (
-              <Link 
-                key={rider.id} 
+              <Link
+                key={rider.id}
                 href={!isVacio ? `/riders/${rider.slug}` : "#"}
-                className="group relative border border-transparent hover:border-blue-400 transition-all duration-300 overflow-hidden"
+                className="group relative border border-transparent hover:border-white transition-all duration-300 overflow-hidden"
               >
-                {/* Visualización del Nombre Estandarizado (Ejemplo solicitado) */}
-                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/90 flex flex-col items-center justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/95 flex flex-col items-center justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   {!isVacio ? (
                     <>
-                      <span className="text-[9px] font-black text-[#38bdf8] mb-1 tracking-[0.2em]">
+                      <span className="text-[9px] font-black text-neutral-500 mb-1 tracking-[0.2em]">
                         {prefix}
                       </span>
                       <span className="text-[10px] font-black text-black tracking-[0.3em] text-center uppercase">
@@ -60,7 +54,7 @@ export default function RidersSection() {
                       </span>
                     </>
                   ) : (
-                    <span className="text-[9px] font-black text-gray-400 tracking-[0.3em]">
+                    <span className="text-[9px] font-black text-neutral-400 tracking-[0.3em]">
                       D I S P O N I B L E
                     </span>
                   )}
@@ -70,12 +64,6 @@ export default function RidersSection() {
           })}
         </div>
       </div>
-
-      <style jsx>{`
-        .grid {
-          padding: 2% 5%;
-        }
-      `}</style>
     </div>
   );
 }

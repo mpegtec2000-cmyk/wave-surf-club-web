@@ -3,12 +3,11 @@
 // Simula Supabase hasta que se configure
 // =============================================
 
-// ---- USUARIOS DE EJEMPLO ----
+// ---- USUARIOS DE EJEMPLO (sin credenciales en cliente) ----
 export const MOCK_USERS = {
   'WAVE_SURF_CLUB@outlook.com': {
     id: 'u-001',
     email: 'WAVE_SURF_CLUB@outlook.com',
-    password: 'WAVESURF2026',
     rut: '11.111.111-1',
     name: 'Matías Wave',
     role: 'superadmin',
@@ -19,7 +18,6 @@ export const MOCK_USERS = {
   'francisco@wavesurf.cl': {
     id: 'u-004',
     email: 'francisco@wavesurf.cl',
-    password: 'francisco2026',
     rut: '19.999.999-9',
     name: 'Francisco Lusiño',
     role: 'superadmin',
@@ -30,7 +28,6 @@ export const MOCK_USERS = {
   'caja@wavesurf.cl': {
     id: 'u-002',
     email: 'caja@wavesurf.cl',
-    password: 'caja2026',
     rut: '22.222.222-2',
     name: 'Carlos Caja',
     role: 'caja',
@@ -41,7 +38,6 @@ export const MOCK_USERS = {
   'asistente@wavesurf.cl': {
     id: 'u-003',
     email: 'asistente@wavesurf.cl',
-    password: 'asistente2026',
     rut: '33.333.333-3',
     name: 'Ana Asistente',
     role: 'asistente',
@@ -120,19 +116,8 @@ export const MOCK_TRANSACTIONS = [
   { id: 'tx-007', branch_id: 3, staff_id: 'u-002', client_rut: '98.765.432-1', type: 'ingreso', category: 'escuela', method: 'transferencia', total: 35000, is_incident: false, incident_note: '', created_at: hoursAgo(1) },
 ];
 
-// ---- Mock Auth State ----
+// ---- Mock Auth State (solo lectura/cierre local, la validación vive en /api/auth/login) ----
 let currentUser = null;
-
-export function mockLogin(email, password) {
-  const user = MOCK_USERS[email];
-  if (!user) return { error: 'Usuario no encontrado' };
-  if (user.password !== password) return { error: 'Contraseña incorrecta' };
-  currentUser = { ...user };
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('wave_user', JSON.stringify(currentUser));
-  }
-  return { user: currentUser, error: null };
-}
 
 export function mockLogout() {
   currentUser = null;

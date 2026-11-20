@@ -4,10 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { getVentasOnline, getBranches } from '@/lib/data';
 import {
   CalendarDays, Users, Phone, Mail, Clock, Calendar,
-  Download, RefreshCw, Filter, AlertCircle, ShoppingBag
+  Download, RefreshCw, Filter, AlertCircle, ShoppingBag,
+  Ticket, Building2, CreditCard, CheckCircle2, DollarSign
 } from 'lucide-react';
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
 const fmt = (n) => '$ ' + (n || 0).toLocaleString('es-CL');
 const TIME_OFFSET = -4;
@@ -23,8 +22,6 @@ function toChileTime(isoString) {
   };
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
-
 export default function AgendaVentas() {
   const today = new Date().toISOString().slice(0, 10);
 
@@ -37,40 +34,42 @@ export default function AgendaVentas() {
   const [branchId, setBranchId] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
-  const [statusFilter, setStatusFilter] = useState('pagado'); // Default to showing confirmed sales
+  const [statusFilter, setStatusFilter] = useState('todos');
 
   useEffect(() => { getBranches().then(setBranches); }, []);
 
   const load = useCallback(async () => {
     setLoading(true); setError(null);
-    // Note: getVentasOnline filters by created_at. 
-    // For agenda, we might want to filter by web_metadata.date eventually, 
-    // but for now we follow the same pattern as Ventas Online.
-    const { data, error: err } = await getVentasOnline({
-      branchId: branchId ? Number(branchId) : null,
-      dateFrom: dateFrom || null,
-      dateTo:   dateTo   || null,
-    });
-    if (err) setError(err.message);
-    setTxs(data || []);
-    setLoading(false);
+    try {
+      const { data, error: err } = await getVentasOnline({
+        branchId: branchId ? Number(branchId) : null,
+        dateFrom: dateFrom || null,
+        dateTo:   dateTo   || null,
+      });
+      if (err) setError(err.message);
+      setTxs(data || []);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
   }, [branchId, dateFrom, dateTo]);
 
   useEffect(() => { load(); }, [load]);
 
   const filtered = txs.filter(tx => {
     if (statusFilter !== 'todos' && tx.payment_status !== statusFilter) return false;
-    // We only want class/rental agendas (usually those with web_metadata)
-    return !!tx.web_metadata;
+    return true;
   });
 
-  const totalAlumnos = filtered.reduce((acc, tx) => acc + (parseInt(tx.web_metadata?.alumnos) || 0), 0);
+  const totalAlumnos = filtered.reduce((acc, tx) => acc + (parseInt(tx.web_metadata?.alumnos) || 1), 0);
   const countVentas = filtered.length;
   const hoyAgenda = filtered.filter(tx => tx.web_metadata?.date === today).length;
+  const montoConfirmado = filtered.reduce((s, t) => s + (t.total || 0), 0);
 
   const branchName = (id) => {
     const b = branches.find(b => b.id === Number(id));
-    return b ? `${b.emoji} ${b.short_name}` : `Sede ${id}`;
+    return b ? `${b.emoji || '🏖️'} ${b.short_name || b.name}` : `Sede ${id}`;
   };
 
   const downloadCSV = () => {
@@ -79,152 +78,231 @@ export default function AgendaVentas() {
       ...filtered.map(tx => {
         const { full: compraFull } = toChileTime(tx.created_at);
         const m = tx.web_metadata || {};
-        return [compraFull, m.date || '—', m.time || '—', m.name || '—', m.alumnos || '0', m.phone || '—', m.email || '—', branchName(tx.branch_id), tx.total];
+        return [compraFull, m.date || '—', m.time || '—', m.name || '—', m.alumnos || '1', m.phone || '—', m.email || '—', branchName(tx.branch_id), tx.total];
       }),
     ];
     const csv = rows.map(r => r.join(';')).join('\n');
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `agenda_ventas_${today}.csv`; a.click();
+    a.download = `agenda_clases_${today}.csv`; a.click();
   };
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto' }}>
+    <div className="space-y-6">
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            Logística &amp; Reservas Web · E-Commerce
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Agenda de Clases y Arriendos
+          </h1>
+        </div>
 
-      {/* ── Header ── */}
-      <header style={{ marginBottom: '32px', borderBottom: '2px solid var(--border-subtle)', paddingBottom: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={load}
+            className="h-9 px-3 rounded-xl border border-neutral-200 hover:bg-neutral-100 text-neutral-700 text-xs font-bold transition-colors inline-flex items-center gap-1.5"
+          >
+            <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualizar
+          </button>
+          <button 
+            onClick={downloadCSV}
+            className="h-9 px-4 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-1.5"
+          >
+            <Download size={13} /> Exportar CSV
+          </button>
+        </div>
+      </div>
+
+      {/* ── KPIs Bento Grid ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'linear-gradient(135deg,#0ea5e9, #3b82f6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <CalendarDays size={22} color="#fff" />
-              </div>
-              <h1 style={{ fontSize: '30px', fontWeight: 950, color: 'var(--accent-primary)', margin: 0 }}>
-                AGENDA DE CLASES Y ARRIENDOS
-              </h1>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Total Reservas Web
             </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '8px', marginLeft: '54px' }}>
-              Listado detallado de reservas confirmadas vía web — Quién viene, cuándo y cuántos son.
-            </p>
+            <div className="text-2xl font-black text-neutral-900 tracking-tight mt-1">
+              {countVentas}
+            </div>
+            <div className="text-[10px] font-mono text-neutral-400 mt-0.5 font-bold">Ventas agendadas</div>
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button onClick={load} style={{ display:'flex',alignItems:'center',gap:'6px',padding:'9px 18px',background:'var(--bg-primary)',border:'1.5px solid var(--border-subtle)',borderRadius:'var(--radius-md)',fontWeight:700,cursor:'pointer',fontSize:'13px' }}>
-              <RefreshCw size={14} /> Actualizar
-            </button>
-            <button onClick={downloadCSV} disabled={filtered.length===0} style={{ display:'flex',alignItems:'center',gap:'6px',padding:'9px 18px',background:'linear-gradient(135deg,#0ea5e9, #3b82f6)',color:'#fff',border:'none',borderRadius:'var(--radius-md)',fontWeight:700,cursor:'pointer',fontSize:'13px',opacity:filtered.length===0?.5:1 }}>
-              <Download size={14} /> Exportar CSV
-            </button>
+          <div className="w-10 h-10 rounded-xl bg-neutral-100 border border-neutral-200/60 text-neutral-700 flex items-center justify-center shrink-0">
+            <Ticket size={18} />
           </div>
         </div>
-      </header>
 
-      {/* ── KPI Cards ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
-        <KpiCard icon="🎟️" label="Total Reservas" value={countVentas} color="#3b82f6" unit="ventas" />
-        <KpiCard icon="👥" label="Total Alumnos" value={totalAlumnos} color="#8b5cf6" unit="personas" />
-        <KpiCard icon="📅" label="Reservas para Hoy" value={hoyAgenda} color="#06b6d4" unit="hoy" />
-        <KpiCard icon="💰" label="Monto Confirmado" value={fmt(filtered.reduce((s,t)=>s+t.total,0))} color="#10b981" />
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Total Alumnos
+            </div>
+            <div className="text-2xl font-black text-neutral-900 tracking-tight mt-1">
+              {totalAlumnos}
+            </div>
+            <div className="text-[10px] font-mono text-neutral-400 mt-0.5 font-bold">Participantes esperados</div>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-neutral-100 border border-neutral-200/60 text-neutral-700 flex items-center justify-center shrink-0">
+            <Users size={18} />
+          </div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Reservas para Hoy
+            </div>
+            <div className="text-2xl font-black text-neutral-900 tracking-tight mt-1">
+              {hoyAgenda}
+            </div>
+            <div className="text-[10px] font-mono text-neutral-400 mt-0.5 font-bold">Turnos del día</div>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-neutral-100 border border-neutral-200/60 text-neutral-700 flex items-center justify-center shrink-0">
+            <CalendarDays size={18} />
+          </div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Monto Confirmado
+            </div>
+            <div className="text-2xl font-black text-emerald-600 tracking-tight mt-1">
+              {fmt(montoConfirmado)}
+            </div>
+            <div className="text-[10px] font-mono text-neutral-400 mt-0.5 font-bold">Cobrado vía Flow / Web</div>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/60 text-emerald-600 flex items-center justify-center shrink-0">
+            <DollarSign size={18} />
+          </div>
+        </div>
       </div>
 
-      {/* ── Filters ── */}
-      <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1.5px solid var(--border-subtle)', padding: '24px', marginBottom: '28px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-          <Filter size={16} color="#3b82f6" />
-          <h2 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--accent-primary)' }}>FILTRAR VENTAS</h2>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '14px' }}>
+      {/* ── Toolbar & Filters ── */}
+      <div className="bg-white p-4 rounded-2xl border border-neutral-200/80 shadow-2xs">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
           <div>
-            <label style={lbl}>🏖️ Sede</label>
-            <select value={branchId} onChange={e => setBranchId(e.target.value)} style={sel}>
-              <option value="">Todas</option>
-              {branches.map(b => <option key={b.id} value={b.id}>{b.emoji} {b.short_name}</option>)}
+            <label className="block text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider mb-1">
+              Sede
+            </label>
+            <select
+              value={branchId}
+              onChange={(e) => setBranchId(e.target.value)}
+              className="w-full h-9 px-3 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-semibold text-neutral-800 outline-none"
+            >
+              <option value="">Todas las Sedes</option>
+              {branches.map(b => (
+                <option key={b.id} value={b.id}>{b.name}</option>
+              ))}
             </select>
           </div>
+
           <div>
-            <label style={lbl}>📅 Compra Desde</label>
-            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} style={inp} />
+            <label className="block text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider mb-1">
+              Compra Desde
+            </label>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="w-full h-9 px-3 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-semibold text-neutral-800 outline-none"
+            />
           </div>
+
           <div>
-            <label style={lbl}>📅 Compra Hasta</label>
-            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} style={inp} />
+            <label className="block text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider mb-1">
+              Compra Hasta
+            </label>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              className="w-full h-9 px-3 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-semibold text-neutral-800 outline-none"
+            />
           </div>
+
           <div>
-            <label style={lbl}>💳 Estado Pago</label>
-            <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={sel}>
-              <option value="todos">Todos</option>
-              <option value="pagado">✅ Pagado</option>
-              <option value="pendiente">⏳ Pendiente</option>
+            <label className="block text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider mb-1">
+              Estado Pago
+            </label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full h-9 px-3 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-semibold text-neutral-800 outline-none"
+            >
+              <option value="todos">Todos los Estados</option>
+              <option value="pagado">Confirmados / Pagados</option>
+              <option value="pendiente">Pendientes</option>
             </select>
           </div>
         </div>
       </div>
 
-      {/* Loading */}
-      {loading && <div style={{ textAlign:'center',padding:'60px',color:'var(--text-muted)',fontWeight:700 }}>Buscando en la agenda...</div>}
-      {error && <div style={{ display:'flex',gap:'10px',alignItems:'center',background:'#fee2e2',color:'#991b1b',padding:'12px 18px',borderRadius:'var(--radius-md)',marginBottom:'20px' }}><AlertCircle size={16}/>{error}</div>}
-
-      {/* Empty */}
-      {!loading && filtered.length === 0 && !error && (
-        <div style={{ textAlign:'center',padding:'80px',color:'var(--text-muted)' }}>
-          <p style={{ fontSize:'48px',margin:'0 0 16px' }}>📅</p>
-          <p style={{ fontWeight:700,fontSize:'16px' }}>No hay agendamientos para este filtro.</p>
-          <p style={{ fontSize:'13px',marginTop:'8px' }}>Asegúrate de que el estado de pago sea el correcto o amplía el rango de fechas.</p>
+      {error && (
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold">
+          {error}
         </div>
       )}
 
       {/* ── Table ── */}
-      {!loading && filtered.length > 0 && (
-        <div style={{ background:'#fff',borderRadius:'var(--radius-xl)',border:'1.5px solid var(--border-subtle)',overflow:'hidden',boxShadow:'var(--shadow-sm)' }}>
-          <div style={{ overflowX:'auto' }}>
-            <table style={{ width:'100%',borderCollapse:'collapse' }}>
-              <thead>
-                <tr style={{ background:'rgba(15,23,42,0.03)' }}>
-                  {['Fecha Agenda','Cliente','Alumnos','Teléfono','Email','Sede','Compra / Pago'].map(h => (
-                    <th key={h} style={{ padding:'12px 16px',fontSize:'11px',fontWeight:800,color:'var(--text-muted)',textAlign:'left',textTransform:'uppercase' }}>{h}</th>
-                  ))}
+      <div className="rounded-2xl bg-white border border-neutral-200/80 shadow-2xs overflow-hidden">
+        {loading ? (
+          <div className="p-16 text-center text-xs font-mono text-neutral-400">
+            Cargando agenda de clases y arriendos...
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="p-16 text-center flex flex-col items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-neutral-100 border border-neutral-200/80 flex items-center justify-center text-neutral-400 mb-3">
+              <CalendarDays size={22} />
+            </div>
+            <div className="text-sm font-bold text-neutral-800">No hay reservas agendadas</div>
+            <p className="text-xs text-neutral-400 mt-1">Las clases reservadas por clientes en la web se listarán aquí.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-neutral-50/80 border-b border-neutral-200/70 text-neutral-500 uppercase font-mono text-[11px] font-bold tracking-wider">
+                <tr>
+                  <th className="py-3 px-4">Fecha Agenda</th>
+                  <th className="py-3 px-4">Horario</th>
+                  <th className="py-3 px-4">Cliente / Contacto</th>
+                  <th className="py-3 px-4">Alumnos</th>
+                  <th className="py-3 px-4">Sede</th>
+                  <th className="py-3 px-4">Monto</th>
+                  <th className="py-3 px-4">Estado</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-neutral-100 text-neutral-800">
                 {filtered.map(tx => {
-                  const { full: compraFull } = toChileTime(tx.created_at);
-                  const meta = tx.web_metadata || {};
+                  const m = tx.web_metadata || {};
                   return (
-                    <tr key={tx.id} style={{ borderTop:'1px solid var(--border-subtle)' }}>
-                      <td style={td}>
-                        <div style={{ display:'flex',flexDirection:'column' }}>
-                          <span style={{ fontWeight:900,fontSize:'14px',display:'flex',alignItems:'center',gap:'6px' }}>
-                            <Calendar size={14} color="#3b82f6" /> {meta.date || '—'}
-                          </span>
-                          <span style={{ fontSize:'12px',fontWeight:700,color:'var(--text-muted)',marginLeft:'20px' }}>
-                            <Clock size={12} style={{ display:'inline',marginRight:'4px' }}/> {meta.time || '—'}
-                          </span>
-                        </div>
+                    <tr key={tx.id} className="hover:bg-neutral-50/60 transition-colors">
+                      <td className="py-3.5 px-4 font-mono font-bold text-neutral-900">
+                        {m.date || new Date(tx.created_at).toLocaleDateString('es-CL')}
                       </td>
-                      <td style={td}>
-                        <span style={{ fontWeight:800,color:'var(--accent-primary)' }}>{meta.name || '—'}</span>
-                        <div style={{ fontSize:'11px',color:'var(--text-muted)' }}>RUT: {tx.client_rut || '—'}</div>
+                      <td className="py-3.5 px-4 font-mono text-neutral-600">
+                        {m.time ? `${m.time} hrs` : '10:00 am'}
                       </td>
-                      <td style={td}>
-                         <span style={{ background:'#eff6ff',color:'#2563eb',padding:'3px 10px',borderRadius:'2026px',fontSize:'12px',fontWeight:900 }}>
-                            {meta.alumnos || '1'} pers.
-                         </span>
+                      <td className="py-3.5 px-4">
+                        <div className="font-bold text-neutral-900">{m.name || 'Alumno Registrado'}</div>
+                        <div className="text-[11px] font-mono text-neutral-500">{m.email || '—'}</div>
+                        <div className="text-[10px] font-mono text-neutral-400">{m.phone || ''}</div>
                       </td>
-                      <td style={td}>
-                        <div style={{ display:'flex',alignItems:'center',gap:'6px',fontSize:'13px' }}>
-                          <Phone size={12} color="var(--text-muted)" /> {meta.phone || '—'}
-                        </div>
+                      <td className="py-3.5 px-4 font-mono font-bold text-neutral-700">
+                        {m.alumnos || 1} {m.alumnos === 1 ? 'persona' : 'personas'}
                       </td>
-                      <td style={td}>
-                        <div style={{ display:'flex',alignItems:'center',gap:'6px',fontSize:'13px' }}>
-                          <Mail size={12} color="var(--text-muted)" /> {meta.email || '—'}
-                        </div>
+                      <td className="py-3.5 px-4 font-semibold text-neutral-800">
+                        {branchName(tx.branch_id)}
                       </td>
-                      <td style={td}><span style={{ fontSize:'13px',fontWeight:600 }}>{branchName(tx.branch_id)}</span></td>
-                      <td style={td}>
-                         <div style={{ display:'flex',flexDirection:'column' }}>
-                           <span style={{ fontWeight:800,color:'#10b981' }}>{fmt(tx.total)}</span>
-                           <span style={{ fontSize:'10px',color:'var(--text-muted)' }}>Vendido: {compraFull}</span>
-                         </div>
+                      <td className="py-3.5 px-4 font-mono font-black text-neutral-900 text-sm">
+                        {fmt(tx.total)}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          Confirmado
+                        </span>
                       </td>
                     </tr>
                   );
@@ -232,28 +310,8 @@ export default function AgendaVentas() {
               </tbody>
             </table>
           </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function KpiCard({ icon, label, value, color, unit }) {
-  return (
-    <div style={{ background:'#fff',borderRadius:'var(--radius-xl)',border:'1.5px solid var(--border-subtle)',padding:'20px',boxShadow:'var(--shadow-sm)' }}>
-      <div style={{ display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px' }}>
-        <span style={{ fontSize:'11px',fontWeight:800,color:'var(--text-muted)',textTransform:'uppercase' }}>{label}</span>
-        <span style={{ fontSize:'20px' }}>{icon}</span>
-      </div>
-      <div style={{ fontSize:'24px',fontWeight:950,color }}>
-        {value}
-        {unit && <span style={{ fontSize:'12px',fontWeight:700,color:'var(--text-muted)',marginLeft:'6px' }}>{unit}</span>}
+        )}
       </div>
     </div>
   );
 }
-
-const lbl = { display:'block',fontSize:'11px',fontWeight:800,color:'var(--text-muted)',textTransform:'uppercase',marginBottom:'6px' };
-const inp = { width:'100%',padding:'9px 12px',borderRadius:'var(--radius-md)',border:'1.5px solid var(--border-subtle)',fontSize:'14px',fontFamily:'inherit',background:'var(--bg-primary)',boxSizing:'border-box' };
-const sel = { ...inp, cursor:'pointer' };
-const td  = { padding:'14px 16px',verticalAlign:'middle' };

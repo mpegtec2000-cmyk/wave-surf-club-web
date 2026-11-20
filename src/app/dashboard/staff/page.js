@@ -3,7 +3,10 @@
 import { useState, useEffect } from 'react';
 import { getCurrentUser, getStaff, findClientByRut, addStaffMember, removeStaffMember, registerStaffMember } from '@/lib/data';
 import { BRANCHES, ROLES, ROLE_LABELS } from '@/lib/constants';
-import { Search, Briefcase, Plus, Shield, UserMinus, UserPlus, FileText, MapPin, Calendar, Heart } from 'lucide-react';
+import { 
+  Search, Briefcase, Plus, Shield, UserMinus, UserPlus, FileText, 
+  MapPin, Calendar, Heart, ShieldCheck, Crown, Globe, Users, Check
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { formatRut } from '@/lib/rut-validator';
 
@@ -59,10 +62,9 @@ export default function StaffPage() {
   const handleSearchRUT = async () => {
     setSearchError('');
     
-    // Validar si ya es staff
     const alreadyStaff = staffList.find(s => s.rut === rut);
     if (alreadyStaff) {
-      setSearchError('Esta persona ya es parte del personal.');
+      setSearchError('Esta persona ya es parte del personal activo.');
       setFoundClient(null);
       return;
     }
@@ -73,7 +75,7 @@ export default function StaffPage() {
       setSelectedBranches([]);
       setSelectedRole('caja');
     } else if (rut.length >= 11) {
-      setSearchError('Persona no encontrada en la base de clientes. Debe registrarlo primero en Clientes.');
+      setSearchError('Persona no encontrada en el sistema. Puedes usar "Registro Completo".');
     }
   };
 
@@ -86,7 +88,7 @@ export default function StaffPage() {
   const handleAddStaff = async () => {
     if (!foundClient) return;
     if (selectedRole !== 'superadmin' && selectedBranches.length === 0) {
-      showToast('Seleccione al menos una sucursal para este empleado', 'error');
+      showToast('Seleccione al menos una sucursal para este colaborador', 'error');
       return;
     }
 
@@ -101,292 +103,338 @@ export default function StaffPage() {
     setFoundClient(null);
   };
 
+  const handleRemoveStaff = async (staffId) => {
+    if (confirm('¿Confirmas que deseas retirar el acceso y rol a este empleado?')) {
+      await removeStaffMember(staffId);
+      const updated = await getStaff();
+      setStaffList(updated);
+      showToast('Permisos de personal retirados', 'info');
+    }
+  };
+
   const handleFullRegistration = async (e) => {
     e.preventDefault();
     if (selectedRole !== 'superadmin' && selectedBranches.length === 0) {
-      showToast('Seleccione al menos una sucursal', 'error');
+      showToast('Seleccione al menos una sucursal de acceso', 'error');
       return;
     }
 
-    const result = await registerStaffMember({
+    const branchIds = selectedRole === 'superadmin' ? [1,2,3] : selectedBranches;
+    const { data, error } = await registerStaffMember({
       ...newStaff,
-      role: selectedRole,
-      branchIds: selectedRole === 'superadmin' ? [1,2,3] : selectedBranches
-    });
+      role: selectedRole
+    }, branchIds);
 
-    if (result.error) {
-      showToast('Error: ' + result.error, 'error');
-    } else {
-      showToast('Personal registrado y contratado exitosamente', 'success');
-      const updated = await getStaff();
-      setStaffList(updated);
-      setRegMode(false);
-      setNewStaff({
-        name: '', rut: '', email: '', phone: '', birth_date: '',
-        marital_status: 'soltero', address: '', service_start_date: '', role: 'caja'
-      });
-    }
-  };
-
-  const handleRemoveStaff = async (staffId) => {
-    if (!staffId) return;
-    const staffMember = staffList.find(s => s.id === staffId);
-    if (staffMember?.rut === user.rut) {
-      showToast('No puedes auto-eliminarte del sistema', 'error');
+    if (error) {
+      showToast('Error al registrar personal: ' + error.message, 'error');
       return;
     }
-    const confirmDelete = window.confirm('¿Seguro que deseas desvincular a esta persona del personal?');
-    if (!confirmDelete) return;
 
-    await removeStaffMember(staffId);
+    showToast('Empleado registrado exitosamente en nómina', 'success');
+    setRegMode(false);
+    setNewStaff({
+      name: '',
+      rut: '',
+      email: '',
+      phone: '',
+      birth_date: '',
+      marital_status: 'soltero',
+      address: '',
+      service_start_date: new Date().toISOString().split('T')[0],
+      role: 'caja'
+    });
     const updated = await getStaff();
     setStaffList(updated);
-    showToast('Personal desvinculado correctamente', 'success');
   };
 
-  const showToast = (msg, type) => {
+  const showToast = (msg, type = 'info') => {
     setToast({ msg, type });
-    setTimeout(() => setToast(null), 4000);
+    setTimeout(() => setToast(null), 3000);
   };
 
   if (!user) return null;
 
   return (
-    <div>
-      <div className="pos-layout" style={{ gridTemplateColumns: '1fr 2fr' }}>
-        
-        {/* LEFT: Agregar Personal */}
-        <div className="pos-panel industrial-card">
-          <div className="pos-panel-header industrial-header">
-            <UserPlus size={20} />
-            <h2 className="industrial-title">Módulo de Contratación</h2>
-          </div>
-          
-          <div className="pos-panel-body scrollable-panel">
-            <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
-              <button 
-                className={`btn-sap-tab ${!regMode ? 'active' : ''}`}
-                onClick={() => setRegMode(false)}
-              >
-                Asignar Existente
-              </button>
-              <button 
-                className={`btn-sap-tab ${regMode ? 'active' : ''}`}
-                onClick={() => setRegMode(true)}
-              >
-                Nuevo Ingreso
-              </button>
-            </div>
+    <div className="space-y-6">
 
-            {!regMode ? (
-              <div className="fade-in">
-                <label className="industrial-label">Búsqueda por RUT (Ficha Base)</label>
-                <div className="rut-search-wrap industrial-search">
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            Recursos Humanos &amp; Permisos Operativos
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Gestión de Personal &amp; Acceso a Sedes
+          </h1>
+        </div>
+
+        <button
+          onClick={() => setRegMode(!regMode)}
+          className="h-9 px-4 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-2 self-start sm:self-auto"
+        >
+          {regMode ? '← Asignar desde Clientes' : '+ Nuevo Registro Completo'}
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        
+        {/* Left Card: Form */}
+        <div className="p-6 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs space-y-4">
+          <div className="border-b border-neutral-100 pb-3">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              {regMode ? 'Alta en Nómina' : 'Vinculación de Perfil'}
+            </div>
+            <h3 className="text-sm font-black text-neutral-900 mt-0.5">
+              {regMode ? 'Formulario de Contratación' : 'Habilitar Funcionario Existente'}
+            </h3>
+          </div>
+
+          {!regMode ? (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                  Buscar RUT Persona
+                </label>
+                <div className="relative">
+                  <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
                   <input
                     type="text"
-                    className="form-input"
-                    placeholder="Ej: 12.345.678-5"
+                    placeholder="12.345.678-9"
                     value={rut}
-                    onChange={(e) => setRut(formatRut(e.target.value))}
+                    onChange={e => setRut(formatRut(e.target.value))}
+                    className="w-full h-10 pl-9 pr-3.5 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-mono font-bold text-neutral-900 focus:bg-white focus:border-neutral-900 outline-none"
                   />
-                  <button className="rut-search-btn" onClick={handleSearchRUT}>
-                    <Search size={18} />
+                </div>
+              </div>
+
+              {searchError && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold">
+                  {searchError}
+                </div>
+              )}
+
+              {foundClient && (
+                <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200/70 space-y-3">
+                  <div>
+                    <div className="text-[10px] font-mono font-bold uppercase text-neutral-400">Persona Encontrada</div>
+                    <div className="text-sm font-black text-neutral-900">{foundClient.name}</div>
+                    <div className="text-xs font-mono text-neutral-500">{foundClient.rut}</div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                      Rol Asignado
+                    </label>
+                    <select
+                      value={selectedRole}
+                      onChange={e => setSelectedRole(e.target.value)}
+                      className="w-full h-9 px-3 rounded-xl border border-neutral-200 text-xs font-semibold text-neutral-800 outline-none"
+                    >
+                      <option value="caja">Base / Cajero</option>
+                      <option value="profesor">Profesor / Instructor</option>
+                      <option value="asistente">Asistente Logístico</option>
+                      <option value="superadmin">Administrador Global</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
+                      Sedes Permitidas
+                    </label>
+                    {selectedRole === 'superadmin' ? (
+                      <div className="text-[11px] font-mono text-emerald-700 font-bold bg-emerald-50 p-2 rounded-lg">
+                        Acceso automático a todas las sedes
+                      </div>
+                    ) : (
+                      <div className="flex flex-wrap gap-1.5">
+                        {BRANCHES.map(b => {
+                          const active = selectedBranches.includes(b.id);
+                          return (
+                            <button
+                              key={b.id}
+                              type="button"
+                              onClick={() => handleToggleBranch(b.id)}
+                              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                                active ? 'bg-neutral-900 text-white' : 'bg-white border border-neutral-200 text-neutral-700'
+                              }`}
+                            >
+                              {b.short_name || b.name}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={handleAddStaff}
+                    className="w-full h-10 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider transition-all shadow-xs"
+                  >
+                    Confirmar Contratación
                   </button>
                 </div>
+              )}
+            </div>
+          ) : (
+            <form onSubmit={handleFullRegistration} className="space-y-3">
+              <div>
+                <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-0.5">Nombre Completo *</label>
+                <input
+                  type="text" required
+                  value={newStaff.name}
+                  onChange={e => setNewStaff({ ...newStaff, name: e.target.value })}
+                  className="w-full h-9 px-3 rounded-xl border border-neutral-200 text-xs text-neutral-900 outline-none"
+                />
+              </div>
 
-                {searchError && <div className="industrial-alert error">{searchError}</div>}
+              <div>
+                <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-0.5">RUT *</label>
+                <input
+                  type="text" required
+                  value={newStaff.rut}
+                  onChange={e => setNewStaff({ ...newStaff, rut: formatRut(e.target.value) })}
+                  className="w-full h-9 px-3 rounded-xl border border-neutral-200 text-xs font-mono font-bold text-neutral-900 outline-none"
+                />
+              </div>
 
-                {foundClient && (
-                  <div className="found-box industrial-box">
-                    <div className="sap-info-row">
-                      <span className="label">NOMBRE:</span>
-                      <span className="value">{foundClient.name?.toUpperCase()}</span>
-                    </div>
-                    <div className="sap-info-row">
-                      <span className="label">ESTADO:</span>
-                      <span className="value status-ok">DISPONIBLE PARA CONTRATO</span>
-                    </div>
-                    
-                    <div style={{ marginTop: 20 }}>
-                      <label className="industrial-label">ROL A DESEMPEÑAR</label>
-                      <select className="form-select" value={selectedRole} onChange={e => setSelectedRole(e.target.value)}>
-                        <option value="caja">Personal Base (Caja/Operativo)</option>
-                        <option value="profesor">Profesor / Instructor</option>
-                        <option value="asistente">Asistente Técnico</option>
-                        <option value="superadmin">Administrador Global</option>
-                      </select>
-                    </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-0.5">Correo *</label>
+                  <input
+                    type="email" required
+                    value={newStaff.email}
+                    onChange={e => setNewStaff({ ...newStaff, email: e.target.value })}
+                    className="w-full h-9 px-3 rounded-xl border border-neutral-200 text-xs text-neutral-900 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-0.5">Teléfono</label>
+                  <input
+                    type="text"
+                    value={newStaff.phone}
+                    onChange={e => setNewStaff({ ...newStaff, phone: e.target.value })}
+                    className="w-full h-9 px-3 rounded-xl border border-neutral-200 text-xs text-neutral-900 outline-none"
+                  />
+                </div>
+              </div>
 
-                    <BranchSelector 
-                      selectedBranches={selectedBranches} 
-                      onToggle={handleToggleBranch} 
-                      isGlobal={selectedRole === 'superadmin'} 
-                    />
+              <div>
+                <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-0.5">Rol de Personal</label>
+                <select
+                  value={selectedRole}
+                  onChange={e => setSelectedRole(e.target.value)}
+                  className="w-full h-9 px-3 rounded-xl border border-neutral-200 text-xs font-semibold text-neutral-800 outline-none"
+                >
+                  <option value="caja">Caja / Mostrador</option>
+                  <option value="profesor">Profesor de Surf</option>
+                  <option value="asistente">Asistente</option>
+                  <option value="superadmin">Administrador</option>
+                </select>
+              </div>
 
-                    <button className="btn-sap btn-finalize" onClick={handleAddStaff}>
-                      CONFIRMAR CONTRATACIÓN
-                    </button>
+              <div>
+                <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1.5">Sedes Habilitadas</label>
+                {selectedRole === 'superadmin' ? (
+                  <div className="text-[11px] font-mono text-emerald-700 font-bold bg-emerald-50 p-2 rounded-lg">
+                    Acceso total a todas las sedes
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-1.5">
+                    {BRANCHES.map(b => {
+                      const active = selectedBranches.includes(b.id);
+                      return (
+                        <button
+                          key={b.id}
+                          type="button"
+                          onClick={() => handleToggleBranch(b.id)}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                            active ? 'bg-neutral-900 text-white' : 'bg-white border border-neutral-200 text-neutral-700'
+                          }`}
+                        >
+                          {b.short_name || b.name}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
-            ) : (
-              <form className="fade-in" onSubmit={handleFullRegistration}>
-                <div className="industrial-grid">
-                  <div className="form-group">
-                    <label className="industrial-label">Nombre Completo</label>
-                    <input 
-                      type="text" required className="form-input" 
-                      value={newStaff.name} 
-                      onChange={e => setNewStaff({...newStaff, name: e.target.value})} 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="industrial-label">RUT</label>
-                    <input 
-                      type="text" required className="form-input" 
-                      value={newStaff.rut} 
-                      onChange={e => setNewStaff({...newStaff, rut: formatRut(e.target.value)})} 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="industrial-label">Correo Electrónico</label>
-                    <input 
-                      type="email" required className="form-input" 
-                      value={newStaff.email} 
-                      onChange={e => setNewStaff({...newStaff, email: e.target.value})} 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="industrial-label">Teléfono</label>
-                    <input 
-                      type="text" className="form-input" 
-                      value={newStaff.phone} 
-                      onChange={e => setNewStaff({...newStaff, phone: e.target.value})} 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="industrial-label">Fecha de Nacimiento</label>
-                    <input 
-                      type="date" required className="form-input" 
-                      value={newStaff.birth_date} 
-                      onChange={e => setNewStaff({...newStaff, birth_date: e.target.value})} 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="industrial-label">Estado Civil</label>
-                    <select 
-                      className="form-select"
-                      value={newStaff.marital_status}
-                      onChange={e => setNewStaff({...newStaff, marital_status: e.target.value})}
-                    >
-                      <option value="soltero">Soltero/a</option>
-                      <option value="casado">Casado/a</option>
-                      <option value="divorciado">Divorciado/a</option>
-                      <option value="viudo">Viudo/a</option>
-                    </select>
-                  </div>
-                  <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                    <label className="industrial-label">Dirección Particular</label>
-                    <textarea 
-                      className="form-input" rows="2"
-                      value={newStaff.address}
-                      onChange={e => setNewStaff({...newStaff, address: e.target.value})}
-                    ></textarea>
-                  </div>
-                  <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                    <label className="industrial-label">Fecha Inicio de Servicio (Ingreso)</label>
-                    <input 
-                      type="date" required className="form-input" 
-                      value={newStaff.service_start_date} 
-                      onChange={e => setNewStaff({...newStaff, service_start_date: e.target.value})} 
-                    />
-                  </div>
-                  <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                    <label className="industrial-label">Tipo de Personal / Rol</label>
-                    <select 
-                      className="form-select" required
-                      value={selectedRole}
-                      onChange={e => setSelectedRole(e.target.value)}
-                    >
-                      <option value="caja">Base / Caja</option>
-                      <option value="profesor">Profesor / Instructor</option>
-                      <option value="asistente">Asistente</option>
-                      <option value="superadmin">Administrador</option>
-                    </select>
-                  </div>
-                </div>
 
-                <BranchSelector 
-                  selectedBranches={selectedBranches} 
-                  onToggle={handleToggleBranch} 
-                  isGlobal={selectedRole === 'superadmin'} 
-                />
-
-                <button type="submit" className="btn-sap btn-finalize" style={{ marginTop: 24 }}>
-                  REGISTRAR E INGRESAR A PLANILLA
-                </button>
-              </form>
-            )}
-          </div>
+              <button
+                type="submit"
+                className="w-full h-10 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider transition-all shadow-xs mt-2"
+              >
+                Registrar e Ingresar
+              </button>
+            </form>
+          )}
         </div>
 
-        {/* RIGHT: Lista de Personal */}
-        <div className="data-section">
-          <div className="data-section-header">
-            <h3 className="data-section-title">🛡️ Lista de Personal Activo</h3>
+        {/* Right Card: Staff Table */}
+        <div className="lg:col-span-2 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs overflow-hidden">
+          <div className="p-4 sm:p-5 border-b border-neutral-200/70 flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-neutral-900">Nómina de Personal Activo</h3>
+              <p className="text-[11px] text-neutral-400">{staffList.length} funcionarios con acceso al ERP</p>
+            </div>
+            <span className="text-xs font-mono font-bold text-neutral-500 bg-neutral-100 px-2.5 py-1 rounded-lg">
+              {staffList.length} activos
+            </span>
           </div>
-          <div className="data-table-wrap">
-            <table className="data-table">
-              <thead>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-neutral-50/80 border-b border-neutral-200/70 text-neutral-500 uppercase font-mono text-[11px] font-bold tracking-wider">
                 <tr>
-                  <th>Nombre</th>
-                  <th>RUT</th>
-                  <th>Cargo</th>
-                  <th>Sedes de Acceso</th>
-                  <th>Acción</th>
+                  <th className="py-3 px-4">Colaborador</th>
+                  <th className="py-3 px-4">RUT</th>
+                  <th className="py-3 px-4">Rol / Cargo</th>
+                  <th className="py-3 px-4">Sedes Autorizadas</th>
+                  <th className="py-3 px-4 text-right">Acción</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-neutral-100 text-neutral-800">
                 {staffList.map(staff => (
-                  <tr key={staff.rut || staff.email}>
-                    <td><strong>{staff.name}</strong></td>
-                    <td style={{ color: 'var(--text-muted)' }}>{staff.rut || '--'}</td>
-                    <td>
-                      <span className="type-badge" style={{
-                        background: staff.role === 'superadmin' ? 'rgba(168,85,247,0.15)' : 'rgba(14,165,233,0.15)',
-                        color: staff.role === 'superadmin' ? '#c084fc' : '#38bdf8',
-                        borderColor: staff.role === 'superadmin' ? 'rgba(168,85,247,0.3)' : 'rgba(14,165,233,0.3)'
-                      }}>
-                        {staff.role === 'superadmin' ? '👑 ' : ''}{ROLE_LABELS[staff.role] || staff.role}
+                  <tr key={staff.rut || staff.email} className="hover:bg-neutral-50/60 transition-colors">
+                    <td className="py-3.5 px-4">
+                      <div className="font-bold text-neutral-900">{staff.name}</div>
+                      <div className="text-[11px] text-neutral-400 font-mono">{staff.email}</div>
+                    </td>
+                    <td className="py-3.5 px-4 font-mono font-bold text-neutral-600">
+                      {staff.rut || '—'}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold ${
+                        staff.role === 'superadmin' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-neutral-100 text-neutral-700'
+                      }`}>
+                        {staff.role === 'superadmin' && <Crown size={11} />}
+                        {ROLE_LABELS[staff.role] || staff.role}
                       </span>
                     </td>
-                    <td>
+                    <td className="py-3.5 px-4">
                       {staff.allowed_branches?.length === 3 ? (
-                        <span style={{ fontSize: 12, color: 'var(--color-success)' }}>🌍 Todas las Sedes</span>
+                        <span className="text-emerald-700 font-bold font-mono text-[11px] inline-flex items-center gap-1">
+                          <Globe size={12} /> Todas las Sedes
+                        </span>
                       ) : (
-                        <div style={{ display: 'flex', gap: 6 }}>
+                        <div className="flex flex-wrap gap-1">
                           {staff.allowed_branches?.map(bid => {
                             const b = BRANCHES.find(br => br.id === bid);
                             return b ? (
-                              <span key={b.id} style={{
-                                padding: '2px 6px', background: 'var(--bg-surface)', 
-                                border: '1px solid var(--border-subtle)', borderRadius: 4, fontSize: 11
-                              }}>
-                                {b.emoji} {b.shortName}
+                              <span key={b.id} className="px-2 py-0.5 rounded bg-neutral-100 text-neutral-700 text-[10px] font-mono font-bold">
+                                {b.short_name || b.name}
                               </span>
                             ) : null;
                           })}
                         </div>
                       )}
                     </td>
-                    <td>
-                      <button 
-                        className="btn btn-secondary btn-sm" 
+                    <td className="py-3.5 px-4 text-right">
+                      <button
                         onClick={() => handleRemoveStaff(staff.id)}
-                        style={{ color: '#fca5a5', borderColor: 'rgba(239,68,68,0.2)', padding: '4px 8px' }}
-                        title="Quitar (-)"
+                        className="h-7 px-2.5 rounded-lg border border-rose-200 hover:bg-rose-50 text-rose-600 text-xs font-bold transition-colors inline-flex items-center gap-1"
+                        title="Quitar permisos"
                       >
-                        <UserMinus size={14} /> Quitar
+                        <UserMinus size={12} /> Desvincular
                       </button>
                     </td>
                   </tr>
@@ -395,43 +443,20 @@ export default function StaffPage() {
             </table>
           </div>
         </div>
+
       </div>
 
+      {/* Toast */}
       {toast && (
-        <div className={`toast ${toast.type}`}>
-          <span className="toast-message">{toast.msg}</span>
+        <div className={`fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl border shadow-xl text-xs font-bold animate-in fade-in slide-in-from-bottom-3 duration-200 ${
+          toast.type === 'error'
+            ? 'bg-rose-50 border-rose-200 text-rose-700'
+            : 'bg-neutral-900 border-neutral-800 text-white'
+        }`}>
+          {toast.msg}
         </div>
       )}
-    </div>
-  );
-}
 
-// Subcomponente para selector de sucursales
-function BranchSelector({ selectedBranches, onToggle, isGlobal }) {
-  if (isGlobal) {
-    return (
-      <div className="industrial-alert info" style={{ marginTop: 16 }}>
-        🛡️ ACCESO GLOBAL: Administradores acceden a todas las sucursales por defecto.
-      </div>
-    );
-  }
-
-  return (
-    <div className="form-group" style={{ marginTop: 16 }}>
-      <label className="industrial-label">Centros de Costo (Sedes Permitidas)</label>
-      <div className="industrial-branch-grid">
-        {BRANCHES.map(b => (
-          <label key={b.id} className={`branch-check-chip ${selectedBranches.includes(b.id) ? 'active' : ''}`}>
-            <input 
-              type="checkbox" 
-              checked={selectedBranches.includes(b.id)}
-              onChange={() => onToggle(b.id)}
-              hidden
-            />
-            {b.emoji} {b.shortName}
-          </label>
-        ))}
-      </div>
     </div>
   );
 }

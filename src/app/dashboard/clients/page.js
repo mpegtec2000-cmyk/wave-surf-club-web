@@ -2,37 +2,33 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { getCurrentUser, getClients, addClient, getTransactions, findClientByRut } from '@/lib/data';
-import { Search, UserPlus, X, Save, User } from 'lucide-react';
+import { 
+  Search, UserPlus, X, Save, User, FileText, AlertTriangle, CheckCircle2, 
+  Users, Inbox, ArrowUpRight, ArrowDownRight, Check, ArrowLeft, Phone, Mail, ShieldAlert,
+  DollarSign, TrendingUp, Sparkles, Filter
+} from 'lucide-react';
 import { formatRut, validateRut } from '@/lib/rut-validator';
+
+const fmt = (n) => '$ ' + (n || 0).toLocaleString('es-CL');
 
 export default function ClientsPage() {
   const [user, setUser] = useState(null);
-  
-  // Lista global de clientes (usará LocalStorage)
   const [clientsData, setClientsData] = useState([]);
-  
-  // Vistas
   const [view, setView] = useState('list'); // 'list', 'add', 'profile'
-  
-  // Búsqueda
   const [searchRut, setSearchRut] = useState('');
-  
-  // Perfil seleccionado
   const [selectedClient, setSelectedClient] = useState(null);
   const [clientHistory, setClientHistory] = useState([]);
   
-  // Formulario nuevo cliente
   const [formData, setFormData] = useState({
     rut: '',
     nombre: '',
     apellidos: '',
     telefono: '',
-    correo: ''
+    correo: '',
+    role: 'cliente'
   });
   
-  // Filtro de deudas
   const [debtFilter, setDebtFilter] = useState('ALL'); // 'ALL', 'DEBT', 'CLEAR'
-  
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
@@ -44,33 +40,37 @@ export default function ClientsPage() {
     load();
   }, []);
 
-  // Ordenar A-Z por defecto
   const sortedClients = useMemo(() => {
     return [...clientsData].sort((a, b) => a.name.localeCompare(b.name));
   }, [clientsData]);
 
-  // Filtrado por buscador y estado de deuda
   const filteredClients = useMemo(() => {
     let result = sortedClients;
 
-    // 1. Filtro de deuda
     if (debtFilter === 'DEBT') {
       result = result.filter(c => c.debt_balance > 0);
     } else if (debtFilter === 'CLEAR') {
       result = result.filter(c => c.debt_balance === 0);
     }
 
-    // 2. Filtro de texto
     const q = searchRut.toLowerCase().trim();
     if (q) {
       result = result.filter(c => 
-        c.rut.toLowerCase().includes(q) || 
-        c.name.toLowerCase().includes(q)
+        (c.rut || '').toLowerCase().includes(q) || 
+        (c.name || '').toLowerCase().includes(q) ||
+        (c.email || '').toLowerCase().includes(q) ||
+        (c.phone || '').includes(q)
       );
     }
 
     return result;
   }, [sortedClients, searchRut, debtFilter]);
+
+  // KPIs
+  const totalClients = clientsData.length;
+  const clientsWithDebt = clientsData.filter(c => c.debt_balance > 0);
+  const totalDebt = clientsWithDebt.reduce((s, c) => s + (c.debt_balance || 0), 0);
+  const activeMembers = clientsData.filter(c => c.role === 'cliente').length;
 
   const handleSearchClick = () => {
     const clean = searchRut.trim();
@@ -106,7 +106,6 @@ export default function ClientsPage() {
       return;
     }
     
-    // Verificar si ya existe en TODO el sistema (no solo clientes locales)
     const normalizedRut = formData.rut.replace(/[^0-9kK]/g, '').toUpperCase();
     const existingGlobal = await findClientByRut(normalizedRut);
     
@@ -135,16 +134,12 @@ export default function ClientsPage() {
     setClientsData(updatedClients);
     
     showToast(`Cliente ${newClient.name} agregado con éxito`, 'success');
-    
-    // Reset y volver a la vista
     setFormData({ rut: '', nombre: '', apellidos: '', telefono: '', correo: '', role: 'cliente' });
     setView('list');
     setSearchRut('');
   };
 
-  const formatMoney = (n) => '$' + n.toLocaleString('es-CL');
-
-  const showToast = (msg, type) => {
+  const showToast = (msg, type = 'info') => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 4000);
   };
@@ -152,286 +147,205 @@ export default function ClientsPage() {
   if (!user) return null;
 
   return (
-    <div>
-      {/* HEADER CONTROLS */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <div className="rut-search-wrap" style={{ width: 400, margin: 0 }}>
-          <input
-            type="text"
-            className="form-input"
-            placeholder="Buscar por RUT o Nombre..."
-            value={searchRut}
-            onChange={(e) => {
-              setSearchRut(e.target.value);
-              if (view !== 'list') setView('list');
-            }}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}
-          />
-          <button className="rut-search-btn" onClick={handleSearchClick}>
-            <Search size={18} />
-          </button>
+    <div className="space-y-6">
+      
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            CRM &amp; Base de Datos de Clientes
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Gestión Integral de Clientes &amp; Cuentas
+          </h1>
         </div>
 
-        {view === 'list' && (
-          <button className="btn btn-primary" onClick={() => setView('add')}>
-            <UserPlus size={18} /> Nuevo Cliente
-          </button>
-        )}
-        {view !== 'list' && (
-          <button className="btn btn-secondary" onClick={() => { setView('list'); setSearchRut(''); }}>
-            Volver a la Lista
-          </button>
-        )}
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          {view === 'list' ? (
+            <button
+              onClick={() => setView('add')}
+              className="h-9 px-4 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-2"
+            >
+              <UserPlus size={14} /> Nuevo Cliente
+            </button>
+          ) : (
+            <button
+              onClick={() => { setView('list'); setSearchRut(''); }}
+              className="h-9 px-4 rounded-xl border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700 transition-colors inline-flex items-center gap-2"
+            >
+              <ArrowLeft size={14} /> Volver a la Lista
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* VIEW: ADD CLIENT */}
-      {view === 'add' && (
-        <div className="pos-panel fade-in" style={{ maxWidth: 800, margin: '0 auto' }}>
-          <div className="pos-panel-header">
-            <span style={{ fontSize: 20 }}>📝</span>
-            <h2>Agregar Nuevo Cliente</h2>
-          </div>
-          <div className="pos-panel-body">
-            <form onSubmit={handleSaveClient} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-              
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label>RUT</label>
-                <input 
-                  type="text" className="form-input" placeholder="Ej: 12.345.678-5"
-                  value={formData.rut}
-                  onChange={(e) => setFormData({...formData, rut: formatRut(e.target.value)})}
-                  required 
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Nombre (1 Nombre)</label>
-                <input 
-                  type="text" className="form-input" placeholder="Ej: Pedro"
-                  value={formData.nombre}
-                  onChange={(e) => setFormData({...formData, nombre: e.target.value})}
-                  required 
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Apellidos (2 Apellidos)</label>
-                <input 
-                  type="text" className="form-input" placeholder="Ej: Vargas Silva"
-                  value={formData.apellidos}
-                  onChange={(e) => setFormData({...formData, apellidos: e.target.value})}
-                  required 
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Teléfono</label>
-                <input 
-                  type="text" className="form-input" placeholder="Ej: +56 9 1111 2222"
-                  value={formData.telefono}
-                  onChange={(e) => setFormData({...formData, telefono: e.target.value})}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Correo Electrónico</label>
-                <input 
-                  type="email" className="form-input" placeholder="Ej: pedro@correo.com"
-                  value={formData.correo}
-                  onChange={(e) => setFormData({...formData, correo: e.target.value})}
-                />
-              </div>
-
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label>Asignar Rol (Permisos del Sistema)</label>
-                <select 
-                  className="form-input"
-                  value={formData.role || 'cliente'}
-                  onChange={(e) => setFormData({...formData, role: e.target.value})}
-                >
-                  <option value="cliente">Cliente (Sin Acceso al Panel ERP)</option>
-                  <option value="asistente">Asistente de Sucursal</option>
-                  <option value="caja">Cajero / Vendedor</option>
-                  <option value="profesor">Profesor (Instructor)</option>
-                  <option value="superadmin">Super Administrador (Acceso Total)</option>
-                </select>
-              </div>
-
-              <div style={{ gridColumn: '1 / -1', marginTop: 12 }}>
-                <button type="submit" className="btn btn-primary btn-full btn-lg">
-                  <Save size={18} /> Guardar Cliente
-                </button>
-              </div>
-
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* VIEW: CLIENT PROFILE */}
-      {view === 'profile' && selectedClient && (
-        <div className="fade-in">
-          {selectedClient.debt_balance > 0 && (
-            <div className="debt-alert">
-              <div className="debt-alert-icon">⚠️</div>
-              <div className="debt-alert-content">
-                <h3>CLIENTE CON DEUDA ACTIVA</h3>
-                <p>{selectedClient.name} — {selectedClient.rut}</p>
-              </div>
-              <div className="debt-alert-amount">{formatMoney(selectedClient.debt_balance)}</div>
-            </div>
-          )}
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 24 }}>
-            <div className="data-section">
-              <div style={{ padding: 24, textAlign: 'center' }}>
-                <div className="client-avatar" style={{ width: 72, height: 72, fontSize: 28, margin: '0 auto 16px' }}>
-                  {selectedClient.name?.charAt(0)?.toUpperCase()}
-                </div>
-                <h3 style={{ fontSize: 20, fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: 4 }}>
-                  {selectedClient.name}
-                </h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 20 }}>
-                  {selectedClient.rut}
-                </p>
-
-                <div style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Email</span>
-                    <span>{selectedClient.email || '--'}</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Teléfono</span>
-                    <span>{selectedClient.phone || '--'}</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, padding: '12px 0', borderTop: '1px solid var(--border-subtle)', marginTop: 4 }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Saldo Deuda</span>
-                    <span style={{ fontWeight: 700, fontSize: 16, color: selectedClient.debt_balance > 0 ? 'var(--color-danger)' : 'var(--color-success)' }}>
-                      {formatMoney(selectedClient.debt_balance)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="data-section">
-              <div className="data-section-header">
-                <h3 className="data-section-title">📝 Historial de Transacciones</h3>
-                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{clientHistory.length} registros</span>
-              </div>
-              <div className="data-table-wrap">
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Tipo</th>
-                      <th>Categoría</th>
-                      <th>Método</th>
-                      <th>Total</th>
-                      <th>Fecha</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {clientHistory.length === 0 ? (
-                      <tr><td colSpan={5}><div className="empty-state"><h3>Sin historial</h3></div></td></tr>
-                    ) : (
-                      clientHistory.map(tx => (
-                        <tr key={tx.id}>
-                          <td><span className={`type-badge ${tx.type}`}>{tx.type === 'ingreso' ? '↗' : '↘'} {tx.type}</span></td>
-                          <td style={{ textTransform: 'capitalize' }}>{tx.category.replace('_', ' ')}</td>
-                          <td style={{ textTransform: 'capitalize' }}>{tx.method.replace('_', ' ')}</td>
-                          <td><span className={`transaction-amount ${tx.type === 'ingreso' ? 'positive' : 'negative'}`}>{formatMoney(tx.total)}</span></td>
-                          <td style={{ fontSize: 12, color: 'var(--text-muted)' }}>{new Date(tx.created_at).toLocaleString('es-CL', { hour: '2-digit', minute: '2-digit' })}</td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* VIEW: ALPHABETICAL LIST */}
+      {/* ── Bento Metrics KPI Grid ── */}
       {view === 'list' && (
-        <div className="data-section fade-in">
-          <div className="data-section-header" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-            <div>
-              <h3 className="data-section-title">👥 Directorio de Clientes (A-Z)</h3>
-              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{filteredClients.length} registrados</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+                Total Clientes
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-neutral-100 border border-neutral-200/60 flex items-center justify-center text-neutral-700">
+                <Users size={15} />
+              </div>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-neutral-900 tracking-tight font-mono">
+              {totalClients}
+            </div>
+            <div className="text-[10px] font-mono text-neutral-400 mt-1 font-bold">Registrados en la plataforma</div>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+                Clientes al Día
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-600">
+                <CheckCircle2 size={15} />
+              </div>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight font-mono">
+              {totalClients - clientsWithDebt.length}
+            </div>
+            <div className="text-[10px] font-mono text-emerald-700 mt-1 font-bold flex items-center gap-1">
+              <span>●</span> Sin saldos pendientes
             </div>
           </div>
-          
-          {/* Debt Filters */}
-          <div className="data-filters" style={{ padding: '0 24px 16px 24px', borderBottom: '1px solid var(--border-subtle)' }}>
-            <span style={{ fontSize: 13, color: 'var(--text-muted)', marginRight: 8 }}>Filtrar por:</span>
-            <button className={`filter-chip ${debtFilter === 'ALL' ? 'active' : ''}`}
-              onClick={() => setDebtFilter('ALL')}>Todos</button>
-            <button className={`filter-chip ${debtFilter === 'DEBT' ? 'active' : ''}`}
-              onClick={() => setDebtFilter('DEBT')}>⚠️ Con Deuda</button>
-            <button className={`filter-chip ${debtFilter === 'CLEAR' ? 'active' : ''}`}
-              onClick={() => setDebtFilter('CLEAR')}>✓ Al Día</button>
+
+          <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+                Cuentas con Deuda
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-rose-50 border border-rose-200/60 flex items-center justify-center text-rose-600">
+                <AlertTriangle size={15} />
+              </div>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight font-mono">
+              {clientsWithDebt.length}
+            </div>
+            <div className="text-[10px] font-mono text-rose-700 mt-1 font-bold">Por cobrar en sede</div>
           </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+                Total Deuda Activa
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/60 flex items-center justify-center text-amber-600">
+                <DollarSign size={15} />
+              </div>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-amber-600 tracking-tight font-mono">
+              {fmt(totalDebt)}
+            </div>
+            <div className="text-[10px] font-mono text-amber-700 mt-1 font-bold">Monto consolidado fiado</div>
+          </div>
+        </div>
+      )}
+
+      {/* ── VIEW: LIST ── */}
+      {view === 'list' && (
+        <div className="rounded-2xl bg-white border border-neutral-200/80 shadow-2xs overflow-hidden">
           
-          <div className="data-table-wrap">
-            <table className="data-table">
-              <thead>
+          {/* Toolbar */}
+          <div className="p-4 sm:p-5 border-b border-neutral-200/70 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white">
+            <div className="relative flex-1 max-w-md">
+              <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+              <input
+                type="text"
+                placeholder="Buscar por RUT (ej: 19.823.123-4), nombre o email..."
+                value={searchRut}
+                onChange={(e) => setSearchRut(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}
+                className="w-full h-9 pl-9 pr-4 rounded-xl border border-neutral-200 bg-neutral-50/60 text-xs text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-neutral-900 outline-none transition-all"
+              />
+            </div>
+
+            <div className="inline-flex p-1 rounded-xl bg-neutral-100 border border-neutral-200/60 gap-0.5">
+              {[
+                { id: 'ALL', label: 'Todos' },
+                { id: 'DEBT', label: 'Con Deuda' },
+                { id: 'CLEAR', label: 'Al Día' },
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setDebtFilter(tab.id)}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                    debtFilter === tab.id ? 'bg-white text-neutral-900 shadow-2xs' : 'text-neutral-500 hover:text-neutral-900'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Table Content */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-neutral-50/80 border-b border-neutral-200/70 text-neutral-500 uppercase font-mono text-[11px] font-bold tracking-wider">
                 <tr>
-                  <th>Nombre Completo</th>
-                  <th>RUT</th>
-                  <th>Teléfono</th>
-                  <th>Email</th>
-                  <th>Estado Deuda</th>
-                  <th>Acción</th>
+                  <th className="py-3 px-4">Cliente</th>
+                  <th className="py-3 px-4">RUT</th>
+                  <th className="py-3 px-4">Teléfono</th>
+                  <th className="py-3 px-4">Email</th>
+                  <th className="py-3 px-4">Estado Cuenta</th>
+                  <th className="py-3 px-4 text-right">Acción</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-neutral-100 text-neutral-800">
                 {filteredClients.length === 0 ? (
                   <tr>
-                    <td colSpan={6}>
-                      <div className="empty-state">
-                        <div className="empty-state-icon">📭</div>
-                        <h3>No se encontraron clientes</h3>
-                        <p>Asegúrate de haber ingresado bien el nombre o RUT.</p>
-                      </div>
+                    <td colSpan={6} className="py-12 text-center text-neutral-400">
+                      <Inbox size={32} className="mx-auto mb-2 text-neutral-300" />
+                      <div className="font-bold text-sm text-neutral-600">No se encontraron clientes</div>
+                      <div className="text-xs text-neutral-400 mt-0.5">Verifica el RUT ingresado o registra un nuevo cliente</div>
                     </td>
                   </tr>
                 ) : (
                   filteredClients.map(c => (
-                    <tr key={c.rut}>
-                      <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div className="client-avatar" style={{ width: 32, height: 32, fontSize: 14 }}>
+                    <tr key={c.rut} className="hover:bg-neutral-50/60 transition-colors">
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-neutral-900 text-white font-black text-xs flex items-center justify-center shrink-0">
                             {c.name?.charAt(0)?.toUpperCase()}
                           </div>
-                          <strong style={{ color: 'var(--text-primary)' }}>{c.name}</strong>
+                          <div>
+                            <div className="font-bold text-neutral-900">{c.name}</div>
+                            <div className="text-[10px] font-mono text-neutral-400 uppercase">{c.role || 'cliente'}</div>
+                          </div>
                         </div>
                       </td>
-                      <td style={{ fontFamily: 'var(--font-sans)', fontSize: 13 }}>{c.rut}</td>
-                      <td style={{ color: 'var(--text-muted)', fontSize: 13 }}>{c.phone || '--'}</td>
-                      <td style={{ color: 'var(--text-muted)', fontSize: 13 }}>{c.email || '--'}</td>
-                      <td>
+                      <td className="py-3.5 px-4 font-mono font-bold text-neutral-700">
+                        {c.rut}
+                      </td>
+                      <td className="py-3.5 px-4 font-mono text-neutral-600">
+                        {c.phone || '—'}
+                      </td>
+                      <td className="py-3.5 px-4 text-neutral-600">
+                        {c.email || '—'}
+                      </td>
+                      <td className="py-3.5 px-4">
                         {c.debt_balance > 0 ? (
-                          <span style={{ 
-                            background: 'rgba(239,68,68,0.1)', color: '#fca5a5', 
-                            border: '1px solid rgba(239,68,68,0.3)', padding: '2px 6px', 
-                            borderRadius: 4, fontSize: 11, fontWeight: 600 
-                          }}>
-                            ⚠️ Debe {formatMoney(c.debt_balance)}
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                            <AlertTriangle size={11} /> Debe {fmt(c.debt_balance)}
                           </span>
                         ) : (
-                          <span style={{ 
-                            background: 'rgba(34,197,94,0.1)', color: '#86efac', 
-                            border: '1px solid rgba(34,197,94,0.3)', padding: '2px 6px', 
-                            borderRadius: 4, fontSize: 11, fontWeight: 600 
-                          }}>
-                            ✓ Al Día
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Al Día
                           </span>
                         )}
                       </td>
-                      <td>
-                        <button className="btn btn-secondary btn-sm" onClick={() => handleViewProfile(c)}>
-                          <User size={14} /> Ver Perfil
+                      <td className="py-3.5 px-4 text-right">
+                        <button
+                          onClick={() => handleViewProfile(c)}
+                          className="h-7 px-2.5 rounded-lg border border-neutral-200 hover:bg-neutral-100 text-xs font-bold text-neutral-700 transition-colors inline-flex items-center gap-1.5"
+                        >
+                          <User size={12} /> Ver Ficha
                         </button>
                       </td>
                     </tr>
@@ -440,15 +354,255 @@ export default function ClientsPage() {
               </tbody>
             </table>
           </div>
+
+          <div className="p-4 border-t border-neutral-200/70 bg-neutral-50/50 flex items-center justify-between text-xs font-mono text-neutral-500">
+            <div>
+              Mostrando <strong>{filteredClients.length}</strong> de <strong>{clientsData.length}</strong> clientes registrados
+            </div>
+          </div>
         </div>
       )}
 
-      {toast && (
-        <div className={`toast ${toast.type}`}>
-          <span className="toast-message">{toast.msg}</span>
+      {/* ── VIEW: PROFILE ── */}
+      {view === 'profile' && selectedClient && (
+        <div className="space-y-6 animate-in fade-in duration-150">
+          
+          {selectedClient.debt_balance > 0 && (
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-between text-rose-800">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                  <AlertTriangle size={18} />
+                </div>
+                <div>
+                  <h4 className="text-xs font-black uppercase tracking-wider">Cliente con Deuda Pendiente</h4>
+                  <p className="text-xs text-rose-600">{selectedClient.name} registra saldo por pagar en caja</p>
+                </div>
+              </div>
+              <div className="text-lg font-black font-mono text-rose-700">
+                {fmt(selectedClient.debt_balance)}
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Client Card */}
+            <div className="p-6 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs space-y-5">
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-2xl bg-neutral-900 text-white text-2xl font-black flex items-center justify-center mx-auto mb-3 shadow-xs">
+                  {selectedClient.name?.charAt(0)?.toUpperCase()}
+                </div>
+                <h3 className="text-base font-black text-neutral-900">{selectedClient.name}</h3>
+                <div className="text-xs font-mono font-bold text-neutral-400 mt-0.5">{selectedClient.rut}</div>
+              </div>
+
+              <div className="border-t border-neutral-100 pt-4 space-y-3 text-xs">
+                <div>
+                  <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-0.5">
+                    Teléfono
+                  </span>
+                  <div className="font-semibold text-neutral-800">{selectedClient.phone || 'No registrado'}</div>
+                </div>
+
+                <div>
+                  <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-0.5">
+                    Correo Electrónico
+                  </span>
+                  <div className="font-semibold text-neutral-800">{selectedClient.email || 'No registrado'}</div>
+                </div>
+
+                <div>
+                  <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-0.5">
+                    Rol en Sistema
+                  </span>
+                  <div className="font-semibold text-neutral-800 uppercase">{selectedClient.role || 'cliente'}</div>
+                </div>
+
+                <div className="pt-2 border-t border-neutral-100">
+                  <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-0.5">
+                    Saldo en Cuenta
+                  </span>
+                  <div className={`text-xl font-black font-mono ${selectedClient.debt_balance > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                    {fmt(selectedClient.debt_balance)}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* History Table */}
+            <div className="lg:col-span-2 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs overflow-hidden">
+              <div className="p-4 sm:p-5 border-b border-neutral-200/70 flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-bold text-neutral-900">Historial de Transacciones</h3>
+                  <p className="text-[11px] text-neutral-400">{clientHistory.length} movimientos asociados</p>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-neutral-50/80 border-b border-neutral-200/70 text-neutral-500 uppercase font-mono text-[11px] font-bold tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4">Tipo</th>
+                      <th className="py-3 px-4">Categoría</th>
+                      <th className="py-3 px-4">Método</th>
+                      <th className="py-3 px-4">Monto</th>
+                      <th className="py-3 px-4">Fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100 text-neutral-800">
+                    {clientHistory.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="py-12 text-center text-neutral-400">
+                          Sin transacciones registradas para este cliente
+                        </td>
+                      </tr>
+                    ) : (
+                      clientHistory.map(tx => (
+                        <tr key={tx.id} className="hover:bg-neutral-50/60 transition-colors">
+                          <td className="py-3.5 px-4">
+                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold ${
+                              tx.type === 'ingreso' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                            }`}>
+                              {tx.type === 'ingreso' ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />}
+                              {tx.type}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 font-semibold capitalize">{tx.category?.replace('_', ' ')}</td>
+                          <td className="py-3.5 px-4 font-mono uppercase text-neutral-600">{tx.method}</td>
+                          <td className="py-3.5 px-4 font-mono font-black text-neutral-900">
+                            {fmt(tx.total)}
+                          </td>
+                          <td className="py-3.5 px-4 font-mono text-neutral-500">
+                            {new Date(tx.created_at).toLocaleString('es-CL')}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
         </div>
       )}
+
+      {/* ── VIEW: ADD CLIENT ── */}
+      {view === 'add' && (
+        <div className="max-w-xl mx-auto rounded-2xl bg-white border border-neutral-200/80 shadow-2xs p-6 space-y-5 animate-in fade-in duration-150">
+          <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+            <div>
+              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">Registro CRM</div>
+              <h2 className="text-base font-black text-neutral-900 mt-0.5">
+                Nuevo Cliente
+              </h2>
+            </div>
+            <button
+              onClick={() => setView('list')}
+              className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          <form onSubmit={handleSaveClient} className="space-y-4">
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                RUT del Cliente *
+              </label>
+              <input
+                type="text"
+                placeholder="12.345.678-9"
+                value={formData.rut}
+                onChange={e => setFormData({ ...formData, rut: formatRut(e.target.value) })}
+                className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 text-xs font-mono font-bold text-neutral-900 focus:border-neutral-900 outline-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                  Nombres *
+                </label>
+                <input
+                  type="text"
+                  placeholder="Juan Carlos"
+                  value={formData.nombre}
+                  onChange={e => setFormData({ ...formData, nombre: e.target.value })}
+                  className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 text-xs text-neutral-900 focus:border-neutral-900 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                  Apellidos *
+                </label>
+                <input
+                  type="text"
+                  placeholder="Pérez Silva"
+                  value={formData.apellidos}
+                  onChange={e => setFormData({ ...formData, apellidos: e.target.value })}
+                  className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 text-xs text-neutral-900 focus:border-neutral-900 outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                  Teléfono
+                </label>
+                <input
+                  type="text"
+                  placeholder="+56 9 1234 5678"
+                  value={formData.telefono}
+                  onChange={e => setFormData({ ...formData, telefono: e.target.value })}
+                  className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 text-xs font-mono text-neutral-900 focus:border-neutral-900 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                  Correo Electrónico
+                </label>
+                <input
+                  type="email"
+                  placeholder="cliente@ejemplo.cl"
+                  value={formData.correo}
+                  onChange={e => setFormData({ ...formData, correo: e.target.value })}
+                  className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 text-xs text-neutral-900 focus:border-neutral-900 outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-4 border-t border-neutral-100">
+              <button
+                type="button"
+                onClick={() => setView('list')}
+                className="h-10 px-4 rounded-xl border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="h-10 px-5 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-2"
+              >
+                <Save size={14} /> Registrar Cliente
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl border shadow-xl text-xs font-bold animate-in fade-in slide-in-from-bottom-3 duration-200 ${
+          toast.type === 'error'
+            ? 'bg-rose-50 border-rose-200 text-rose-700'
+            : 'bg-neutral-900 border-neutral-800 text-white'
+        }`}>
+          {toast.msg}
+        </div>
+      )}
+
     </div>
   );
 }
-

@@ -54,7 +54,7 @@ export const SPOTS_DATA = {
   "punta-piedra": {
     name: "Sede Punta Piedra",
     subtitle: "Vanguardia, Tecnología y Diseño",
-    heroImage: "https://images.unsplash.com/photo-1455720456102-6b9cebe0ab90?auto=format&fit=crop&w=1920&q=80",
+    heroImage: "/punta-piedra.png",
     description: "Nuestra sede más moderna y tecnológica. Un proyecto de vanguardia diseñado para elevar el estándar de las escuelas de surf en Chile, con arquitectura 360°.",
     stats: {
       area: "1200 m²",

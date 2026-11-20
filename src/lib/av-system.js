@@ -40,7 +40,7 @@ export function filterInventoryByRole(items, role) {
 export function canRentItem(item) {
   const av = item.av || calculateAV(item);
   if (av.level === 'URGENTE') {
-    return { allowed: false, reason: `⚠️ Ítem ${item.item_code} VENCIDO (${av.months} meses). Arriendo bloqueado.` };
+    return { allowed: false, reason: `Ítem ${item.item_code} VENCIDO (${av.months} meses). Arriendo bloqueado.` };
   }
   if (item.is_rented) {
     return { allowed: false, reason: `Ítem ${item.item_code} ya está arrendado.` };

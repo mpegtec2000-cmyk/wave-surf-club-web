@@ -1,175 +1,106 @@
 'use client';
 
+import './escuelas.css';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
-import { useTranslation } from '@/lib/i18n-context';
+import { ArrowUpRight } from 'lucide-react';
 
 export default function EscuelasPage() {
-  const { t } = useTranslation();
-
   const sedes = [
     {
       id: 'concon',
+      num: '01',
       title: 'WAVE SURF CLUB CONCÓN',
-      subtitle: 'SEDE MATRIZ / PLAYA LA BOCA',
-      slogan: 'El corazón de Wave surf club',
-      desc: 'Mega Ramp más grande de Chile y Staff de Élite. Única con EXPERIENCIA FULL DAY: tu equipo te espera para una segunda sesión sin costo adicional.',
-      img: '/fondo-escuela.png',
-      features: ['Mega Ramp Pro', 'Duchas Agua Potable', 'Taller Neoprene', 'Cafetería & Mirador'],
-      cta: 'ASEGURA TU LUGAR CON LOS MEJORES',
-      highlight: 'RESERVA FULL DAY'
+      subtitle: 'SEDE MATRIZ · PLAYA LA BOCA',
+      desc: 'Mega Ramp más grande de Chile y Staff de Élite. Única con experiencia Full Day: tu equipo te espera para una segunda sesión sin costo adicional.',
+      img: '/TIENDA/4.PNG',
+      features: ['Mega Ramp Pro', 'Duchas Calientes', 'Taller Neoprene', 'Cafetería & Mirador'],
+      cta: 'VER SEDE CONCÓN',
+      highlight: 'FULL DAY'
     },
     {
       id: 'pichilemu',
+      num: '02',
       title: 'PICHILEMU',
-      subtitle: 'Capital del Surf',
-      slogan: 'Donde viven las leyendas.',
-      desc: 'Ubicada en la meca del surf chileno, inmersión total.',
+      subtitle: 'CAPITAL DEL SURF · TALLER AGAVE',
+      desc: 'Ubicada en la meca del surf chileno. Inmersión total en olas de clase mundial junto al taller de shaping sustentable de Matías Espinoza.',
       img: '/PICHILEMU.jpg',
-      features: ['Infraestructura Pro', 'Entrenamiento Funcional', 'Acceso Directo'],
-      highlight: 'REPARA TU NAVE'
+      features: ['Olas World Class', 'Shaping Agave', 'Reparación Pro', 'Acceso Directo'],
+      cta: 'EXPLORAR PICHILEMU',
+      highlight: 'TALLER PRO'
     },
     {
       id: 'punta-piedra',
-      title: 'SEDE PUNTA PIEDRA',
-      subtitle: 'Inauguración 2026',
-      slogan: 'El futuro del deporte.',
-      desc: 'Nuestra sede más moderna y tecnológica de vanguardia.',
+      num: '03',
+      title: 'PUNTA DE PIEDRA',
+      subtitle: 'HIGH PERFORMANCE · 2026',
+      desc: 'Nuestra sede más moderna y vanguardista. Arquitectura 360° frente al mar, entrenamiento de alto rendimiento y rampas de skate.',
       img: '/punta-piedra.png',
-      features: ['Arquitectura 360°', 'Rampas de Skate Pro', 'Inclusión Total']
+      features: ['Arquitectura 360°', 'Bowl & Street Skate', 'Coaching Técnico', 'Inclusión Total'],
+      cta: 'VER PUNTA PIEDRA',
+      highlight: 'NEW SPOT'
     }
   ];
 
   return (
-    <main style={{ 
-      width: '100%', 
-      minHeight: '100vh', 
-      backgroundColor: '#000', 
-      position: 'relative'
-    }}>
-      {/* Navbar principal */}
+    <main className="esc-root">
       <Navbar />
 
-      {/* Imagen de Fondo (Full Screen) */}
-      <div style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 1
-      }}>
-        <Image 
-          src="/FONDO_PREMIUM_V1.png" 
-          alt="Escuelas Wave Surf Club" 
-          fill 
+      <div className="esc-bg-wrap" aria-hidden="true">
+        <Image
+          src="/Club%20Wave%20Project%20bajo%20luces%20nocturnas.png"
+          alt=""
+          fill
           priority
-          style={{ 
-            objectFit: 'cover',
-            objectPosition: 'center',
-            opacity: 0.8
-          }}
+          sizes="100vw"
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
         />
-        {/* Overlay para legibilidad */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7))' }} />
+        <div className="esc-bg-overlay" />
       </div>
 
-      {/* Grid de Sedes (Flotando sobre el fondo) */}
-      <section style={{ 
-        position: 'relative', 
-        zIndex: 2, 
-        padding: '140px 20px 80px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }}>
-        <div className="schools-grid" style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-          gap: '30px',
-          maxWidth: '1200px',
-          width: '100%'
-        }}>
-          {sedes.map(sede => {
+      <section className="esc-content">
+        <div className="esc-header">
+          <span className="esc-kicker">01 / SPOTS &amp; ACADEMIAS · CHILE</span>
+          <h1 className="esc-title">NUESTRAS ESCUELAS®</h1>
+          <p className="esc-sub">Tres sedes diseñadas para progresar en el mar y en el concreto, todo el año.</p>
+        </div>
+
+        <div className="esc-grid">
+          {sedes.map((sede) => {
             const cardHref = sede.id === 'pichilemu' ? '/taller' : `/spots/${sede.id}`;
-            
             return (
-              <Link key={sede.id} href={cardHref} style={{ textDecoration: 'none' }}>
-                <div className="school-card" style={{
-                  background: 'rgba(255, 255, 255, 0.95)', 
-                  borderRadius: '16px',
-                  padding: '30px',
-                  color: '#000',
-                  transition: 'transform 0.3s ease',
-                  boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-                  height: '100%'
-                }}>
-                  <div style={{ height: '180px', position: 'relative', marginBottom: '25px', borderRadius: '12px', overflow: 'hidden' }}>
-                      <Image src={sede.img} alt={sede.title} fill style={{ objectFit: 'cover' }} />
-                      {sede.highlight && (
-                          <div style={{ 
-                              position: 'absolute', 
-                              top: '15px', 
-                              right: '15px', 
-                              background: '#38bdf8', 
-                              color: '#fff', 
-                              padding: '6px 12px', 
-                              borderRadius: '50px', 
-                              fontSize: '10px', 
-                              fontWeight: '900',
-                              letterSpacing: '1px',
-                              boxShadow: '0 4px 10px rgba(56, 189, 248, 0.4)'
-                          }}>
-                              {sede.highlight}
-                          </div>
-                      )}
+              <Link key={sede.id} href={cardHref} className="esc-card-link">
+                <article className="esc-card">
+                  <div className="esc-card-media">
+                    <Image src={sede.img} alt={sede.title} fill priority sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'cover' }} />
+                    <span className="esc-num-badge">{sede.num}</span>
+                    {sede.highlight && <span className="esc-tag-badge">{sede.highlight}</span>}
                   </div>
-                  <h3 style={{ fontSize: '22px', fontWeight: 950, marginBottom: '5px', letterSpacing: '-0.02em' }}>{sede.title}</h3>
-                  <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 900, marginBottom: '15px', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{sede.subtitle}</div>
-                  <p style={{ fontSize: '14px', color: '#4b5563', lineHeight: '1.6', marginBottom: '25px', fontWeight: '500' }}>{sede.desc}</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '25px' }}>
-                      {sede.features.map(f => (
-                          <span key={f} style={{ fontSize: '10px', background: '#f3f4f6', padding: '4px 8px', borderRadius: '4px', fontWeight: 700 }}>{f}</span>
+
+                  <div className="esc-card-body">
+                    <span className="esc-card-sub">{sede.subtitle}</span>
+                    <h2 className="esc-card-title">{sede.title}</h2>
+                    <p className="esc-card-desc">{sede.desc}</p>
+
+                    <div className="esc-features">
+                      {sede.features.map((f) => (
+                        <span key={f} className="esc-chip">{f}</span>
                       ))}
+                    </div>
+
+                    <div className="esc-cta-pill">
+                      <span>{sede.cta}</span>
+                      <ArrowUpRight size={15} />
+                    </div>
                   </div>
-                  <div style={{ 
-                      marginTop: 'auto',
-                      width: '100%',
-                      padding: '12px',
-                      textAlign: 'center',
-                      background: '#000',
-                      color: '#fff',
-                      fontSize: '11px',
-                      fontWeight: '900',
-                      borderRadius: '8px',
-                      letterSpacing: '1px',
-                      textTransform: 'uppercase'
-                  }}>
-                      {sede.cta || 'VER MÁS DETALLES'}
-                  </div>
-                </div>
+                </article>
               </Link>
             );
           })}
         </div>
       </section>
-
-      <style jsx global>{`
-        body { margin: 0; padding: 0; background: #000; }
-        .school-card:hover { transform: translateY(-10px); }
-
-        @media (max-width: 768px) {
-          section {
-            padding: 100px 15px 40px !important;
-          }
-          .schools-grid {
-            grid-template-columns: 1fr !important;
-            gap: 20px !important;
-          }
-          .school-card {
-            padding: 20px !important;
-          }
-        }
-      `}</style>
-
     </main>
   );
 }

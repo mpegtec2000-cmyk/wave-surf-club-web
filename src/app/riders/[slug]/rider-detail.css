@@ -1,0 +1,239 @@
+.rmag-root {
+          background: #ffffff;
+          color: #000000;
+          min-height: 100vh;
+          width: 100%;
+          overflow-x: hidden;
+        }
+
+        .rmag-hero {
+          height: 76vh;
+          min-height: 440px;
+          margin-top: var(--nav-height, 100px);
+          position: relative;
+          display: flex;
+          align-items: flex-end;
+          padding: 48px 6%;
+          overflow: hidden;
+          background: #000000;
+        }
+
+        .rmag-hero-grad {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent 60%);
+          z-index: 2;
+        }
+
+        .rmag-title-box {
+          position: relative;
+          z-index: 3;
+          background: #ffffff;
+          color: #000000;
+          padding: 28px 40px;
+          border-radius: 18px;
+          max-width: 100%;
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .rmag-back {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-family: var(--font-mono), monospace;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          color: #525252;
+          margin-bottom: 12px;
+          text-decoration: none;
+        }
+
+        .rmag-role {
+          display: block;
+          font-family: var(--font-mono), monospace;
+          font-size: 10.5px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          color: #737373;
+          margin-bottom: 6px;
+        }
+
+        .rmag-name {
+          font-family: var(--font-display), sans-serif;
+          font-size: clamp(26px, 4.8vw, 56px);
+          font-weight: 800;
+          line-height: 0.96;
+          margin: 0;
+          color: #000000;
+          letter-spacing: -0.04em;
+        }
+
+        .rmag-content {
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 76px 24px;
+        }
+
+        .rmag-row {
+          display: grid;
+          grid-template-columns: 1.05fr 0.95fr;
+          gap: 56px;
+          align-items: start;
+        }
+
+        .rmag-kicker {
+          display: block;
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          color: #737373;
+          margin-bottom: 10px;
+        }
+
+        .rmag-title {
+          font-family: var(--font-display), sans-serif;
+          font-size: clamp(24px, 3.5vw, 38px);
+          font-weight: 800;
+          margin: 0 0 24px;
+          color: #000000;
+          line-height: 1.05;
+        }
+
+        .rmag-bio {
+          font-size: 16px;
+          line-height: 1.8;
+          color: #404040;
+        }
+
+        .rmag-bio p { margin-bottom: 18px; }
+        .rmag-bio strong { color: #000000; font-weight: 800; }
+
+        .rmag-stats {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+          border-top: 1px solid #e5e5e5;
+          border-bottom: 1px solid #e5e5e5;
+          padding: 28px 0;
+          margin-top: 32px;
+        }
+
+        .rmag-stat h6 {
+          font-family: var(--font-mono), monospace;
+          font-size: 10px;
+          color: #737373;
+          letter-spacing: 0.16em;
+          margin: 0 0 6px;
+        }
+
+        .rmag-stat p {
+          font-family: var(--font-display), sans-serif;
+          font-size: 17px;
+          font-weight: 800;
+          margin: 0;
+          color: #000000;
+        }
+
+        .rmag-carousel {
+          position: relative;
+          width: 100%;
+          height: 580px;
+          border-radius: 20px;
+          overflow: hidden;
+          background: #f5f5f5;
+          border: 1px solid #e5e5e5;
+        }
+
+        .rmag-slide {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          transition: opacity 1s ease;
+        }
+
+        .rmag-slide.active { opacity: 1; }
+
+        .rmag-media-block { margin-top: 44px; }
+
+        .rmag-sessions-label {
+          display: block;
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          color: #000000;
+          border-bottom: 1.5px solid #000000;
+          padding-bottom: 8px;
+          margin-bottom: 20px;
+        }
+
+        .rmag-video-wrap {
+          position: relative;
+          width: 100%;
+          padding-top: 56.25%;
+          background: #000000;
+          border-radius: 14px;
+          overflow: hidden;
+        }
+
+        .rmag-video-wrap iframe {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          border: none;
+        }
+
+        .rmag-insta-list {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .rmag-insta-box {
+          border-radius: 14px;
+          overflow: hidden;
+          border: 1px solid #e5e5e5;
+        }
+
+        .rmag-dl-wrap { margin-top: 32px; }
+
+        .rmag-dl-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          background: #000000;
+          color: #ffffff;
+          padding: 15px 28px;
+          border-radius: 9999px;
+          font-family: var(--font-display), sans-serif;
+          font-size: 12px;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          text-decoration: none;
+        }
+
+        .rmag-dl-btn:hover { background: #262626; }
+
+        .rmag-footer {
+          padding: 48px 24px;
+          text-align: center;
+          border-top: 1px solid #e5e5e5;
+        }
+
+        .rmag-footer p {
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          letter-spacing: 0.2em;
+          color: #737373;
+          margin: 0;
+        }
+
+        @media (max-width: 960px) {
+          .rmag-row { grid-template-columns: 1fr; }
+          .rmag-stats { grid-template-columns: 1fr; }
+          .rmag-carousel { height: 380px; }
+          .rmag-title-box { padding: 22px 24px; }
+        }

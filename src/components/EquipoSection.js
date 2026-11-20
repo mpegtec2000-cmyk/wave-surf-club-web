@@ -10,7 +10,7 @@ export default function EquipoSection() {
 
       <div className="equipo-bg-container" style={{ position: 'relative', width: '100%', height: '100%' }}>
         <Image 
-          src="/FONDO-RAIDERS.PNG" 
+          src="/CARUSEL/2.jpg" 
           alt="Riders Background"
           fill
           priority

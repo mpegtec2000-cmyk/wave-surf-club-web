@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Calendar, Clock, Plus, CheckCircle, Search, ClipboardList } from 'lucide-react';
+import { 
+  Calendar, Clock, Plus, CheckCircle, Search, ClipboardList,
+  Printer, X, Save, User, Phone, Check, Tag
+} from 'lucide-react';
 
 export default function TiendaReservasPage() {
   const [reservas, setReservas] = useState([]);
@@ -26,6 +29,12 @@ export default function TiendaReservasPage() {
 
   const [typeFilter, setTypeFilter] = useState('todos'); // 'todos', 'clase', 'arriendo'
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (msg, type = 'info') => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   useEffect(() => {
     fetchReservas();
@@ -67,7 +76,6 @@ export default function TiendaReservasPage() {
   };
 
   const handleOpenFastReg = async () => {
-    // Load products that require reservation
     const { data } = await supabase
       .from('productos_tienda')
       .select('id, nombre, duracion_bloque')
@@ -78,7 +86,10 @@ export default function TiendaReservasPage() {
   };
 
   const handleSaveFastReg = async () => {
-    if (!formData.producto_id || !formData.hora_inicio) return alert('Completa los campos requeridos');
+    if (!formData.producto_id || !formData.hora_inicio) {
+      showToast('Completa los campos requeridos', 'error');
+      return;
+    }
     
     setSaving(true);
     try {
@@ -87,9 +98,8 @@ export default function TiendaReservasPage() {
       endDate.setMinutes(endDate.getMinutes() + formData.duracion_minutos);
       const hora_fin = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
 
-      // Insert dummy order to attach client info, or we can just use notes
       const { data: orden } = await supabase.from('ordenes_tienda').insert({
-        estado: 'pagado', // Pago presencial
+        estado: 'pagado',
         total: 0,
         subtotal: 0,
         comision_flow: 0,
@@ -108,10 +118,11 @@ export default function TiendaReservasPage() {
         notas: 'Registro en Local'
       });
 
+      showToast('Reserva registrada con éxito', 'success');
       setIsModalOpen(false);
       fetchReservas();
     } catch (e) {
-      alert('Error: ' + e.message);
+      showToast('Error: ' + e.message, 'error');
     } finally {
       setSaving(false);
     }
@@ -119,10 +130,10 @@ export default function TiendaReservasPage() {
 
   const markCompleted = async (id) => {
     await supabase.from('reservas').update({ estado: 'completada' }).eq('id', id);
+    showToast('Reserva marcada como completada', 'success');
     fetchReservas();
   };
 
-  // Helper to determine type
   const getTipo = (prod) => {
     if (!prod) return 'Otro';
     const name = prod.nombre?.toLowerCase() || '';
@@ -131,14 +142,12 @@ export default function TiendaReservasPage() {
     return 'Otro';
   };
 
-  // Filter reservations by type
   const filteredReservas = (reservas || []).filter(r => {
     if (typeFilter === 'todos') return true;
     const tipo = getTipo(r.productos_tienda).toLowerCase();
     return tipo === typeFilter;
   });
 
-  // Group reservations by date
   const groupedReservas = filteredReservas.reduce((acc, r) => {
     if (!acc[r.fecha]) acc[r.fecha] = [];
     acc[r.fecha].push(r);
@@ -148,285 +157,412 @@ export default function TiendaReservasPage() {
   const sortedDates = Object.keys(groupedReservas).sort();
 
   return (
-    <div className="tienda-admin">
-      <div className="header-actions">
-        <h1>Agenda de Reservas (Tienda)</h1>
-        <div className="header-btns">
-          <button className="btn-report" onClick={() => setIsReportOpen(true)}>
-            <ClipboardList size={16} /> GENERAR TABLA
+    <div className="space-y-6">
+      
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            Logística &amp; Calendario Operacional
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Agenda de Reservas de Clases &amp; Arriendos
+          </h1>
+        </div>
+
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => setIsReportOpen(true)}
+            className="h-9 px-3.5 rounded-xl border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700 transition-colors inline-flex items-center gap-1.5"
+          >
+            <ClipboardList size={14} /> Generar Tabla
           </button>
-          <button className="btn-primary" onClick={handleOpenFastReg}>
-            <Plus size={16} /> REGISTRO RÁPIDO LOCAL
+          <button
+            onClick={handleOpenFastReg}
+            className="h-9 px-4 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-1.5"
+          >
+            <Plus size={14} /> Registro Rápido Local
           </button>
         </div>
       </div>
 
-      <div className="toolbar">
-        <div className="tool-group">
-          <div className="view-tabs">
-            <button className={viewMode === 'day' ? 'active' : ''} onClick={() => setViewMode('day')}>DÍA</button>
-            <button className={viewMode === 'week' ? 'active' : ''} onClick={() => setViewMode('week')}>SEMANA</button>
-            <button className={viewMode === 'month' ? 'active' : ''} onClick={() => setViewMode('month')}>MES</button>
+      {/* ── Toolbar & Filters Card ── */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs space-y-3">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          <div className="flex flex-wrap items-center gap-3">
+            {/* View Mode Segment */}
+            <div className="inline-flex p-1 rounded-xl bg-neutral-100 border border-neutral-200/60 gap-0.5">
+              {[
+                { id: 'day', label: 'Día' },
+                { id: 'week', label: 'Semana' },
+                { id: 'month', label: 'Mes' }
+              ].map(vm => (
+                <button
+                  key={vm.id}
+                  onClick={() => setViewMode(vm.id)}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                    viewMode === vm.id ? 'bg-white text-neutral-900 shadow-2xs' : 'text-neutral-500 hover:text-neutral-900'
+                  }`}
+                >
+                  {vm.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Type Filter Segment */}
+            <div className="inline-flex p-1 rounded-xl bg-neutral-100 border border-neutral-200/60 gap-0.5">
+              {[
+                { id: 'todos', label: 'Todos' },
+                { id: 'clase', label: 'Clases' },
+                { id: 'arriendo', label: 'Arriendos' }
+              ].map(tf => (
+                <button
+                  key={tf.id}
+                  onClick={() => setTypeFilter(tf.id)}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                    typeFilter === tf.id ? 'bg-white text-neutral-900 shadow-2xs' : 'text-neutral-500 hover:text-neutral-900'
+                  }`}
+                >
+                  {tf.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="type-tabs">
-            <button className={typeFilter === 'todos' ? 'active' : ''} onClick={() => setTypeFilter('todos')}>TODOS</button>
-            <button className={typeFilter === 'clase' ? 'active' : ''} onClick={() => setTypeFilter('clase')}>CLASES</button>
-            <button className={typeFilter === 'arriendo' ? 'active' : ''} onClick={() => setTypeFilter('arriendo')}>ARRIENDOS</button>
+          {/* Date Selector */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono font-bold text-neutral-400 uppercase">
+              {viewMode === 'day' ? 'Fecha:' : viewMode === 'week' ? 'Inicia:' : 'Mes:'}
+            </span>
+            <input
+              type={viewMode === 'month' ? 'month' : 'date'}
+              value={viewMode === 'month' ? dateFilter.substring(0, 7) : dateFilter}
+              onChange={e => {
+                const val = e.target.value;
+                setDateFilter(viewMode === 'month' ? `${val}-01` : val);
+              }}
+              className="h-9 px-3 rounded-xl border border-neutral-200 bg-neutral-50/60 text-xs font-semibold text-neutral-900 focus:bg-white focus:border-neutral-900 outline-none"
+            />
           </div>
-        </div>
 
-        <div className="date-filter">
-          <label>{viewMode === 'day' ? 'Fecha:' : viewMode === 'week' ? 'Inicia en:' : 'Mes de:'}</label>
-          <input 
-            type={viewMode === 'month' ? 'month' : 'date'} 
-            value={viewMode === 'month' ? dateFilter.substring(0,7) : dateFilter}
-            onChange={e => {
-              const val = e.target.value;
-              setDateFilter(viewMode === 'month' ? `${val}-01` : val);
-            }}
-          />
         </div>
       </div>
 
-      <div className="agenda-view">
+      {/* ── Reservations List / Agenda Grid ── */}
+      <div className="space-y-6">
         {loading ? (
-          <div className="loading">Cargando agenda...</div>
+          <div className="p-16 text-center text-xs font-mono text-neutral-400 bg-white rounded-2xl border border-neutral-200/80">
+            Cargando agenda de reservas en vivo...
+          </div>
         ) : sortedDates.length === 0 ? (
-          <div className="empty-state">No hay {typeFilter !== 'todos' ? typeFilter + 's' : 'reservas'} agendadas para este periodo.</div>
+          <div className="p-16 text-center bg-white rounded-2xl border border-neutral-200/80 shadow-2xs">
+            <Calendar size={36} className="mx-auto mb-2 text-neutral-300" />
+            <div className="font-bold text-sm text-neutral-700">Sin reservas agendadas</div>
+            <div className="text-xs text-neutral-400 mt-0.5">
+              No hay {typeFilter !== 'todos' ? typeFilter + 's' : 'reservas'} para este periodo seleccionado
+            </div>
+          </div>
         ) : (
           sortedDates.map(date => (
-            <div key={date} className="date-group">
-              <h2 className="date-header">
-                <Calendar size={16} /> 
-                {new Date(date + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-              </h2>
-              <div className="grid-cards">
-                {groupedReservas[date].map(r => (
-                  <div key={r.id} className={`reserva-card ${r.estado}`}>
-                    <div className="rc-header">
-                      <span className="rc-time">
-                        <Clock size={14} /> {r.hora_inicio.substring(0,5)} - {r.hora_fin.substring(0,5)}
-                      </span>
-                      <span className={`rc-status ${r.estado}`}>{r.estado}</span>
-                    </div>
-                    <div className="rc-body">
-                      <div className="rc-type-tag">{getTipo(r.productos_tienda)}</div>
-                      <h3>{r.productos_tienda?.nombre}</h3>
-                      <div className="client-info">
-                        <p><strong>Cliente:</strong> {r.ordenes_tienda?.nombre_cliente || 'N/A'}</p>
-                        <p><strong>RUT:</strong> {r.ordenes_tienda?.rut_cliente || 'N/A'}</p>
-                        <p><strong>Tel:</strong> {r.ordenes_tienda?.telefono_cliente || 'N/A'}</p>
-                        {r.notas && <p className="notes"><strong>Notas:</strong> {r.notas}</p>}
+            <div key={date} className="space-y-3">
+              <div className="flex items-center gap-2 px-1">
+                <Calendar size={15} className="text-neutral-400" />
+                <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-500">
+                  {new Date(date + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                </h2>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600">
+                  {groupedReservas[date].length} {groupedReservas[date].length === 1 ? 'bloque' : 'bloques'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {groupedReservas[date].map(r => {
+                  const tipo = getTipo(r.productos_tienda);
+                  const isCompleted = r.estado === 'completada';
+
+                  return (
+                    <div 
+                      key={r.id} 
+                      className={`p-5 rounded-2xl bg-white border transition-all flex flex-col justify-between shadow-2xs hover:shadow-xs ${
+                        isCompleted ? 'border-neutral-200/60 opacity-80' : 'border-neutral-200/90'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-3 border-b border-neutral-100 pb-2.5">
+                          <div className="inline-flex items-center gap-1.5 text-xs font-mono font-black text-neutral-900">
+                            <Clock size={13} className="text-neutral-500" />
+                            {r.hora_inicio?.substring(0, 5)} - {r.hora_fin?.substring(0, 5)}
+                          </div>
+                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold ${
+                            isCompleted ? 'bg-neutral-100 text-neutral-600' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          }`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${isCompleted ? 'bg-neutral-400' : 'bg-emerald-500'}`}></span>
+                            {r.estado}
+                          </span>
+                        </div>
+
+                        <div className="space-y-1 mb-4">
+                          <div className="inline-block text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-neutral-100 text-neutral-700 border border-neutral-200 mb-1">
+                            {tipo}
+                          </div>
+                          <h3 className="text-sm font-black text-neutral-900">
+                            {r.productos_tienda?.nombre || 'Servicio'}
+                          </h3>
+                        </div>
+
+                        <div className="p-3 rounded-xl bg-neutral-50 border border-neutral-200/60 space-y-1.5 text-xs">
+                          <div className="flex items-center justify-between">
+                            <span className="text-neutral-400 font-mono text-[11px]">CLIENTE:</span>
+                            <span className="font-bold text-neutral-800">{r.ordenes_tienda?.nombre_cliente || 'N/A'}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-neutral-400 font-mono text-[11px]">RUT:</span>
+                            <span className="font-mono text-neutral-600">{r.ordenes_tienda?.rut_cliente || 'N/A'}</span>
+                          </div>
+                          {r.ordenes_tienda?.telefono_cliente && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-neutral-400 font-mono text-[11px]">TELÉFONO:</span>
+                              <span className="font-mono text-neutral-600">{r.ordenes_tienda?.telefono_cliente}</span>
+                            </div>
+                          )}
+                          {r.notas && (
+                            <div className="pt-1 border-t border-neutral-200/60 text-[11px] text-neutral-500 italic">
+                              Notas: {r.notas}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="pt-4 mt-2">
+                        {r.estado === 'confirmada' ? (
+                          <button
+                            onClick={() => markCompleted(r.id)}
+                            className="w-full h-9 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5"
+                          >
+                            <CheckCircle size={14} /> Marcar Completada
+                          </button>
+                        ) : (
+                          <div className="text-center text-[11px] font-mono text-neutral-400 py-1 font-bold">
+                            Sesión Finalizada
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <div className="rc-footer">
-                      {r.estado === 'confirmada' && (
-                        <button className="btn-complete" onClick={() => markCompleted(r.id)}>
-                          <CheckCircle size={14} /> Marcar Completada
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))
         )}
       </div>
 
-      {/* REPORT MODAL */}
+      {/* ── Modal Tabla Reporte ── */}
       {isReportOpen && (
-        <div className="modal-overlay" onClick={() => setIsReportOpen(false)}>
-          <div className="modal-content report-modal" onClick={e => e.stopPropagation()}>
-            <div className="report-header">
+        <div className="fixed inset-0 z-50 bg-neutral-950/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-3xl bg-white rounded-2xl border border-neutral-200 shadow-2xl p-6 space-y-4 max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
               <div>
-                <h2>Tabla de Control de Reservas</h2>
-                <p>Periodo: {viewMode.toUpperCase()} | Filtro: {typeFilter.toUpperCase()}</p>
+                <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">Planilla Operativa</div>
+                <h3 className="text-base font-black text-neutral-900 mt-0.5">
+                  Tabla de Control de Reservas
+                </h3>
               </div>
-              <button className="btn-print" onClick={() => window.print()}>IMPRIMIR / PDF</button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => window.print()}
+                  className="h-8 px-3 rounded-lg border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700 inline-flex items-center gap-1"
+                >
+                  <Printer size={13} /> Imprimir / PDF
+                </button>
+                <button
+                  onClick={() => setIsReportOpen(false)}
+                  className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100"
+                >
+                  <X size={16} />
+                </button>
+              </div>
             </div>
-            
-            <div className="report-body">
-              <table className="report-table">
-                <thead>
+
+            <div className="flex-1 overflow-y-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-neutral-50 border-b border-neutral-200 text-neutral-500 uppercase font-mono text-[11px]">
                   <tr>
-                    <th>Fecha</th>
-                    <th>Hora</th>
-                    <th>Tipo</th>
-                    <th>Producto</th>
-                    <th>Cliente</th>
+                    <th className="py-2.5 px-3">Fecha</th>
+                    <th className="py-2.5 px-3">Hora</th>
+                    <th className="py-2.5 px-3">Tipo</th>
+                    <th className="py-2.5 px-3">Producto / Servicio</th>
+                    <th className="py-2.5 px-3">Cliente</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-neutral-100">
                   {filteredReservas.map(r => (
                     <tr key={r.id}>
-                      <td>{r.fecha.split('-').reverse().join('/')}</td>
-                      <td>{r.hora_inicio.substring(0,5)}</td>
-                      <td><strong>{getTipo(r.productos_tienda)}</strong></td>
-                      <td>{r.productos_tienda?.nombre}</td>
-                      <td>{r.ordenes_tienda?.nombre_cliente}</td>
+                      <td className="py-2.5 px-3 font-mono">{r.fecha?.split('-').reverse().join('/')}</td>
+                      <td className="py-2.5 px-3 font-mono font-bold">{r.hora_inicio?.substring(0, 5)}</td>
+                      <td className="py-2.5 px-3"><strong>{getTipo(r.productos_tienda)}</strong></td>
+                      <td className="py-2.5 px-3">{r.productos_tienda?.nombre}</td>
+                      <td className="py-2.5 px-3 font-medium">{r.ordenes_tienda?.nombre_cliente || 'Presencial'}</td>
                     </tr>
                   ))}
                   {filteredReservas.length === 0 && (
-                    <tr><td colSpan="5" className="text-center">Sin datos para el reporte</td></tr>
+                    <tr>
+                      <td colSpan="5" className="py-8 text-center text-neutral-400">Sin datos para el reporte</td>
+                    </tr>
                   )}
                 </tbody>
               </table>
             </div>
 
-            <div className="modal-actions">
-              <button className="btn-cancel" onClick={() => setIsReportOpen(false)}>Cerrar Reporte</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* FAST REGISTRATION MODAL */}
-      {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Registro Rápido (Arriendo/Clase Presencial)</h2>
-            
-            <div className="form-grid">
-              <div className="form-group col-span-2">
-                <label>Producto a reservar</label>
-                <select 
-                  value={formData.producto_id} 
-                  onChange={e => {
-                    const prod = productos.find(p => p.id === e.target.value);
-                    setFormData({...formData, producto_id: e.target.value, duracion_minutos: prod?.duracion_bloque || 60});
-                  }}
-                >
-                  <option value="">Seleccionar...</option>
-                  {productos.map(p => <option key={p.id} value={p.id}>{p.nombre} ({p.duracion_bloque} min)</option>)}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label>Nombre Cliente</label>
-                <input type="text" value={formData.nombre_cliente} onChange={e => setFormData({...formData, nombre_cliente: e.target.value})} />
-              </div>
-
-              <div className="form-group">
-                <label>RUT Cliente</label>
-                <input type="text" value={formData.rut_cliente} onChange={e => setFormData({...formData, rut_cliente: e.target.value})} />
-              </div>
-
-              <div className="form-group">
-                <label>Teléfono</label>
-                <input type="text" value={formData.telefono} onChange={e => setFormData({...formData, telefono: e.target.value})} />
-              </div>
-
-              <div className="form-group">
-                <label>Fecha</label>
-                <input type="date" value={formData.fecha} onChange={e => setFormData({...formData, fecha: e.target.value})} />
-              </div>
-
-              <div className="form-group">
-                <label>Hora Inicio</label>
-                <input type="time" value={formData.hora_inicio} onChange={e => setFormData({...formData, hora_inicio: e.target.value})} />
-              </div>
-
-              <div className="form-group">
-                <label>Duración (minutos)</label>
-                <input type="number" value={formData.duracion_minutos} onChange={e => setFormData({...formData, duracion_minutos: parseInt(e.target.value) || 60})} />
-              </div>
-            </div>
-
-            <div className="modal-actions">
-              <button className="btn-cancel" onClick={() => setIsModalOpen(false)}>Cancelar</button>
-              <button className="btn-save" onClick={handleSaveFastReg} disabled={saving}>
-                {saving ? 'Guardando...' : 'Registrar Reserva'}
+            <div className="pt-3 border-t border-neutral-100 flex justify-end">
+              <button
+                onClick={() => setIsReportOpen(false)}
+                className="h-9 px-4 rounded-xl border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700"
+              >
+                Cerrar Planilla
               </button>
             </div>
           </div>
         </div>
       )}
 
-      <style jsx>{`
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header-actions h1 { font-size: 20px; margin: 0; color: #fff; font-weight: 900; }
-        .header-btns { display: flex; gap: 10px; }
-        .btn-primary { background: #38bdf8; color: #000; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .btn-report { background: #1a2236; color: #fff; border: 1px solid #2a3441; padding: 10px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-report:hover { border-color: #38bdf8; color: #38bdf8; }
-        
-        .toolbar { margin-bottom: 20px; background: #1a2236; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; gap: 15px; border: 1px solid #2a3441; }
-        .tool-group { display: flex; gap: 15px; }
+      {/* ── Modal Fast Registration ── */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-neutral-950/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white rounded-2xl border border-neutral-200 shadow-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+              <div>
+                <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">Recepción &amp; POS</div>
+                <h3 className="text-base font-black text-neutral-900 mt-0.5">
+                  Registro Rápido Presencial
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100"
+              >
+                <X size={16} />
+              </button>
+            </div>
 
-        .view-tabs, .type-tabs { display: flex; background: #0f1623; padding: 4px; border-radius: 8px; border: 1px solid #2a3441; }
-        .view-tabs button, .type-tabs button { background: transparent; border: none; color: #64748b; padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
-        .view-tabs button.active { background: #38bdf8; color: #000; }
-        .type-tabs button.active { background: #3b82f6; color: #fff; }
-        
-        .date-filter { display: flex; align-items: center; gap: 10px; }
-        .date-filter label { font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; }
-        .date-filter input { background: #0f1623; border: 1px solid #2a3441; color: #fff; padding: 8px 12px; border-radius: 6px; outline: none; font-size: 13px; }
+            <div className="space-y-3">
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                  Servicio a Reservar *
+                </label>
+                <select
+                  value={formData.producto_id}
+                  onChange={e => {
+                    const prod = productos.find(p => p.id === e.target.value);
+                    setFormData({ ...formData, producto_id: e.target.value, duracion_minutos: prod?.duracion_bloque || 60 });
+                  }}
+                  className="w-full h-10 px-3 rounded-xl border border-neutral-200 text-xs font-semibold text-neutral-900 focus:border-neutral-900 outline-none"
+                >
+                  <option value="">Seleccionar...</option>
+                  {productos.map(p => (
+                    <option key={p.id} value={p.id}>{p.nombre} ({p.duracion_bloque} min)</option>
+                  ))}
+                </select>
+              </div>
 
-        .agenda-view { display: flex; flex-direction: column; gap: 30px; }
-        .date-group { display: flex; flex-direction: column; gap: 15px; }
-        .date-header { font-size: 14px; font-weight: 800; color: #38bdf8; text-transform: uppercase; display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid #2a3441; margin: 0; }
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                  Nombre Completo Cliente *
+                </label>
+                <input
+                  type="text"
+                  value={formData.nombre_cliente}
+                  onChange={e => setFormData({ ...formData, nombre_cliente: e.target.value })}
+                  placeholder="Ej: Sofía Valdés"
+                  className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 text-xs text-neutral-900 focus:border-neutral-900 outline-none"
+                />
+              </div>
 
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
-        
-        .reserva-card { background: #1a2236; border: 1px solid #2a3441; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s; }
-        .reserva-card:hover { transform: translateY(-2px); border-color: #38bdf8; }
-        .reserva-card.completada { opacity: 0.7; filter: grayscale(0.5); }
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                    RUT Cliente
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.rut_cliente}
+                    onChange={e => setFormData({ ...formData, rut_cliente: e.target.value })}
+                    placeholder="12.345.678-9"
+                    className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 text-xs font-mono text-neutral-900 focus:border-neutral-900 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                    Teléfono
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.telefono}
+                    onChange={e => setFormData({ ...formData, telefono: e.target.value })}
+                    placeholder="+56 9..."
+                    className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 text-xs font-mono text-neutral-900 focus:border-neutral-900 outline-none"
+                  />
+                </div>
+              </div>
 
-        .rc-header { background: #0f1623; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a3441; }
-        .rc-time { display: flex; align-items: center; gap: 6px; font-weight: 800; color: #38bdf8; font-size: 13px; }
-        
-        .rc-status { font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; }
-        .rc-status.pendiente { background: rgba(245,158,11,0.2); color: #f59e0b; }
-        .rc-status.confirmada { background: rgba(16,185,129,0.2); color: #10b981; }
-        .rc-status.completada { background: rgba(100,116,139,0.2); color: #94a3b8; }
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                    Fecha *
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.fecha}
+                    onChange={e => setFormData({ ...formData, fecha: e.target.value })}
+                    className="w-full h-10 px-3 rounded-xl border border-neutral-200 text-xs text-neutral-900 focus:border-neutral-900 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                    Hora Inicio *
+                  </label>
+                  <input
+                    type="time"
+                    value={formData.hora_inicio}
+                    onChange={e => setFormData({ ...formData, hora_inicio: e.target.value })}
+                    className="w-full h-10 px-3 rounded-xl border border-neutral-200 text-xs text-neutral-900 focus:border-neutral-900 outline-none"
+                  />
+                </div>
+              </div>
+            </div>
 
-        .rc-body { padding: 15px; flex: 1; }
-        .rc-type-tag { font-size: 9px; font-weight: 900; color: #3b82f6; text-transform: uppercase; margin-bottom: 5px; }
-        .rc-body h3 { margin: 0 0 12px 0; font-size: 15px; color: #fff; font-weight: 800; }
-        
-        .client-info { font-size: 12px; color: #94a3b8; }
-        .client-info p { margin: 0 0 4px 0; }
-        .client-info strong { color: #64748b; font-weight: 800; margin-right: 4px; }
-        .notes { margin-top: 8px !important; color: #f59e0b !important; background: rgba(245,158,11,0.1); padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(245,158,11,0.2); }
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="h-10 px-4 rounded-xl border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveFastReg}
+                disabled={saving}
+                className="h-10 px-5 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-2 disabled:opacity-50"
+              >
+                <Save size={14} /> {saving ? 'Guardando...' : 'Registrar Reserva'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-        .rc-footer { padding: 10px 15px; border-top: 1px solid #2a3441; background: #0f1623; display: flex; justify-content: flex-end; }
-        .btn-complete { background: #10b981; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 800; font-size: 11px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; }
-        .btn-complete:hover { background: #059669; }
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl border shadow-xl text-xs font-bold animate-in fade-in slide-in-from-bottom-3 duration-200 ${
+          toast.type === 'error'
+            ? 'bg-rose-50 border-rose-200 text-rose-700'
+            : 'bg-neutral-900 border-neutral-800 text-white'
+        }`}>
+          {toast.msg}
+        </div>
+      )}
 
-        /* Report Modal Styles */
-        .report-modal { max-width: 800px !important; }
-        .report-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #2a3441; padding-bottom: 15px; }
-        .report-header h2 { margin: 0; }
-        .report-header p { margin: 5px 0 0; color: #64748b; font-size: 12px; }
-        .btn-print { background: #fff; color: #000; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 900; font-size: 11px; cursor: pointer; }
-        
-        .report-body { background: #0f1623; border-radius: 12px; overflow: hidden; }
-        .report-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .report-table th { background: #1a2236; padding: 12px 15px; font-size: 11px; text-transform: uppercase; color: #64748b; border-bottom: 1px solid #2a3441; }
-        .report-table td { padding: 12px 15px; font-size: 13px; border-bottom: 1px solid #2a3441; color: #fff; }
-        .text-center { text-align: center; }
-
-        .empty-state, .loading { text-align: center; padding: 60px; color: #64748b; font-weight: 800; font-size: 14px; background: #1a2236; border-radius: 12px; border: 1px dashed #2a3441; grid-column: 1 / -1; }
-
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        .modal-content { background: #1a2236; width: 90%; max-width: 600px; border-radius: 12px; padding: 30px; }
-        .modal-content h2 { margin: 0 0 20px 0; font-size: 18px; color: #fff; font-weight: 900; }
-
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .col-span-2 { grid-column: span 2; }
-        
-        .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
-        .form-group label { font-size: 11px; color: #64748b; font-weight: 800; text-transform: uppercase; }
-        .form-group input, .form-group select { background: #0f1623; border: 1px solid #2a3441; color: #fff; padding: 10px; border-radius: 8px; outline: none; font-size: 13px; }
-        .form-group input:focus, .form-group select:focus { border-color: #38bdf8; }
-
-        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-        .btn-cancel { background: transparent; color: #64748b; border: 1px solid #2a3441; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 12px; }
-        .btn-save { background: #38bdf8; color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 12px; }
-        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
-      `}</style>
     </div>
   );
 }

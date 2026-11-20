@@ -1,24 +1,14 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+
+const CURATED_TEAM_IMAGES = [
+  '/TIENDA/3.PNG',
+  '/TIENDA/7.PNG',
+  '/TIENDA/Captura.PNG',
+  '/TIENDA/4.PNG',
+  '/TIENDA/5.PNG',
+  '/TIENDA/IMG_5779.jpeg',
+];
 
 export async function GET() {
-  try {
-    const dir = path.join(process.cwd(), 'public', 'CARUSEL EQUIPO');
-    
-    if (!fs.existsSync(dir)) {
-      return NextResponse.json({ images: [] });
-    }
-
-    const files = fs.readdirSync(dir);
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif'];
-    
-    const images = files
-      .filter(file => imageExtensions.includes(path.extname(file).toLowerCase()))
-      .map(file => `/CARUSEL EQUIPO/${file}`);
-
-    return NextResponse.json({ images });
-  } catch (error) {
-    return NextResponse.json({ images: [] });
-  }
+  return NextResponse.json({ images: CURATED_TEAM_IMAGES });
 }

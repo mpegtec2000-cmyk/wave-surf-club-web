@@ -12,9 +12,13 @@ import {
   addClient,
   queueNotification 
 } from '@/lib/data';
-import { PAYMENT_METHODS, TRANSACTION_CATEGORIES, TRANSACTION_TYPES } from '@/lib/constants';
+import { PAYMENT_METHODS, TRANSACTION_CATEGORIES, TRANSACTION_TYPES, BRANCHES as CONST_BRANCHES } from '@/lib/constants';
 import { formatRut } from '@/lib/rut-validator';
-import { Search, Trash2, CheckCircle, RefreshCcw, UserPlus } from 'lucide-react';
+import { 
+  Search, Trash2, CheckCircle, RefreshCcw, UserPlus,
+  Palmtree, Waves, Compass, AlertTriangle, AlertCircle, CheckCircle2,
+  CreditCard, Banknote, Building2, Package, Plus, Zap, ArrowUpRight, ArrowDownRight
+} from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -178,7 +182,7 @@ export default function POSPage() {
       return;
     }
 
-    showToast(`✅ Registrado "En Curso": $${total.toLocaleString('es-CL')}`, 'success');
+    showToast(`Registrado "En Curso": $${total.toLocaleString('es-CL')}`, 'success');
     await loadOpenTx();
 
     setTxCategory('');
@@ -241,7 +245,7 @@ export default function POSPage() {
     if (error) {
       showToast('Error: ' + error.message, 'error');
     } else {
-      showToast('✅ Salida de Stock Registrada', 'success');
+      showToast('Salida de Stock Registrada', 'success');
       setQsTablas('');
       setQsTrajes('');
       setShowQuickStock(false);
@@ -275,12 +279,12 @@ export default function POSPage() {
     await queueNotification(
       'email',
       newClientEmail,
-      '¡Bienvenido a Wave Surf Club! 🏄‍♂️',
-      `Estimado ${newClientName}, ¡bienvenido a www.wavesurfclub.cl! Agradecemos tu visita a nuestra sede. Ya eres parte de la Wave Fam. Marketing puro bro! 😎`
+      '¡Bienvenido a Wave Surf Club!',
+      `Estimado ${newClientName}, ¡bienvenido a www.wavesurfclub.cl! Agradecemos tu visita a nuestra sede. Ya eres parte de la Wave Fam.`
     );
 
     setLoading(false);
-    showToast('✅ Cliente registrado y correo enviado', 'success');
+    showToast('Cliente registrado y correo enviado', 'success');
     
     // Auto-select
     setRut(newClientRut);
@@ -312,7 +316,7 @@ export default function POSPage() {
       if (error) {
         showToast('Error: ' + error.message, 'error');
       } else {
-        showToast('✅ Tarea Finalizada Correctamente', 'success');
+        showToast('Tarea Finalizada Correctamente', 'success');
         await loadOpenTx();
       }
     }
@@ -345,94 +349,76 @@ export default function POSPage() {
 
   if (!user) return null;
 
-  const currentBranch = branches.find(b => b.id === selectedBranchId) || branches[0];
+  const currentBranch = branches.find(b => b.id === selectedBranchId) || CONST_BRANCHES.find(b => b.id === selectedBranchId) || CONST_BRANCHES[0];
 
   return (
     <div className="pos-page-wrap">
-      {/* Top Fixed Branch Tabs */}
-      <div className="branch-tabs">
-        {branches.map(b => (
-          <button
-            key={b.id}
-            className={`branch-tab ${selectedBranchId === b.id ? 'active' : ''}`}
-            onClick={() => {
-              setSelectedBranchId(b.id);
-              setActiveBranchId(b.id); // Also update global context for consistency
-            }}
-          >
-            <span style={{ fontSize: 20 }}>{b.id === 1 ? '🏖️' : b.id === 2 ? '🌊' : '🏄'}</span>
-            {b.short_name?.toUpperCase() || b.name?.toUpperCase()}
-          </button>
-        ))}
-      </div>
-
       <div className="pos-grid">
         {/* LEFT: Main Transaction Form */}
-        <div className="pos-main">
+        <div className="pos-main space-y-5">
           {/* IDENTIFICAR CLIENTE */}
-          <div className="data-section" style={{ marginBottom: 24, borderRadius: 'var(--radius-lg)', background: '#fff' }}>
-            <div className="data-section-header">
-              <h3 className="data-section-title">
-                <Search size={22} style={{ color: 'var(--accent-action)' }} /> IDENTIFICAR CLIENTE
-              </h3>
-            </div>
-            <div style={{ padding: '32px' }}>
-              {/* Fila integrada: Nuevo Cliente + RUT + Buscar + S */}
-              <div style={{ width: '100%', display: 'flex', gap: '0', alignItems: 'stretch', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '2px solid var(--border-subtle)', background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.08)' }}>
-                
-                {/* Botón Agregar Nuevo Cliente — AHORA A LA IZQUIERDA */}
+          <div className="vc-card white !p-5 sm:!p-6 shadow-2xs">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 mb-4 border-b border-neutral-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-800 shrink-0">
+                  <Search size={15} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-neutral-900 tracking-tight leading-none">IDENTIFICAR CLIENTE</h3>
+                  <p className="text-[10px] font-mono text-neutral-400 mt-1 uppercase">Búsqueda rápida por RUT o código</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5">
                 <button
-                  style={{ height: 64, padding: '0 24px', background: showNewClient ? 'var(--color-success)' : '#f0fdf4', border: 'none', color: showNewClient ? '#fff' : 'var(--color-success)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexShrink: 0, fontWeight: 900, fontSize: 13, borderRadius: 0, transition: 'all 0.2s', letterSpacing: '0.05em' }}
+                  type="button"
                   onClick={() => { setShowNewClient(!showNewClient); setShowQuickStock(false); }}
-                  title="Registrar nuevo cliente (+)"
+                  className={`vc-btn plain !h-9 !px-3.5 !rounded-xl !text-xs ${showNewClient ? 'lime' : 'ghost'}`}
                 >
-                  <UserPlus size={22} />
-                  <span style={{ whiteSpace: 'nowrap' }}>NUEVO CLIENTE</span>
+                  <UserPlus size={14} />
+                  <span>Nuevo Cliente</span>
                 </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowQuickStock(!showQuickStock); setShowNewClient(false); }}
+                  className={`vc-btn plain !h-9 !px-3 !rounded-xl !text-xs ${showQuickStock ? 'lime' : 'ghost'}`}
+                  title="Contingencia Stock Rápido (S)"
+                >
+                  <Zap size={13} />
+                  <span>Stock (S)</span>
+                </button>
+              </div>
+            </div>
 
-                {/* Separador */}
-                <div style={{ width: '2px', background: 'var(--border-subtle)', alignSelf: 'stretch' }} />
-
-                {/* Input de RUT */}
+            {/* Input Bar */}
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
                 <input
                   type="text"
-                  className="search-input-pos"
-                  style={{ flex: 1, padding: '0 24px', margin: 0, border: 'none', outline: 'none', height: 64, fontSize: 18, fontWeight: 600, background: 'transparent', color: 'var(--text-primary)' }}
-                  placeholder="Ingrese RUT del Cliente..."
+                  className="vc-input !h-11 !pl-4 !pr-10 !rounded-xl font-mono text-sm font-semibold tracking-wide"
+                  placeholder="Ingrese RUT del cliente (ej: 12.345.678-9)..."
                   value={rut}
                   onChange={(e) => setRut(formatRut(e.target.value))}
                   onKeyDown={handleKeyDown}
                 />
-
-                {/* Botón Buscar */}
-                <button
-                  className="search-button-pos"
-                  style={{ height: 64, width: 64, border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, borderRadius: 0, background: 'var(--accent-primary)' }}
-                  onClick={handleSearchRUT}
-                  title="Buscar cliente por RUT"
-                >
-                  <Search size={24} />
-                </button>
-
-                {/* Separador */}
-                <div style={{ width: '2px', background: 'var(--border-subtle)', alignSelf: 'stretch' }} />
-
-                {/* Botón Contingencia Stock (S) */}
-                <button
-                  style={{ height: 64, width: 60, background: showQuickStock ? '#3b82f6' : '#eff6ff', border: 'none', color: showQuickStock ? '#fff' : '#3b82f6', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 20, flexShrink: 0, borderRadius: 0, transition: 'all 0.2s' }}
-                  onClick={() => { setShowQuickStock(!showQuickStock); setShowNewClient(false); }}
-                  title="Contingencia Stock (S)"
-                >
-                  S
-                </button>
+                {searching && (
+                  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-neutral-300 border-t-neutral-900 rounded-full animate-spin" />
+                )}
               </div>
+              <button
+                type="button"
+                onClick={handleSearchRUT}
+                className="vc-btn !h-11 !px-5 !rounded-xl text-xs font-bold shrink-0 !bg-[#171717] !text-white hover:!bg-black"
+              >
+                <Search size={14} className="text-white" />
+                <span className="text-white">Buscar</span>
+              </button>
             </div>
           </div>
 
               {/* NEW CLIENT REGISTRATION FORM */}
               {showNewClient && (
                 <div className="animate-slide-down" style={{ marginTop: 20, padding: 24, background: 'var(--bg-primary)', borderRadius: 'var(--radius-lg)', border: '1.5px solid var(--color-success)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-                  <h4 style={{ color: 'var(--color-success)', margin: '0 0 20px 0', fontSize: 14, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em' }}>👤 REGISTRO EXPRESS DE CLIENTE</h4>
+                  <h4 style={{ color: 'var(--color-success)', margin: '0 0 20px 0', fontSize: 14, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: 8 }}><UserPlus size={16} /> REGISTRO EXPRESS DE CLIENTE</h4>
                   <form onSubmit={handleRegisterNewClient} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
                     <div className="form-group">
                       <label style={{ fontSize: 11 }}>Nombre Completo *</label>
@@ -462,34 +448,36 @@ export default function POSPage() {
 
               {/* QUICK STOCK CONTINGENCY SECTION */}
               {showQuickStock && (
-                <div className="animate-slide-down" style={{ marginTop: 20, padding: 20, background: '#0f172a', borderRadius: 'var(--radius-lg)', border: '1px solid #3b82f6' }}>
-                  <h4 style={{ color: '#60a5fa', margin: '0 0 16px 0', fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>🚀 REGISTRO RÁPIDO (SIN ETIQUETA)</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                    <div style={{ background: '#1e293b', padding: 12, borderRadius: 'var(--radius-md)' }}>
-                      <label style={{ display: 'block', fontSize: 10, color: '#94a3b8', marginBottom: 4 }}>TABLAS</label>
+                <div className="animate-slide-down mt-4 p-4 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3">
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-700 flex items-center gap-2">
+                    <Zap size={14} className="text-amber-500" /> Registro Rápido (Contingencia sin Etiqueta)
+                  </h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-white p-3 rounded-xl border border-neutral-200">
+                      <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">TABLAS</label>
                       <input 
                         type="number" 
                         placeholder="Cant." 
                         value={qsTablas}
                         onChange={(e) => setQsTablas(e.target.value)}
-                        style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: '1px solid #475569', color: '#fff', outline: 'none', fontSize: 18, fontWeight: 'bold' }} 
+                        className="w-full bg-transparent border-0 border-b border-neutral-200 focus:border-neutral-900 text-neutral-900 outline-none text-base font-mono font-bold" 
                       />
                     </div>
-                    <div style={{ background: '#1e293b', padding: 12, borderRadius: 'var(--radius-md)' }}>
-                      <label style={{ display: 'block', fontSize: 10, color: '#94a3b8', marginBottom: 4 }}>TRAJES</label>
+                    <div className="bg-white p-3 rounded-xl border border-neutral-200">
+                      <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">TRAJES</label>
                       <input 
                         type="number" 
                         placeholder="Cant." 
                         value={qsTrajes}
                         onChange={(e) => setQsTrajes(e.target.value)}
-                        style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: '1px solid #475569', color: '#fff', outline: 'none', fontSize: 18, fontWeight: 'bold' }} 
+                        className="w-full bg-transparent border-0 border-b border-neutral-200 focus:border-neutral-900 text-neutral-900 outline-none text-base font-mono font-bold" 
                       />
                     </div>
                   </div>
                   <button 
                     onClick={handleQuickStockSubmit}
                     disabled={loading}
-                    style={{ width: '100%', marginTop: 16, background: 'var(--color-success)', color: '#fff', padding: '12px', borderRadius: 'var(--radius-md)', border: 'none', fontWeight: 800, cursor: 'pointer', transition: '0.2s' }}
+                    className="w-full h-10 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider transition-all shadow-xs"
                   >
                     {loading ? 'REGISTRANDO...' : 'REGISTRAR SALIDA'}
                   </button>
@@ -498,7 +486,7 @@ export default function POSPage() {
 
               {searchError && (
                 <div style={{ marginTop: 16, padding: '20px', borderRadius: 'var(--radius-md)', background: 'rgba(239,68,68,0.05)', border: '1.5px solid rgba(239,68,68,0.2)', color: 'var(--color-danger)', fontWeight: 600, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span>⚠️ {searchError}</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><AlertCircle size={16} /> {searchError}</span>
                   <button 
                     onClick={() => {
                       setNewClientRut(rut);
@@ -513,193 +501,283 @@ export default function POSPage() {
               )}
 
               {clientData && (
-                <div className={`client-card ${debtAlert ? 'has-debt' : ''}`} style={{ marginTop: 24, padding: 24, borderRadius: 'var(--radius-lg)', background: 'var(--bg-primary)', border: '1.5px solid var(--border-subtle)', display: 'flex', alignItems: 'center', gap: 24 }}>
-                  <div className="client-avatar">
-                    {clientData.name?.charAt(0).toUpperCase()}
+                <div className={`mt-3 p-3.5 rounded-2xl border flex items-center justify-between gap-3 ${
+                  debtAlert ? 'bg-amber-50/80 border-amber-200' : 'bg-neutral-50 border-neutral-200/80'
+                }`}>
+                  <div className="flex items-center gap-3 truncate">
+                    <div className="w-9 h-9 rounded-xl bg-neutral-900 text-white font-bold flex items-center justify-center text-xs shrink-0">
+                      {clientData.name?.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="truncate">
+                      <div className="text-xs font-bold text-neutral-900 truncate">{clientData.name}</div>
+                      <div className="text-[10px] font-mono text-neutral-400 truncate">{clientData.rut} · {clientData.email}</div>
+                    </div>
                   </div>
-                  <div className="client-data-box">
-                    <h3 className="client-name-title">{clientData.name}</h3>
-                    <p className="client-details-text">{clientData.rut} · {clientData.email}</p>
-                    {debtAlert ? (
-                      <span className="debt-status deudora">⚠️ SALDO DEUDOR: {formatMoney(clientData.debt_balance)}</span>
-                    ) : (
-                      <span className="debt-status al-dia">✅ CLIENTE AL DÍA</span>
-                    )}
-                  </div>
+                  {debtAlert ? (
+                    <span className="vc-tag bg-amber-100 text-amber-900 border-amber-300 font-bold shrink-0">
+                      <AlertTriangle size={12} /> DEUDA: {formatMoney(clientData.debt_balance)}
+                    </span>
+                  ) : (
+                    <span className="vc-tag bg-emerald-50 text-emerald-700 border-emerald-200 font-bold shrink-0">
+                      <CheckCircle2 size={12} /> AL DÍA
+                    </span>
+                  )}
                 </div>
               )}
 
           {/* NUEVA TRANSACCION */}
-          <div className="data-section" style={{ background: '#fff', borderRadius: 'var(--radius-lg)' }}>
-            <div className="data-section-header" style={{ borderLeft: `8px solid ${selectedBranchId === 1 ? '#F59E0B' : selectedBranchId === 2 ? '#0EA5E9' : '#10B981'}` }}>
-              <h3 className="data-section-title">🗳️ NUEVA ACTIVIDAD — {currentBranch?.short_name?.toUpperCase()}</h3>
+          <div className="vc-card white !p-5 sm:!p-6 shadow-2xs">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 mb-5 border-b border-neutral-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-neutral-900 text-white flex items-center justify-center shrink-0">
+                  <CreditCard size={15} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-neutral-900 tracking-tight leading-none">
+                    NUEVA ACTIVIDAD OPERATIVA — {currentBranch?.short_name?.toUpperCase() || currentBranch?.name?.toUpperCase()}
+                  </h3>
+                  <p className="text-[10px] font-mono text-neutral-400 mt-1 uppercase">Registro de cobro o egreso de caja</p>
+                </div>
+              </div>
+              <span className="vc-tag font-mono">
+                {txType === 'ingreso' ? 'Ingreso a Caja' : 'Salida de Caja'}
+              </span>
             </div>
-            <div style={{ padding: '32px' }}>
-              <form className="pos-form" onSubmit={handleSubmit} style={{ display: 'grid', gap: 32 }}>
-                <div className="form-group">
-                  <label style={{ fontSize: 11, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 16, display: 'block', letterSpacing: '0.05em' }}>TIPO DE OPERACIÓN</label>
-                  <div style={{ display: 'flex', gap: 16 }}>
-                    <button
-                      type="button"
-                      className={`btn ${txType === 'ingreso' ? 'active' : ''}`}
-                      style={{ flex: 1, height: 72, background: txType === 'ingreso' ? 'var(--color-success)' : 'var(--bg-primary)', color: txType === 'ingreso' ? '#fff' : 'var(--text-muted)', border: 'none', borderRadius: 'var(--radius-lg)', fontWeight: 800, fontSize: 16, transition: '0.3s' }}
-                      onClick={() => setTxType('ingreso')}
-                    >
-                      ↗ INGRESO +
-                    </button>
-                    <button
-                      type="button"
-                      className={`btn ${txType === 'salida' ? 'active' : ''}`}
-                      style={{ flex: 1, height: 72, background: txType === 'salida' ? 'var(--color-danger)' : 'var(--bg-primary)', color: txType === 'salida' ? '#fff' : 'var(--text-muted)', border: 'none', borderRadius: 'var(--radius-lg)', fontWeight: 800, fontSize: 16, transition: '0.3s' }}
-                      onClick={() => setTxType('salida')}
-                    >
-                      ↘ SALIDA -
-                    </button>
-                  </div>
+
+            <form className="pos-form space-y-5" onSubmit={handleSubmit}>
+              <div>
+                <label className="block text-[11px] font-bold text-neutral-500 uppercase font-mono tracking-wider mb-2">
+                  Tipo de Operación
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setTxType('ingreso')}
+                    className={`h-11 rounded-xl flex items-center justify-center gap-2 text-xs font-bold transition-all border ${
+                      txType === 'ingreso'
+                        ? 'bg-neutral-900 text-white border-neutral-900 shadow-xs'
+                        : 'bg-neutral-50 text-neutral-600 border-neutral-200 hover:bg-neutral-100'
+                    }`}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+                    <ArrowUpRight size={14} /> INGRESO
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTxType('salida')}
+                    className={`h-11 rounded-xl flex items-center justify-center gap-2 text-xs font-bold transition-all border ${
+                      txType === 'salida'
+                        ? 'bg-neutral-900 text-white border-neutral-900 shadow-xs'
+                        : 'bg-neutral-50 text-neutral-600 border-neutral-200 hover:bg-neutral-100'
+                    }`}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-red-500" />
+                    <ArrowDownRight size={14} /> SALIDA
+                  </button>
                 </div>
+              </div>
 
-                <div className="pos-form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-                  <div className="form-group">
-                    <label>Categoría del Movimiento</label>
-                    <select className="form-select" value={txCategory} onChange={(e) => setTxCategory(e.target.value)} required style={{ height: 60, fontSize: 16 }}>
-                      <option value="">Seleccionar...</option>
-                      {TRANSACTION_CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.icon} {c.label}</option>)}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Medio de Recaudo / Pago</label>
-                    <select className="form-select" value={txMethod} onChange={(e) => setTxMethod(e.target.value)} required style={{ height: 60, fontSize: 16 }}>
-                      <option value="">Seleccionar...</option>
-                      {PAYMENT_METHODS.map(m => <option key={m.value} value={m.value}>{m.icon} {m.label}</option>)}
-                    </select>
-                  </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold text-neutral-600 mb-1.5">Categoría del Movimiento</label>
+                  <select
+                    className="vc-select !h-11 !rounded-xl !text-xs font-medium"
+                    value={txCategory}
+                    onChange={(e) => setTxCategory(e.target.value)}
+                    required
+                  >
+                    <option value="">Seleccionar...</option>
+                    {TRANSACTION_CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                  </select>
                 </div>
-
-                <div className="form-group">
-                  <label>Monto de la Operación ($)</label>
-                  <div style={{ position: 'relative' }}>
-                    <input
-                      type="number"
-                      className="form-input total-input-pos"
-                      placeholder="0"
-                      value={txTotal}
-                      onChange={(e) => setTxTotal(e.target.value)}
-                      required
-                    />
-                    <span className="currency-symbol">$</span>
-                  </div>
+                <div>
+                  <label className="block text-[11px] font-semibold text-neutral-600 mb-1.5">Medio de Recaudo / Pago</label>
+                  <select
+                    className="vc-select !h-11 !rounded-xl !text-xs font-medium"
+                    value={txMethod}
+                    onChange={(e) => setTxMethod(e.target.value)}
+                    required
+                  >
+                    <option value="">Seleccionar...</option>
+                    {PAYMENT_METHODS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+                  </select>
                 </div>
+              </div>
 
-                {txCategory === 'arriendo' && (
-                  <div className="form-group animate-slide-down">
-                    <label>Equipamiento (Tablas T- / Trajes TR-)</label>
-                    <input 
-                      type="text" 
-                      className="form-input" 
-                      style={{ height: 60, fontSize: 16 }} 
-                      placeholder="Ej: T-002, TR-015..." 
-                      value={rentalDetails} 
-                      onChange={(e) => setRentalDetails(e.target.value.toUpperCase())} 
-                      required 
-                    />
-                  </div>
-                )}
-
-                {(txCategory === 'mensualidad' || txCategory === 'bodega') && (
-                  <div className="form-group animate-slide-down">
-                    <label>Período de Contratación</label>
-                    <select className="form-select" value={subscriptionPeriod} onChange={(e) => setSubscriptionPeriod(e.target.value)} required style={{ height: 60, fontSize: 16 }}>
-                      <option value="15_dias">Cada 15 Días</option>
-                      <option value="mensual">Mensual (1 Mes)</option>
-                      <option value="anual">Anual (1 Año)</option>
-                    </select>
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <label className="checkbox-label" style={{ fontWeight: 800, fontSize: 14, userSelect: 'none' }}>
-                    <input type="checkbox" checked={txIsIncident} onChange={(e) => setTxIsIncident(e.target.checked)} />
-                    🚨 REGISTRAR INCIDENCIA / DAÑO
-                  </label>
+              <div>
+                <label className="block text-[11px] font-semibold text-neutral-600 mb-1.5">Monto de la Operación ($)</label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    className="vc-input !h-12 !pl-8 !rounded-xl font-mono text-xl font-black text-neutral-900 tracking-tight"
+                    placeholder="0"
+                    value={txTotal}
+                    onChange={(e) => setTxTotal(e.target.value)}
+                    required
+                  />
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 font-bold font-mono text-sm">$</span>
                 </div>
+              </div>
 
-                {txIsIncident && (
-                  <div className="form-group animate-slide-down">
-                    <label>Nota de Auditoría (Hito de Incidencia)</label>
-                    <input type="text" className="form-input" style={{ height: 60 }} placeholder="Detalles de la incidencia..." value={txIncidentNote} onChange={(e) => setTxIncidentNote(e.target.value)} />
-                  </div>
-                )}
+              {txCategory === 'arriendo' && (
+                <div className="animate-slide-down">
+                  <label className="block text-[11px] font-semibold text-neutral-600 mb-1.5">Equipamiento (Tablas T- / Trajes TR-)</label>
+                  <input 
+                    type="text" 
+                    className="vc-input !h-11 !rounded-xl text-xs font-medium uppercase font-mono" 
+                    placeholder="Ej: T-002, TR-015..." 
+                    value={rentalDetails} 
+                    onChange={(e) => setRentalDetails(e.target.value.toUpperCase())} 
+                    required 
+                  />
+                </div>
+              )}
 
-                <button type="submit" className="btn-finalize" disabled={!clientData || loading} style={{ background: 'var(--accent-primary)', height: 84, fontSize: 20, boxShadow: '0 12px 30px rgba(15, 23, 42, 0.15)' }}>
-                  {loading ? 'PROCESANDO...' : '➕ REGISTRAR ACTIVIDAD OPERATIVA'}
-                </button>
-              </form>
-            </div>
+              {(txCategory === 'mensualidad' || txCategory === 'bodega') && (
+                <div className="animate-slide-down">
+                  <label className="block text-[11px] font-semibold text-neutral-600 mb-1.5">Período de Contratación</label>
+                  <select
+                    className="vc-select !h-11 !rounded-xl text-xs font-medium"
+                    value={subscriptionPeriod}
+                    onChange={(e) => setSubscriptionPeriod(e.target.value)}
+                    required
+                  >
+                    <option value="15_dias">Cada 15 Días</option>
+                    <option value="mensual">Mensual (1 Mes)</option>
+                    <option value="anual">Anual (1 Año)</option>
+                  </select>
+                </div>
+              )}
+
+              <div className="flex items-center gap-2">
+                <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-neutral-700 select-none">
+                  <input
+                    type="checkbox"
+                    checked={txIsIncident}
+                    onChange={(e) => setTxIsIncident(e.target.checked)}
+                    className="w-4 h-4 rounded text-neutral-900 border-neutral-300 focus:ring-0"
+                  />
+                  <AlertTriangle size={14} className="text-amber-500" />
+                  <span>Registrar incidencia / daño en equipo</span>
+                </label>
+              </div>
+
+              {txIsIncident && (
+                <div className="animate-slide-down">
+                  <label className="block text-[11px] font-semibold text-neutral-600 mb-1.5">Nota de Auditoría (Hito de Incidencia)</label>
+                  <input
+                    type="text"
+                    className="vc-input !h-11 !rounded-xl text-xs font-medium"
+                    placeholder="Detalles de la incidencia..."
+                    value={txIncidentNote}
+                    onChange={(e) => setTxIncidentNote(e.target.value)}
+                  />
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={!clientData || loading}
+                className={`vc-btn !h-12 w-full !rounded-xl text-xs font-bold shadow-xs transition-all ${
+                  !clientData ? '!bg-neutral-200 !text-neutral-500 cursor-not-allowed' : '!bg-[#171717] !text-white hover:!bg-black'
+                }`}
+              >
+                <Plus size={16} />
+                <span>{loading ? 'PROCESANDO...' : 'REGISTRAR ACTIVIDAD OPERATIVA'}</span>
+              </button>
+            </form>
           </div>
         </div>
 
         {/* RIGHT: Sidebar "En Curso" (Session) */}
-        <div className="pos-sidebar">
-          <div className="pos-sidebar-header">
+        <div className="pos-sidebar vc-card white !p-0 shadow-2xs overflow-hidden">
+          <div className="flex items-center justify-between p-4 border-b border-neutral-100 bg-white">
             <div>
-              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 950 }}>⚡ CAJA CHICA ACTIVA</h3>
-              <p style={{ margin: 0, fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Balance de Sesión actual</p>
+              <h3 className="text-sm font-bold text-neutral-900 flex items-center gap-1.5">
+                <Zap size={14} className="text-amber-500" /> CAJA CHICA ACTIVA
+              </h3>
+              <p className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider mt-0.5">Balance de Sesión actual</p>
             </div>
-            <button className="refresh-btn" onClick={loadOpenTx} style={{ background: 'var(--bg-primary)' }}><RefreshCcw size={18} /></button>
+            <button
+              className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-600 transition-colors"
+              onClick={loadOpenTx}
+              title="Refrescar balance"
+            >
+              <RefreshCcw size={13} />
+            </button>
           </div>
 
-          <div className="pos-sidebar-content" style={{ background: 'var(--bg-primary)' }}>
+          <div className="pos-sidebar-content bg-neutral-50/40">
             {/* Cash Breakdown Summary */}
             {recentTx.length > 0 && (
-              <div className="pos-summary-bar" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: 'var(--border-subtle)', borderBottom: '2px solid var(--border-subtle)' }}>
-                <div style={{ background: '#fff', padding: '12px 8px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 800 }}>💵 EFECTIVO</div>
-                  <div style={{ fontSize: 13, fontWeight: 900, color: 'var(--color-success)' }}>{formatMoney(recentTx.filter(t => t.method === 'efectivo').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}</div>
+              <div className="grid grid-cols-3 divide-x divide-neutral-200/80 border-b border-neutral-200/80 bg-white">
+                <div className="py-2.5 px-2 text-center">
+                  <div className="text-[9px] text-neutral-400 font-bold uppercase flex items-center justify-center gap-1">
+                    <Banknote size={11} /> EFECTIVO
+                  </div>
+                  <div className="text-xs font-mono font-bold text-[#10b981] mt-0.5 truncate">
+                    {formatMoney(recentTx.filter(t => t.method === 'efectivo').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}
+                  </div>
                 </div>
-                <div style={{ background: '#fff', padding: '12px 8px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 800 }}>🏦 TRANSF.</div>
-                  <div style={{ fontSize: 13, fontWeight: 900, color: 'var(--accent-action)' }}>{formatMoney(recentTx.filter(t => t.method === 'transferencia').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}</div>
+                <div className="py-2.5 px-2 text-center">
+                  <div className="text-[9px] text-neutral-400 font-bold uppercase flex items-center justify-center gap-1">
+                    <Building2 size={11} /> TRANSF.
+                  </div>
+                  <div className="text-xs font-mono font-bold text-neutral-900 mt-0.5 truncate">
+                    {formatMoney(recentTx.filter(t => t.method === 'transferencia').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}
+                  </div>
                 </div>
-                <div style={{ background: '#fff', padding: '12px 8px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 800 }}>💳 TARJETA</div>
-                  <div style={{ fontSize: 13, fontWeight: 900, color: '#8b5cf6' }}>{formatMoney(recentTx.filter(t => t.method === 'tarjeta' || t.method === 'debito').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}</div>
+                <div className="py-2.5 px-2 text-center">
+                  <div className="text-[9px] text-neutral-400 font-bold uppercase flex items-center justify-center gap-1">
+                    <CreditCard size={11} /> TARJETA
+                  </div>
+                  <div className="text-xs font-mono font-bold text-neutral-900 mt-0.5 truncate">
+                    {formatMoney(recentTx.filter(t => t.method === 'tarjeta' || t.method === 'debito').reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}
+                  </div>
                 </div>
               </div>
             )}
 
             {recentTx.length === 0 ? (
-              <div style={{ padding: '64px 32px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                <div style={{ fontSize: 64, marginBottom: 20 }}>📦</div>
-                <p style={{ fontSize: 14, fontWeight: 600 }}>Sin movimientos<br/>pendientes de balance.</p>
+              <div className="p-10 text-center text-neutral-400">
+                <Package size={40} className="mx-auto mb-3 text-neutral-300" />
+                <p className="text-xs font-medium text-neutral-500">Sin movimientos pendientes de balance.</p>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="divide-y divide-neutral-100 max-h-[380px] overflow-y-auto">
                 {recentTx.map(tx => (
-                  <div key={tx.id} style={{ padding: 24, borderBottom: '1px solid var(--border-subtle)', background: '#fff', margin: '1px 0' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, alignItems: 'center' }}>
-                      <span className={`type-badge ${tx.type}`} style={{ fontSize: 10, padding: '3px 8px' }}>{tx.type?.toUpperCase()}</span>
-                      <span className="mono" style={{ fontSize: 18, fontWeight: 900, color: tx.type === 'ingreso' ? 'var(--color-success)' : 'var(--color-danger)' }}>
+                  <div key={tx.id} className="p-3 bg-white hover:bg-neutral-50/70 transition-colors">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold uppercase ${
+                        tx.type === 'ingreso' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+                      }`}>
+                        {tx.type}
+                      </span>
+                      <span className={`font-mono text-xs font-bold ${tx.type === 'ingreso' ? 'text-[#10b981]' : 'text-red-600'}`}>
                         {tx.type === 'ingreso' ? '+' : '-'}{formatMoney(tx.total)}
                       </span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14, fontWeight: 850 }}>{tx.client_name || tx.client_rut}</div>
-                        <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'capitalize' }}>{tx.category} · {tx.method}</div>
-                        {tx.rental_details && <div style={{ fontSize: 10, color: 'var(--accent-action)', fontWeight: 700, marginTop: 4 }}>🏄 {tx.rental_details}</div>}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs font-bold text-neutral-900 truncate">{tx.client_name || tx.client_rut}</div>
+                        <div className="text-[10px] text-neutral-400 capitalize truncate">{tx.category} · {tx.method}</div>
+                        {tx.rental_details && (
+                          <div className="text-[9.5px] text-neutral-600 font-medium mt-0.5 flex items-center gap-1 truncate">
+                            <Waves size={10} className="text-neutral-400 shrink-0" />
+                            <span className="truncate">{tx.rental_details}</span>
+                          </div>
+                        )}
                       </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <div className="flex flex-col gap-1 shrink-0">
                         <button 
-                          className="btn-finalize" 
                           onClick={() => handleFinalizeIndividual(tx.id, tx.category?.toUpperCase())} 
-                          style={{ fontSize: 9, padding: '6px 10px', height: 'auto', background: 'var(--color-success)' }}
+                          className="px-2 py-1 rounded text-[9px] font-bold bg-neutral-900 text-white hover:bg-black transition-colors"
                         >
                           CERRAR
                         </button>
                         <button 
-                          className="btn-void" 
                           onClick={() => handleDeleteTransaction(tx)} 
-                          style={{ fontSize: 9, padding: '6px 10px', height: 'auto' }}
+                          className="px-2 py-1 rounded text-[9px] font-bold bg-white border border-neutral-200 text-neutral-500 hover:text-red-600 hover:border-red-200 transition-colors"
                         >
                           ANULAR
                         </button>
@@ -711,15 +789,17 @@ export default function POSPage() {
             )}
           </div>
 
-          <div className="pos-sidebar-footer" style={{ borderTop: '2px solid var(--border-subtle)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24, alignItems: 'center' }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--text-muted)' }}>SALDO OPERATIVO:</span>
-              <span className="mono" style={{ fontSize: 28, fontWeight: 950, color: 'var(--accent-primary)' }}>{formatMoney(recentTx.reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}</span>
+          <div className="p-4 bg-neutral-50/80 border-t border-neutral-200/80">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10.5px] font-bold font-mono text-neutral-400 uppercase">SALDO OPERATIVO:</span>
+              <span className="font-mono text-lg font-black text-neutral-900">
+                {formatMoney(recentTx.reduce((s, t) => t.type === 'ingreso' ? s + t.total : s - t.total, 0))}
+              </span>
             </div>
             
             {recentTx.length > 0 && (
               <button 
-                className="btn-finalize"
+                className="vc-btn lime w-full !h-12 !rounded-xl !text-xs font-bold shadow-xs flex items-center justify-center gap-2"
                 disabled={loading}
                 onClick={async () => {
                    // Cálculos detallados para el cierre
@@ -753,7 +833,7 @@ export default function POSPage() {
                           </div>
                           <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; margin-bottom: 6px;">
                             <span style="color: #64748b; font-weight: 600;">Transferencias:</span> 
-                            <strong style="color: #0ea5e9; font-family: monospace; font-size: 15px;">${formatMoney(totalTransferencia)}</strong>
+                            <strong style="color: #171717; font-family: monospace; font-size: 15px;">${formatMoney(totalTransferencia)}</strong>
                           </div>
                           <div style="display: flex; justify-content: space-between; font-size: 16px; margin-top: 12px; background: #e2e8f0; padding: 8px; border-radius: 4px;">
                             <span><strong>TOTAL GENERAL:</strong></span> 
@@ -764,9 +844,9 @@ export default function POSPage() {
                         <div style="margin-top: 15px;">
                           <label style="display: block; font-weight: 800; color: #334155; margin-bottom: 5px; font-size: 11px; text-transform: uppercase;">1. Seleccione su Turno</label>
                           <select id="swal-turno" style="width: 100%; padding: 10px; border: 2px solid #cbd5e1; border-radius: 6px; margin-bottom: 15px; font-size: 14px; outline: none; background: #fff;">
-                            <option value="Mañana">☀️ Turno Mañana</option>
-                            <option value="Tarde">🌙 Turno Tarde</option>
-                            <option value="Día Completo">⏳ Día Completo</option>
+                            <option value="Mañana">Turno Mañana</option>
+                            <option value="Tarde">Turno Tarde</option>
+                            <option value="Día Completo">Día Completo</option>
                           </select>
                           
                           <label style="display: block; font-weight: 800; color: #334155; margin-bottom: 5px; font-size: 11px; text-transform: uppercase;">2. Notas de Cuadratura</label>
@@ -776,7 +856,7 @@ export default function POSPage() {
                     `,
                     icon: 'info',
                     showCancelButton: true,
-                    confirmButtonText: '✅ CONFIRMAR CIERRE',
+                    confirmButtonText: 'CONFIRMAR CIERRE',
                     confirmButtonColor: 'var(--color-success)',
                     cancelButtonColor: 'var(--border-subtle)',
                     cancelButtonText: 'Revisar Montos',
@@ -794,15 +874,14 @@ export default function POSPage() {
                     if (error) {
                       MySwal.fire('Error', error, 'error');
                     } else {
-                      showToast('✅ Sesión Consolidada Correctamente', 'success');
+                      showToast('Sesión Consolidada Correctamente', 'success');
                       await loadOpenTx();
                       MySwal.fire('Éxito', 'El balance ha sido enviado a Finanzas Globales.', 'success');
                     }
                   }
                 }}
-                style={{ height: 72 }}
               >
-                <CheckCircle size={22} /> FINALIZAR SESIÓN [{currentBranch?.short_name?.toUpperCase()}]
+                <CheckCircle size={15} /> <span>FINALIZAR SESIÓN [{currentBranch?.short_name?.toUpperCase()}]</span>
               </button>
             )}
           </div>

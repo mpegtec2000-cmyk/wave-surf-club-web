@@ -2,15 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import { getSubscriptions, getCurrentUser, getBranches } from '@/lib/data';
-import { CalendarDays, Package, User, MapPin, Search } from 'lucide-react';
+import { 
+  CalendarDays, Package, User, MapPin, Search, CreditCard, Phone,
+  Clock, AlertTriangle, CheckCircle2, DollarSign, RefreshCw
+} from 'lucide-react';
 import { useBranch } from '@/lib/branch-context';
+
+const fmt = (n) => '$ ' + (n || 0).toLocaleString('es-CL');
 
 export default function SubscriptionsPage() {
   const { branches } = useBranch();
   const [subs, setSubs] = useState([]);
   const [filteredSubs, setFilteredSubs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterType, setFilterType] = useState('todos'); // 'todos', 'mensualidad', 'bodega'
+  const [filterType, setFilterType] = useState('todos');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -24,7 +29,7 @@ export default function SubscriptionsPage() {
   async function loadSubscriptions() {
     setLoading(true);
     const data = await getSubscriptions();
-    setSubs(data);
+    setSubs(data || []);
     setLoading(false);
   }
 
@@ -38,8 +43,8 @@ export default function SubscriptionsPage() {
     if (searchTerm) {
       const q = searchTerm.toLowerCase();
       result = result.filter(s => 
-        s.client_rut?.toLowerCase().includes(q) || 
-        s.profiles?.name?.toLowerCase().includes(q)
+        (s.client_rut || '').toLowerCase().includes(q) || 
+        (s.profiles?.name || '').toLowerCase().includes(q)
       );
     }
 
@@ -54,8 +59,6 @@ export default function SubscriptionsPage() {
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
 
-  const formatMoney = (n) => '$ ' + (n || 0).toLocaleString('es-CL');
-
   // KPI calculations
   const totalActivas = subs.filter(s => getDaysLeft(s.valid_until) > 0).length;
   const expiradas = subs.filter(s => getDaysLeft(s.valid_until) <= 0).length;
@@ -63,144 +66,222 @@ export default function SubscriptionsPage() {
   const mensualCount = subs.filter(s => s.category === 'mensualidad' && getDaysLeft(s.valid_until) > 0).length;
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto' }}>
-      
-      {/* ── Header ── */}
-      <header style={{ marginBottom: '40px', borderBottom: '2px solid var(--border-subtle)', paddingBottom: '24px', display: 'flex', gap: '20px', alignItems: 'center' }}>
-        <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'linear-gradient(135deg, #10b981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 15px -3px rgba(16, 185, 129, 0.3)' }}>
-          <CalendarDays size={32} color="#fff" />
-        </div>
+    <div className="space-y-6">
+
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 style={{ fontSize: '36px', fontWeight: 950, color: 'var(--accent-primary)', margin: 0, letterSpacing: '-0.5px' }}>
-            MENSUALIDADES Y BODEGA
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            Fidelización &amp; Membresías Periódicas
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Mensualidades &amp; Espacios de Bodega
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '15px', marginTop: '6px', fontWeight: 500 }}>
-            Control de suscripciones, arriendos a largo plazo y membresías activas.
-          </p>
         </div>
-      </header>
 
-      {/* ── KPIs ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24, marginBottom: 32 }}>
-        <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', padding: 24, border: '1.5px solid var(--border-subtle)', borderLeft: '6px solid var(--color-success)' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase' }}>Suscripciones Activas</div>
-          <div style={{ fontSize: 36, fontWeight: 900, color: 'var(--text-primary)', marginTop: 8 }}>{totalActivas}</div>
+        <button
+          onClick={loadSubscriptions}
+          className="h-9 px-4 rounded-xl border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700 transition-colors inline-flex items-center gap-2 self-start sm:self-auto"
+        >
+          <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualizar
+        </button>
+      </div>
+
+      {/* ── Bento Metrics KPI Grid ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Suscripciones Activas
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-600">
+              <CheckCircle2 size={15} />
+            </div>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight font-mono">
+            {totalActivas}
+          </div>
+          <div className="text-[10px] font-mono text-emerald-700 mt-1 font-bold">Vigentes en sistema</div>
         </div>
-        <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', padding: 24, border: '1.5px solid var(--border-subtle)', borderLeft: '6px solid var(--color-danger)' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase' }}>Suscripciones Vencidas</div>
-          <div style={{ fontSize: 36, fontWeight: 900, color: 'var(--color-danger)', marginTop: 8 }}>{expiradas}</div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Suscripciones Vencidas
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-rose-50 border border-rose-200/60 flex items-center justify-center text-rose-600">
+              <AlertTriangle size={15} />
+            </div>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight font-mono">
+            {expiradas}
+          </div>
+          <div className="text-[10px] font-mono text-rose-700 mt-1 font-bold">Requieren renovación</div>
         </div>
-        <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', padding: 24, border: '1.5px solid var(--border-subtle)', borderLeft: '6px solid #8b5cf6' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase' }}>Cupos Bodega Activos</div>
-          <div style={{ fontSize: 36, fontWeight: 900, color: '#8b5cf6', marginTop: 8 }}>{bodegaCount}</div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Cupos Bodega Activos
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-purple-50 border border-purple-200/60 flex items-center justify-center text-purple-600">
+              <Package size={15} />
+            </div>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-purple-600 tracking-tight font-mono">
+            {bodegaCount}
+          </div>
+          <div className="text-[10px] font-mono text-purple-700 mt-1 font-bold">Guardería de tablas</div>
         </div>
-        <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', padding: 24, border: '1.5px solid var(--border-subtle)', borderLeft: '6px solid #ec4899' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase' }}>Mensualidades Activas</div>
-          <div style={{ fontSize: 36, fontWeight: 900, color: '#ec4899', marginTop: 8 }}>{mensualCount}</div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Mensualidades Activas
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-sky-50 border border-sky-200/60 flex items-center justify-center text-sky-600">
+              <CalendarDays size={15} />
+            </div>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-sky-600 tracking-tight font-mono">
+            {mensualCount}
+          </div>
+          <div className="text-[10px] font-mono text-sky-700 mt-1 font-bold">Planes de entrenamiento</div>
         </div>
       </div>
 
-      {/* ── Filters ── */}
-      <div style={{ display: 'flex', gap: 16, marginBottom: 24 }}>
-        <div style={{ position: 'relative', flex: 1, maxWidth: 400 }}>
-          <Search size={20} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-          <input
-            type="text"
-            className="form-input"
-            style={{ paddingLeft: 48, height: 50, fontSize: 15 }}
-            placeholder="Buscar por RUT o Nombre..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      {/* ── Table Card ── */}
+      <div className="rounded-2xl bg-white border border-neutral-200/80 shadow-2xs overflow-hidden">
+        
+        {/* Toolbar */}
+        <div className="p-4 sm:p-5 border-b border-neutral-200/70 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white">
+          <div className="relative flex-1 max-w-md">
+            <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+            <input
+              type="text"
+              placeholder="Buscar por RUT o Nombre..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-9 pl-9 pr-4 rounded-xl border border-neutral-200 bg-neutral-50/60 text-xs text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-neutral-900 outline-none transition-all"
+            />
+          </div>
+
+          <div className="inline-flex p-1 rounded-xl bg-neutral-100 border border-neutral-200/60 gap-0.5">
+            {[
+              { id: 'todos', label: 'Todas' },
+              { id: 'mensualidad', label: 'Mensualidades' },
+              { id: 'bodega', label: 'Bodega' },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setFilterType(tab.id)}
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                  filterType === tab.id ? 'bg-white text-neutral-900 shadow-2xs' : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button className={`btn ${filterType === 'todos' ? 'active' : ''}`} onClick={() => setFilterType('todos')} style={{ background: filterType === 'todos' ? 'var(--accent-action)' : '#fff', color: filterType === 'todos' ? '#fff' : 'var(--text-muted)', border: '1.5px solid var(--border-subtle)' }}>
-            Todos
-          </button>
-          <button className={`btn ${filterType === 'mensualidad' ? 'active' : ''}`} onClick={() => setFilterType('mensualidad')} style={{ background: filterType === 'mensualidad' ? '#ec4899' : '#fff', color: filterType === 'mensualidad' ? '#fff' : 'var(--text-muted)', border: '1.5px solid var(--border-subtle)' }}>
-            Mensualidades
-          </button>
-          <button className={`btn ${filterType === 'bodega' ? 'active' : ''}`} onClick={() => setFilterType('bodega')} style={{ background: filterType === 'bodega' ? '#8b5cf6' : '#fff', color: filterType === 'bodega' ? '#fff' : 'var(--text-muted)', border: '1.5px solid var(--border-subtle)' }}>
-            Bodega
-          </button>
+
+        {/* Table Content */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-neutral-50/80 border-b border-neutral-200/70 text-neutral-500 uppercase font-mono text-[11px] font-bold tracking-wider">
+              <tr>
+                <th className="py-3 px-4">Cliente / Contacto</th>
+                <th className="py-3 px-4">Tipo Suscripción</th>
+                <th className="py-3 px-4">Sede</th>
+                <th className="py-3 px-4">Fecha Pago</th>
+                <th className="py-3 px-4">Monto</th>
+                <th className="py-3 px-4 text-center">Días Restantes</th>
+                <th className="py-3 px-4 text-right">Estado</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-neutral-100 text-neutral-800">
+              {loading ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-neutral-400 font-mono">
+                    Cargando suscripciones...
+                  </td>
+                </tr>
+              ) : filteredSubs.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-neutral-400">
+                    <CalendarDays size={32} className="mx-auto mb-2 text-neutral-300" />
+                    <div className="font-bold text-sm text-neutral-600">Sin suscripciones registradas</div>
+                    <div className="text-xs text-neutral-400 mt-0.5">No hay membresías que coincidan con la búsqueda</div>
+                  </td>
+                </tr>
+              ) : (
+                filteredSubs.map(s => {
+                  const daysLeft = getDaysLeft(s.valid_until);
+                  const isBodega = s.category === 'bodega';
+                  const shortBranch = branches?.find(b => b.id === s.branch_id)?.short_name || `Sede ${s.branch_id}`;
+
+                  return (
+                    <tr key={s.id} className="hover:bg-neutral-50/60 transition-colors">
+                      <td className="py-3.5 px-4">
+                        <div className="font-bold text-neutral-900">{s.profiles?.name || 'Cliente'}</div>
+                        <div className="text-[11px] font-mono text-neutral-400">RUT: {s.client_rut}</div>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold ${
+                          isBodega ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-pink-50 text-pink-700 border border-pink-200'
+                        }`}>
+                          {isBodega ? <Package size={12} /> : <User size={12} />}
+                          {s.category}
+                        </span>
+                        <div className="text-[10px] font-mono text-neutral-400 mt-1 uppercase">
+                          {s.subscription_period?.replace('_', ' ')}
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4 font-semibold text-neutral-700">
+                        {shortBranch}
+                      </td>
+                      <td className="py-3.5 px-4 font-mono text-neutral-500">
+                        {new Date(s.created_at).toLocaleDateString('es-CL')}
+                      </td>
+                      <td className="py-3.5 px-4 font-mono font-bold text-neutral-900">
+                        {fmt(s.total)}
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        <span className={`font-mono font-black text-sm ${
+                          daysLeft > 7 ? 'text-emerald-600' : daysLeft > 0 ? 'text-amber-600' : 'text-rose-600'
+                        }`}>
+                          {daysLeft} d
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right">
+                        {daysLeft > 0 ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Activa
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                            Vencida
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
+
+        <div className="p-4 border-t border-neutral-200/70 bg-neutral-50/50 flex items-center justify-between text-xs font-mono text-neutral-500">
+          <div>
+            Mostrando <strong>{filteredSubs.length}</strong> de <strong>{subs.length}</strong> registros
+          </div>
+        </div>
+
       </div>
 
-      {/* ── Table ── */}
-      <div className="data-table-wrap">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Cliente / Datos</th>
-              <th>Tipo Suscripción</th>
-              <th style={{ textAlign: 'center' }}>Sede</th>
-              <th>Fecha Pago</th>
-              <th style={{ textAlign: 'right' }}>Monto Pagado</th>
-              <th style={{ textAlign: 'center' }}>Días Restantes</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan="7" style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>Cargando datos...</td></tr>
-            ) : filteredSubs.length === 0 ? (
-              <tr><td colSpan="7" style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>No hay suscripciones registradas.</td></tr>
-            ) : (
-              filteredSubs.map(s => {
-                const daysLeft = getDaysLeft(s.valid_until);
-                const isBodega = s.category === 'bodega';
-                const shortBranch = branches.find(b => b.id === s.branch_id)?.short_name || `SEDE ${s.branch_id}`;
-
-                return (
-                  <tr key={s.id}>
-                    <td>
-                      <div style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: 14 }}>{s.profiles?.name || 'Cliente sin nombre'}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>💳 RUT: {s.client_rut}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>📱 Fono: {s.profiles?.phone || 'N/A'}</div>
-                    </td>
-                    <td>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: isBodega ? '#f3e8ff' : '#fce7f3', color: isBodega ? '#7e22ce' : '#be185d', padding: '4px 10px', borderRadius: 8, fontSize: 12, fontWeight: 800 }}>
-                        {isBodega ? <Package size={14} /> : <User size={14} />}
-                        {s.category.toUpperCase()} 
-                      </div>
-                      <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 6, fontWeight: 700, textTransform: 'uppercase' }}>
-                        Periodo: {s.subscription_period?.replace('_', ' ')}
-                      </div>
-                    </td>
-                    <td style={{ textAlign: 'center', fontWeight: 700 }}>
-                      <span style={{ fontSize: 11, background: 'var(--bg-primary)', padding: '2px 8px', borderRadius: 4, border: '1px solid var(--border-subtle)' }}>
-                        <MapPin size={10} style={{ display: 'inline', marginRight: 4 }}/>
-                        {shortBranch.toUpperCase()}
-                      </span>
-                    </td>
-                    <td style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-                      {new Date(s.created_at).toLocaleDateString('es-CL')}
-                    </td>
-                    <td style={{ textAlign: 'right', fontWeight: 900, fontFamily: 'var(--font-mono)', fontSize: 15 }}>
-                      {formatMoney(s.total)}
-                    </td>
-                    <td style={{ textAlign: 'center' }}>
-                      <div style={{ 
-                        fontSize: 20, fontWeight: 900, fontFamily: 'var(--font-mono)',
-                        color: daysLeft > 5 ? 'var(--color-success)' : daysLeft > 0 ? 'var(--color-warning)' : 'var(--color-danger)'
-                      }}>
-                        {daysLeft}
-                      </div>
-                    </td>
-                    <td>
-                      {daysLeft > 0 ? (
-                        <span className="av-badge av-optimal">ACTIVA</span>
-                      ) : (
-                        <span className="av-badge av-urgent">VENCIDA</span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 }

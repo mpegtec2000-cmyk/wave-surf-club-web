@@ -1,9 +1,13 @@
 'use client';
 
+import './login.css';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { loginUser } from '@/lib/data';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Lock, Mail, LogIn, ArrowLeft } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,72 +32,43 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-bg-video-wrapper">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="login-video"
-        >
-          <source src="https://oghqbrtfcmrmucqgehkc.supabase.co/storage/v1/object/public/videos/download.mp4" type="video/mp4" />
+    <div className="lg-root">
+      <div className="lg-video-wrap">
+        <video autoPlay loop muted playsInline preload="auto" className="lg-video">
+          <source src="/videos/fondo-wave.mp4" type="video/mp4" />
         </video>
-        <div className="login-video-overlay"></div>
+        <div className="lg-overlay" />
       </div>
 
-      <div className="login-card">
-        <div className="login-logo">
-          <div style={{ position: 'relative', width: '80px', height: '80px', margin: '0 auto 16px' }}>
-            <Image 
-              src="/logo-pag.png" 
-              alt="Wave Surf Club" 
-              fill
-              sizes="80px"
-              className="login-logo-img"
-              style={{ objectFit: 'contain' }}
-            />
+      <div className="lg-card">
+        <Link href="/" className="lg-back">
+          <ArrowLeft size={15} />
+          <span>VOLVER AL CLUB</span>
+        </Link>
+
+        <div className="lg-head">
+          <div className="lg-logo">
+            <Image src="/logo-wave.png" alt="Wave Surf Club" width={54} height={54} priority />
           </div>
-          <h1>WAVE SURF CLUB</h1>
-          <p className="since">⚡ SINCE 2015 · PREMIUM LOGISTICS ⚡</p>
+          <h1>WAVE SURF CLUB®</h1>
+          <p>SISTEMA ERP &amp; POS · OPERACIONES</p>
         </div>
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          {error && <div className="login-error">{error}</div>}
+        <form className="lg-form" onSubmit={handleSubmit}>
+          {error && <div className="lg-err">{error}</div>}
 
-          <div className="form-group">
-            <label htmlFor="email">Correo electrónico</label>
-            <input
-              id="email"
-              type="email"
-              className="form-input"
-              placeholder="tu@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoFocus
-            />
+          <div className="lg-field">
+            <label htmlFor="email"><Mail size={13} /> Correo Institucional</label>
+            <input id="email" type="email" placeholder="usuario@wavesurfclub.cl" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
-            <input
-              id="password"
-              type="password"
-              className="form-input"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          <div className="lg-field">
+            <label htmlFor="password"><Lock size={13} /> Contraseña</label>
+            <input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary btn-full btn-lg"
-            disabled={loading}
-          >
-            {loading ? '⏳ Conectando con Supabase...' : '🔐 Ingresar al Sistema'}
+          <button type="submit" className="lg-submit" disabled={loading}>
+            {loading ? 'AUTENTICANDO...' : (<><LogIn size={16} /><span>INGRESAR AL SISTEMA</span></>)}
           </button>
         </form>
       </div>

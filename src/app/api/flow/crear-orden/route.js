@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-const FLOW_API_URL = process.env.FLOW_API_URL || 'https://www.flow.cl/api';
-const FLOW_API_KEY = process.env.FLOW_API_KEY || '546AEF54-FFF9-4305-BC63-6E266EL45C7B';
-const FLOW_SECRET_KEY = process.env.FLOW_SECRET_KEY || 'd3930102502eb35ae78e943b6b92ff9b95576717';
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || 'https://wavesurfclub.cl';
 
 function signParams(params, secretKey) {
@@ -21,14 +18,36 @@ export async function POST(request) {
     // Guardar orden en Supabase primero
     const { createClient } = await import('@supabase/supabase-js');
     
-    const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://oghqbrtfcmrmucqgehkc.supabase.co';
-    const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9naHFicnRmY21ybXVjcWdlaGtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzA2OTksImV4cCI6MjA5MTAwNjY5OX0.30PI9RTwqtxpKDSQdFhB9pExEV-gTnKDztm0mn8B1_A';
+    const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!SB_URL || !SB_KEY) {
+      throw new Error('Configuración de Supabase faltante en el servidor.');
+    }
+
+    const supabase = createClient(SB_URL, SB_KEY);
+
+    let FLOW_API_URL = process.env.FLOW_API_URL || 'https://www.flow.cl/api';
+    let FLOW_API_KEY = process.env.FLOW_API_KEY || '';
+    let FLOW_SECRET_KEY = process.env.FLOW_SECRET_KEY || '';
+
+    if (!FLOW_API_KEY || !FLOW_SECRET_KEY) {
+      const { data: cfg } = await supabase
+        .from('site_settings')
+        .select('key, value')
+        .in('key', ['flow_api_key', 'flow_secret_key', 'flow_url']);
+      if (cfg) {
+        cfg.forEach((item) => {
+          if (item.key === 'flow_api_key' && !FLOW_API_KEY) FLOW_API_KEY = item.value;
+          if (item.key === 'flow_secret_key' && !FLOW_SECRET_KEY) FLOW_SECRET_KEY = item.value;
+          if (item.key === 'flow_url' && item.value) FLOW_API_URL = item.value;
+        });
+      }
+    }
 
     if (!FLOW_API_KEY || !FLOW_SECRET_KEY) {
       throw new Error('Configuración de Flow (API_KEY o SECRET) faltante en el servidor.');
     }
-
-    const supabase = createClient(SB_URL, SB_KEY);
 
     const { data: orden, error } = await supabase
       .from('ordenes_tienda')

@@ -4,10 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { getVentasFisicas, getBranches } from '@/lib/data';
 import {
   Store, TrendingUp, ShoppingBag, BookOpen, Clock,
-  Download, RefreshCw, Filter, AlertCircle
+  Download, RefreshCw, Filter, AlertCircle,
+  DollarSign, GraduationCap, Waves, Calendar, Building2, CreditCard, Lock, Hourglass, Coffee, Tag, Banknote
 } from 'lucide-react';
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
 const fmt = (n) => '$ ' + (n || 0).toLocaleString('es-CL');
 const TIME_OFFSET = -4;
@@ -23,21 +22,12 @@ function toChileTime(isoString) {
   };
 }
 
-const methodBadge = {
-  efectivo:      { label: 'Efectivo',      bg: '#d1fae5', color: '#065f46' },
-  transferencia: { label: 'Transferencia', bg: '#dbeafe', color: '#1e3a8a' },
-  tarjeta:       { label: 'Tarjeta',       bg: '#ede9fe', color: '#4c1d95' },
-  por_pagar:     { label: 'Por Pagar',     bg: '#fee2e2', color: '#991b1b' },
-};
-
 const categoryInfo = {
-  clase:     { icon: '📚', label: 'Clase' },
-  arriendo:  { icon: '🏄', label: 'Arriendo' },
-  tienda:    { icon: '🛍️', label: 'Tienda' },
-  cafeteria: { icon: '☕', label: 'Cafetería' },
+  clase:     { label: 'Clase' },
+  arriendo:  { label: 'Arriendo' },
+  tienda:    { label: 'Tienda' },
+  cafeteria: { label: 'Cafetería' },
 };
-
-// ── Component ─────────────────────────────────────────────────────────────────
 
 export default function VentasFisicas() {
   const today = new Date().toISOString().slice(0, 10);
@@ -64,7 +54,7 @@ export default function VentasFisicas() {
       dateTo:   dateTo   || null,
     });
     if (err) setError(err.message);
-    setTxs(data);
+    setTxs(data || []);
     setLoading(false);
   }, [branchId, dateFrom, dateTo]);
 
@@ -90,7 +80,7 @@ export default function VentasFisicas() {
 
   const branchName = (id) => {
     const b = branches.find(b => b.id === Number(id));
-    return b ? `${b.emoji} ${b.short_name}` : `Sede ${id}`;
+    return b ? `${b.name}` : `Sede ${id}`;
   };
 
   const setPreset = (preset) => {
@@ -122,196 +112,296 @@ export default function VentasFisicas() {
   };
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto' }}>
+    <div className="space-y-6">
 
-      {/* ── Header ── */}
-      <header style={{ marginBottom: '32px', borderBottom: '2px solid var(--border-subtle)', paddingBottom: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'var(--accent-action)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Store size={22} color="#fff" />
-              </div>
-              <h1 style={{ fontSize: '30px', fontWeight: 950, color: 'var(--accent-primary)', margin: 0 }}>
-                VENTAS FÍSICAS
-              </h1>
-            </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '8px', marginLeft: '54px' }}>
-              Control directo de ingresos generados presencialmente en cada sede.
-            </p>
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            Control de Caja Presencial &amp; Mostrador
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button onClick={load} style={{ display:'flex',alignItems:'center',gap:'6px',padding:'9px 18px',background:'var(--bg-primary)',border:'1.5px solid var(--border-subtle)',borderRadius:'var(--radius-md)',fontWeight:700,cursor:'pointer',fontSize:'13px' }}>
-              <RefreshCw size={14} /> Actualizar
-            </button>
-            <button 
-              onClick={() => window.location.href = '/dashboard/closing'} 
-              style={{ display:'flex',alignItems:'center',gap:'6px',padding:'9px 18px',background:'#f59e0b',color:'#fff',border:'none',borderRadius:'var(--radius-md)',fontWeight:700,cursor:'pointer',fontSize:'13px' }}
-            >
-              <ShoppingBag size={14} /> Cierre de Caja
-            </button>
-            <button onClick={downloadCSV} disabled={filtered.length===0} style={{ display:'flex',alignItems:'center',gap:'6px',padding:'9px 18px',background:'var(--accent-action)',color:'#fff',border:'none',borderRadius:'var(--radius-md)',fontWeight:700,cursor:'pointer',fontSize:'13px',opacity:filtered.length===0?.5:1 }}>
-              <Download size={14} /> Exportar CSV
-            </button>
-          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Ventas Físicas en Sucursal
+          </h1>
         </div>
-      </header>
 
-      {/* ── KPI Cards ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', marginBottom: '28px' }}>
-        <FisicasKpi icon="💰" label="Total Cobrado" value={fmt(totalPagado)} color="#0ea5e9" />
-        <FisicasKpi icon="⏳" label="Fiado (Por Pagar)" value={fmt(totalPendiente)} color="#d97706" />
-        <FisicasKpi icon="📚" label="Clases" value={countClases} color="#0891b2" />
-        <FisicasKpi icon="🏄" label="Arriendos" value={countArriendos} color="#059669" />
-        <FisicasKpi icon="🛍️" label="Tienda" value={countTienda} color="#8b5cf6" />
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={downloadCSV}
+            disabled={filtered.length === 0}
+            className="h-9 px-3.5 rounded-xl border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700 transition-colors inline-flex items-center gap-1.5 disabled:opacity-40"
+          >
+            <Download size={14} /> Exportar CSV
+          </button>
+          <button
+            onClick={load}
+            className="h-9 px-4 rounded-xl border border-neutral-200 hover:bg-neutral-50 text-xs font-bold text-neutral-700 transition-colors inline-flex items-center gap-2"
+          >
+            <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualizar
+          </button>
+        </div>
       </div>
 
-      {/* ── Filters ── */}
-      <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1.5px solid var(--border-subtle)', padding: '24px', marginBottom: '28px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-          <Filter size={16} color="var(--accent-action)" />
-          <h2 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--accent-primary)' }}>FILTROS</h2>
+      {/* ── Bento Metrics KPI Grid ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Total Cobrado
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-600">
+              <DollarSign size={15} />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-emerald-600 tracking-tight font-mono">
+            {fmt(totalPagado)}
+          </div>
+          <div className="text-[10px] font-mono text-neutral-400 mt-1 font-bold">Ingresos confirmados</div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '14px' }}>
-          <div>
-            <label style={lbl}>🏖️ Sede</label>
-            <select value={branchId} onChange={e => setBranchId(e.target.value)} style={sel}>
-              <option value="">Todas</option>
-              {branches.map(b => <option key={b.id} value={b.id}>{b.emoji} {b.short_name}</option>)}
-            </select>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Fiado / Pendiente
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/60 flex items-center justify-center text-amber-600">
+              <Hourglass size={15} />
+            </div>
           </div>
-          <div>
-            <label style={lbl}>📅 Desde</label>
-            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} style={inp} />
+          <div className="text-2xl font-black text-amber-600 tracking-tight font-mono">
+            {fmt(totalPendiente)}
           </div>
-          <div>
-            <label style={lbl}>📅 Hasta</label>
-            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} style={inp} />
+          <div className="text-[10px] font-mono text-amber-700 mt-1 font-bold">Por saldar en caja</div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Clases Surf
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-neutral-100 border border-neutral-200/60 flex items-center justify-center text-neutral-700">
+              <GraduationCap size={15} />
+            </div>
           </div>
+          <div className="text-2xl font-black text-neutral-900 tracking-tight font-mono">
+            {countClases}
+          </div>
+          <div className="text-[10px] font-mono text-neutral-400 mt-1 font-bold">Sesiones vendidas</div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Arriendos
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-sky-50 border border-sky-200/60 flex items-center justify-center text-sky-600">
+              <Waves size={15} />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-sky-600 tracking-tight font-mono">
+            {countArriendos}
+          </div>
+          <div className="text-[10px] font-mono text-sky-700 mt-1 font-bold">Equipos arrendados</div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+              Tienda / Café
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-purple-50 border border-purple-200/60 flex items-center justify-center text-purple-600">
+              <ShoppingBag size={15} />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-purple-600 tracking-tight font-mono">
+            {countTienda}
+          </div>
+          <div className="text-[10px] font-mono text-purple-700 mt-1 font-bold">Productos retail</div>
+        </div>
+      </div>
+
+      {/* ── Filters Card ── */}
+      <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
           <div>
-            <label style={lbl}>🏷️ Especialidad</label>
-            <select value={catFilter} onChange={e => setCatFilter(e.target.value)} style={sel}>
-              <option value="todos">Todas</option>
-              {Object.entries(categoryInfo).map(([k, v]) => (
-                <option key={k} value={k}>{v.icon} {v.label}</option>
+            <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+              Sede
+            </label>
+            <select
+              value={branchId}
+              onChange={e => setBranchId(e.target.value)}
+              className="w-full h-9 px-2.5 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-semibold text-neutral-800 outline-none"
+            >
+              <option value="">Todas las sedes</option>
+              {branches.map(b => (
+                <option key={b.id} value={b.id}>{b.short_name || b.name}</option>
               ))}
             </select>
           </div>
+
           <div>
-            <label style={lbl}>💳 Medio de Pago</label>
-            <select value={methodFilter} onChange={e => setMethodFilter(e.target.value)} style={sel}>
+            <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+              Desde
+            </label>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={e => setDateFrom(e.target.value)}
+              className="w-full h-9 px-2.5 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs text-neutral-800 outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+              Hasta
+            </label>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={e => setDateTo(e.target.value)}
+              className="w-full h-9 px-2.5 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs text-neutral-800 outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+              Categoría
+            </label>
+            <select
+              value={catFilter}
+              onChange={e => setCatFilter(e.target.value)}
+              className="w-full h-9 px-2.5 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-semibold text-neutral-800 outline-none"
+            >
+              <option value="todos">Todas</option>
+              {Object.entries(categoryInfo).map(([k, v]) => (
+                <option key={k} value={k}>{v.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+              Medio de Pago
+            </label>
+            <select
+              value={methodFilter}
+              onChange={e => setMethodFilter(e.target.value)}
+              className="w-full h-9 px-2.5 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-semibold text-neutral-800 outline-none"
+            >
               <option value="todos">Todos</option>
-              <option value="efectivo">💵 Efectivo</option>
-              <option value="transferencia">🏦 Transferencia</option>
-              <option value="tarjeta">💳 Tarjeta</option>
-              <option value="por_pagar">⏳ Por Pagar (Fiado)</option>
+              <option value="efectivo">Efectivo</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="tarjeta">Tarjeta</option>
+              <option value="por_pagar">Por Pagar (Fiado)</option>
             </select>
           </div>
         </div>
-        <div style={{ marginTop: '14px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {[['hoy','Hoy'],['semana','Esta Semana'],['mes','Este Mes'],['todo','Todo']].map(([k,l]) => (
-            <button key={k} onClick={() => setPreset(k)} style={{ padding:'4px 12px',borderRadius:'20px',fontSize:'12px',fontWeight:700,border:'1.5px solid var(--border-subtle)',background:'var(--bg-primary)',cursor:'pointer' }}>{l}</button>
+
+        {/* Presets */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-neutral-100">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mr-1">
+            Atajos:
+          </span>
+          {[
+            { k: 'hoy', l: 'Hoy' },
+            { k: 'semana', l: 'Esta Semana' },
+            { k: 'mes', l: 'Este Mes' },
+            { k: 'todo', l: 'Todo' },
+          ].map(p => (
+            <button
+              key={p.k}
+              onClick={() => setPreset(p.k)}
+              className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors"
+            >
+              {p.l}
+            </button>
           ))}
         </div>
       </div>
 
-      {/* Error / Loading */}
-      {error && <div style={{ display:'flex',gap:'10px',alignItems:'center',background:'#fee2e2',color:'#991b1b',padding:'12px 18px',borderRadius:'var(--radius-md)',marginBottom:'20px' }}><AlertCircle size={16}/>{error}</div>}
-      {loading && <div style={{ textAlign:'center',padding:'60px',color:'var(--text-muted)',fontWeight:700 }}>Cargando ventas físicas...</div>}
-
-      {/* Empty */}
-      {!loading && filtered.length === 0 && !error && (
-        <div style={{ textAlign:'center',padding:'80px',color:'var(--text-muted)' }}>
-          <p style={{ fontSize:'48px',margin:'0 0 16px' }}>🏪</p>
-          <p style={{ fontWeight:700,fontSize:'16px' }}>No hay ventas físicas para el período.</p>
-        </div>
-      )}
-
-      {/* ── Table ── */}
-      {!loading && filtered.length > 0 && (
-        <div style={{ background:'#fff',borderRadius:'var(--radius-xl)',border:'1.5px solid var(--border-subtle)',overflow:'hidden',boxShadow:'var(--shadow-sm)' }}>
-          <div style={{ padding:'16px 24px',borderBottom:'1.5px solid var(--border-subtle)',display:'flex',justifyContent:'space-between',alignItems:'center' }}>
-            <span style={{ fontWeight:900,fontSize:'15px',color:'var(--accent-primary)' }}>Detalle de Ingresos Físicos</span>
-            <span style={{ background:'#e0f2fe',color:'#0284c7',padding:'4px 12px',borderRadius:'20px',fontSize:'12px',fontWeight:800 }}>{filtered.length} transacciones</span>
+      {/* ── Table Card ── */}
+      <div className="rounded-2xl bg-white border border-neutral-200/80 shadow-2xs overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-neutral-200/70 flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-bold text-neutral-900">Detalle de Cobros Presenciales</h3>
+            <p className="text-[11px] text-neutral-400">{filtered.length} transacciones registradas</p>
           </div>
-          <div style={{ overflowX:'auto' }}>
-            <table style={{ width:'100%',borderCollapse:'collapse' }}>
-              <thead>
-                <tr style={{ background:'rgba(15,23,42,0.03)' }}>
-                  {['Fecha y Hora','Sede','Especialidad','Medio de Pago','RUT Cliente','Cierre de Caja','Total'].map(h => (
-                    <th key={h} style={{ padding:'10px 16px',fontSize:'11px',fontWeight:800,color:'var(--text-muted)',textAlign:'left',textTransform:'uppercase',whiteSpace:'nowrap' }}>{h}</th>
-                  ))}
+          <span className="text-xs font-mono font-bold text-neutral-500 bg-neutral-100 px-2.5 py-1 rounded-lg">
+            {filtered.length} ventas
+          </span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-neutral-50/80 border-b border-neutral-200/70 text-neutral-500 uppercase font-mono text-[11px] font-bold tracking-wider">
+              <tr>
+                <th className="py-3 px-4">Fecha y Hora</th>
+                <th className="py-3 px-4">Sede</th>
+                <th className="py-3 px-4">Categoría</th>
+                <th className="py-3 px-4">Medio de Pago</th>
+                <th className="py-3 px-4">RUT Cliente</th>
+                <th className="py-3 px-4">Estado Caja</th>
+                <th className="py-3 px-4 text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-neutral-100 text-neutral-800">
+              {loading ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-neutral-400 font-mono">
+                    Cargando ventas físicas...
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filtered.map(tx => {
+              ) : filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-neutral-400">
+                    <Store size={32} className="mx-auto mb-2 text-neutral-300" />
+                    <div className="font-bold text-sm text-neutral-600">No hay ventas físicas</div>
+                    <div className="text-xs text-neutral-400 mt-0.5">No se encontraron movimientos para el filtro seleccionado</div>
+                  </td>
+                </tr>
+              ) : (
+                filtered.map(tx => {
                   const { full } = toChileTime(tx.created_at);
-                  const mb = methodBadge[tx.method] || { label: tx.method, bg:'#f3f4f6',color:'#374151' };
-                  const catI = categoryInfo[tx.category] || { icon:'📦', label: tx.category };
                   return (
-                    <tr key={tx.id}
-                        style={{ borderTop:'1px solid var(--border-subtle)' }}
-                        onMouseEnter={e => e.currentTarget.style.background='rgba(99,102,241,.04)'}
-                        onMouseLeave={e => e.currentTarget.style.background=''}>
-                      <td style={td}>
-                        <span style={{ display:'flex',alignItems:'center',gap:'5px',fontSize:'13px',fontWeight:600 }}>
-                          <Clock size={12} color="var(--accent-action)" /> {full}
+                    <tr key={tx.id} className="hover:bg-neutral-50/60 transition-colors">
+                      <td className="py-3.5 px-4 font-mono text-neutral-600">{full}</td>
+                      <td className="py-3.5 px-4 font-semibold text-neutral-700">{branchName(tx.branch_id)}</td>
+                      <td className="py-3.5 px-4 font-medium capitalize">{tx.category}</td>
+                      <td className="py-3.5 px-4">
+                        <span className="px-2 py-0.5 rounded bg-neutral-100 text-neutral-700 font-mono uppercase text-[10px] font-bold">
+                          {tx.method}
                         </span>
                       </td>
-                      <td style={td}><span style={{ fontSize:'13px' }}>{branchName(tx.branch_id)}</span></td>
-                      <td style={td}>
-                        <span style={{ background:'#f1f5f9',color:'#475569',padding:'3px 10px',borderRadius:'20px',fontSize:'12px',fontWeight:700 }}>
-                          {catI.icon} {catI.label}
-                        </span>
+                      <td className="py-3.5 px-4 font-mono text-neutral-500">{tx.client_rut || '—'}</td>
+                      <td className="py-3.5 px-4">
+                        {tx.finalized_at ? (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Consolidado
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span> En Sesión Activa
+                          </span>
+                        )}
                       </td>
-                      <td style={td}>
-                        <span style={{ background:mb.bg,color:mb.color,padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:800 }}>
-                          {mb.label}
-                        </span>
-                      </td>
-                      <td style={{ ...td,fontFamily:'monospace',fontSize:'12px',color:'var(--text-muted)' }}>
-                        {tx.client_rut || '—'}
-                      </td>
-                      <td style={td}>
-                        {tx.finalized_at
-                          ? <span style={{ color:'#059669',fontWeight:700,fontSize:'12px' }}>🔒 Consolidado</span>
-                          : <span style={{ color:'#d97706',fontWeight:700,fontSize:'12px' }}>⏳ Pendiente</span>
-                        }
-                      </td>
-                      <td style={td}>
-                        <span style={{ fontWeight:950,fontSize:'15px',color:'var(--color-success)' }}>{fmt(tx.total)}</span>
+                      <td className="py-3.5 px-4 text-right font-mono font-black text-neutral-900 text-sm">
+                        {fmt(tx.total)}
                       </td>
                     </tr>
                   );
-                })}
-              </tbody>
-            </table>
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="p-4 border-t border-neutral-200/70 bg-neutral-50/50 flex items-center justify-between text-xs font-mono text-neutral-500">
+          <div>
+            Mostrando <strong>{filtered.length}</strong> de <strong>{txs.length}</strong> transacciones
           </div>
         </div>
-      )}
+      </div>
+
     </div>
   );
 }
-
-// ── Sub-components ────────────────────────────────────────────────────────────
-
-function FisicasKpi({ icon, label, value, color }) {
-  return (
-    <div style={{ background:'#fff',borderRadius:'var(--radius-xl)',border:'1.5px solid var(--border-subtle)',padding:'20px',boxShadow:'var(--shadow-sm)' }}>
-      <div style={{ display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px' }}>
-        <span style={{ fontSize:'10px',fontWeight:800,color:'var(--text-muted)',textTransform:'uppercase' }}>{label}</span>
-        <span style={{ fontSize:'18px' }}>{icon}</span>
-      </div>
-      <div className="mono" style={{ fontSize:'22px',fontWeight:950,color }}>
-        {value}
-      </div>
-    </div>
-  );
-}
-
-// ── Shared styles ─────────────────────────────────────────────────────────────
-
-const lbl = { display:'block',fontSize:'11px',fontWeight:800,color:'var(--text-muted)',textTransform:'uppercase',marginBottom:'6px' };
-const inp = { width:'100%',padding:'9px 12px',borderRadius:'var(--radius-md)',border:'1.5px solid var(--border-subtle)',fontSize:'14px',fontFamily:'inherit',background:'var(--bg-primary)',boxSizing:'border-box' };
-const sel = { ...inp, cursor:'pointer' };
-const td  = { padding:'11px 16px',fontSize:'13px',verticalAlign:'middle' };

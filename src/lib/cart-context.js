@@ -30,32 +30,44 @@ export function CartProvider({ children }) {
   useEffect(() => {
     if (Array.isArray(cartItems)) {
       try {
-        // Use a safe stringify to avoid circular reference crashes
         const json = JSON.stringify(cartItems);
         localStorage.setItem('wave_cart', json);
       } catch (e) {
         console.error("CRITICAL: Failed to save cart to localStorage", e);
-        // If it fails, don't crash the whole app, just log it.
       }
     }
   }, [cartItems]);
 
   const cleanItem = (item) => {
     if (!item) return null;
-    // Strip possible circular refs or complex objects
+    const itemName = item.name || item.nombre || 'Producto Wave Surf Club';
+    const itemPrice = Number(item.price_final || item.precio_final || item.price || item.precio || 0);
+    const itemCategory = item.category || item.categoria || 'General';
+    const itemImage = item.imagen_url || item.image || item.img || '/logo-wave.png';
+
     return {
-      id: item.id,
-      nombre: String(item.nombre || 'Producto'),
-      precio: Number(item.precio || 0),
-      precio_final: Number(item.precio_final || 0),
-      imagen_url: item.imagen_url,
+      id: item.id || Date.now(),
+      name: itemName,
+      nombre: itemName,
+      price: itemPrice,
+      precio: itemPrice,
+      precio_final: itemPrice,
+      price_final: itemPrice,
+      category: itemCategory,
+      categoria: itemCategory,
+      imagen_url: itemImage,
       requiere_reserva: !!item.requiere_reserva,
-      cartItemId: item.cartItemId || Date.now(),
+      cartItemId: item.cartItemId || `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+      metadata: item.metadata || null,
       reserva: item.reserva ? {
         fecha: String(item.reserva.fecha || ''),
         hora_inicio: String(item.reserva.hora_inicio || ''),
         hora_fin: String(item.reserva.hora_fin || '')
-      } : null
+      } : (item.metadata?.date ? {
+        fecha: String(item.metadata.date || ''),
+        hora_inicio: String(item.metadata.time || ''),
+        hora_fin: ''
+      } : null)
     };
   };
 
@@ -84,7 +96,7 @@ export function CartProvider({ children }) {
 
   const getCartTotal = () => {
     const items = Array.isArray(cartItems) ? cartItems : [];
-    return items.reduce((sum, item) => sum + (Number(item?.precio_final) || 0), 0);
+    return items.reduce((sum, item) => sum + (Number(item?.price || item?.precio_final || item?.precio) || 0), 0);
   };
 
   return (

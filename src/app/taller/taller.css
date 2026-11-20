@@ -1,0 +1,318 @@
+.taller-page {
+          background: #ffffff;
+          color: #000000;
+          min-height: 100vh;
+          width: 100%;
+          overflow-x: hidden;
+        }
+
+        .taller-page .hero {
+          position: relative;
+          width: 100%;
+          height: 75vh;
+          min-height: 440px;
+          margin-top: var(--nav-height, 100px);
+          overflow: hidden;
+          display: flex;
+          align-items: flex-end;
+          padding: 48px 6%;
+          background: #000000;
+        }
+
+        .taller-page .hero-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.85) 100%);
+          z-index: 2;
+        }
+
+        .taller-page .hero-caption {
+          position: relative;
+          z-index: 3;
+          color: #ffffff;
+        }
+
+        .taller-page .hero-kicker {
+          display: block;
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          color: #d4d4d4;
+          margin-bottom: 10px;
+        }
+
+        .taller-page .hero-caption h1 {
+          font-family: var(--font-display), sans-serif;
+          font-size: clamp(2.4rem, 6vw, 72px);
+          font-weight: 800;
+          letter-spacing: -0.04em;
+          line-height: 0.94;
+          margin: 0;
+          color: #ffffff;
+        }
+
+        .taller-page .info-section {
+          padding: 88px 24px;
+        }
+
+        .taller-page .taller-container {
+          max-width: 1240px;
+          margin: 0 auto;
+        }
+
+        .taller-page .header-block {
+          text-align: center;
+          margin-bottom: 64px;
+        }
+
+        .taller-page .mono-tag {
+          display: block;
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          color: #737373;
+          margin-bottom: 12px;
+        }
+
+        .taller-page .section-intro {
+          font-size: 20px;
+          color: #262626;
+          max-width: 740px;
+          margin: 0 auto;
+          line-height: 1.6;
+        }
+
+        .taller-page .content-grid {
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 48px;
+          align-items: center;
+        }
+
+        .taller-page .text-block {
+          font-size: 17px;
+          line-height: 1.8;
+          color: #404040;
+        }
+
+        .taller-page .text-block strong {
+          color: #000000;
+          font-weight: 800;
+        }
+
+        .taller-page .quote {
+          margin: 32px 0 0;
+          border-left: 3px solid #000000;
+          padding: 16px 24px;
+          background: #fafafa;
+          font-style: italic;
+          color: #000000;
+          font-size: 18px;
+        }
+
+        .taller-page .author {
+          display: block;
+          margin-top: 12px;
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          font-style: normal;
+          color: #525252;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+
+        .taller-page .social-card {
+          background: #fafafa;
+          border: 1px solid #e5e5e5;
+          padding: 44px 32px;
+          border-radius: 20px;
+          text-align: center;
+          transition: all 0.25s;
+        }
+
+        .taller-page .social-card:hover {
+          border-color: #000000;
+          transform: translateY(-4px);
+        }
+
+        .taller-page .icon-box {
+          width: 58px;
+          height: 58px;
+          border-radius: 14px;
+          background: #000000;
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 20px;
+        }
+
+        .taller-page .card-title {
+          font-family: var(--font-display), sans-serif;
+          font-size: 20px;
+          font-weight: 800;
+          margin: 0 0 10px;
+          color: #000000;
+        }
+
+        .taller-page .card-text {
+          color: #525252;
+          font-size: 14px;
+          margin: 0 0 26px;
+        }
+
+        .taller-page .insta-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #000000;
+          color: #ffffff;
+          padding: 13px 26px;
+          border-radius: 9999px;
+          font-family: var(--font-display), sans-serif;
+          font-weight: 800;
+          font-size: 12px;
+          text-decoration: none;
+        }
+
+        .taller-page .quote-bar {
+          margin-top: 64px;
+          background: #000000;
+          color: #ffffff;
+          border-radius: 20px;
+          padding: 36px 44px;
+        }
+
+        .taller-page .quote-content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+        }
+
+        .taller-page .quote-text h3 {
+          font-family: var(--font-display), sans-serif;
+          font-size: 22px;
+          font-weight: 800;
+          margin: 0 0 6px;
+          color: #ffffff;
+        }
+
+        .taller-page .quote-text p {
+          color: #a3a3a3;
+          font-size: 14px;
+          margin: 0;
+        }
+
+        .taller-page .quote-whatsapp {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          background: #ffffff;
+          color: #000000;
+          padding: 15px 28px;
+          border-radius: 9999px;
+          text-decoration: none;
+          font-family: var(--font-display), sans-serif;
+          font-weight: 800;
+          font-size: 12px;
+          letter-spacing: 0.06em;
+          white-space: nowrap;
+        }
+
+        .taller-page .work-display-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 48px;
+          margin-top: 84px;
+          align-items: start;
+        }
+
+        .taller-page .section-title {
+          font-family: var(--font-mono), monospace;
+          font-size: 12px;
+          letter-spacing: 0.18em;
+          color: #000000;
+          margin: 0 0 22px;
+          font-weight: 700;
+          border-left: 3px solid #000000;
+          padding-left: 14px;
+        }
+
+        .taller-page .carousel-frame {
+          position: relative;
+          height: 640px;
+          border-radius: 20px;
+          overflow: hidden;
+          background: #f5f5f5;
+          border: 1px solid #e5e5e5;
+        }
+
+        .taller-page .video-frame {
+          border-radius: 20px;
+          overflow: hidden;
+          border: 1px solid #e5e5e5;
+          background: #fafafa;
+        }
+
+        .taller-page .carousel-slide {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          transition: opacity 0.8s ease;
+        }
+
+        .taller-page .carousel-slide.active {
+          opacity: 1;
+        }
+
+        .taller-page .carousel-dots {
+          display: flex;
+          justify-content: center;
+          gap: 8px;
+          margin-top: 20px;
+        }
+
+        .taller-page .dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 9999px;
+          background: #d4d4d4;
+          border: none;
+          cursor: pointer;
+          transition: all 0.25s;
+        }
+
+        .taller-page .dot.active {
+          background: #000000;
+          width: 26px;
+        }
+
+        .taller-page .taller-footer {
+          text-align: center;
+          padding: 48px 20px;
+          font-family: var(--font-mono), monospace;
+          font-size: 10px;
+          letter-spacing: 0.2em;
+          color: #737373;
+          border-top: 1px solid #e5e5e5;
+        }
+
+        @media (max-width: 960px) {
+          .taller-page .content-grid, .taller-page .work-display-grid {
+            grid-template-columns: 1fr;
+          }
+          .taller-page .quote-content {
+            flex-direction: column;
+            text-align: center;
+          }
+          .taller-page .quote-whatsapp {
+            width: 100%;
+            justify-content: center;
+          }
+          .taller-page .carousel-frame {
+            height: 440px;
+          }
+        }

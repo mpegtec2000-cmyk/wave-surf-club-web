@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { 
   Package, Truck, CheckCircle, Clock, Search, 
   ChevronRight, Filter, ShoppingBag, User, 
-  MapPin, Phone, Mail, Calendar, Info
+  MapPin, Phone, Mail, Calendar, Info, X
 } from 'lucide-react';
 
 export default function PedidosLogisticaPage() {
@@ -79,283 +79,299 @@ export default function PedidosLogisticaPage() {
       p.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.nombre_cliente?.toLowerCase().includes(searchQuery.toLowerCase());
     
-    if (filter === 'PENDIENTES') return matchesSearch && p.estado_entrega === 'pendiente';
+    if (filter === 'PENDIENTES') return matchesSearch && (p.estado_entrega === 'pendiente' || !p.estado_entrega);
     if (filter === 'ENTREGADOS') return matchesSearch && p.estado_entrega === 'entregado';
     return matchesSearch;
   });
 
   const kpis = {
-    pendientes: pedidos.filter(p => p.estado_entrega === 'pendiente').length,
+    pendientes: pedidos.filter(p => p.estado_entrega === 'pendiente' || !p.estado_entrega).length,
     entregados: pedidos.filter(p => p.estado_entrega === 'entregado').length,
     total: pedidos.length
   };
 
   return (
-    <div className="pedidos-container">
-      <div className="page-header">
-        <div className="header-title">
-          <Truck className="title-icon" />
+    <div className="space-y-6">
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            Logística &amp; Retiro en Sede · E-Commerce
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Despacho y Retiro de Pedidos
+          </h1>
+        </div>
+      </div>
+
+      {/* ── KPI Grid (Bento Style) ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
           <div>
-            <h1>Despacho y Retiro de Pedidos</h1>
-            <p>Gestión de entrega de equipos y ropa (Venta Online)</p>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Pendientes de Retiro
+            </div>
+            <div className="text-2xl font-black text-neutral-900 tracking-tight mt-1">
+              {kpis.pendientes}
+            </div>
+            <div className="text-[10px] font-mono text-amber-600 mt-0.5 font-bold">Por entregar en sede</div>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-600 flex items-center justify-center shrink-0">
+            <Clock size={18} />
           </div>
         </div>
-        
-        <div className="kpi-grid">
-          <div className="kpi-card pending">
-            <Clock size={16} />
-            <div className="kpi-info">
-              <span>Pendientes de Retiro</span>
-              <strong>{kpis.pendientes}</strong>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Entregas Completadas
             </div>
+            <div className="text-2xl font-black text-neutral-900 tracking-tight mt-1">
+              {kpis.entregados}
+            </div>
+            <div className="text-[10px] font-mono text-emerald-600 mt-0.5 font-bold">Retirados con éxito</div>
           </div>
-          <div className="kpi-card success">
-            <CheckCircle size={16} />
-            <div className="kpi-info">
-              <span>Entregas Completadas</span>
-              <strong>{kpis.entregados}</strong>
-            </div>
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/60 text-emerald-600 flex items-center justify-center shrink-0">
+            <CheckCircle size={18} />
           </div>
-          <div className="kpi-card total">
-            <ShoppingBag size={16} />
-            <div className="kpi-info">
-              <span>Total Pedidos</span>
-              <strong>{kpis.total}</strong>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs hover:border-neutral-300 transition-all flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+              Total Pedidos Físicos
             </div>
+            <div className="text-2xl font-black text-neutral-900 tracking-tight mt-1">
+              {kpis.total}
+            </div>
+            <div className="text-[10px] font-mono text-neutral-400 mt-0.5">Historial acumulado</div>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-neutral-100 border border-neutral-200/60 text-neutral-700 flex items-center justify-center shrink-0">
+            <ShoppingBag size={18} />
           </div>
         </div>
       </div>
 
-      <div className="toolbar">
-        <div className="search-box">
-          <Search size={18} />
+      {/* ── Toolbar & Filters ── */}
+      <div className="bg-white p-3.5 rounded-2xl border border-neutral-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[240px] max-w-sm">
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
           <input 
             type="text" 
-            placeholder="Buscar por ID o Cliente..." 
+            placeholder="Buscar por ID o Nombre de cliente..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-9 pl-9 pr-3 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs text-neutral-800 placeholder-neutral-400 focus:bg-white focus:border-neutral-900 outline-none transition-all"
           />
         </div>
 
-        <div className="filter-tabs">
-          <button className={filter === 'TODOS' ? 'active' : ''} onClick={() => setFilter('TODOS')}>TODOS</button>
-          <button className={filter === 'PENDIENTES' ? 'active' : ''} onClick={() => setFilter('PENDIENTES')}>PENDIENTES</button>
-          <button className={filter === 'ENTREGADOS' ? 'active' : ''} onClick={() => setFilter('ENTREGADOS')}>ENTREGADOS</button>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setFilter('TODOS')}
+            className={`h-8 px-3 rounded-lg text-xs font-bold transition-all ${
+              filter === 'TODOS'
+                ? 'bg-neutral-900 text-white shadow-xs'
+                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+            }`}
+          >
+            Todos ({kpis.total})
+          </button>
+          <button
+            onClick={() => setFilter('PENDIENTES')}
+            className={`h-8 px-3 rounded-lg text-xs font-bold transition-all ${
+              filter === 'PENDIENTES'
+                ? 'bg-neutral-900 text-white shadow-xs'
+                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+            }`}
+          >
+            Pendientes ({kpis.pendientes})
+          </button>
+          <button
+            onClick={() => setFilter('ENTREGADOS')}
+            className={`h-8 px-3 rounded-lg text-xs font-bold transition-all ${
+              filter === 'ENTREGADOS'
+                ? 'bg-neutral-900 text-white shadow-xs'
+                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+            }`}
+          >
+            Entregados ({kpis.entregados})
+          </button>
         </div>
       </div>
 
-      <div className="table-container">
+      {/* ── Table ── */}
+      <div className="rounded-2xl bg-white border border-neutral-200/80 shadow-2xs overflow-hidden">
         {loading ? (
-          <div className="loading-state">Cargando pedidos...</div>
+          <div className="p-16 text-center text-xs font-mono text-neutral-400">
+            Cargando pedidos de equipo y ropa...
+          </div>
         ) : filteredData.length === 0 ? (
-          <div className="empty-state">
-            <Package size={48} />
-            <p>No se encontraron pedidos de equipo o ropa.</p>
+          <div className="p-16 text-center flex flex-col items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-neutral-100 border border-neutral-200/80 flex items-center justify-center text-neutral-400 mb-3">
+              <Package size={22} />
+            </div>
+            <div className="text-sm font-bold text-neutral-800">No se encontraron pedidos</div>
+            <p className="text-xs text-neutral-400 mt-1">No hay órdenes pendientes con productos físicos de entrega.</p>
           </div>
         ) : (
-          <table className="sap-table">
-            <thead>
-              <tr>
-                <th>ID PEDIDO</th>
-                <th>FECHA</th>
-                <th>CLIENTE</th>
-                <th>ARTÍCULOS</th>
-                <th>RETIRO EN</th>
-                <th>ESTADO</th>
-                <th>ACCIONES</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map(order => (
-                <tr key={order.id} className={order.estado_entrega}>
-                  <td className="id-cell">#{order.id.substring(0, 8).toUpperCase()}</td>
-                  <td>{new Date(order.created_at).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
-                  <td>
-                    <div className="client-cell">
-                      <strong>{order.nombre_cliente}</strong>
-                      <span>{order.email_cliente}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="items-preview">
-                      {(order.productos || []).filter(p => {
-                        const n = p.nombre?.toLowerCase() || '';
-                        return !n.includes('clase') && !n.includes('arriendo') && !n.includes('curso') && !n.includes('rent');
-                      }).map((p, i) => (
-                        <span key={i} className="item-tag">{p.cantidad}x {p.nombre}</span>
-                      ))}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="branch-tag">
-                      <MapPin size={10} /> {order.sucursal_retiro || 'Concón'}
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`status-badge ${order.estado_entrega}`}>
-                      {order.estado_entrega === 'entregado' ? 'ENTREGADO' : 'PENDIENTE'}
-                    </span>
-                  </td>
-                  <td>
-                    <button className="btn-detail" onClick={() => setSelectedOrder(order)}>
-                      GESTIONAR <ChevronRight size={14} />
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-neutral-50/80 border-b border-neutral-200/70 text-neutral-500 uppercase font-mono text-[11px] font-bold tracking-wider">
+                <tr>
+                  <th className="py-3 px-4">ID Pedido</th>
+                  <th className="py-3 px-4">Fecha Compra</th>
+                  <th className="py-3 px-4">Cliente</th>
+                  <th className="py-3 px-4">Artículos Físicos</th>
+                  <th className="py-3 px-4">Sede de Retiro</th>
+                  <th className="py-3 px-4">Estado</th>
+                  <th className="py-3 px-4 text-right">Acción</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-neutral-100 text-neutral-800">
+                {filteredData.map(order => (
+                  <tr key={order.id} className="hover:bg-neutral-50/60 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-neutral-900">
+                      #{order.id.substring(0, 8).toUpperCase()}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-neutral-500 text-[11px]">
+                      {new Date(order.created_at).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="font-bold text-neutral-900">{order.nombre_cliente || 'Cliente Web'}</div>
+                      <div className="text-[11px] text-neutral-400 font-mono">{order.email_cliente || '—'}</div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex flex-wrap gap-1">
+                        {(order.productos || []).filter(p => {
+                          const n = p.nombre?.toLowerCase() || '';
+                          return !n.includes('clase') && !n.includes('arriendo') && !n.includes('curso') && !n.includes('rent');
+                        }).map((p, i) => (
+                          <span key={i} className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-neutral-100 text-neutral-700 border border-neutral-200/60">
+                            {p.cantidad || 1}x {p.nombre}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-neutral-700">
+                        <MapPin size={12} className="text-neutral-400" />
+                        {order.sucursal_retiro || 'Concón (Sede Principal)'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold ${
+                        order.estado_entrega === 'entregado'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : 'bg-amber-50 text-amber-700 border border-amber-200'
+                      }`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${order.estado_entrega === 'entregado' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                        {order.estado_entrega === 'entregado' ? 'Entregado' : 'Pendiente Retiro'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <button 
+                        onClick={() => setSelectedOrder(order)}
+                        className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border border-neutral-200 hover:bg-neutral-100 text-neutral-700 font-bold text-xs transition-colors"
+                      >
+                        Ver Ficha <ChevronRight size={13} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
+      {/* ── Modal Detalle de Pedido ── */}
       {selectedOrder && (
-        <div className="modal-overlay" onClick={() => setSelectedOrder(null)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <div className="mh-title">
-                <Package className="modal-icon" />
+        <div className="fixed inset-0 z-50 bg-neutral-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-neutral-200 flex flex-col max-h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-neutral-100 text-neutral-700 flex items-center justify-center">
+                  <Package size={18} />
+                </div>
                 <div>
-                  <h2>Detalle del Pedido #{selectedOrder.id.substring(0, 8).toUpperCase()}</h2>
-                  <span className={`status-badge ${selectedOrder.estado_entrega}`}>
-                    {selectedOrder.estado_entrega === 'entregado' ? 'Entregado' : 'Esperando Retiro'}
-                  </span>
+                  <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">Orden de Despacho</div>
+                  <h2 className="text-sm font-black text-neutral-900">
+                    Pedido #{selectedOrder.id.substring(0, 8).toUpperCase()}
+                  </h2>
                 </div>
               </div>
-              <button className="close-btn" onClick={() => setSelectedOrder(null)}><X size={20} /></button>
+              <button 
+                onClick={() => setSelectedOrder(null)}
+                className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-neutral-100 text-neutral-400 hover:text-neutral-700"
+              >
+                <X size={16} />
+              </button>
             </div>
 
-            <div className="modal-body">
-              <div className="detail-grid">
-                <section>
-                  <h3><User size={16} /> Datos del Cliente</h3>
-                  <div className="info-card">
-                    <p><strong>Nombre:</strong> {selectedOrder.nombre_cliente}</p>
-                    <p><strong>RUT:</strong> {selectedOrder.rut_cliente}</p>
-                    <p><strong>Email:</strong> {selectedOrder.email_cliente}</p>
-                    <p><strong>Teléfono:</strong> {selectedOrder.telefono_cliente}</p>
-                  </div>
-                </section>
+            <div className="p-5 overflow-y-auto space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/70">
+                  <div className="text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-wider mb-1">Cliente</div>
+                  <div className="text-xs font-bold text-neutral-900">{selectedOrder.nombre_cliente}</div>
+                  <div className="text-[11px] text-neutral-500 font-mono mt-0.5">{selectedOrder.email_cliente}</div>
+                  <div className="text-[11px] text-neutral-500 font-mono">{selectedOrder.telefono_cliente || 'Sin teléfono'}</div>
+                </div>
 
-                <section>
-                  <h3><ShoppingBag size={16} /> Artículos a Entregar</h3>
-                  <div className="items-list">
-                    {(selectedOrder.productos || []).filter(p => {
-                      const n = p.nombre?.toLowerCase() || '';
-                      return !n.includes('clase') && !n.includes('arriendo') && !n.includes('curso') && !n.includes('rent');
-                    }).map((p, i) => (
-                      <div key={i} className="item-row">
-                        <div className="item-qty">{p.cantidad}</div>
-                        <div className="item-name">{p.nombre}</div>
-                        <div className="item-price">${p.precio?.toLocaleString()}</div>
+                <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/70">
+                  <div className="text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-wider mb-1">Punto de Entrega</div>
+                  <div className="text-xs font-bold text-neutral-900 flex items-center gap-1">
+                    <MapPin size={12} className="text-neutral-500" />
+                    {selectedOrder.sucursal_retiro || 'Sede Concón'}
+                  </div>
+                  <div className="text-[11px] text-neutral-500 mt-1">Horario: Lun - Dom 08:00 a 20:00</div>
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xs font-bold text-neutral-700 mb-2">Artículos para entrega en mesón:</div>
+                <div className="rounded-xl border border-neutral-200/80 overflow-hidden divide-y divide-neutral-100">
+                  {(selectedOrder.productos || []).map((item, idx) => (
+                    <div key={idx} className="p-3 flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="w-5 h-5 rounded-md bg-neutral-900 text-white font-mono font-bold text-[10px] flex items-center justify-center">
+                          {item.cantidad || 1}
+                        </span>
+                        <span className="font-semibold text-neutral-800">{item.nombre}</span>
                       </div>
-                    ))}
-                  </div>
-                </section>
+                      <span className="font-mono text-neutral-500 font-semibold">
+                        ${Number(item.precio || 0).toLocaleString('es-CL')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="pickup-notice">
-                <MapPin size={16} />
-                <p>Retiro programado en Sucursal: <strong>{selectedOrder.sucursal_retiro || 'Concón'}</strong></p>
+              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center gap-2 text-xs text-amber-800">
+                <Info size={16} className="shrink-0 text-amber-600" />
+                <span>Verificar Cédula de Identidad del alumno al momento de entregar el equipo físico.</span>
               </div>
             </div>
 
-            <div className="modal-footer">
-              <button className="btn-secondary" onClick={() => setSelectedOrder(null)}>Cerrar</button>
-              {selectedOrder.estado_entrega === 'pendiente' && (
+            <div className="p-4 bg-neutral-50 border-t border-neutral-100 flex justify-end gap-2">
+              <button 
+                onClick={() => setSelectedOrder(null)}
+                className="h-9 px-4 rounded-xl border border-neutral-200 hover:bg-neutral-100 text-xs font-bold text-neutral-700 transition-colors"
+              >
+                Cerrar
+              </button>
+              {selectedOrder.estado_entrega !== 'entregado' && (
                 <button 
-                  className="btn-success" 
                   onClick={() => markAsDelivered(selectedOrder.id)}
                   disabled={isUpdating}
+                  className="h-9 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
                 >
-                  <CheckCircle size={16} /> {isUpdating ? 'Actualizando...' : 'Confirmar Entrega'}
+                  <CheckCircle size={14} /> {isUpdating ? 'Actualizando...' : 'Confirmar Entrega en Mesón'}
                 </button>
               )}
             </div>
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        .pedidos-container { padding: 25px; display: flex; flex-direction: column; gap: 25px; color: #fff; }
-        .page-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .header-title { display: flex; gap: 15px; align-items: center; }
-        .title-icon { width: 40px; height: 40px; color: #0ea5e9; background: rgba(14,165,233,0.1); padding: 8px; border-radius: 12px; }
-        .header-title h1 { font-size: 22px; font-weight: 900; margin: 0; }
-        .header-title p { color: #64748b; margin: 4px 0 0; font-size: 14px; }
-        .kpi-grid { display: flex; gap: 15px; }
-        .kpi-card { background: #1a2236; border: 1px solid #2a3441; padding: 12px 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; min-width: 180px; }
-        .kpi-info { display: flex; flex-direction: column; }
-        .kpi-info span { font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; }
-        .kpi-info strong { font-size: 20px; font-weight: 900; color: #fff; }
-        .kpi-card.pending { border-left: 4px solid #f59e0b; }
-        .kpi-card.pending svg { color: #f59e0b; }
-        .kpi-card.success { border-left: 4px solid #10b981; }
-        .kpi-card.success svg { color: #10b981; }
-        .toolbar { display: flex; justify-content: space-between; align-items: center; background: #1a2236; padding: 12px 20px; border-radius: 12px; border: 1px solid #2a3441; }
-        .search-box { display: flex; align-items: center; gap: 12px; background: #0f172a; border: 1px solid #334155; padding: 8px 15px; border-radius: 8px; width: 400px; }
-        .search-box input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 14px; }
-        .filter-tabs { display: flex; background: #0f172a; padding: 4px; border-radius: 8px; border: 1px solid #334155; }
-        .filter-tabs button { background: transparent; border: none; color: #64748b; padding: 6px 15px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-        .filter-tabs button.active { background: #0ea5e9; color: #000; }
-        .table-container { background: #1a2236; border-radius: 12px; border: 1px solid #2a3441; overflow: hidden; }
-        .sap-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .sap-table th { background: #0f172a; padding: 15px 20px; font-size: 11px; font-weight: 800; color: #64748b; border-bottom: 1px solid #2a3441; text-transform: uppercase; letter-spacing: 0.5px; }
-        .sap-table td { padding: 15px 20px; border-bottom: 1px solid #2a3441; font-size: 13px; }
-        .id-cell { font-family: 'Courier New', monospace; font-weight: 800; color: #0ea5e9; }
-        .client-cell { display: flex; flex-direction: column; }
-        .client-cell span { font-size: 11px; color: #64748b; }
-        .items-preview { display: flex; flex-wrap: wrap; gap: 5px; }
-        .item-tag { background: rgba(14,165,233,0.1); color: #0ea5e9; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(14,165,233,0.2); }
-        .branch-tag { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #94a3b8; font-weight: 700; }
-        .status-badge { font-size: 9px; font-weight: 900; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px; }
-        .status-badge.pendiente { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
-        .status-badge.entregado { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
-        .btn-detail { background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 10px; font-weight: 800; padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
-        .btn-detail:hover { border-color: #0ea5e9; color: #0ea5e9; }
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
-        .modal-content { background: #0f172a; width: 90%; max-width: 700px; border-radius: 16px; border: 1px solid #1e293b; overflow: hidden; }
-        .modal-header { padding: 20px 25px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; background: #1a2236; }
-        .mh-title { display: flex; gap: 15px; align-items: center; }
-        .modal-icon { color: #0ea5e9; }
-        .modal-header h2 { font-size: 18px; margin: 0; font-weight: 900; }
-        .close-btn { background: none; border: none; color: #64748b; cursor: pointer; }
-        .modal-body { padding: 25px; display: flex; flex-direction: column; gap: 20px; }
-        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .detail-grid h3 { font-size: 13px; font-weight: 800; color: #64748b; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; text-transform: uppercase; }
-        .info-card { background: #1a2236; padding: 15px; border-radius: 12px; border: 1px solid #2a3441; font-size: 13px; }
-        .info-card p { margin: 8px 0; display: flex; justify-content: space-between; }
-        .info-card strong { color: #94a3b8; font-weight: 600; }
-        .items-list { background: #1a2236; border-radius: 12px; border: 1px solid #2a3441; overflow: hidden; }
-        .item-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #2a3441; gap: 12px; font-size: 13px; }
-        .item-qty { background: #0ea5e9; color: #000; font-weight: 900; width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
-        .item-name { flex: 1; font-weight: 600; }
-        .item-price { color: #64748b; font-family: monospace; }
-        .pickup-notice { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); padding: 12px 20px; border-radius: 10px; display: flex; align-items: center; gap: 12px; font-size: 13px; color: #f59e0b; }
-        .modal-footer { padding: 20px 25px; background: #1a2236; border-top: 1px solid #1e293b; display: flex; justify-content: flex-end; gap: 12px; }
-        .btn-secondary { background: transparent; border: 1px solid #334155; color: #64748b; padding: 10px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 13px; }
-        .btn-success { background: #10b981; color: #fff; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; }
-        .loading-state, .empty-state { text-align: center; padding: 100px; color: #475569; }
-      `}</style>
     </div>
-  );
-}
-
-function X(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
   );
 }

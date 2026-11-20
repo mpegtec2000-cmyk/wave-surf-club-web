@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Allows images from any domain (for future Supabase Storage and Unsplash)
+  // Serve local high-res assets & external images directly without dev-mode Sharp proxy timeouts
   images: {
+    unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: '*.supabase.co' },

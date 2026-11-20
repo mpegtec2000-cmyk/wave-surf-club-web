@@ -1,0 +1,157 @@
+.cks-page {
+          min-height: 100vh;
+          background: #ffffff;
+          color: #000000;
+          padding-top: var(--nav-height, 100px);
+        }
+        .cks-wrapper {
+          min-height: calc(100vh - 100px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 40px 20px;
+        }
+        .cks-card {
+          background: #ffffff;
+          border: 1.5px solid #000000;
+          color: #000000;
+          max-width: 540px;
+          width: 100%;
+          border-radius: 24px;
+          padding: 48px 36px;
+          text-align: center;
+        }
+        .cks-icon {
+          width: 80px;
+          height: 80px;
+          background: #000000;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 24px;
+        }
+        .cks-card h1 {
+          font-family: var(--font-display), sans-serif;
+          font-size: 28px;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          margin: 0 0 10px;
+        }
+        .cks-subtitle {
+          color: #525252;
+          margin: 0 0 32px;
+          line-height: 1.6;
+          font-size: 14px;
+        }
+        .cks-order-box {
+          background: #fafafa;
+          border: 1px solid #e5e5e5;
+          padding: 20px;
+          border-radius: 16px;
+          margin-bottom: 28px;
+          text-align: left;
+        }
+        .cks-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 0;
+          font-size: 13px;
+          color: #525252;
+        }
+        .cks-bold {
+          font-family: var(--font-mono), monospace;
+          font-weight: 700;
+          color: #000000;
+        }
+        .cks-status {
+          background: #000000;
+          color: #ffffff;
+          padding: 4px 10px;
+          border-radius: 9999px;
+          font-family: var(--font-mono), monospace;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+        }
+        .cks-steps {
+          text-align: left;
+          margin-bottom: 32px;
+        }
+        .cks-steps h3 {
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.16em;
+          color: #737373;
+          margin: 0 0 12px;
+        }
+        .cks-steps ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        .cks-steps li {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: #262626;
+          font-size: 13px;
+          margin-bottom: 8px;
+        }
+        .cks-actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+        }
+        .cks-btn-home {
+          background: #000000;
+          color: #ffffff !important;
+          padding: 15px 18px;
+          border-radius: 9999px;
+          text-decoration: none;
+          font-family: var(--font-display), sans-serif;
+          font-weight: 800;
+          font-size: 12px;
+          letter-spacing: 0.06em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .cks-btn-social {
+          background: #ffffff;
+          color: #000000 !important;
+          padding: 15px 18px;
+          border-radius: 9999px;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          font-weight: 700;
+          font-size: 12px;
+          border: 1.5px solid #000000;
+        }
+        .cks-loading {
+          min-height: 60vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: #000000;
+        }
+        .cks-spinner {
+          width: 36px;
+          height: 36px;
+          border: 3px solid #e5e5e5;
+          border-top-color: #000000;
+          border-radius: 50%;
+          animation: cksSpin 0.8s linear infinite;
+          margin-bottom: 16px;
+        }
+        @keyframes cksSpin { to { transform: rotate(360deg); } }
+        @media (max-width: 520px) {
+          .cks-actions { grid-template-columns: 1fr; }
+          .cks-card { padding: 36px 22px; }
+        }

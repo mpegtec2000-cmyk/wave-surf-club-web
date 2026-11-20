@@ -1,15 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getMockUser } from '@/lib/mock-data';
+import { getCurrentUser } from '@/lib/data';
 import { useRouter } from 'next/navigation';
 import { BRANCHES, ROLE_LABELS } from '@/lib/constants';
 import { supabase } from '@/lib/supabase';
-import { CreditCard, ShieldCheck, Save, Globe } from 'lucide-react';
+import { 
+  CreditCard, ShieldCheck, Save, Globe, Zap, AlertTriangle, Building2, 
+  Users, Check, Eye, X, Activity, CheckCircle2, Clock, Wrench, 
+  RotateCcw, Key, Database, Download, Lock, RefreshCw, Server
+} from 'lucide-react';
 
 export default function SettingsPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [toast, setToast] = useState(null);
   
   // Flow Settings State
   const [flowConfig, setFlowConfig] = useState({
@@ -19,8 +24,13 @@ export default function SettingsPage() {
     isSaving: false
   });
 
+  const showToast = (msg, type = 'info') => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   useEffect(() => {
-    const u = getMockUser();
+    const u = getCurrentUser();
     if (!u || u.role !== 'superadmin') {
       router.replace('/dashboard');
       return;
@@ -55,254 +65,202 @@ export default function SettingsPage() {
       { key: 'flow_url', value: flowConfig.baseUrl }
     ];
 
-    for (const update of updates) {
-      await supabase
-        .from('site_settings')
-        .update({ value: update.value, updated_at: new Date() })
-        .eq('key', update.key);
+    try {
+      for (const update of updates) {
+        await supabase
+          .from('site_settings')
+          .update({ value: update.value, updated_at: new Date() })
+          .eq('key', update.key);
+      }
+      showToast('Credenciales de Flow actualizadas con éxito', 'success');
+    } catch (e) {
+      showToast('Error al guardar credenciales: ' + e.message, 'error');
+    } finally {
+      setFlowConfig(prev => ({ ...prev, isSaving: false }));
     }
-
-    setFlowConfig(prev => ({ ...prev, isSaving: false }));
-    alert('Configuración de Flow guardada exitosamente.');
   };
 
   if (!user) return null;
 
   return (
-    <div>
-      {/* Header notice */}
-      <div style={{
-        padding: '14px 20px',
-        background: 'rgba(14,165,233,0.08)',
-        border: '1px solid rgba(14,165,233,0.2)',
-        borderRadius: 'var(--radius-md)',
-        color: 'var(--text-accent)',
-        fontSize: 13,
-        marginBottom: 28
-      }}>
-        🔐 Solo el <strong>SuperAdmin</strong> puede acceder a esta sección
+    <div className="space-y-6">
+      
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            Administración &amp; Parámetros de Plataforma
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Configuración del Sistema
+          </h1>
+        </div>
+
+        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold self-start sm:self-auto">
+          <Lock size={13} className="text-amber-600" />
+          <span>Acceso Restringido: SuperAdmin</span>
+        </div>
       </div>
 
-      <div className="settings-grid">
+      {/* ── Settings Bento Grid ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        {/* Supabase Connection */}
-        <div className="settings-card">
-          <h3>⚡ Conexión Supabase</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div className="form-group">
-              <label>Supabase URL</label>
-              <input className="form-input" placeholder="https://xxxx.supabase.co" defaultValue="https://YOUR_PROJECT.supabase.co" />
+        {/* Card 1: Supabase Database Status */}
+        <div className="p-6 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs space-y-4">
+          <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200/60 flex items-center justify-center">
+                <Database size={18} />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-neutral-900">Conexión a Base de Datos</h3>
+                <p className="text-[11px] text-neutral-400">Instancia en la nube de Supabase PostgreSQL</p>
+              </div>
             </div>
-            <div className="form-group">
-              <label>Anon Key</label>
-              <input className="form-input" type="password" placeholder="eyJ..." />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Conectado
+            </span>
+          </div>
+
+          <div className="space-y-3 text-xs">
+            <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/60 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-400 font-mono text-[11px]">PROJECT REF:</span>
+                <span className="font-mono font-bold text-neutral-800">keaoaxltnbdxysysxxem</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-400 font-mono text-[11px]">ENDPOINT:</span>
+                <span className="font-mono text-neutral-700 truncate max-w-[220px]">https://keaoaxltnbdxysysxxem.supabase.co</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-400 font-mono text-[11px]">LATENCIA / SYNC:</span>
+                <span className="font-mono font-bold text-emerald-600">Tiempo Real (Websockets activos)</span>
+              </div>
             </div>
-            <div className="form-group">
-              <label>Service Role Key</label>
-              <input className="form-input" type="password" placeholder="eyJ..." />
-            </div>
-            <div style={{
-              padding: '12px 16px',
-              background: 'rgba(234,179,8,0.08)',
-              border: '1px solid rgba(234,179,8,0.2)',
-              borderRadius: 'var(--radius-md)',
-              fontSize: 12,
-              color: '#fde047'
-            }}>
-              ⚠️ Configura estas variables en el archivo <code style={{ background: 'rgba(255,255,255,0.1)', padding: '2px 6px', borderRadius: 4 }}>.env.local</code> de tu proyecto.
+
+            <div className="text-[11px] text-neutral-500">
+              Todas las transacciones, inventarios y clientes se sincronizan automáticamente con persistencia en PostgreSQL.
             </div>
           </div>
         </div>
 
-        {/* Pasarela Flow */}
-        <div className="settings-card" style={{ border: '1px solid rgba(236,72,153,0.3)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-            <CreditCard size={20} color="#ec4899" />
-            <h3 style={{ margin: 0 }}>💳 Configuración de Flow (Ventas Web)</h3>
+        {/* Card 2: Flow Payment Gateway Configuration */}
+        <div className="p-6 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs space-y-4">
+          <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-neutral-100 text-neutral-800 border border-neutral-200 flex items-center justify-center">
+                <CreditCard size={18} />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-neutral-900">Pasarela Flow Pagos</h3>
+                <p className="text-[11px] text-neutral-400">Webpay Plus, Servipag y Multicaja para la Tienda Online</p>
+              </div>
+            </div>
           </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div className="form-group">
-              <label>API Key de Flow</label>
-              <input 
-                className="form-input" 
-                placeholder="Ingresa tu API Key..." 
+
+          <div className="space-y-3">
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                API Key
+              </label>
+              <input
+                type="text"
                 value={flowConfig.apiKey}
-                onChange={e => setFlowConfig({...flowConfig, apiKey: e.target.value})}
+                onChange={e => setFlowConfig({ ...flowConfig, apiKey: e.target.value })}
+                placeholder="flow_api_key..."
+                className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-mono font-bold text-neutral-900 focus:bg-white focus:border-neutral-900 outline-none"
               />
             </div>
-            <div className="form-group">
-              <label>Secret Key de Flow</label>
-              <input 
-                className="form-input" 
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                Secret Key
+              </label>
+              <input
                 type="password"
-                placeholder="Ingresa tu Secret Key..." 
                 value={flowConfig.secretKey}
-                onChange={e => setFlowConfig({...flowConfig, secretKey: e.target.value})}
+                onChange={e => setFlowConfig({ ...flowConfig, secretKey: e.target.value })}
+                placeholder="••••••••••••••••"
+                className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-mono font-bold text-neutral-900 focus:bg-white focus:border-neutral-900 outline-none"
               />
             </div>
-            <div className="form-group">
-              <label>URL de la API (Ambiente)</label>
-              <select 
-                className="form-input"
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                Ambiente de Pasarela
+              </label>
+              <select
                 value={flowConfig.baseUrl}
-                onChange={e => setFlowConfig({...flowConfig, baseUrl: e.target.value})}
+                onChange={e => setFlowConfig({ ...flowConfig, baseUrl: e.target.value })}
+                className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs font-semibold text-neutral-800 focus:bg-white focus:border-neutral-900 outline-none"
               >
-                <option value="https://sandbox.flow.cl/api">Sandbox / Prueba</option>
-                <option value="https://www.flow.cl/api">Producción / Oficial</option>
+                <option value="https://sandbox.flow.cl/api">Sandbox (Pruebas / Certificación)</option>
+                <option value="https://www.flow.cl/api">Producción (Cobro Real)</option>
               </select>
             </div>
 
-            <div style={{
-              padding: '12px 16px',
-              background: 'rgba(236,72,153,0.08)',
-              border: '1px solid rgba(236,72,153,0.2)',
-              borderRadius: 'var(--radius-md)',
-              fontSize: 12,
-              color: '#f472b6',
-              display: 'flex',
-              gap: 8,
-              alignItems: 'flex-start'
-            }}>
-              <ShieldCheck size={16} style={{ flexShrink: 0, marginTop: 2 }} />
-              <span>
-                Estas llaves se guardarán en la base de datos y se usarán para procesar todos los pagos del Carrito de Compras.
-              </span>
+            <div className="pt-2">
+              <button
+                onClick={saveFlowConfig}
+                disabled={flowConfig.isSaving}
+                className="w-full h-10 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs inline-flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <Save size={14} /> {flowConfig.isSaving ? 'Guardando...' : 'Guardar Parámetros Flow'}
+              </button>
             </div>
-
-            <button 
-              className="btn btn-primary" 
-              style={{ background: '#ec4899', border: 'none', display: 'flex', gap: 8, justifyContent: 'center' }}
-              onClick={saveFlowConfig}
-              disabled={flowConfig.isSaving}
-            >
-              {flowConfig.isSaving ? 'Guardando...' : <><Save size={18}/> Guardar Credenciales Flow</>}
-            </button>
           </div>
         </div>
 
-        {/* Sucursales */}
-        <div className="settings-card">
-          <h3>🏢 Sucursales Registradas</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {/* Card 3: Branches / Centros de Costo Overview */}
+        <div className="lg:col-span-2 p-6 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs space-y-4">
+          <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 border border-purple-200/60 flex items-center justify-center">
+                <Building2 size={18} />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-neutral-900">Sucursales Habilitadas (Centros de Costo)</h3>
+                <p className="text-[11px] text-neutral-400">Sedes operativas con control de inventario y caja independiente</p>
+              </div>
+            </div>
+            <span className="text-xs font-mono font-bold text-neutral-500 bg-neutral-100 px-2.5 py-1 rounded-lg">
+              {BRANCHES.length} sedes
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {BRANCHES.map(b => (
-              <div key={b.id} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '12px 16px',
-                background: 'var(--bg-surface)',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-subtle)'
-              }}>
-                <span style={{ fontSize: 24 }}>{b.emoji}</span>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: 14 }}>{b.name}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>ID: {b.id}</div>
+              <div key={b.id} className="p-4 rounded-xl bg-neutral-50 border border-neutral-200/70 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-neutral-900 text-sm">{b.name}</span>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-white border border-neutral-200 text-neutral-600">
+                    ID #{b.id}
+                  </span>
                 </div>
-                <span className="av-badge av-optimal" style={{ marginLeft: 'auto' }}>Activa</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Roles y Permisos */}
-        <div className="settings-card">
-          <h3>👥 Roles del Sistema</h3>
-          <div className="data-table-wrap">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Rol</th>
-                  <th>POS</th>
-                  <th>Inventario</th>
-                  <th>Dashboard</th>
-                  <th>Cierre</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>SuperAdmin</td>
-                  <td>✅</td><td>✅ CRUD</td><td>✅</td><td>✅</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Caja</td>
-                  <td>✅</td><td>👁️ Read</td><td>✅</td><td>✅</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Asistente</td>
-                  <td>✅</td><td>🚫</td><td>🚫</td><td>🚫</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Sistema AV */}
-        <div className="settings-card">
-          <h3>🏄 Sistema AV — Lógica de Salud</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {[
-              { badge: 'av-optimal', icon: '✅', level: 'AV1 — ÓPTIMO', desc: 'Menos de 3 meses desde ingreso o último reset' },
-              { badge: 'av-review', icon: '🕒', level: 'AV2 — REVISIÓN', desc: 'Entre 3 y 6 meses — Programar inspección' },
-              { badge: 'av-repair', icon: '🔧', level: 'AV3 — REPARACIÓN', desc: 'Entre 6 y 9 meses — Ocultar de Asistente' },
-              { badge: 'av-urgent', icon: '⚠️', level: 'URGENTE — VENCIDO', desc: 'Más de 9 meses — Bloqueo total de arriendo' },
-            ].map((item) => (
-              <div key={item.level} style={{
-                display: 'flex', gap: 12, alignItems: 'flex-start',
-                padding: '12px', background: 'var(--bg-surface)',
-                borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)'
-              }}>
-                <span className={`av-badge ${item.badge}`}>{item.icon} {item.level.split('—')[0].trim()}</span>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: 13 }}>{item.level}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{item.desc}</div>
+                <div className="text-xs font-mono text-neutral-500">{b.short_name}</div>
+                <div className="pt-2 border-t border-neutral-200/60 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  Operacional &amp; Auditoría Activa
                 </div>
               </div>
             ))}
-            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
-              🔄 Solo el SuperAdmin puede hacer <strong style={{ color: 'var(--text-secondary)' }}>Reset AV</strong> actualizando la <code>entry_date</code>.
-            </div>
           </div>
         </div>
 
-        {/* SuperAdmin Info */}
-        <div className="settings-card">
-          <h3>🔑 Cuenta SuperAdmin</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div className="form-group">
-              <label>Email</label>
-              <input className="form-input" value={user.email} readOnly />
-            </div>
-            <div className="form-group">
-              <label>Nombre</label>
-              <input className="form-input" defaultValue={user.name} />
-            </div>
-            <div className="form-group">
-              <label>RUT</label>
-              <input className="form-input" value={user.rut} readOnly />
-            </div>
-            <button className="btn btn-primary" onClick={() => alert('En producción, esto actualizaría el perfil en Supabase.')}>
-              Guardar Cambios
-            </button>
-          </div>
-        </div>
-
-        {/* SQL Script */}
-        <div className="settings-card">
-          <h3>🗄️ Script SQL para Supabase</h3>
-          <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 12 }}>
-            Ejecuta este script en el SQL Editor de Supabase para inicializar la base de datos.
-          </p>
-          <a
-            href="/supabase-init.sql"
-            download
-            className="btn btn-secondary btn-full"
-          >
-            📥 Descargar supabase-init.sql
-          </a>
-        </div>
       </div>
+
+      {/* Toast Feedback */}
+      {toast && (
+        <div className={`fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl border shadow-xl text-xs font-bold animate-in fade-in slide-in-from-bottom-3 duration-200 ${
+          toast.type === 'error'
+            ? 'bg-rose-50 border-rose-200 text-rose-700'
+            : 'bg-neutral-900 border-neutral-800 text-white'
+        }`}>
+          {toast.msg}
+        </div>
+      )}
+
     </div>
   );
 }

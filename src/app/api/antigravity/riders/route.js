@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   const activeRiders = [
-    { name: 'Tomas Bock', slug: 'tomas-bock', img: '/tomy-escuela.png' },
+    { name: 'Tomas Bock', slug: 'tomas-bock', img: '/CARUSEL EQUIPO/tomy-escuela.png' },
     { name: 'Paulo Muñoz', slug: 'paulo-munoz', img: '/paulo-1.png' },
     { name: 'Angelo Avello', slug: 'angelo-avello', img: 'https://images.unsplash.com/photo-1520156584202-0e94b9f01391?auto=format&fit=crop&w=800&q=80' },
     { name: 'Cristobal Lazcano', slug: 'cristobal-lazcano', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80' },

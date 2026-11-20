@@ -28,13 +28,14 @@ export const dictionaries = {
       movimientos: "Reg. Movimientos",
       'ventas-online': "Ventas Online",
       'ventas-fisicas': "Ventas Físicas",
-      'agenda-ventas': "Agenda de Clases y Arriendos",
+      'agenda-ventas': "Agenda de Clases",
       'suscripciones': "Suscripciones",
       'cotizaciones': "Cotizaciones",
       'tienda': "Productos Tienda",
       'categorias': "Categorías Tienda",
       'reservas': "Reservas Tienda",
       'ordenes': "Órdenes Tienda",
+      pedidos: "Pedidos Online",
       settings: "Configuración"
     },
     landing: {

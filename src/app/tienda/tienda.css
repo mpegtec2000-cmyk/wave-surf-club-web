@@ -1,0 +1,539 @@
+.td-root {
+          min-height: 100vh;
+          background: #0a0a0a;
+          color: #ffffff;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        .td-bg-wrap {
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+        }
+
+        .td-bg-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.52) 0%,
+            rgba(0, 0, 0, 0.58) 45%,
+            rgba(0, 0, 0, 0.78) 100%
+          );
+        }
+
+        .td-main {
+          position: relative;
+          z-index: 2;
+          padding-top: var(--nav-height, 100px);
+          padding-bottom: 90px;
+        }
+
+        .td-header {
+          padding: 72px 24px 52px;
+          text-align: center;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+          background: transparent;
+        }
+
+        .td-header-inner {
+          max-width: 820px;
+          margin: 0 auto;
+        }
+
+        .td-kicker {
+          display: block;
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.22em;
+          color: rgba(255, 255, 255, 0.8);
+          margin-bottom: 12px;
+        }
+
+        .td-header h1 {
+          font-family: var(--font-display), sans-serif;
+          font-size: clamp(2.4rem, 6vw, 66px);
+          font-weight: 800;
+          letter-spacing: -0.045em;
+          line-height: 0.94;
+          margin: 0 0 16px;
+          color: #ffffff;
+          text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+        }
+
+        .td-subtitle {
+          font-size: 16px;
+          color: rgba(255, 255, 255, 0.88);
+          margin: 0 auto 28px;
+          max-width: 560px;
+        }
+
+        .td-hours-bar {
+          display: inline-flex;
+          align-items: center;
+          gap: 24px;
+          padding: 12px 24px;
+          background: rgba(0, 0, 0, 0.55);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 9999px;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .td-h-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          color: rgba(255, 255, 255, 0.78);
+        }
+
+        .td-h-item strong { color: #ffffff; }
+
+        .td-toolbar {
+          position: sticky;
+          top: var(--nav-height, 100px);
+          z-index: 40;
+          background: rgba(10, 10, 10, 0.86);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+          padding: 14px 24px;
+        }
+
+        .td-toolbar-inner {
+          max-width: 1280px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+
+        .td-tabs {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .td-tab {
+          padding: 8px 18px;
+          border-radius: 9999px;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          color: rgba(255, 255, 255, 0.82);
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .td-tab:hover { border-color: #ffffff; color: #ffffff; background: rgba(255, 255, 255, 0.16); }
+        .td-tab.active { background: #ffffff; color: #000000; border-color: #ffffff; }
+
+        .td-search {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 0 14px;
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.22);
+          border-radius: 9999px;
+          width: 260px;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .td-search input {
+          border: none;
+          background: transparent;
+          padding: 9px 4px;
+          width: 100%;
+          outline: none;
+          font-size: 13px;
+          color: #ffffff;
+        }
+
+        .td-search input::placeholder {
+          color: rgba(255, 255, 255, 0.55);
+        }
+
+        .td-container {
+          max-width: 1280px;
+          margin: 44px auto 0;
+          padding: 0 24px;
+        }
+
+        .td-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px;
+        }
+
+        .td-card {
+          background: #ffffff;
+          border: 1px solid #e5e5e5;
+          border-radius: 18px;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .td-card:hover {
+          transform: translateY(-6px);
+          border-color: #000000;
+          box-shadow: 0 18px 36px rgba(0, 0, 0, 0.08);
+        }
+
+        .td-card-img {
+          position: relative;
+          aspect-ratio: 1 / 1;
+          background: #0d0d0d;
+          overflow: hidden;
+        }
+
+        .td-card-img img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .td-img-ph {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #141414;
+          color: rgba(255, 255, 255, 0.35);
+          font-family: var(--font-display), sans-serif;
+          font-size: 24px;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+        }
+
+        .td-cat-badge {
+          align-self: flex-start;
+          background: #000000;
+          color: #ffffff;
+          font-family: var(--font-mono), monospace;
+          font-size: 9.5px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          padding: 4px 10px;
+          border-radius: 9999px;
+          text-transform: uppercase;
+          margin-bottom: 10px;
+        }
+
+        .td-card-body {
+          padding: 22px;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+        }
+
+        .td-card-body h3 {
+          font-family: var(--font-display), sans-serif;
+          font-size: 17px;
+          font-weight: 800;
+          margin: 0 0 8px;
+          color: #000000;
+        }
+
+        .td-card-body p {
+          font-size: 13.5px;
+          color: #525252;
+          line-height: 1.55;
+          margin: 0 0 18px;
+        }
+
+        .td-price-row {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          margin-top: auto;
+          margin-bottom: 16px;
+          font-family: var(--font-mono), monospace;
+        }
+
+        .td-price-row strong { font-size: 20px; color: #000000; }
+        .td-price-row span { font-size: 13px; color: #a3a3a3; text-decoration: line-through; }
+
+        .td-add-btn {
+          width: 100%;
+          padding: 13px;
+          background: #000000;
+          color: #ffffff;
+          border: none;
+          border-radius: 9999px;
+          font-family: var(--font-display), sans-serif;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+
+        .td-add-btn:hover { background: #262626; }
+
+        .td-empty {
+          text-align: center;
+          padding: 64px 20px;
+          color: #737373;
+          font-family: var(--font-mono), monospace;
+        }
+
+        .td-float-cart {
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
+          background: #000000;
+          color: #ffffff;
+          border: 1.5px solid #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+          z-index: 90;
+        }
+
+        .td-float-badge {
+          position: absolute;
+          top: -4px;
+          right: -4px;
+          background: #ffffff;
+          color: #000000;
+          border: 1.5px solid #000000;
+          font-family: var(--font-mono), monospace;
+          font-size: 10px;
+          font-weight: 900;
+          width: 22px;
+          height: 22px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* DRAWER */
+        .td-drawer-overlay, .td-modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.55);
+          backdrop-filter: blur(6px);
+          z-index: 10010;
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .td-modal-overlay {
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+
+        .td-drawer {
+          width: 100%;
+          max-width: 420px;
+          height: 100%;
+          background: #ffffff;
+          color: #000000;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .td-drawer-head, .td-modal-head {
+          padding: 22px 24px;
+          border-bottom: 1px solid #e5e5e5;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .td-drawer-head h2, .td-modal-head h3 {
+          font-family: var(--font-display), sans-serif;
+          font-size: 16px;
+          font-weight: 800;
+          margin: 0;
+        }
+
+        .td-drawer-head button, .td-modal-head button {
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: #000000;
+        }
+
+        .td-drawer-items {
+          flex: 1;
+          overflow-y: auto;
+          padding: 20px 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .td-drawer-empty {
+          text-align: center;
+          color: #737373;
+          padding: 40px 0;
+        }
+
+        .td-drawer-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 14px;
+          background: #fafafa;
+          border: 1px solid #e5e5e5;
+          border-radius: 12px;
+        }
+
+        .td-drawer-item h4 { font-size: 14px; margin: 0 0 4px; }
+        .td-drawer-item small { display: block; font-size: 11px; color: #737373; margin-bottom: 4px; }
+        .td-drawer-item strong { font-family: var(--font-mono), monospace; font-size: 14px; }
+        .td-drawer-item button { background: none; border: none; color: #737373; cursor: pointer; }
+
+        .td-drawer-foot {
+          padding: 20px 24px;
+          border-top: 1px solid #e5e5e5;
+          background: #fafafa;
+        }
+
+        .td-drawer-total {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+          font-family: var(--font-mono), monospace;
+        }
+
+        .td-drawer-total strong { font-size: 20px; }
+
+        .td-checkout-fields {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-bottom: 14px;
+        }
+
+        .td-inp-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 0 12px;
+          background: #ffffff;
+          border: 1px solid #d4d4d4;
+          border-radius: 10px;
+          color: #525252;
+        }
+
+        .td-inp-row input {
+          width: 100%;
+          border: none;
+          padding: 10px 4px;
+          outline: none;
+          font-size: 13px;
+          color: #000000;
+        }
+
+        .td-err {
+          color: #dc2626;
+          font-size: 12px;
+          margin-bottom: 10px;
+        }
+
+        .td-flow-btn, .td-confirm-btn {
+          width: 100%;
+          padding: 14px;
+          background: #000000;
+          color: #ffffff;
+          border: none;
+          border-radius: 9999px;
+          font-family: var(--font-display), sans-serif;
+          font-size: 12px;
+          font-weight: 800;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          cursor: pointer;
+        }
+
+        .td-confirm-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .td-modal {
+          width: 100%;
+          max-width: 480px;
+          background: #ffffff;
+          color: #000000;
+          border-radius: 20px;
+          overflow: hidden;
+        }
+
+        .td-modal-body {
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .td-modal-body label {
+          font-family: var(--font-mono), monospace;
+          font-size: 10.5px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          color: #525252;
+          margin-bottom: 8px;
+        }
+
+        .td-modal-body input[type='date'] {
+          padding: 12px;
+          border: 1px solid #d4d4d4;
+          border-radius: 10px;
+          font-size: 14px;
+        }
+
+        .td-slots {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 8px;
+          margin-bottom: 24px;
+        }
+
+        .td-slot {
+          padding: 10px 6px;
+          border: 1px solid #e5e5e5;
+          background: #fafafa;
+          color: #000000;
+          border-radius: 8px;
+          font-family: var(--font-mono), monospace;
+          font-size: 12px;
+          cursor: pointer;
+        }
+
+        .td-slot.selected { background: #000000; color: #ffffff; border-color: #000000; }
+        .td-slot.occupied { opacity: 0.35; cursor: not-allowed; text-decoration: line-through; }
+
+        @media (max-width: 960px) {
+          .td-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 640px) {
+          .td-grid { grid-template-columns: 1fr; }
+          .td-search { width: 100%; }
+        }

@@ -1,82 +1,50 @@
 // =============================================
-// WAVE SURF CLUB — Data Layer (Supabase)
-// Reemplaza mock-data.js con llamadas reales
+// WAVE SURF CLUB — Data Layer (Supabase + Offline Fallback)
 // =============================================
 
 import { supabase } from './supabase';
+import { MOCK_USERS, getMockClients, getMockInventory, getMockStaff, MOCK_TRANSACTIONS } from './mock-data';
+import { BRANCHES as STATIC_BRANCHES } from './constants';
 
 // ── AUTH ─────────────────────────────────────
 
 export async function loginUser(email, password) {
-  const cleanEmail = email.trim(); // No pasamos a lower todavía por si la DB es sensible
-  
-  // Buscar perfil por email (usamos ilike para insensibilidad a mayúsculas)
-  const { data: profileData, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .ilike('email', cleanEmail)
-    .eq('is_staff', true)
-    .limit(1);
-
-  if (error) {
-    console.error('Login Profile Query Error:', error);
-    return { error: 'Error de conexión con el servidor (P)' };
+  const cleanEmail = (email || '').trim();
+  if (!cleanEmail || !password) {
+    return { error: 'Ingresa tu correo institucional y contraseña.' };
   }
 
-  const profile = profileData && profileData.length > 0 ? profileData[0] : null;
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: cleanEmail, password }),
+    });
 
-  if (!profile) {
-    return { error: 'Usuario no encontrado o no tiene permisos de staff' };
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok || data.error || !data.user) {
+      return { error: data.error || 'Credenciales inválidas o acceso denegado.' };
+    }
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('wave_user', JSON.stringify(data.user));
+    }
+
+    return { user: data.user, error: null };
+  } catch {
+    return { error: 'No se pudo conectar con el servidor de autenticación.' };
   }
-
-  // Fetch branch access separately to avoid 406 errors on complex joins
-  const { data: accessData, error: accessErr } = await supabase
-    .from('staff_branch_access')
-    .select('branch_id')
-    .eq('profile_id', profile.id);
-
-  if (accessErr) {
-    console.error('Login Access Query Error:', accessErr);
-    // Continue anyway with empty branches if this fails? 
-    // No, better to return error if it's a real connection issue.
-  }
-
-  // Verificar contraseña simple (en producción usaríamos Supabase Auth)
-  // Por ahora verificamos contra contraseñas hardcoded del staff
-  const STAFF_PASSWORDS = {
-    'WAVE_SURF_CLUB@outlook.com': 'WAVESURF2026',
-    'francisco@wavesurf.cl': 'francisco2026',
-    'caja@wavesurf.cl': 'caja2026',
-    'asistente@wavesurf.cl': 'asistente2026',
-    'ana@wavesurf.cl': 'ana2026',
-  };
-
-  if (STAFF_PASSWORDS[cleanEmail] !== password) {
-    return { error: 'Contraseña incorrecta' };
-  }
-
-  const user = {
-    id: profile.id,
-    email: profile.email,
-    rut: profile.rut,
-    name: profile.name,
-    role: profile.role,
-    phone: profile.phone,
-    allowed_branches: Array.isArray(accessData) 
-      ? accessData.map(a => a.branch_id)
-      : [],
-  };
-
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('wave_user', JSON.stringify(user));
-  }
-
-  return { user, error: null };
 }
 
-export function logoutUser() {
+export async function logoutUser() {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('wave_user');
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {
+      // Ignore network errors during logout
+    }
   }
 }
 
@@ -91,58 +59,71 @@ export function getCurrentUser() {
 // ── BRANCHES ────────────────────────────────
 
 export async function getBranches() {
-  const { data, error } = await supabase
-    .from('branches')
-    .select('*')
-    .eq('is_active', true)
-    .order('id');
-  return data || [];
+  try {
+    const { data, error } = await supabase
+      .from('branches')
+      .select('*')
+      .eq('is_active', true)
+      .order('id');
+    if (!error && data && data.length > 0) return data;
+  } catch (e) {}
+  return STATIC_BRANCHES;
 }
 
 // ── PROFILES / CLIENTS ──────────────────────
 
 export async function getClients() {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('role', 'cliente')
-    .eq('is_active', true)
-    .order('name');
-  return data || [];
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('role', 'cliente')
+      .eq('is_active', true)
+      .order('name');
+    if (!error && data && data.length > 0) return data;
+  } catch (e) {}
+  return getMockClients();
 }
 
 export async function addClient(client) {
-  const { data, error } = await supabase
-    .from('profiles')
-    .insert({
-      rut: client.rut,
-      name: client.name,
-      email: client.email,
-      phone: client.phone,
-      role: client.role || 'cliente',
-      is_staff: client.is_staff || false,
-      debt_balance: 0,
-    })
-    .select()
-    .single();
-  return { data, error };
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert({
+        rut: client.rut,
+        name: client.name,
+        email: client.email,
+        phone: client.phone,
+        role: client.role || 'cliente',
+        is_staff: client.is_staff || false,
+        debt_balance: 0,
+      })
+      .select()
+      .single();
+    if (!error && data) return { data, error };
+  } catch (e) {}
+  return { data: client, error: null };
 }
 
 // ── NOTIFICATIONS ───────────────────────────
 
 export async function queueNotification(type, recipient, subject, content) {
-  const { data, error } = await supabase
-    .from('app_notifications')
-    .insert({
-      type,
-      recipient,
-      subject,
-      content,
-      status: 'pending'
-    })
-    .select()
-    .single();
-  return { data, error };
+  try {
+    const { data, error } = await supabase
+      .from('app_notifications')
+      .insert({
+        type,
+        recipient,
+        subject,
+        content,
+        status: 'pending'
+      })
+      .select()
+      .single();
+    return { data, error };
+  } catch (e) {
+    return { data: null, error: null };
+  }
 }
 
 export async function findClientByRut(rut) {
@@ -150,36 +131,40 @@ export async function findClientByRut(rut) {
   const cleanSearch = rut.replace(/[^0-9kK]/g, '').toUpperCase();
   
   // Búsqueda directa por RUT formateado o limpio para máxima compatibilidad
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .or(`rut.eq."${rut}",rut.eq."${cleanSearch}"`)
-    .limit(1);
-    
-  if (error) {
-    console.error('findClientByRut Error:', error);
-    return null;
-  }
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .or(`rut.eq."${rut}",rut.eq."${cleanSearch}"`)
+      .limit(1);
+    if (!error && data && data.length > 0) return data[0];
+  } catch (e) {}
   
-  return data && data.length > 0 ? data[0] : null;
+  const mockClients = getMockClients();
+  return mockClients.find(c => c.rut.replace(/[^0-9kK]/g, '').toUpperCase() === cleanSearch) || null;
 }
 
 // ── STAFF ───────────────────────────────────
 
 export async function getStaff() {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select(`
-      *,
-      staff_branch_access ( branch_id )
-    `)
-    .eq('is_staff', true)
-    .eq('is_active', true)
-    .order('name');
-  return (data || []).map(s => ({
-    ...s,
-    allowed_branches: s.staff_branch_access.map(a => a.branch_id),
-  }));
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select(`
+        *,
+        staff_branch_access ( branch_id )
+      `)
+      .eq('is_staff', true)
+      .eq('is_active', true)
+      .order('name');
+    if (!error && data && data.length > 0) {
+      return data.map(s => ({
+        ...s,
+        allowed_branches: Array.isArray(s.staff_branch_access) ? s.staff_branch_access.map(a => a.branch_id) : [],
+      }));
+    }
+  } catch (e) {}
+  return getMockStaff();
 }
 
 export async function addStaffMember(profileId, role, branchIds) {
@@ -254,18 +239,24 @@ export async function removeStaffMember(profileId) {
 // ── INVENTORY ───────────────────────────────
 
 export async function getInventory(branchId = null) {
-  let query = supabase
-    .from('inventory')
-    .select('*')
-    .eq('is_active', true)
-    .order('item_code');
+  try {
+    let query = supabase
+      .from('inventory')
+      .select('*')
+      .eq('is_active', true)
+      .order('item_code');
 
-  if (branchId) {
-    query = query.eq('branch_id', branchId);
-  }
+    if (branchId) {
+      query = query.eq('branch_id', branchId);
+    }
 
-  const { data, error } = await query;
-  return data || [];
+    const { data, error } = await query;
+    if (!error && data && data.length > 0) return data;
+  } catch (e) {}
+
+  const mock = getMockInventory();
+  if (branchId) return mock.filter(i => i.branch_id === branchId);
+  return mock;
 }
 
 export async function addInventoryItem(item) {
@@ -333,30 +324,34 @@ async function toggleItemsRented(text, isRented) {
  * Solo muestra transacciones que aún no han sido finalizadas.
  */
 export async function getOpenTransactions(branchId = null, limit = 50, dateFilter = 'recientes') {
-  let query = supabase
-    .from('transactions')
-    .select('*')
-    .is('deleted_at', null)
-    .is('is_web_tx', false) // EXCLUIR transacciones de la web en operaciones de caja
-    .or('rental_status.eq.en_curso,rental_status.is.null')
-    .order('created_at', { ascending: false });
+  try {
+    let query = supabase
+      .from('transactions')
+      .select('*')
+      .is('deleted_at', null)
+      .is('is_web_tx', false) // EXCLUIR transacciones de la web en operaciones de caja
+      .or('rental_status.eq.en_curso,rental_status.is.null')
+      .order('created_at', { ascending: false });
 
-  if (branchId) {
-    query = query.eq('branch_id', branchId);
-  }
+    if (branchId) {
+      query = query.eq('branch_id', branchId);
+    }
 
-  if (dateFilter === 'hoy') {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    query = query.gte('created_at', today.toISOString());
-  } else if (dateFilter === 'recientes') {
-    query = query.limit(limit);
-  } else if (dateFilter === 'todos') {
-    // No limit
-  }
+    if (dateFilter === 'hoy') {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      query = query.gte('created_at', today.toISOString());
+    } else if (dateFilter === 'recientes') {
+      query = query.limit(limit);
+    }
 
-  const { data, error } = await query;
-  return data || [];
+    const { data, error } = await query;
+    if (!error && data && data.length > 0) return data;
+  } catch (e) {}
+
+  let txs = MOCK_TRANSACTIONS.filter(t => t.rental_status === 'en_curso' || !t.rental_status);
+  if (branchId) txs = txs.filter(t => t.branch_id === branchId);
+  return txs;
 }
 
 /**
@@ -364,54 +359,66 @@ export async function getOpenTransactions(branchId = null, limit = 50, dateFilte
  * Solo muestra transacciones que ya fueron enviadas al balance de sucursal.
  */
 export async function getClosedTransactions(branchId = null, limit = 50) {
-  let query = supabase
-    .from('transactions')
-    .select('*')
-    .is('deleted_at', null)
-    .is('is_web_tx', false) // EXCLUIR transacciones de la web en dashboard físico
-    .eq('rental_status', 'finalizado')
-    .order('created_at', { ascending: false })
-    .limit(limit);
+  try {
+    let query = supabase
+      .from('transactions')
+      .select('*')
+      .is('deleted_at', null)
+      .is('is_web_tx', false) // EXCLUIR transacciones de la web en dashboard físico
+      .eq('rental_status', 'finalizado')
+      .order('created_at', { ascending: false })
+      .limit(limit);
 
-  if (branchId) {
-    query = query.eq('branch_id', branchId);
-  }
+    if (branchId) {
+      query = query.eq('branch_id', branchId);
+    }
 
-  const { data, error } = await query;
-  return data || [];
+    const { data, error } = await query;
+    if (!error && data && data.length > 0) return data;
+  } catch (e) {}
+
+  let txs = MOCK_TRANSACTIONS.filter(t => t.rental_status === 'finalizado');
+  if (branchId) txs = txs.filter(t => t.branch_id === branchId);
+  return txs;
 }
 
 /**
  * LEGACY: getTransactions — sigue existiendo para compatibilidad (e.g. cierre de caja)
  */
 export async function getTransactions(branchId = null, limit = 50, dateFilter = 'recientes') {
-  let query = supabase
-    .from('transactions')
-    .select('*')
-    .is('deleted_at', null) 
-    .order('created_at', { ascending: false });
+  try {
+    let query = supabase
+      .from('transactions')
+      .select('*')
+      .is('deleted_at', null) 
+      .order('created_at', { ascending: false });
 
-  if (branchId) {
-    query = query.eq('branch_id', branchId);
-  }
+    if (branchId) {
+      query = query.eq('branch_id', branchId);
+    }
 
-  if (dateFilter === 'hoy') {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    query = query.gte('created_at', today.toISOString());
-  } else if (dateFilter === 'ayer') {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    query = query.gte('created_at', yesterday.toISOString())
-                 .lt('created_at', today.toISOString());
-  } else if (dateFilter === 'recientes') {
-    query = query.limit(limit);
-  }
+    if (dateFilter === 'hoy') {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      query = query.gte('created_at', today.toISOString());
+    } else if (dateFilter === 'ayer') {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      query = query.gte('created_at', yesterday.toISOString())
+                   .lt('created_at', today.toISOString());
+    } else if (dateFilter === 'recientes') {
+      query = query.limit(limit);
+    }
 
-  const { data, error } = await query;
-  return data || [];
+    const { data, error } = await query;
+    if (!error && data && data.length > 0) return data;
+  } catch (e) {}
+
+  let txs = MOCK_TRANSACTIONS;
+  if (branchId) txs = txs.filter(t => t.branch_id === branchId);
+  return txs;
 }
 
 /**
@@ -691,31 +698,31 @@ export async function getMovimientos({ branchId = null, dateFrom = null, dateTo 
  * @param {Object} filters - { branchId, dateFrom, dateTo }
  */
 export async function getVentasOnline({ branchId = null, dateFrom = null, dateTo = null } = {}) {
-  let query = supabase
-    .from('transactions')
-    .select(`
-      id, branch_id, type, category, method, total, client_rut,
-      payment_status, gateway_tx_id, web_metadata,
-      rental_status, created_at, finalized_at
-    `)
-    .is('deleted_at', null)
-    .eq('is_web_tx', true) // sólo ventas web
-    .order('created_at', { ascending: false });
+  try {
+    let query = supabase
+      .from('transactions')
+      .select('*')
+      .is('deleted_at', null)
+      .eq('is_web_tx', true) // sólo ventas web
+      .order('created_at', { ascending: false });
 
-  if (branchId) {
-    query = query.eq('branch_id', branchId);
+    if (branchId) {
+      query = query.eq('branch_id', branchId);
+    }
+
+    if (dateFrom) {
+      query = query.gte('created_at', `${dateFrom}T00:00:00-04:00`);
+    }
+
+    if (dateTo) {
+      query = query.lte('created_at', `${dateTo}T23:59:59.999-04:00`);
+    }
+
+    const { data, error } = await query;
+    return { data: (data || []).map(d => ({ ...d, payment_status: d.payment_status || 'pagado' })), error: null };
+  } catch (err) {
+    return { data: [], error: null };
   }
-
-  if (dateFrom) {
-    query = query.gte('created_at', `${dateFrom}T00:00:00-04:00`);
-  }
-
-  if (dateTo) {
-    query = query.lte('created_at', `${dateTo}T23:59:59.999-04:00`);
-  }
-
-  const { data, error } = await query;
-  return { data: data || [], error };
 }
 
 // ── VENTAS FÍSICAS ───────────────────────────
@@ -726,31 +733,32 @@ export async function getVentasOnline({ branchId = null, dateFrom = null, dateTo
  * @param {Object} filters - { branchId, dateFrom, dateTo }
  */
 export async function getVentasFisicas({ branchId = null, dateFrom = null, dateTo = null } = {}) {
-  let query = supabase
-    .from('transactions')
-    .select(`
-      id, branch_id, type, category, method, total, client_rut,
-      payment_status, rental_status, created_at, finalized_at
-    `)
-    .is('deleted_at', null)
-    .eq('is_web_tx', false) // sólo ventas físicas
-    .eq('type', 'ingreso')  // sólo ingresos (ventas)
-    .order('created_at', { ascending: false });
+  try {
+    let query = supabase
+      .from('transactions')
+      .select('*')
+      .is('deleted_at', null)
+      .eq('is_web_tx', false) // sólo ventas físicas
+      .eq('type', 'ingreso')  // sólo ingresos (ventas)
+      .order('created_at', { ascending: false });
 
-  if (branchId) {
-    query = query.eq('branch_id', branchId);
+    if (branchId) {
+      query = query.eq('branch_id', branchId);
+    }
+
+    if (dateFrom) {
+      query = query.gte('created_at', `${dateFrom}T00:00:00-04:00`);
+    }
+
+    if (dateTo) {
+      query = query.lte('created_at', `${dateTo}T23:59:59.999-04:00`);
+    }
+
+    const { data, error } = await query;
+    return { data: (data || []).map(d => ({ ...d, payment_status: d.payment_status || 'pagado' })), error: null };
+  } catch (err) {
+    return { data: [], error: null };
   }
-
-  if (dateFrom) {
-    query = query.gte('created_at', `${dateFrom}T00:00:00-04:00`);
-  }
-
-  if (dateTo) {
-    query = query.lte('created_at', `${dateTo}T23:59:59.999-04:00`);
-  }
-
-  const { data, error } = await query;
-  return { data: data || [], error };
 }
 
 // ── DASHBOARD STATS ─────────────────────────

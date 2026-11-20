@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Plus, Edit2, Trash2, Search, Image as ImageIcon } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, Image as ImageIcon, Tag, CheckCircle2, Clock, X, ShoppingBag } from 'lucide-react';
 
 export default function TiendaDashboard() {
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCat, setSelectedCat] = useState('ALL');
   
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -68,9 +69,17 @@ export default function TiendaDashboard() {
     } else {
       setEditingId(null);
       setFormData({
-        nombre: '', descripcion: '', categoria_id: categorias[0]?.id || '',
-        precio: 0, aplica_comision_flow: true, porcentaje_comision: 10,
-        requiere_reserva: false, duracion_bloque: 60, stock: 0, stock_ilimitado: false, activo: true
+        nombre: '',
+        descripcion: '',
+        categoria_id: categorias[0]?.id || '',
+        precio: 0,
+        aplica_comision_flow: true,
+        porcentaje_comision: 10,
+        requiere_reserva: false,
+        duracion_bloque: 60,
+        stock: 0,
+        stock_ilimitado: true,
+        activo: true
       });
     }
     setImageFile(null);
@@ -84,37 +93,44 @@ export default function TiendaDashboard() {
   };
 
   const handleSave = async () => {
+    if (!formData.nombre || !formData.categoria_id) {
+      alert('Por favor completa el nombre y categoría');
+      return;
+    }
+
     setSaving(true);
     try {
-      let imageUrl = null;
+      let imagenUrl = null;
 
       if (imageFile) {
         const fileExt = imageFile.name.split('.').pop();
-        const fileName = `${Date.now()}.${fileExt}`;
-        const { error: uploadError, data } = await supabase.storage
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const filePath = `productos/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
           .from('productos-tienda')
-          .upload(fileName, imageFile);
+          .upload(filePath, imageFile);
 
         if (uploadError) throw uploadError;
-        
+
         const { data: { publicUrl } } = supabase.storage
           .from('productos-tienda')
-          .getPublicUrl(fileName);
-          
-        imageUrl = publicUrl;
+          .getPublicUrl(filePath);
+
+        imagenUrl = publicUrl;
       }
+
+      const precio = parseInt(formData.precio) || 0;
+      const precio_final = formData.aplica_comision_flow 
+        ? Math.round(precio * (1 + formData.porcentaje_comision / 100))
+        : precio;
 
       const payload = {
         ...formData,
-        // Calc precio final si aplica comision
-        precio_final: formData.aplica_comision_flow 
-          ? Math.round(formData.precio * (1 + formData.porcentaje_comision / 100))
-          : formData.precio
+        precio,
+        precio_final,
+        ...(imagenUrl ? { imagen_url: imagenUrl } : {})
       };
-
-      if (imageUrl) {
-        payload.imagen_url = imageUrl;
-      }
 
       if (editingId) {
         await supabase.from('productos_tienda').update(payload).eq('id', editingId);
@@ -125,233 +141,316 @@ export default function TiendaDashboard() {
       setIsModalOpen(false);
       fetchData();
     } catch (e) {
-      alert('Error guardando producto: ' + e.message);
+      console.error(e);
+      alert('Error al guardar: ' + e.message);
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (confirm('¿Estás seguro de eliminar este producto?')) {
+    if (confirm('¿Seguro que deseas eliminar este producto?')) {
       await supabase.from('productos_tienda').delete().eq('id', id);
       fetchData();
     }
   };
 
-  const filteredProducts = productos.filter(p => 
-    p.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = productos.filter(p => {
+    const matchesSearch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCat = selectedCat === 'ALL' || p.categoria_id === selectedCat;
+    return matchesSearch && matchesCat;
+  });
 
   return (
-    <div className="tienda-admin">
-      <div className="header-actions">
-        <h1>Gestión de Productos</h1>
-        <button className="btn-primary" onClick={() => handleOpenModal()}>
-          <Plus size={16} /> NUEVO PRODUCTO
+    <div className="space-y-6">
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+            Catálogo Oficial · E-Commerce &amp; Logística
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight mt-0.5">
+            Gestión de Productos y Servicios
+          </h1>
+        </div>
+        <button 
+          onClick={() => handleOpenModal()}
+          className="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs shrink-0"
+        >
+          <Plus size={15} /> NUEVO PRODUCTO
         </button>
       </div>
 
-      <div className="toolbar">
-        <div className="search-box">
-          <Search size={16} />
+      {/* ── Toolbar & Filters ── */}
+      <div className="bg-white p-3.5 rounded-2xl border border-neutral-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[240px] max-w-sm">
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
           <input 
             type="text" 
             placeholder="Buscar por nombre..." 
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
+            className="w-full h-9 pl-9 pr-3 rounded-xl border border-neutral-200 bg-neutral-50/50 text-xs text-neutral-800 placeholder-neutral-400 focus:bg-white focus:border-neutral-900 outline-none transition-all"
           />
+        </div>
+
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+          <button
+            onClick={() => setSelectedCat('ALL')}
+            className={`h-8 px-3 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+              selectedCat === 'ALL'
+                ? 'bg-neutral-900 text-white shadow-xs'
+                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+            }`}
+          >
+            Todos ({productos.length})
+          </button>
+          {categorias.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCat(cat.id)}
+              className={`h-8 px-3 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                selectedCat === cat.id
+                  ? 'bg-neutral-900 text-white shadow-xs'
+                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+              }`}
+            >
+              {cat.nombre}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="table-container">
+      {/* ── Table ── */}
+      <div className="rounded-2xl bg-white border border-neutral-200/80 shadow-2xs overflow-hidden">
         {loading ? (
-          <div className="loading">Cargando productos...</div>
+          <div className="p-16 text-center text-xs font-mono text-neutral-400">
+            Cargando catálogo oficial desde Supabase...
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="p-16 text-center flex flex-col items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-neutral-100 border border-neutral-200/80 flex items-center justify-center text-neutral-400 mb-3">
+              <ShoppingBag size={22} />
+            </div>
+            <div className="text-sm font-bold text-neutral-800">No se encontraron productos</div>
+            <p className="text-xs text-neutral-400 mt-1">Prueba cambiando el término de búsqueda o la categoría seleccionada.</p>
+          </div>
         ) : (
-          <table className="erp-table">
-            <thead>
-              <tr>
-                <th>Imagen</th>
-                <th>Nombre</th>
-                <th>Categoría</th>
-                <th>Precio Base</th>
-                <th>Precio Final</th>
-                <th>Stock</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProducts.map(p => (
-                <tr key={p.id}>
-                  <td>
-                    {p.imagen_url ? (
-                      <img src={p.imagen_url} alt="Prod" className="td-img" />
-                    ) : (
-                      <div className="td-img-placeholder"><ImageIcon size={16} /></div>
-                    )}
-                  </td>
-                  <td><strong>{p.nombre}</strong><br/><span className="text-sm text-gray">{p.requiere_reserva ? 'Requiere Reserva' : 'Venta Directa'}</span></td>
-                  <td>{p.categorias_tienda?.nombre}</td>
-                  <td>${p.precio.toLocaleString('es-CL')}</td>
-                  <td className="text-blue font-bold">${p.precio_final.toLocaleString('es-CL')}</td>
-                  <td>{p.stock_ilimitado ? '∞' : p.stock}</td>
-                  <td>
-                    <span className={`badge ${p.activo ? 'bg-green' : 'bg-red'}`}>
-                      {p.activo ? 'Activo' : 'Inactivo'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="actions">
-                      <button onClick={() => handleOpenModal(p)} className="action-btn edit"><Edit2 size={16} /></button>
-                      <button onClick={() => handleDelete(p.id)} className="action-btn delete"><Trash2 size={16} /></button>
-                    </div>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-neutral-50/80 border-b border-neutral-200/70 text-neutral-500 uppercase font-mono text-[11px] font-bold tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 w-14">Imagen</th>
+                  <th className="py-3 px-4">Producto / Modalidad</th>
+                  <th className="py-3 px-4">Categoría</th>
+                  <th className="py-3 px-4">Precio Base</th>
+                  <th className="py-3 px-4">Precio Final</th>
+                  <th className="py-3 px-4">Stock</th>
+                  <th className="py-3 px-4">Estado</th>
+                  <th className="py-3 px-4 text-right">Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-neutral-100 text-neutral-800">
+                {filteredProducts.map(p => (
+                  <tr key={p.id} className="hover:bg-neutral-50/60 transition-colors">
+                    <td className="py-3 px-4">
+                      {p.imagen_url ? (
+                        <img src={p.imagen_url} alt={p.nombre} className="w-10 h-10 rounded-xl object-cover border border-neutral-200/80" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-xl bg-neutral-100 border border-neutral-200/80 flex items-center justify-center text-neutral-400">
+                          <ImageIcon size={16} />
+                        </div>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="font-bold text-neutral-900">{p.nombre}</div>
+                      <div className="text-[10px] font-mono text-neutral-400 mt-0.5">
+                        {p.requiere_reserva ? `⏱️ Reserva obligatoria (${p.duracion_bloque || 60}m)` : '📦 Venta directa en línea'}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-neutral-100 text-neutral-700 border border-neutral-200/60">
+                        {p.categorias_tienda?.nombre || 'General'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 font-mono text-neutral-600">
+                      ${Number(p.precio || 0).toLocaleString('es-CL')}
+                    </td>
+                    <td className="py-3 px-4 font-mono font-black text-neutral-900 text-sm">
+                      ${Number(p.precio_final || 0).toLocaleString('es-CL')}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-neutral-600">
+                      {p.stock_ilimitado ? (
+                        <span className="text-neutral-400 font-bold">Ilimitado (∞)</span>
+                      ) : (
+                        `${p.stock} un.`
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold ${
+                        p.activo 
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                          : 'bg-neutral-100 text-neutral-500 border border-neutral-200'
+                      }`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${p.activo ? 'bg-emerald-500' : 'bg-neutral-400'}`} />
+                        {p.activo ? 'Activo' : 'Pausado'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <div className="inline-flex items-center gap-1">
+                        <button 
+                          onClick={() => handleOpenModal(p)} 
+                          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-neutral-100 text-neutral-500 hover:text-neutral-900 transition-colors"
+                          title="Editar"
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(p.id)} 
+                          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-rose-50 text-neutral-400 hover:text-rose-600 transition-colors"
+                          title="Eliminar"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
-      {/* MODAL */}
+      {/* ── Modal Nuevo / Editar ── */}
       {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>{editingId ? 'Editar Producto' : 'Nuevo Producto'}</h2>
+        <div className="fixed inset-0 z-50 bg-neutral-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-neutral-200 flex flex-col max-h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
+              <div>
+                <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">Catálogo ERP</div>
+                <h2 className="text-base font-black text-neutral-900 mt-0.5">
+                  {editingId ? 'Editar Producto / Servicio' : 'Nuevo Producto / Servicio'}
+                </h2>
+              </div>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-neutral-100 text-neutral-400 hover:text-neutral-700"
+              >
+                <X size={16} />
+              </button>
+            </div>
             
-            <div className="form-grid">
-              <div className="form-group col-span-2">
-                <label>Nombre del Producto</label>
-                <input type="text" value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} />
+            <div className="p-5 overflow-y-auto space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-neutral-700 mb-1">Nombre</label>
+                <input 
+                  type="text" 
+                  value={formData.nombre} 
+                  onChange={e => setFormData({...formData, nombre: e.target.value})}
+                  className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 text-xs text-neutral-900 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 outline-none" 
+                  placeholder="Ej: Clase personalizada de Surf"
+                />
               </div>
               
-              <div className="form-group col-span-2">
-                <label>Descripción</label>
-                <textarea rows="2" value={formData.descripcion} onChange={e => setFormData({...formData, descripcion: e.target.value})}></textarea>
+              <div>
+                <label className="block text-xs font-bold text-neutral-700 mb-1">Descripción</label>
+                <textarea 
+                  rows="2" 
+                  value={formData.descripcion} 
+                  onChange={e => setFormData({...formData, descripcion: e.target.value})}
+                  className="w-full p-3 rounded-xl border border-neutral-200 text-xs text-neutral-900 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 outline-none resize-none" 
+                  placeholder="Detalles del arriendo o clase..."
+                />
               </div>
 
-              <div className="form-group">
-                <label>Categoría</label>
-                <select value={formData.categoria_id} onChange={e => setFormData({...formData, categoria_id: e.target.value})}>
-                  <option value="">Seleccionar...</option>
-                  {categorias.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label>Precio Base</label>
-                <input type="number" value={formData.precio} onChange={e => setFormData({...formData, precio: parseInt(e.target.value) || 0})} />
-              </div>
-
-              <div className="form-group checkbox-group col-span-2">
-                <label>
-                  <input type="checkbox" checked={formData.aplica_comision_flow} onChange={e => setFormData({...formData, aplica_comision_flow: e.target.checked})} />
-                  Aplicar Comisión Flow ({formData.porcentaje_comision}%)
-                </label>
-              </div>
-
-              <div className="form-group checkbox-group col-span-2">
-                <label>
-                  <input type="checkbox" checked={formData.requiere_reserva} onChange={e => setFormData({...formData, requiere_reserva: e.target.checked})} />
-                  Requiere Reserva (Arriendo/Clase)
-                </label>
-              </div>
-
-              {formData.requiere_reserva && (
-                <div className="form-group col-span-2">
-                  <label>Duración del Bloque (minutos)</label>
-                  <input type="number" value={formData.duracion_bloque} onChange={e => setFormData({...formData, duracion_bloque: parseInt(e.target.value) || 60})} />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-neutral-700 mb-1">Categoría</label>
+                  <select 
+                    value={formData.categoria_id} 
+                    onChange={e => setFormData({...formData, categoria_id: e.target.value})}
+                    className="w-full h-10 px-3 rounded-xl border border-neutral-200 text-xs text-neutral-900 focus:border-neutral-900 outline-none"
+                  >
+                    <option value="">Selecciona...</option>
+                    {categorias.map(c => (
+                      <option key={c.id} value={c.id}>{c.nombre}</option>
+                    ))}
+                  </select>
                 </div>
-              )}
 
-              <div className="form-group">
-                <label>Stock</label>
-                <input type="number" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} disabled={formData.stock_ilimitado} />
+                <div>
+                  <label className="block text-xs font-bold text-neutral-700 mb-1">Precio Base ($ CLP)</label>
+                  <input 
+                    type="number" 
+                    value={formData.precio} 
+                    onChange={e => setFormData({...formData, precio: parseInt(e.target.value) || 0})}
+                    className="w-full h-10 px-3.5 rounded-xl border border-neutral-200 text-xs text-neutral-900 font-mono focus:border-neutral-900 outline-none" 
+                  />
+                </div>
               </div>
 
-              <div className="form-group checkbox-group">
-                <label>
-                  <input type="checkbox" checked={formData.stock_ilimitado} onChange={e => setFormData({...formData, stock_ilimitado: e.target.checked})} />
-                  Stock Ilimitado
+              <div className="p-3 rounded-xl bg-neutral-50 border border-neutral-200/80 space-y-2">
+                <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-neutral-800">
+                  <input 
+                    type="checkbox" 
+                    checked={formData.aplica_comision_flow} 
+                    onChange={e => setFormData({...formData, aplica_comision_flow: e.target.checked})}
+                    className="rounded border-neutral-300 text-neutral-900 focus:ring-0"
+                  />
+                  Aplicar Comisión Flow (+{formData.porcentaje_comision}%)
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-neutral-800">
+                  <input 
+                    type="checkbox" 
+                    checked={formData.requiere_reserva} 
+                    onChange={e => setFormData({...formData, requiere_reserva: e.target.checked})}
+                    className="rounded border-neutral-300 text-neutral-900 focus:ring-0"
+                  />
+                  Requiere Reserva de Horario (Arriendo / Clase)
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-neutral-800">
+                  <input 
+                    type="checkbox" 
+                    checked={formData.stock_ilimitado} 
+                    onChange={e => setFormData({...formData, stock_ilimitado: e.target.checked})}
+                    className="rounded border-neutral-300 text-neutral-900 focus:ring-0"
+                  />
+                  Stock Ilimitado (Servicios y Clases)
                 </label>
               </div>
 
-              <div className="form-group col-span-2">
-                <label>Imagen (JPEG recomendado)</label>
-                <input type="file" accept="image/jpeg, image/png" onChange={handleImageChange} />
-              </div>
-
-              <div className="form-group checkbox-group col-span-2">
-                <label>
-                  <input type="checkbox" checked={formData.activo} onChange={e => setFormData({...formData, activo: e.target.checked})} />
-                  Producto Activo (Visible en tienda)
-                </label>
+              <div>
+                <label className="block text-xs font-bold text-neutral-700 mb-1">Foto del Producto (opcional)</label>
+                <input 
+                  type="file" 
+                  accept="image/jpeg, image/png" 
+                  onChange={handleImageChange}
+                  className="w-full text-xs text-neutral-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-neutral-900 file:text-white hover:file:bg-black cursor-pointer"
+                />
               </div>
             </div>
 
-            <div className="modal-actions">
-              <button className="btn-cancel" onClick={() => setIsModalOpen(false)}>Cancelar</button>
-              <button className="btn-save" onClick={handleSave} disabled={saving}>
-                {saving ? 'Guardando...' : 'Guardar Producto'}
+            <div className="p-4 bg-neutral-50 border-t border-neutral-100 flex justify-end gap-2">
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="h-9 px-4 rounded-xl border border-neutral-200 hover:bg-neutral-100 text-xs font-bold text-neutral-700 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={handleSave} 
+                disabled={saving}
+                className="h-9 px-4 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs disabled:opacity-50"
+              >
+                {saving ? 'Guardando...' : (editingId ? 'Actualizar Producto' : 'Guardar Producto')}
               </button>
             </div>
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header-actions h1 { font-size: 20px; margin: 0; }
-        .btn-primary { background: #38bdf8; color: #000; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        
-        .toolbar { margin-bottom: 20px; }
-        .search-box { display: flex; align-items: center; gap: 10px; background: #1a2236; padding: 10px 15px; border-radius: 8px; max-width: 300px; }
-        .search-box input { background: transparent; border: none; color: #fff; outline: none; width: 100%; }
-
-        .table-container { background: #1a2236; border-radius: 12px; overflow: hidden; }
-        .erp-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .erp-table th { background: #0f1623; padding: 15px; font-size: 12px; text-transform: uppercase; color: #888; }
-        .erp-table td { padding: 15px; border-bottom: 1px solid #2a3441; font-size: 14px; vertical-align: middle; }
-        
-        .td-img { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; }
-        .td-img-placeholder { width: 40px; height: 40px; background: #2a3441; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #888; }
-
-        .text-sm { font-size: 12px; }
-        .text-gray { color: #888; }
-        .text-blue { color: #38bdf8; }
-        .font-bold { font-weight: bold; }
-
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .bg-green { background: rgba(16,185,129,0.2); color: #10b981; }
-        .bg-red { background: rgba(239,68,68,0.2); color: #ef4444; }
-
-        .actions { display: flex; gap: 10px; }
-        .action-btn { background: none; border: none; cursor: pointer; padding: 5px; border-radius: 4px; }
-        .action-btn.edit { color: #38bdf8; }
-        .action-btn.edit:hover { background: rgba(56,189,248,0.1); }
-        .action-btn.delete { color: #ef4444; }
-        .action-btn.delete:hover { background: rgba(239,68,68,0.1); }
-
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        .modal-content { background: #1a2236; width: 90%; max-width: 600px; border-radius: 12px; padding: 30px; max-height: 90vh; overflow-y: auto; }
-        .modal-content h2 { margin: 0 0 20px 0; font-size: 18px; }
-
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .col-span-2 { grid-column: span 2; }
-        
-        .form-group { display: flex; flex-direction: column; gap: 5px; }
-        .form-group label { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; }
-        .form-group input[type="text"], .form-group input[type="number"], .form-group select, .form-group textarea { background: #0f1623; border: 1px solid #2a3441; color: #fff; padding: 10px; border-radius: 6px; outline: none; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #38bdf8; }
-        
-        .checkbox-group { flex-direction: row; align-items: center; }
-        .checkbox-group label { display: flex; align-items: center; gap: 8px; cursor: pointer; color: #fff; text-transform: none; }
-
-        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 30px; }
-        .btn-cancel { background: transparent; color: #888; border: 1px solid #888; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
-        .btn-save { background: #38bdf8; color: #000; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
-      `}</style>
     </div>
   );
 }

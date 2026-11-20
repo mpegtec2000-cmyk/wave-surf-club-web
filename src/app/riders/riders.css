@@ -1,0 +1,74 @@
+.riders-root {
+          min-height: 100vh;
+          background: #ffffff;
+          color: #000000;
+          padding-top: var(--nav-height, 100px);
+          overflow-x: hidden;
+        }
+
+        .riders-inner {
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 56px 24px 80px;
+        }
+
+        .riders-header {
+          text-align: center;
+          margin-bottom: 56px;
+        }
+
+        .riders-kicker {
+          display: block;
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.22em;
+          color: #737373;
+          margin-bottom: 12px;
+        }
+
+        .riders-title {
+          font-family: var(--font-display), sans-serif;
+          font-size: clamp(2.8rem, 8vw, 88px);
+          font-weight: 800;
+          color: #000000;
+          letter-spacing: -0.05em;
+          margin: 0 0 14px;
+          line-height: 0.92;
+        }
+
+        .riders-sub {
+          font-size: 15px;
+          color: #525252;
+          max-width: 540px;
+          margin: 0 auto;
+        }
+
+        .riders-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+          .riders-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+          .riders-grid { grid-template-columns: 1fr; }
+        }
+
+        .riders-footer {
+          margin-top: 84px;
+          text-align: center;
+          border-top: 1px solid #e5e5e5;
+          padding-top: 40px;
+        }
+
+        .riders-footer p {
+          font-family: var(--font-mono), monospace;
+          font-size: 11px;
+          color: #737373;
+          letter-spacing: 0.22em;
+          margin: 0;
+        }

@@ -15,10 +15,6 @@ export const RIDERS_DATA = {
     gallery: [
       '/riders/tomas-bock/tomi-1.jpg',
       '/riders/tomas-bock/tomi-2.png'
-    ],
-    instagramUrls: [
-      'https://www.instagram.com/p/C7ST0ZTvNQE/',
-      'https://www.instagram.com/reel/DA_zhg4PxnB/'
     ]
   },
   'paulo-munoz': {
@@ -103,7 +99,7 @@ export const RIDERS_DATA = {
   'diego-salt': {
     name: 'Diego Salt',
     role: 'WAVE TALLER',
-    cover: '/FONDO TALLER MATI.jpg',
+    cover: '/FONDO TALLER.jpg',
     bio: '<p>El guardián de los equipos. Diego conoce cada secreto de las tablas y el equipamiento. Su labor en el taller asegura que cada rider de Wave tenga las herramientas perfectas para dominar el mar.</p>',
     stats: { board: 'Wave Cruiser 8\'0"', stance: 'Regular', local: 'Concón' },
     gallery: ['https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=1200&q=80']
@@ -220,10 +216,7 @@ export const RIDERS_DATA = {
       '/riders/luca-penna/3.png',
       '/riders/luca-penna/4.png',
       '/riders/luca-penna/5.png',
-      '/riders/luca-penna/6.png',
-      '/riders/luca-penna/7.png',
-      '/riders/luca-penna/8.png',
-      '/riders/luca-penna/9.png'
+      '/riders/luca-penna/6.png'
     ],
     instagramUrls: [
       'https://www.instagram.com/p/DHerkpLRg8U/',
