@@ -5,8 +5,8 @@ import { I18nProvider } from '@/lib/i18n-context';
 import { CartProvider } from '@/lib/cart-context';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const syne = Syne({ subsets: ['latin'], weight: ['600', '700', '800'], variable: '--font-syne' });
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-space' });
+const syne = Syne({ subsets: ['latin'], variable: '--font-syne' });
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space' });
 const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-space-mono' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat' });
