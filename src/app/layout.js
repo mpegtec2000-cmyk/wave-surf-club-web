@@ -15,7 +15,15 @@ const archivo = Archivo_Black({ weight: '400', subsets: ['latin'], variable: '--
 export const metadata = {
   title: 'WAVE SURF CLUB® — Surf, Skate & Ocean Culture | Since 2015',
   description: 'Wave Surf Club Chile. Escuela de surf, Mega Ramp skate, taller de shaping sustentable en Agave y tienda oficial en Concón, Pichilemu y Punta de Piedra.',
-  icons: { icon: '/logo-wave.png' },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png' },
+    ],
+  },
 };
 
 export default function RootLayout({ children }) {
